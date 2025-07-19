@@ -1,6 +1,6 @@
         // Recipes and their ingredients data loaded from JSON file
         let recipes = [];
-        let commonIngredients = [];
+        let commonIngredientsDict = {};
 
         // Function to load recipes from JSON file
         async function loadRecipes() {
@@ -47,22 +47,31 @@
             }
 
             // Build common ingredients list
-            extractCommonIngredients();
+            extractCommonIngredientsDict();
             renderRecipeList();
         });
 
         // Utility to extract all ingredient names
-        function extractCommonIngredients() {
-            const ingredientSet = new Set();
+        // Create a dictionary: ingredient name -> list of recipe names
+        function extractCommonIngredientsDict() {
+            const dict = {};
 
             recipes.forEach(recipe => {
                 recipe.ingredients.forEach(ing => {
-                    ingredientSet.add(ing.name.toLowerCase());
+                    const name = ing.name.toLowerCase();
+                    if (!dict[name]) {
+                        dict[name] = new Set(); // Use Set to prevent duplicates
+                    }
+                    dict[name].add(recipe.name);
                 });
             });
 
-            commonIngredients = Array.from(ingredientSet);
-            console.log("Common Ingredients:", commonIngredients);
+            // Convert sets to arrays for easier use
+            commonIngredientsDict = Object.fromEntries(
+                Object.entries(dict).map(([k, v]) => [k, Array.from(v)])
+            );
+
+            console.log("commonIngredientsDict:", commonIngredientsDict);
         }
         
         // Render recipe list
@@ -241,7 +250,9 @@
                 }
                 
                 // Find matches using fuzzy search
-                const matches = fuzzySearch(searchTerm, commonIngredients);
+                const ingredientNames = Object.keys(commonIngredientsDict);
+                // Pass ingredientNames into your fuzzy search algorithm
+                const matches = fuzzySearch(searchTerm, ingredientNames);
                 
                 if (matches.length > 0) {
                     showSuggestions(this, matches);
@@ -351,7 +362,69 @@
         // Save recipes to localStorage
         function saveRecipes() {
             localStorage.setItem('recipes', JSON.stringify(recipes));
+            updateIngredientStats(); // Update stats whenever recipes change
         }
+
+        // Calculate ingredient usage statistics
+        function calculateIngredientStats() {
+            const stats = {};
+            
+            recipes.forEach(recipe => {
+                recipe.ingredients.forEach(ing => {
+                    const name = ing.name.toLowerCase();
+                    stats[name] = (stats[name] || 0) + 1;
+                });
+            });
+            
+            return stats;
+        }
+
+        // Update ingredient statistics display
+        function updateIngredientStats(filter = '') {
+            const stats = calculateIngredientStats();
+            const container = document.getElementById('ingredientStatsList');
+            
+            // Sort by most used first
+            const sortedIngredients = Object.entries(stats)
+                .sort((a, b) => b[1] - a[1])
+                .filter(([name]) => name.includes(filter.toLowerCase()));
+            
+            container.innerHTML = '';
+            
+            if (sortedIngredients.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 col-span-3 text-center py-4">No ingredients found</p>';
+                return;
+            }
+            
+            sortedIngredients.forEach(([name, count]) => {
+                const card = document.createElement('div');
+                card.className = 'bg-gray-50 p-4 rounded-lg border border-gray-200';
+                card.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span class="font-medium capitalize">${name}</span>
+                        <span class="bg-amber-100 text-amber-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                            ${count} ${count === 1 ? 'recipe' : 'recipes'}
+                        </span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Initialize ingredient stats when page loads
+        document.addEventListener('DOMContentLoaded', async () => {
+            // First try to load from localStorage
+            const savedRecipes = localStorage.getItem('recipes');
+            if (savedRecipes) {
+                recipes = JSON.parse(savedRecipes);
+                renderRecipeList();
+                updateIngredientStats();
+            } else {
+                // If no localStorage, load from JSON file
+                await loadRecipes();
+                updateIngredientStats();
+            }
+        });
         
         // Download recipes as JSON file
         function downloadRecipes() {
@@ -395,6 +468,11 @@
         
         addIngredientBtn.addEventListener('click', function() {
             addIngredientField();
+        });
+        
+        // Search ingredients stats
+        document.getElementById('ingredientStatsSearch').addEventListener('input', function() {
+            updateIngredientStats(this.value);
         });
         
         // Handle form submission
