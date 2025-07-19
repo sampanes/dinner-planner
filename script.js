@@ -46,9 +46,13 @@
                 await loadRecipes();
             }
 
-            // Build common ingredients list
             extractCommonIngredientsDict();
             renderRecipeList();
+            updateIngredientStats();
+
+            // Initialize star containers with 0 rating
+            renderStarRating('pinkStarContainer', 'pink', 0);
+            renderStarRating('blueStarContainer', 'blue', 0);
         });
 
         // Utility to extract all ingredient names
@@ -141,6 +145,16 @@
                                     <i class="fas fa-trash-alt mr-1"></i> Delete
                                 </button>
                             </div>
+                            <div class="flex gap-4 mt-2">
+                                <div class="flex items-center">
+                                    <span class="text-pink-500 mr-1">${recipe.pinkStar || 0}</span>
+                                    <i class="fas fa-star text-pink-400"></i>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="text-blue-500 mr-1">${recipe.blueStar || 0}</span>
+                                    <i class="fas fa-star text-blue-400"></i>
+                                </div>
+                            </div>
                         </div>
                         ${recipe.image ? 
                             `<img src="${recipe.image}" alt="${recipe.name}" class="w-24 h-24 object-cover rounded-lg shadow">` : 
@@ -192,9 +206,13 @@
             
             // Store the ID we're editing
             recipeForm.dataset.editingId = id;
-            
+
+            // Set star ratings
+            renderStarRating('pinkStarContainer', 'pink', recipe.pinkStar || 0);
+            renderStarRating('blueStarContainer', 'blue', recipe.blueStar || 0);
+
             // Show the modal
-            newRecipeModal.classList.remove('hidden');
+            newRecipeModal.classList.remove('hidden');  
         }
         
         // Delete recipe
@@ -411,20 +429,44 @@
             });
         }
 
-        // Initialize ingredient stats when page loads
-        document.addEventListener('DOMContentLoaded', async () => {
-            // First try to load from localStorage
-            const savedRecipes = localStorage.getItem('recipes');
-            if (savedRecipes) {
-                recipes = JSON.parse(savedRecipes);
-                renderRecipeList();
-                updateIngredientStats();
-            } else {
-                // If no localStorage, load from JSON file
-                await loadRecipes();
-                updateIngredientStats();
+        function renderStarRating(containerId, color, initial = 0) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = ''; // clear previous
+
+            for (let i = 1; i <= 5; i++) {
+                const star = document.createElement('i');
+                star.className = `fas fa-star text-2xl cursor-pointer transition-colors`;
+                star.dataset.value = i;
+
+                star.addEventListener('click', () => {
+                    updateStarRating(containerId, i, color);
+                });
+
+                container.appendChild(star);
             }
-        });
+
+            updateStarRating(containerId, initial, color);
+        }
+
+        function updateStarRating(containerId, value, color) {
+            const container = document.getElementById(containerId);
+            container.dataset.selected = value; // store current value
+            const stars = container.querySelectorAll('i');
+
+            stars.forEach((star, index) => {
+                if (index < value) {
+                    star.classList.add(`text-${color}-500`);
+                    star.classList.remove('text-gray-300');
+                } else {
+                    star.classList.remove(`text-${color}-500`);
+                    star.classList.add('text-gray-300');
+                }
+            });
+        }
+
+        function getStarValue(containerId) {
+            return parseInt(document.getElementById(containerId).dataset.selected || "0");
+        }
         
         // Download recipes as JSON file
         function downloadRecipes() {
@@ -454,6 +496,10 @@
             // Add one empty ingredient field by default
             addIngredientField();
             
+            // Set default star ratings to 0
+            renderStarRating('pinkStarContainer', 'pink', 0);
+            renderStarRating('blueStarContainer', 'blue', 0);
+
             // Show modal
             newRecipeModal.classList.remove('hidden');
         });
@@ -504,13 +550,18 @@
                 return;
             }
             
+            const pinkStar = getStarValue('pinkStarContainer');
+            const blueStar = getStarValue('blueStarContainer');
+
             const recipeData = {
-                name,
-                image: image || undefined,
-                ingredients,
-                instructions
+            name,
+            image: image || undefined,
+            ingredients,
+            instructions,
+            pinkStar,
+            blueStar
             };
-            
+
             // Check if we're editing or creating new
             const editingId = this.dataset.editingId;
             if (editingId) {
