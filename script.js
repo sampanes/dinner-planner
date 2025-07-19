@@ -83,9 +83,11 @@
         function renderRecipeList(filter = '') {
             recipeList.innerHTML = '';
             
-            const filteredRecipes = recipes.filter(recipe => 
-                recipe.name.toLowerCase().includes(filter.toLowerCase())
-            );
+            const normalizedFilter = filter.toLowerCase().replace(/-/g, ' ');
+            const filteredRecipes = recipes.filter(recipe => {
+                const normalizedName = recipe.name.toLowerCase().replace(/-/g, ' ');
+                return normalizedName.includes(normalizedFilter);
+            });
             
             if (filteredRecipes.length === 0) {
                 recipeList.innerHTML = '<p class="text-gray-500 text-center py-4">No recipes found</p>';
