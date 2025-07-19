@@ -17,7 +17,12 @@
                         recipe.id = index + 1;
                     }
                 });
+                                
+                // Save to localStorage
+                localStorage.setItem('recipes', JSON.stringify(recipes));
                 
+                console.log("loadRecipes called:", recipes);
+
                 renderRecipeList();
             } catch (error) {
                 console.error('Error loading recipes:', error);
@@ -41,9 +46,13 @@
         
         document.addEventListener('DOMContentLoaded', async () => {
             const savedRecipes = localStorage.getItem('recipes');
+
+            // THIS IS WHERE we load what's available for viewing
             if (savedRecipes) {
+                // We have a saved recipes in local storage so just use that
                 recipes = JSON.parse(savedRecipes);
             } else {
+                // Brand new, so load recipes from a json file
                 await loadRecipes();
             }
 
