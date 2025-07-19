@@ -353,6 +353,24 @@
             localStorage.setItem('recipes', JSON.stringify(recipes));
         }
         
+        // Download recipes as JSON file
+        function downloadRecipes() {
+            const data = JSON.stringify(recipes, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'recipes.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Event listeners
+        document.getElementById('downloadRecipesBtn').addEventListener('click', downloadRecipes);
+        
         // Event listeners
         newRecipeBtn.addEventListener('click', function() {
             // Reset form
