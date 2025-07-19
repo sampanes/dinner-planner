@@ -563,12 +563,12 @@
             const blueStar = getStarValue('blueStarContainer');
 
             const recipeData = {
-            name,
-            image: image || undefined,
-            ingredients,
-            instructions,
-            pinkStar,
-            blueStar
+                name,
+                image: image || undefined,
+                ingredients,
+                instructions,
+                pinkStar,
+                blueStar
             };
 
             // Check if we're editing or creating new
