@@ -108,13 +108,20 @@
                     </div>
                     
                     <div class="mb-6">
-                        <div class="flex justify-between items-center mb-1">
-                            <label class="block text-sm font-medium text-gray-700">Ingredients</label>
-                            <button type="button" id="addIngredientBtn" class="text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded text-gray-700">Add Ingredient</button>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Ingredients</label>
+                        
+                        <div id="ingredientsContainer" class="space-y-2 mb-2">
+                            <!-- Ingredients will be added here -->
                         </div>
                         
-                        <div id="ingredientsContainer" class="space-y-2">
-                            <!-- Ingredients will be added here -->
+                        <div class="mt-2 flex justify-between">
+                            <button type="button" id="addIngredientBtn" class="text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded text-gray-700">
+                                ➕ Ingredient
+                            </button>
+                            
+                            <button type="button" id="addIngredientPresetBtn" class="text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded text-gray-700">
+                                salt, pepper, oil
+                            </button>
                         </div>
                     </div>
                     

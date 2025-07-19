@@ -37,6 +37,7 @@
         const recipeSearch = document.getElementById('recipeSearch');
         const ingredientsContainer = document.getElementById('ingredientsContainer');
         const addIngredientBtn = document.getElementById('addIngredientBtn');
+        const addIngredientPresetBtn = document.getElementById('addIngredientPresetBtn');
         
         document.addEventListener('DOMContentLoaded', async () => {
             const savedRecipes = localStorage.getItem('recipes');
@@ -516,6 +517,13 @@
             addIngredientField();
         });
         
+        document.getElementById('addIngredientPresetBtn').addEventListener('click', () => {
+            addIngredientField('salt', 'to taste');
+            addIngredientField('pepper', 'to taste');
+            addIngredientField('olive oil', '1 tsp');
+        });
+
+        
         // Search ingredients stats
         document.getElementById('ingredientStatsSearch').addEventListener('input', function() {
             updateIngredientStats(this.value);
@@ -532,11 +540,12 @@
             // Collect ingredients
             const ingredients = [];
             const ingredientInputs = ingredientsContainer.querySelectorAll('.ingredient-name');
-            
+
             ingredientInputs.forEach(input => {
                 const name = input.value.trim();
                 if (name) {
-                    const amountInput = input.parentNode.nextElementSibling;
+                    const ingredientDiv = input.closest('.flex');
+                    const amountInput = ingredientDiv.querySelector('input:not(.ingredient-name)');
                     const amount = amountInput.value.trim();
                     ingredients.push({
                         name,
