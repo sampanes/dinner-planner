@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "name": "Spaghetti Carbonara",
+    "image": "https://images.unsplash.com/photo-1589227365533-cee630bd59bd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    "ingredients": [
+      { "name": "spaghetti", "amount": "400g" },
+      { "name": "eggs", "amount": "3 large" },
+      { "name": "pancetta", "amount": "150g" },
+      { "name": "parmesan cheese", "amount": "50g" },
+      { "name": "black pepper", "amount": "to taste" }
+    ],
+    "instructions": "1. Cook spaghetti according to package instructions.\n2. Fry pancetta until crispy.\n3. Beat eggs with grated parmesan and pepper.\n4. Drain pasta, mix with pancetta, then quickly stir in egg mixture off heat.\n5. Serve immediately with extra parmesan."
+  },
+  {
+    "id": 2,
+    "name": "Chocolate Chip Cookies",
+    "image": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    "ingredients": [
+      { "name": "all-purpose flour", "amount": "2 1/4 cups" },
+      { "name": "butter", "amount": "1 cup" },
+      { "name": "brown sugar", "amount": "3/4 cup" },
+      { "name": "white sugar", "amount": "3/4 cup" },
+      { "name": "eggs", "amount": "2 large" },
+      { "name": "chocolate chips", "amount": "2 cups" },
+      { "name": "vanilla extract", "amount": "1 tsp" }
+    ],
+    "instructions": "1. Preheat oven to 375°F (190°C).\n2. Cream butter and sugars until fluffy.\n3. Beat in eggs one at a time, then add vanilla.\n4. Mix in flour, then stir in chocolate chips.\n5. Drop spoonfuls onto baking sheets and bake for 9-11 minutes."
+  }
+]

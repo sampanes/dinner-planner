@@ -1,68 +1,30 @@
+        // Recipes and their ingredients data loaded from JSON file
+        let recipes = [];
+        let commonIngredients = [];
 
-        // Sample initial data
-        let recipes = [
-            {
-                id: 1,
-                name: "Spaghetti Carbonara",
-                image: "https://images.unsplash.com/photo-1589227365533-cee630bd59bd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-                ingredients: [
-                    { name: "spaghetti", amount: "400g" },
-                    { name: "eggs", amount: "3 large" },
-                    { name: "pancetta", amount: "150g" },
-                    { name: "parmesan cheese", amount: "50g" },
-                    { name: "black pepper", amount: "to taste" }
-                ],
-                instructions: "1. Cook spaghetti according to package instructions.\n2. Fry pancetta until crispy.\n3. Beat eggs with grated parmesan and pepper.\n4. Drain pasta, mix with pancetta, then quickly stir in egg mixture off heat.\n5. Serve immediately with extra parmesan."
-            },
-            {
-                id: 2,
-                name: "Chocolate Chip Cookies",
-                image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-                ingredients: [
-                    { name: "all-purpose flour", amount: "2 1/4 cups" },
-                    { name: "butter", amount: "1 cup" },
-                    { name: "brown sugar", amount: "3/4 cup" },
-                    { name: "white sugar", amount: "3/4 cup" },
-                    { name: "eggs", amount: "2 large" },
-                    { name: "chocolate chips", amount: "2 cups" },
-                    { name: "vanilla extract", amount: "1 tsp" }
-                ],
-                instructions: "1. Preheat oven to 375°F (190°C).\n2. Cream butter and sugars until fluffy.\n3. Beat in eggs one at a time, then add vanilla.\n4. Mix in flour, then stir in chocolate chips.\n5. Drop spoonfuls onto baking sheets and bake for 9-11 minutes."
+        // Function to load recipes from JSON file
+        async function loadRecipes() {
+            try {
+                const response = await fetch('recipes.json');
+                if (!response.ok) {
+                    throw new Error('Failed to load recipes');
+                }
+                recipes = await response.json();
+                
+                // Ensure all recipes have IDs
+                recipes.forEach((recipe, index) => {
+                    if (!recipe.id) {
+                        recipe.id = index + 1;
+                    }
+                });
+                
+                renderRecipeList();
+            } catch (error) {
+                console.error('Error loading recipes:', error);
+                // Fallback to empty array
+                recipes = [];
             }
-        ];
-        
-        // Common ingredients for fuzzy search
-        const commonIngredients = [
-            "flour", "sugar", "salt", "pepper", "butter", "oil", "eggs", "milk", 
-            "cheese", "chicken", "beef", "pork", "fish", "rice", "pasta", 
-            "tomatoes", "onions", "garlic", "potatoes", "carrots", "bell peppers",
-            "broccoli", "spinach", "mushrooms", "lemons", "limes", "apples",
-            "bananas", "strawberries", "blueberries", "chocolate", "vanilla",
-            "cinnamon", "nutmeg", "basil", "oregano", "thyme", "rosemary",
-            "parsley", "cilantro", "ginger", "turmeric", "cumin", "paprika",
-            "chili powder", "soy sauce", "vinegar", "honey", "maple syrup",
-            "yogurt", "cream", "bread", "nuts", "seeds", "beans", "lentils",
-            "tofu", "bacon", "sausage", "ham", "shrimp", "crab", "lobster",
-            "scallops", "clams", "oysters", "salmon", "tuna", "cod", "tilapia",
-            "avocado", "cucumber", "zucchini", "eggplant", "asparagus", "peas",
-            "corn", "celery", "lettuce", "kale", "arugula", "radishes", "beets",
-            "sweet potatoes", "pumpkin", "squash", "coconut", "almonds", "walnuts",
-            "pecans", "cashews", "peanuts", "sunflower seeds", "pumpkin seeds",
-            "chia seeds", "flax seeds", "quinoa", "oats", "barley", "couscous",
-            "bulgur", "farro", "cornmeal", "breadcrumbs", "panko", "phyllo dough",
-            "puff pastry", "pie crust", "cake flour", "baking powder", "baking soda",
-            "yeast", "cocoa powder", "chocolate chips", "white chocolate", "dark chocolate",
-            "milk chocolate", "caramel", "butterscotch", "marshmallows", "sprinkles",
-            "food coloring", "gelatin", "cornstarch", "arrowroot", "tapioca",
-            "xanthan gum", "cream cheese", "sour cream", "buttermilk", "heavy cream",
-            "whipping cream", "half-and-half", "evaporated milk", "condensed milk",
-            "coconut milk", "almond milk", "soy milk", "oat milk", "rice milk",
-            "goat cheese", "feta cheese", "mozzarella", "cheddar", "parmesan",
-            "pecorino", "gouda", "brie", "camembert", "blue cheese", "provolone",
-            "swiss cheese", "monterey jack", "pepper jack", "ricotta", "cottage cheese",
-            "cream cheese", "mascarpone", "gruyere", "asiago", "manchego", "halloumi",
-            "paneer", "queso fresco", "cotija", "goat cheese", "feta", "halloumi"
-        ];
+        }
         
         // DOM elements
         const recipeList = document.getElementById('recipeList');
@@ -76,17 +38,32 @@
         const ingredientsContainer = document.getElementById('ingredientsContainer');
         const addIngredientBtn = document.getElementById('addIngredientBtn');
         
-        // Initialize the app
-        document.addEventListener('DOMContentLoaded', () => {
-            renderRecipeList();
-            
-            // Load from localStorage if available
+        document.addEventListener('DOMContentLoaded', async () => {
             const savedRecipes = localStorage.getItem('recipes');
             if (savedRecipes) {
                 recipes = JSON.parse(savedRecipes);
-                renderRecipeList();
+            } else {
+                await loadRecipes();
             }
+
+            // Build common ingredients list
+            extractCommonIngredients();
+            renderRecipeList();
         });
+
+        // Utility to extract all ingredient names
+        function extractCommonIngredients() {
+            const ingredientSet = new Set();
+
+            recipes.forEach(recipe => {
+                recipe.ingredients.forEach(ing => {
+                    ingredientSet.add(ing.name.toLowerCase());
+                });
+            });
+
+            commonIngredients = Array.from(ingredientSet);
+            console.log("Common Ingredients:", commonIngredients);
+        }
         
         // Render recipe list
         function renderRecipeList(filter = '') {
