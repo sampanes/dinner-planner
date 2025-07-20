@@ -279,5 +279,167 @@
       {"name": "oil", "amount": "2 teaspoon"},
       {"name": "butter", "amount": "4 tablespoon"}
     ]
+  },
+  {
+  "id": 14,
+  "name": "Beef Bulgogi Meatballs",
+  "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/5e9dcf26ae5fdf1c8e663326-819884a9.jpg",
+  "ingredients": [
+    { "name": "carrots", "amount": "24 ounce" },
+    { "name": "scallions", "amount": "4 unit" },
+    { "name": "ginger", "amount": "2 thumb" },
+    { "name": "jasmine rice", "amount": "1.5 cup" },
+    { "name": "ground beef", "amount": "20 ounce" },
+    { "name": "panko breadcrumbs", "amount": "½ cup" },
+    { "name": "bulgogi sauce", "amount": "16 tablespoon" },
+    { "name": "sour cream", "amount": "4 tablespoon" },
+    { "name": "sriracha", "amount": "1 teaspoon" },
+    { "name": "sesame seeds", "amount": "1 tablespoon" },
+    { "name": "vegetable oil", "amount": "2 teaspoon" },
+    { "name": "salt", "amount": "to taste" },
+    { "name": "pepper", "amount": "to taste" }
+  ],
+  "instructions": "1. Preheat oven to 425°F. Peel and slice carrots; roast on baking sheet with oil, salt, and pepper until tender, 20–25 minutes.\n\n2. Peel and mince ginger. Slice scallions, separating whites and greens.\n\n3. Sauté half the ginger in oil; add rice, water, and salt. Simmer until tender, 15–18 minutes.\n\n4. Mix beef, scallion whites, panko, remaining ginger, and some bulgogi sauce. Form into meatballs and bake 14–16 min.\n\n5. Mix sour cream with sriracha and water until drizzle consistency. Toss cooked meatballs in remaining bulgogi sauce.\n\n6. Plate rice with carrots and meatballs. Drizzle crema on top and garnish with scallion greens and sesame seeds.",
+  "pinkStar": 4,
+  "blueStar": 1
+  },
+  {
+  "id": 15,
+  "name": "Firecracker Meatballs",
+  "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/5ea70fe14c4efb3fb12140f1-af8fa452.jpg",
+  "ingredients": [
+    { "name": "scallions", "amount": "4 unit" },
+    { "name": "ginger", "amount": "2 thumb" },
+    { "name": "mayonnaise", "amount": "4 tablespoon" },
+    { "name": "sour cream", "amount": "4 tablespoon" },
+    { "name": "honey", "amount": "4 teaspoon" },
+    { "name": "soy sauce", "amount": "4 tablespoon" },
+    { "name": "sriracha", "amount": "2 teaspoon" },
+    { "name": "sesame seeds", "amount": "2 tablespoon" },
+    { "name": "jasmine rice", "amount": "1 cup" },
+    { "name": "ground beef", "amount": "20 ounce" },
+    { "name": "panko breadcrumbs", "amount": "½ cup" },
+    { "name": "green beans", "amount": "12 ounce" },
+    { "name": "korean chili flakes", "amount": "1 teaspoon" },
+    { "name": "vegetable oil", "amount": "1 tablespoon" },
+    { "name": "salt", "amount": "to taste" },
+    { "name": "pepper", "amount": "to taste" }
+  ],
+  "instructions": "1. Preheat oven to 425°F. Slice scallions (whites/minced, greens/garnish). Mince ginger.\n\n2. In a bowl, mix mayo, sour cream, honey, 2 tsp soy sauce, and sriracha to taste for sauce.\n\n3. Toast half the sesame seeds in oil, then add rice, water, and salt. Simmer covered 15–18 min.\n\n4. In another bowl, mix beef, panko, ginger, scallion whites, remaining soy sauce, salt, and pepper. Form into meatballs.\n\n5. Place meatballs and green beans (with oil, salt, pepper) on a baking sheet. Roast 14–16 min.\n\n6. Fluff rice. Toss meatballs in firecracker sauce. Plate rice, meatballs, and green beans. Garnish with scallion greens, sesame seeds, and chili flakes to taste.",
+  "pinkStar": 3,
+  "blueStar": 1
+  },
+  {
+  "id": 16,
+  "name": "Sweet Chili Beef & Green Bean Bowls",
+  "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/sweet-chili-beef-green-bean-bowls-03527292.jpg",
+  "ingredients": [
+    { "name": "jasmine rice", "amount": "1.5 cup" },
+    { "name": "green beans", "amount": "12 ounce" },
+    { "name": "lime", "amount": "1 unit" },
+    { "name": "cilantro", "amount": "¼ ounce" },
+    { "name": "ground beef", "amount": "20 ounce" },
+    { "name": "sweet soy glaze", "amount": "8 tablespoon" },
+    { "name": "sweet thai chili sauce", "amount": "2 ounce" },
+    { "name": "crispy fried onions", "amount": "2 unit" },
+    { "name": "cooking oil", "amount": "1 teaspoon" },
+    { "name": "butter", "amount": "4 tablespoon" },
+    { "name": "salt", "amount": "to taste" },
+    { "name": "pepper", "amount": "to taste" },
+    { "name": "sugar", "amount": "1 teaspoon" }
+  ],
+  "instructions": "1. Cook rice in salted water until tender, 15-18 min. Set aside.\n\n2. Trim and chop green beans, quarter lime, chop cilantro.\n\n3. Brown ground beef in oil, 3-4 min undisturbed, then break up and cook through. Drain excess grease if needed.\n\n4. Steam green beans in microwave with splash of water (1-2 min) or on stovetop (5-7 min).\n\n5. Add green beans to beef along with chili sauce, 2½ TBSP sweet soy glaze, ½ tsp sugar, and 1 TBSP butter. Cook 1-2 min. Finish with lime juice.\n\n6. Fluff rice, stir in 1 TBSP butter, season. Serve rice topped with beef, onions, cilantro, and lime wedges.",
+  "pinkStar": 2,
+  "blueStar": 1
+  },
+{
+  "id": 17,
+  "name": "Mozzarella & Herb Chicken",
+  "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/61cb23cb04b953527f52bd5a-75d9f746.jpg",
+  "ingredients": [
+    { "name": "lemon", "amount": "1 unit" },
+    { "name": "panko breadcrumbs", "amount": "½ cup" },
+    { "name": "mozzarella cheese", "amount": "1 cup" },
+    { "name": "italian seasoning", "amount": "1 tablespoon" },
+    { "name": "chicken cutlets", "amount": "20 ounce" },
+    { "name": "sour cream", "amount": "4 tablespoon" },
+    { "name": "carrots", "amount": "24 ounce" },
+    { "name": "israeli couscous", "amount": "5 ounce" },
+    { "name": "chicken stock concentrate", "amount": "2 unit" },
+    { "name": "chili flakes", "amount": "1 teaspoon" },
+    { "name": "olive oil", "amount": "7 teaspoon" },
+    { "name": "butter", "amount": "4 tablespoon" },
+    { "name": "salt", "amount": "to taste" },
+    { "name": "pepper", "amount": "to taste" }
+  ],
+  "instructions": "1. Preheat oven to 425°F. Wash produce. Peel and cut carrots diagonally. Zest and quarter lemon.\n\n2. Mix panko, mozzarella, 1 tsp Italian seasoning, 1 TBSP olive oil, salt, and pepper. Toss carrots with oil, salt, pepper, and chili flakes. Roast carrots on top rack for 5 min.\n\n3. Pat chicken dry; season. Spread sour cream on top and press panko mix on top (not bottom).\n\n4. Add chicken to baking sheet. Roast 15-20 min until cooked through. Remove carrots early if done.\n\n5. Toast couscous in butter, then add water and stock concentrate. Simmer 6-8 min until tender.\n\n6. Finish couscous with butter, lemon zest, and juice. Season. Plate chicken, carrots, and couscous. Serve with lemon wedges.",
+  "pinkStar": 2,
+  "blueStar": 1
+  },
+  {
+  "id": 18,
+  "name": "Turkey Ragù Spaghetti",
+  "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/turkey-ragu-spaghetti-9e4a7e0b.jpg",
+  "ingredients": [
+    { "name": "zucchini", "amount": "2 unit" },
+    { "name": "spaghetti", "amount": "12 ounce" },
+    { "name": "ground turkey", "amount": "20 ounce" },
+    { "name": "tuscan heat spice", "amount": "2 tablespoon" },
+    { "name": "garlic powder", "amount": "2 teaspoon" },
+    { "name": "marinara cup", "amount": "10 ounce" },
+    { "name": "chicken stock concentrate", "amount": "2 unit" },
+    { "name": "cream cheese", "amount": "4 tablespoon" },
+    { "name": "sour cream", "amount": "4 tablespoon" },
+    { "name": "parmesan cheese", "amount": "½ cup" },
+    { "name": "cooking oil", "amount": "1 teaspoon" },
+    { "name": "butter", "amount": "2 tablespoon" },
+    { "name": "salt", "amount": "to taste" },
+    { "name": "pepper", "amount": "to taste" }
+  ],
+  "instructions": "1. Bring salted water to a boil. Wash produce. Grate zucchini.\n\n2. Cook spaghetti until al dente, 9–11 min. Reserve ¾ cup pasta water, then drain.\n\n3. Heat oil in pan. Cook turkey, Tuscan Heat Spice, garlic powder, salt & pepper until browned. Add zucchini and cook 2–3 min. Add marinara, stock, and pasta water; simmer 1–2 min. Lower heat and stir in cream cheese, sour cream, half the Parmesan, and butter. Season to taste.\n\n4. Toss spaghetti into sauce. Add more water if needed. Plate and top with remaining Parmesan.",
+  "pinkStar": 4,
+  "blueStar": 2
+  },
+  {
+  "id": 19,
+  "name": "Italian Sausage Rigatoni",
+  "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/677d63b0a90519950138cdf5-1c1598c6.jpeg",
+  "ingredients": [
+    { "name": "romesco sauce", "amount": "12 tablespoon" },
+    { "name": "oven-ready aluminum trays", "amount": "2 unit" },
+    { "name": "parmesan cheese", "amount": "6 tablespoon" },
+    { "name": "peas", "amount": "8 ounce" },
+    { "name": "chicken stock concentrate", "amount": "4 unit" },
+    { "name": "fresh rigatoni pasta", "amount": "14 ounce" },
+    { "name": "italian pork sausage mix", "amount": "18 ounce" },
+    { "name": "pepper", "amount": "to taste" }
+  ],
+  "instructions": "1. Preheat oven to 450°F. Remove sausage casing if needed. In oven tray, combine sausage (broken up), rigatoni, peas, romesco, stock concentrate, and 1¼ cups hot water. Stir to mix. \n\n2. Cover tray tightly with foil and bake 20 min. Uncover, stir gently, and bake another 12–15 min until sausage is cooked and pasta is al dente. \n\n3. Top with Parmesan and serve.",
+  "pinkStar": 3,
+  "blueStar": 3
+},
+{
+  "id": 20,
+  "name": "Pork Sausage Rigatoni Rosa",
+  "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/645a65528287f79d14049049-3adf3746.jpg",
+  "ingredients": [
+    { "name": "rigatoni pasta", "amount": "6 ounce" },
+    { "name": "zucchini", "amount": "1 unit" },
+    { "name": "garlic", "amount": "1 clove" },
+    { "name": "italian pork sausage", "amount": "9 ounce" },
+    { "name": "tomato paste", "amount": "1 unit" },
+    { "name": "cream cheese", "amount": "4 tablespoon" },
+    { "name": "chicken stock concentrate", "amount": "1 unit" },
+    { "name": "chili flakes", "amount": "1 teaspoon" },
+    { "name": "parmesan cheese", "amount": "6 tablespoon" },
+    { "name": "salt", "amount": "to taste" },
+    { "name": "pepper", "amount": "to taste" },
+    { "name": "cooking oil", "amount": "2 teaspoon" },
+    { "name": "sugar", "amount": "½ teaspoon" },
+    { "name": "butter", "amount": "1 tablespoon" }
+  ],
+  "instructions": "1. Boil salted water and cook rigatoni 9–11 min until al dente. Reserve 1 cup pasta water, then drain. Slice zucchini into half-moons and mince garlic. \n\n2. Sauté zucchini in oil 5–6 min. Remove. Cook sausage in same pan until almost done. \n\n3. Add garlic and tomato paste; cook 1–2 min. Stir in cream cheese, stock, ½ cup pasta water, butter, sugar, and chili flakes. Mix until smooth. \n\n4. Add pasta and zucchini. Stir in half the Parmesan. Add more water as needed for creamy texture. Top with remaining Parmesan and serve.",
+  "pinkStar": 3,
+  "blueStar": 4
   }
 ]
