@@ -91,18 +91,34 @@
         // Render recipe list
         function renderRecipeList(filter = '') {
             recipeList.innerHTML = '';
-            
+
             const normalizedFilter = filter.toLowerCase().replace(/-/g, ' ');
-            const filteredRecipes = recipes.filter(recipe => {
+            let filteredRecipes = recipes.filter(recipe => {
                 const normalizedName = recipe.name.toLowerCase().replace(/-/g, ' ');
                 return normalizedName.includes(normalizedFilter);
             });
-            
+
+            // 🧠 First: recalculate id = pinkStar + blueStar
+            filteredRecipes.forEach(recipe => {
+                const pink = parseInt(recipe.pinkStar) || 0;
+                const blue = parseInt(recipe.blueStar) || 0;
+                recipe.sortKey = pink + blue; // Don't overwrite .id if it's used elsewhere
+            });
+
+            // 🧮 Sort by sortKey (star total) descending, then name
+            filteredRecipes.sort((a, b) => {
+                if (b.sortKey !== a.sortKey) {
+                    return b.sortKey - a.sortKey;
+                }
+                return a.name.localeCompare(b.name);
+            });
+
             if (filteredRecipes.length === 0) {
                 recipeList.innerHTML = '<p class="text-gray-500 text-center py-4">No recipes found</p>';
                 return;
             }
-            
+
+            // 👇 Normal rendering logic stays unchanged
             filteredRecipes.forEach(recipe => {
                 const recipeCard = document.createElement('div');
                 recipeCard.className = 'recipe-card bg-white p-4 rounded-lg mb-3 cursor-pointer hover:bg-gray-50 border border-gray-200';
@@ -112,15 +128,13 @@
                             `<img src="${recipe.image}" alt="${recipe.name}" class="w-12 h-12 object-cover rounded-lg">` : 
                             `<div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
                                 <i class="fas fa-utensils text-gray-400"></i>
-                            </div>`
-                        }
+                            </div>`}
                         <div>
                             <h3 class="font-medium text-gray-800">${recipe.name}</h3>
                             <p class="text-xs text-gray-500">${recipe.ingredients.length} ingredients</p>
                         </div>
                     </div>
                 `;
-                
                 recipeCard.addEventListener('click', () => showRecipeDetails(recipe.id));
                 recipeList.appendChild(recipeCard);
             });
@@ -572,8 +586,10 @@
             
             const pinkStar = getStarValue('pinkStarContainer');
             const blueStar = getStarValue('blueStarContainer');
+            const starSum = pinkStar + blueStar;
 
             const recipeData = {
+                id: starSum,
                 name,
                 image: image || undefined,
                 ingredients,
@@ -585,21 +601,12 @@
             // Check if we're editing or creating new
             const editingId = this.dataset.editingId;
             if (editingId) {
-                // Update existing recipe
                 const index = recipes.findIndex(r => r.id === parseInt(editingId));
                 if (index !== -1) {
-                    recipes[index] = {
-                        ...recipes[index],
-                        ...recipeData
-                    };
+                    recipes[index] = recipeData;  // <- no spread
                 }
             } else {
-                // Add new recipe
-                const newId = recipes.length > 0 ? Math.max(...recipes.map(r => r.id)) + 1 : 1;
-                recipes.push({
-                    id: newId,
-                    ...recipeData
-                });
+                recipes.push(recipeData);  // <- just push, no manual id
             }
             
             // Save and update UI
