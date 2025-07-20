@@ -27,7 +27,7 @@
       {"name": "all-purpose flour", "amount": "2 1/4 cups"},
       {"name": "butter", "amount": "1 cup"},
       {"name": "brown sugar", "amount": "3/4 cup"},
-      {"name": "white sugar", "amount": "3/4 cup"},
+      {"name": "sugar", "amount": "3/4 cup"},
       {"name": "eggs", "amount": "2 large"},
       {"name": "chocolate chips", "amount": "2 cups"},
       {"name": "vanilla extract", "amount": "1 tsp"}
@@ -135,8 +135,8 @@
     "blueStar": 5,
     "sortKey": 10,
     "ingredients": [
-      {"name": "penne", "amount": "12 oz"},
-      {"name": "mozzarella", "amount": "7.5 oz"},
+      {"name": "penne pasta", "amount": "12 oz"},
+      {"name": "mozzarella cheese", "amount": "7.5 oz"},
       {"name": "ground beef", "amount": "20 oz"},
       {"name": "marinara sauce", "amount": "16 oz"},
       {"name": "garlic", "amount": "2 tsp, grated"},
@@ -428,7 +428,6 @@
     "sortKey": 6,
     "ingredients": [
       {"name": "romesco sauce", "amount": "12 tablespoon"},
-      {"name": "oven-ready aluminum trays", "amount": "2 unit"},
       {"name": "parmesan cheese", "amount": "6 tablespoon"},
       {"name": "peas", "amount": "8 ounce"},
       {"name": "chicken stock concentrate", "amount": "4 unit"},
