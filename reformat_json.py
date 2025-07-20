@@ -4,8 +4,9 @@ from pathlib import Path
 # Replacement tuples
 replace_tuples = [
     ("beef stock concentrate", "stock concentrate"),
-    ("beef stock", "stock"),
+    ("chicken stock concentrate", "stock concentrate"),
     ("olive oil", "oil"),
+    ("cooking oil", "oil"),
     ("all-purpose flour", "flour"),
     ("white sugar", "sugar")
 ]
