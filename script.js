@@ -126,15 +126,23 @@
                 const recipeCard = document.createElement('div');
                 recipeCard.className = 'recipe-card bg-white p-4 rounded-lg mb-3 cursor-pointer hover:bg-gray-50 border border-gray-200';
                 recipeCard.innerHTML = `
-                    <div class="flex items-center gap-3">
+                    <div class="flex items-start gap-3 w-full">
                         ${recipe.image ? 
                             `<img src="${recipe.image}" alt="${recipe.name}" class="w-12 h-12 object-cover rounded-lg">` : 
                             `<div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
                                 <i class="fas fa-utensils text-gray-400"></i>
-                            </div>`}
-                        <div>
+                            </div>`
+                        }
+
+                        <div class="flex flex-col flex-grow">
                             <h3 class="font-medium text-gray-800">${recipe.name}</h3>
-                            <p class="text-xs text-gray-500">${recipe.ingredients.length} ingredients</p>
+                            <div class="flex items-center justify-between">
+                                <p class="text-xs text-gray-500">${recipe.ingredients.length} ingredients</p>
+                                <div class="flex gap-0.5 text-[10px] leading-none">
+                                    ${'<span class="text-pink-500">★</span>'.repeat(recipe.pinkStar || 0)}
+                                    ${'<span class="text-blue-500">★</span>'.repeat(recipe.blueStar || 0)}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 `;
