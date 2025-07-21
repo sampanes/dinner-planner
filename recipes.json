@@ -24,7 +24,7 @@
     "blueStar": 1,
     "sortKey": 2,
     "ingredients": [
-      {"name": "all-purpose flour", "amount": "2 1/4 cups"},
+      {"name": "flour", "amount": "2 1/4 cups"},
       {"name": "butter", "amount": "1 cup"},
       {"name": "brown sugar", "amount": "3/4 cup"},
       {"name": "sugar", "amount": "3/4 cup"},
@@ -361,7 +361,7 @@
       {"name": "sweet soy glaze", "amount": "8 tablespoon"},
       {"name": "sweet thai chili sauce", "amount": "2 ounce"},
       {"name": "crispy fried onions", "amount": "2 unit"},
-      {"name": "cooking oil", "amount": "1 teaspoon"},
+      {"name": "oil", "amount": "1 teaspoon"},
       {"name": "butter", "amount": "4 tablespoon"},
       {"name": "salt", "amount": "to taste"},
       {"name": "pepper", "amount": "to taste"},
@@ -412,7 +412,7 @@
       {"name": "cream cheese", "amount": "4 tablespoon"},
       {"name": "sour cream", "amount": "4 tablespoon"},
       {"name": "parmesan cheese", "amount": "\u00bd cup"},
-      {"name": "cooking oil", "amount": "1 teaspoon"},
+      {"name": "oil", "amount": "1 teaspoon"},
       {"name": "butter", "amount": "2 tablespoon"},
       {"name": "salt", "amount": "to taste"},
       {"name": "pepper", "amount": "to taste"}
@@ -456,7 +456,7 @@
       {"name": "parmesan cheese", "amount": "6 tablespoon"},
       {"name": "salt", "amount": "to taste"},
       {"name": "pepper", "amount": "to taste"},
-      {"name": "cooking oil", "amount": "2 teaspoon"},
+      {"name": "oil", "amount": "2 teaspoon"},
       {"name": "sugar", "amount": "\u00bd teaspoon"},
       {"name": "butter", "amount": "1 tablespoon"}
     ]

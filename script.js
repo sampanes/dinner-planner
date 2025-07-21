@@ -1,3 +1,6 @@
+        let showSalt = true;
+        const EXCLUDE_INGREDIENTS = ['salt', 'pepper', 'oil', 'butter'];
+        
         // Recipes and their ingredients data loaded from JSON file
         let recipes = [];
         let commonIngredientsDict = {};
@@ -416,10 +419,11 @@
             recipes.forEach(recipe => {
                 recipe.ingredients.forEach(ing => {
                     const name = ing.name.toLowerCase();
+                    if (!showSalt && EXCLUDE_INGREDIENTS.includes(name)) return;
                     stats[name] = (stats[name] || 0) + 1;
                 });
             });
-            
+
             return stats;
         }
 
@@ -554,6 +558,12 @@
             updateIngredientStats(this.value);
         });
         
+        document.getElementById('toggleSaltBtn').addEventListener('click', function () {
+            showSalt = !showSalt;
+            this.textContent = showSalt ? '-common' : '+common';
+            updateIngredientStats(document.getElementById('ingredientStatsSearch').value);
+        });
+
         // Handle form submission
         recipeForm.addEventListener('submit', function(e) {
             e.preventDefault();
