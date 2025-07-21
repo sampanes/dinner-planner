@@ -137,10 +137,16 @@
                         <div class="flex flex-col flex-grow">
                             <h3 class="font-medium text-gray-800">${recipe.name}</h3>
                             <div class="flex items-center justify-between">
-                                <p class="text-xs text-gray-500">${recipe.ingredients.length} ingredients</p>
-                                <div class="flex gap-0.5 text-[10px] leading-none">
-                                    ${'<span class="text-pink-500">★</span>'.repeat(recipe.pinkStar || 0)}
-                                    ${'<span class="text-blue-500">★</span>'.repeat(recipe.blueStar || 0)}
+                            <p class="text-xs text-gray-500">${recipe.ingredients.length} ingredients</p>
+                                <div class="flex flex-col text-[10px] leading-none items-end">
+                                    <div class="flex gap-0.5">
+                                        ${'<span class="text-gray-300">★</span>'.repeat(5 - Math.min(recipe.pinkStar || 0, 5))}
+                                        ${'<span class="text-pink-500">★</span>'.repeat(Math.min(recipe.pinkStar || 0, 5))}
+                                    </div>
+                                    <div class="flex gap-0.5">
+                                        ${'<span class="text-blue-500">★</span>'.repeat(Math.min(recipe.blueStar || 0, 5))}
+                                        ${'<span class="text-gray-300">★</span>'.repeat(5 - Math.min(recipe.blueStar || 0, 5))}
+                                    </div>
                                 </div>
                             </div>
                         </div>
