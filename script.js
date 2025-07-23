@@ -1,4 +1,9 @@
 let showSalt = true;
+let activeIngredientFilters = new Set();
+
+const recipeFiltersBar = document.getElementById('recipeFiltersBar');
+const activeFiltersText = document.getElementById('activeFiltersText');
+const clearIngredientFiltersBtn = document.getElementById('clearIngredientFiltersBtn');
 const EXCLUDE_INGREDIENTS = ['salt', 'pepper', 'oil', 'butter'];
 
 // Recipes and their ingredients data loaded from JSON file
@@ -46,6 +51,12 @@ const recipeSearch = document.getElementById('recipeSearch');
 const ingredientsContainer = document.getElementById('ingredientsContainer');
 const addIngredientBtn = document.getElementById('addIngredientBtn');
 const addIngredientPresetBtn = document.getElementById('addIngredientPresetBtn');
+
+clearIngredientFiltersBtn.addEventListener('click', () => {
+    activeIngredientFilters.clear();
+    updateIngredientStats();  // Refresh ingredient checkboxes
+    renderRecipeList(document.getElementById('recipeSearch').value);
+});
 
 document.addEventListener('DOMContentLoaded', async () => {
     const savedRecipes = localStorage.getItem('recipes');
@@ -98,7 +109,18 @@ function renderRecipeList(filter = '') {
     const normalizedFilter = filter.toLowerCase().replace(/-/g, ' ');
     let filteredRecipes = recipes.filter(recipe => {
         const normalizedName = recipe.name.toLowerCase().replace(/-/g, ' ');
-        return normalizedName.includes(normalizedFilter);
+        const nameMatch = normalizedName.includes(normalizedFilter);
+
+        // Ingredient filter logic
+        if (activeIngredientFilters.size > 0) {
+            const recipeIngredients = recipe.ingredients.map(ing => ing.name.toLowerCase());
+            const hasAll = Array.from(activeIngredientFilters).every(filterName =>
+                recipeIngredients.includes(filterName)
+            );
+            return nameMatch && hasAll;
+        }
+
+        return nameMatch;
     });
 
     // 🧠 First: recalculate id = pinkStar + blueStar
@@ -119,6 +141,15 @@ function renderRecipeList(filter = '') {
     if (filteredRecipes.length === 0) {
         recipeList.innerHTML = '<p class="text-gray-500 text-center py-4">No recipes found</p>';
         return;
+    } else {
+        // Update filter bar
+        if (activeIngredientFilters.size > 0) {
+            recipeFiltersBar.classList.remove('hidden');
+            activeFiltersText.textContent = `Filtering by: ${Array.from(activeIngredientFilters).join(', ')}`;
+        } else {
+            recipeFiltersBar.classList.add('hidden');
+            activeFiltersText.textContent = '';
+        }
     }
 
     // 👇 Normal rendering logic stays unchanged
@@ -447,28 +478,53 @@ function updateIngredientStats(filter = '') {
     const container = document.getElementById('ingredientStatsList');
     
     // Sort by most used first
-    const sortedIngredients = Object.entries(stats)
-        .sort((a, b) => b[1] - a[1])
-        .filter(([name]) => name.includes(filter.toLowerCase()));
-    
+    const sortedIngredients = Object.entries(stats).sort((a, b) => b[1] - a[1]);
+
     container.innerHTML = '';
-    
+
     if (sortedIngredients.length === 0) {
         container.innerHTML = '<p class="text-gray-500 col-span-3 text-center py-4">No ingredients found</p>';
         return;
     }
-    
+
     sortedIngredients.forEach(([name, count]) => {
         const card = document.createElement('div');
-        card.className = 'bg-gray-50 p-4 rounded-lg border border-gray-200';
-        card.innerHTML = `
-            <div class="flex justify-between items-center">
-                <span class="font-medium capitalize">${name}</span>
-                <span class="bg-amber-100 text-amber-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                    ${count} ${count === 1 ? 'recipe' : 'recipes'}
-                </span>
-            </div>
-        `;
+        card.className = 'bg-gray-50 p-3 rounded-lg border border-gray-200 flex justify-between items-center hover:shadow-sm transition';
+
+        const left = document.createElement('div');
+        left.className = 'flex items-center gap-2';
+
+        // Checkbox
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = activeIngredientFilters.has(name);
+        checkbox.className = 'form-checkbox accent-orange-500';
+        checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+                activeIngredientFilters.add(name);
+            } else {
+                activeIngredientFilters.delete(name);
+            }
+            renderRecipeList(document.getElementById('recipeSearch').value);
+        });
+
+        // Ingredient name
+        const nameEl = document.createElement('span');
+        nameEl.className = 'font-medium capitalize text-sm';
+        nameEl.textContent = name;
+
+        // Assemble left side
+        left.appendChild(checkbox);
+        left.appendChild(nameEl);
+
+        // Count badge
+        const countEl = document.createElement('span');
+        countEl.className = 'bg-amber-100 text-amber-800 text-xs font-medium px-2.5 py-0.5 rounded-full';
+        countEl.textContent = `${count} recipe${count !== 1 ? 's' : ''}`;
+
+        // Assemble full card
+        card.appendChild(left);
+        card.appendChild(countEl);
         container.appendChild(card);
     });
 }
