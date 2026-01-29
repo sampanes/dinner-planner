@@ -4,7 +4,7 @@ let activeIngredientFilters = new Set();
 const recipeFiltersBar = document.getElementById('recipeFiltersBar');
 const activeFiltersText = document.getElementById('activeFiltersText');
 const clearIngredientFiltersBtn = document.getElementById('clearIngredientFiltersBtn');
-const EXCLUDE_INGREDIENTS = ['salt', 'pepper', 'oil', 'butter'];
+const EXCLUDE_INGREDIENTS = ['salt', 'pepper', 'oil', 'butter', 'parmesan cheese', 'italian seasoning'];
 
 // Recipes and their ingredients data loaded from JSON file
 let recipes = [];
