@@ -3,12 +3,36 @@ from pathlib import Path
 
 # Replacement tuples
 replace_tuples = [
+    # Stock concentrates
     ("beef stock concentrate", "stock concentrate"),
     ("chicken stock concentrate", "stock concentrate"),
+    ("mushroom stock concentrate", "stock concentrate"),
+    ("seafood stock concentrate", "stock concentrate"),
+    # Note: veggie stock concentrate is debatable, leave it if filtering by diet
+
+    # Oils
     ("olive oil", "oil"),
     ("cooking oil", "oil"),
+    ("vegetable oil", "oil"),
+
+    # Flour/sugar
     ("all-purpose flour", "flour"),
-    ("white sugar", "sugar")
+    ("white sugar", "sugar"),
+
+    # Clear naming inconsistencies
+    ("black pepper", "pepper"),
+    ("carrots", "carrot"),
+    ("marinara cup", "marinara sauce"),
+    ("marinara", "marinara sauce"),  # catch any short form too
+    ("italian pork sausage mix", "italian pork sausage"),
+
+    # Produce
+    ("broccoli florets", "broccoli"),
+    ("yukon gold potatoes", "potatoes"),
+    ("dried thyme", "thyme"),
+    ("fresh mozzarella", "mozzarella cheese"),
+    ("white cheddar cheese", "cheddar cheese"),
+    ("fresh rigatoni pasta", "rigatoni pasta"),
 ]
 
 def apply_replacements(text, replacements):
