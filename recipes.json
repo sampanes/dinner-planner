@@ -460,5 +460,182 @@
       {"name": "sugar", "amount": "\u00bd teaspoon"},
       {"name": "butter", "amount": "1 tablespoon"}
     ]
+  },
+  {
+    "id": 21,
+    "name": "Turkey & Queso Nacho Crunch Burritos",
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/686405270203e9f8dbb4c73c-73411493-8290f7cc.jpeg",
+    "ingredients": [
+      { "name": "flour tortillas", "amount": "2 unit" },
+      { "name": "ground turkey", "amount": "10 ounce" },
+      { "name": "blue corn tortilla chips", "amount": "1.5 ounce" },
+      { "name": "queso blanco", "amount": "3 ounce" },
+      { "name": "tomato", "amount": "1 unit" },
+      { "name": "lime", "amount": "1 unit" },
+      { "name": "scallions", "amount": "2 unit" },
+      { "name": "jasmine rice", "amount": "¾ cup" },
+      { "name": "southwest spice blend", "amount": "1 tablespoon" },
+      { "name": "salt", "amount": "to taste" },
+      { "name": "black pepper", "amount": "to taste" },
+      { "name": "cooking oil", "amount": "1 teaspoon" }
+    ],
+    "instructions": "1. Cook rice in salted water until tender, about 15 minutes. Keep covered off heat.\n\n2. Dice tomato. Slice scallions, separating whites and greens. Quarter lime.\n\n3. Heat oil in a large pan. Add ground turkey, scallion whites, and Southwest Spice Blend. Cook, breaking up meat, until browned and cooked through.\n\n4. Warm queso in a small bowl. Crush tortilla chips slightly for crunch.\n\n5. Stir lime zest and juice into rice along with scallion greens. Season to taste.\n\n6. Warm tortillas. Fill each with rice, turkey mixture, tomato, queso, and crushed chips.\n\n7. Roll into burritos, slice if desired, and serve with extra lime wedges.",
+    "pinkStar": 0,
+    "blueStar": 0
+  },
+  {
+    "id": 22,
+    "name": "Chicken Sausage and Spinach Ravioli",
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/5db88f3a508f707ab355cde4-5ce05c01.jpg",
+    "ingredients": [
+      { "name": "scallions", "amount": "4 unit" },
+      { "name": "roma tomato", "amount": "2 unit" },
+      { "name": "lemon", "amount": "1 unit" },
+      { "name": "italian chicken sausage mix", "amount": "18 ounce" },
+      { "name": "italian seasoning", "amount": "2 tablespoon" },
+      { "name": "spinach and ricotta ravioli", "amount": "18 ounce" },
+      { "name": "chicken stock concentrate", "amount": "2 unit" },
+      { "name": "sour cream", "amount": "8 tablespoon" },
+      { "name": "vegetable oil", "amount": "2 teaspoon" },
+      { "name": "butter", "amount": "2 tablespoon" },
+      { "name": "salt", "amount": "to taste" },
+      { "name": "pepper", "amount": "to taste" }
+    ],
+    "instructions": "1. Bring salted water to a boil. Slice scallions (separate whites and greens), dice tomato, quarter lemon.\n\n2. Heat oil in large pan. Add scallion whites, sausage, and Italian seasoning. Cook 3–5 min until browned. Stir in tomato and cook 1–2 min.\n\n3. Cook ravioli in boiling water 4–5 min until floating. Reserve ½ cup pasta water, then drain well.\n\n4. Stir stock concentrate, lemon juice, and splash of pasta water into sausage pan. Simmer 1–2 min. Stir in sour cream and butter. Season. Add more pasta water if needed for creaminess.\n\n5. Gently stir ravioli into sauce. Adjust salt, pepper, and lemon to taste.\n\n6. Divide into bowls and garnish with scallion greens. Serve with extra lemon wedges.",
+    "pinkStar": 0,
+    "blueStar": 0
+  },
+  {
+    "id": 23,
+    "name": "Creamy Chicken & Bacon Spaghetti",
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/675743c5daedc2bd1295827f-f9a73627.jpeg",
+    "ingredients": [
+      { "name": "tomato", "amount": "2 unit" },
+      { "name": "garlic", "amount": "1 clove" },
+      { "name": "tuscan heat spice", "amount": "1 tablespoon" },
+      { "name": "spaghetti", "amount": "6 ounce" },
+      { "name": "chicken cutlets", "amount": "10 ounce" },
+      { "name": "cream cheese", "amount": "4 tablespoon" },
+      { "name": "parmesan cheese", "amount": "3 tablespoon" },
+      { "name": "bacon", "amount": "4 ounce" },
+      { "name": "olive oil", "amount": "to taste" },
+      { "name": "cooking oil", "amount": "to taste" },
+      { "name": "butter", "amount": "to taste" },
+      { "name": "salt", "amount": "to taste" },
+      { "name": "pepper", "amount": "to taste" }
+    ],
+    "instructions": "1. Preheat oven to 400°F. Cut tomatoes into wedges. Wrap garlic in foil with olive oil, salt, and pepper. Roast tomatoes (with Tuscan Heat Spice) and garlic 20–25 minutes.\n\n2. Cook bacon in a pan until crispy, 6–10 minutes. Remove and chop.\n\n3. Boil salted water and cook spaghetti 9–11 minutes until al dente. Reserve ¾ cup pasta water, then drain.\n\n4. Season chicken with Tuscan Heat Spice, salt, and pepper. Cook in oil 3–5 minutes per side until cooked through. Keep warm.\n\n5. In pasta pot, melt butter. Mash roasted garlic with Tuscan Heat Spice. Stir in reserved pasta water, cream cheese, half the Parmesan, and more butter until smooth.\n\n6. Toss spaghetti in sauce until coated. Plate with sliced chicken and roasted tomatoes. Top with bacon and remaining Parmesan.",
+    "pinkStar": 0,
+    "blueStar": 0
+  },
+  {
+    "id": 24,
+    "name": "Garlic Butter Shrimp Scampi",
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/68b6ccba51932a34199cfdfb-e9b5ef03-12a017d3.jpeg",
+    "ingredients": [
+      { "name": "seafood stock concentrate", "amount": "1 unit" },
+      { "name": "lemon", "amount": "1 unit" },
+      { "name": "shrimp", "amount": "10 ounce" },
+      { "name": "garlic", "amount": "2 clove" },
+      { "name": "linguine pasta", "amount": "6 ounce" },
+      { "name": "parmesan cheese", "amount": "3 tablespoon" },
+      { "name": "broccoli", "amount": "1 unit" },
+      { "name": "chili flakes", "amount": "1 teaspoon" },
+      { "name": "olive oil", "amount": "1 tablespoon" },
+      { "name": "butter", "amount": "3 tablespoon" },
+      { "name": "salt", "amount": "to taste" },
+      { "name": "black pepper", "amount": "to taste" }
+    ],
+    "instructions": "1. Preheat oven to 450°F. Cut broccoli into florets. Zest and quarter lemon. Mince garlic.\n\n2. Toss broccoli with olive oil, salt, and pepper. Roast 12–15 minutes until crispy.\n\n3. Cook linguine in salted boiling water 9–11 minutes until al dente. Reserve ½ cup pasta water, then drain.\n\n4. Soften butter and mix with lemon zest, half the Parmesan, a pinch of garlic, and chili flakes.\n\n5. Pat shrimp dry. Toss with olive oil, remaining garlic, salt, and pepper. Cook in a hot pan 2–4 minutes until opaque.\n\n6. Add pasta, broccoli, stock concentrate, garlic butter, and reserved pasta water to shrimp. Toss until coated. Finish with lemon juice, salt, and pepper. Serve topped with remaining Parmesan and chili flakes.",
+    "pinkStar": 0,
+    "blueStar": 0
+  },
+  {
+    "id": 25,
+    "name": "Garlicky Shrimp Couscous Bowls",
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/garlicky-shrimp-couscous-bowls-518874cd.jpg",
+    "ingredients": [
+      { "name": "broccoli florets", "amount": "8 ounce" },
+      { "name": "garlic", "amount": "2 clove" },
+      { "name": "parsley", "amount": "¼ ounce" },
+      { "name": "lemon", "amount": "1 unit" },
+      { "name": "chili flakes", "amount": "1 teaspoon" },
+      { "name": "israeli couscous", "amount": "2.5 ounce" },
+      { "name": "veggie stock concentrate", "amount": "1 unit" },
+      { "name": "shrimp", "amount": "10 ounce" },
+      { "name": "garlic powder", "amount": "1 teaspoon" },
+      { "name": "olive oil", "amount": "5 teaspoon" },
+      { "name": "butter", "amount": "1 tablespoon" },
+      { "name": "salt", "amount": "to taste" },
+      { "name": "pepper", "amount": "to taste" }
+    ],
+    "instructions": "1. Preheat oven to 450°F. Cut broccoli if needed. Mince garlic, chop parsley, quarter lemon.\n\n2. Toss broccoli with olive oil, chili flakes, salt, and pepper. Roast 12–15 minutes.\n\n3. In a small pot, sauté half the garlic in olive oil. Add couscous, stock concentrate, water, and salt. Simmer covered 6–8 minutes until tender.\n\n4. Pat shrimp dry. Cook in olive oil with garlic powder, salt, and pepper 3–4 minutes. Add water and cook until evaporated. Lower heat; add butter, remaining garlic, chili flakes. Toss with half the parsley and lemon juice.\n\n5. Fluff couscous. Stir in remaining parsley, lemon juice, and olive oil. Season.\n\n6. Divide couscous into bowls. Top with shrimp and broccoli. Spoon garlic butter over and serve with lemon wedges.",
+    "pinkStar": 0,
+    "blueStar": 0
+  },
+  {
+    "id": 26,
+    "name": "Lemony Chicken & Grains Spinach Salad",
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/67619f9cbdfa7f79d1f16a13-d487407a-79ca89c1.jpeg",
+    "ingredients": [
+      { "name": "feta cheese", "amount": "½ cup" },
+      { "name": "spinach", "amount": "2.5 ounce" },
+      { "name": "yogurt", "amount": "2 tablespoon" },
+      { "name": "green goddess dressing", "amount": "2 ounce" },
+      { "name": "lemon-herb diced chicken thighs", "amount": "10 ounce" },
+      { "name": "microwavable grain blend", "amount": "1 unit" },
+      { "name": "olive oil", "amount": "1 tablespoon" },
+      { "name": "cooking oil", "amount": "1 teaspoon" },
+      { "name": "salt", "amount": "to taste" },
+      { "name": "black pepper", "amount": "to taste" }
+    ],
+    "instructions": "1. Heat oil in a large pan over medium-high. Add chicken and cook until beginning to brown, 2–4 minutes.\n\n2. Separate grain blend in package, then add to pan with chicken along with 2 TBSP water. Cover and cook until warmed through and chicken is fully cooked, 2–4 minutes. Season with salt and pepper.\n\n3. In a large bowl, whisk together green goddess dressing, yogurt, olive oil, salt, and pepper.\n\n4. Add spinach and chicken-grain mixture to bowl; toss to coat. Divide between bowls and sprinkle with feta.",
+    "pinkStar": 0,
+    "blueStar": 0
+  },
+  {
+    "id": 27,
+    "name": "Mushroom Ravioli in a Tomato Cream Sauce",
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/mushroom-ravioli-in-a-tomato-cream-sauce-22a0ad00.jpg",
+    "ingredients": [
+      { "name": "grape tomatoes", "amount": "4 ounce" },
+      { "name": "ricotta cheese", "amount": "4 ounce" },
+      { "name": "italian seasoning", "amount": "1 tablespoon" },
+      { "name": "marinara sauce", "amount": "14 ounce" },
+      { "name": "mushroom stock concentrate", "amount": "1 unit" },
+      { "name": "cream cheese", "amount": "2 tablespoon" },
+      { "name": "mushroom ravioli", "amount": "9 ounce" },
+      { "name": "olive oil", "amount": "2 teaspoon" },
+      { "name": "butter", "amount": "1 tablespoon" },
+      { "name": "salt", "amount": "to taste" },
+      { "name": "pepper", "amount": "to taste" }
+    ],
+    "instructions": "1. Bring a medium pot of salted water to a boil. Halve large tomatoes. Stir ricotta with olive oil, salt, and pepper.\n\n2. Heat olive oil in a large pan. Add tomatoes and Italian seasoning; cook 2–3 minutes. Stir in stock concentrate, marinara, cream cheese, and water. Simmer until thickened.\n\n3. Cook ravioli in boiling water until tender and floating, 3–4 minutes. Reserve ¼ cup pasta water, then drain.\n\n4. Add ravioli and butter to sauce; toss to coat. Add reserved pasta water as needed for creaminess. Season.\n\n5. Divide between bowls and top with a dollop of ricotta.",
+    "pinkStar": 0,
+    "blueStar": 0
+  },
+  {
+    "id": 28,
+    "name": "One-Pan Baja Chicken Quesadillas",
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/648888970b7af205da01b370-c4eb04a5.jpeg",
+    "ingredients": [
+      { "name": "yellow onion", "amount": "1 unit" },
+      { "name": "diced chicken thighs", "amount": "10 ounce" },
+      { "name": "blackening spice", "amount": "1 tablespoon" },
+      { "name": "lime", "amount": "1 unit" },
+      { "name": "tomato", "amount": "1 unit" },
+      { "name": "sour cream", "amount": "3 tablespoon" },
+      { "name": "flour tortillas", "amount": "2 unit" },
+      { "name": "pepper jack cheese", "amount": "½ cup" },
+      { "name": "mexican cheese blend", "amount": "½ cup" },
+      { "name": "hot sauce", "amount": "1 teaspoon" },
+      { "name": "cooking oil", "amount": "1 tablespoon" },
+      { "name": "butter", "amount": "1 tablespoon" },
+      { "name": "salt", "amount": "to taste" },
+      { "name": "pepper", "amount": "to taste" }
+    ],
+    "instructions": "1. Dice onion. Pat chicken dry.\n\n2. Heat oil in a large pan. Cook chicken with blackening spice, onion, salt, and pepper until browned and cooked through, 4–6 minutes. Remove and wipe pan.\n\n3. Make salsa: combine diced tomato, lime juice, reserved onion, salt, and pepper.\n\n4. Make lime crema: mix sour cream, lime juice, zest, and a splash of water to thin. Season.\n\n5. Assemble quesadillas: layer cheeses and chicken on half of each tortilla; fold. Cook in butter and oil until golden and crispy, 1–2 minutes per side.\n\n6. Slice and serve with salsa, lime crema, hot sauce, and lime wedges.",
+    "pinkStar": 0,
+    "blueStar": 0
   }
 ]
