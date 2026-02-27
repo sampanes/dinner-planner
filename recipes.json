@@ -637,5 +637,115 @@
     "instructions": "1. Dice onion. Pat chicken dry.\n\n2. Heat oil in a large pan. Cook chicken with blackening spice, onion, salt, and pepper until browned and cooked through, 4–6 minutes. Remove and wipe pan.\n\n3. Make salsa: combine diced tomato, lime juice, reserved onion, salt, and pepper.\n\n4. Make lime crema: mix sour cream, lime juice, zest, and a splash of water to thin. Season.\n\n5. Assemble quesadillas: layer cheeses and chicken on half of each tortilla; fold. Cook in butter and oil until golden and crispy, 1–2 minutes per side.\n\n6. Slice and serve with salsa, lime crema, hot sauce, and lime wedges.",
     "pinkStar": 0,
     "blueStar": 0
+  },
+  {
+    "id": 29,
+    "name": "One-Pan Cantina Shrimp Fajitas",
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/61952aac1e429c3c246b4c40-b1558197.jpg",
+    "ingredients": [
+      { "name": "poblano pepper", "amount": "1 unit" },
+      { "name": "red onion", "amount": "1 unit" },
+      { "name": "lime", "amount": "1 unit" },
+      { "name": "shrimp", "amount": "10 ounce" },
+      { "name": "fajita spice blend", "amount": "1 tablespoon" },
+      { "name": "flour tortillas", "amount": "6 unit" },
+      { "name": "guacamole", "amount": "4 tablespoon" },
+      { "name": "smoky red pepper crema", "amount": "4 tablespoon" },
+      { "name": "hot sauce", "amount": "1 teaspoon" },
+      { "name": "cooking oil", "amount": "2 teaspoon" },
+      { "name": "salt", "amount": "to taste" },
+      { "name": "pepper", "amount": "to taste" }
+    ],
+    "instructions": "1. Slice poblano and onion; quarter lime. Mix guacamole with lime juice and a dash of hot sauce.\n\n2. Heat oil in a large pan. Cook poblano and onion until softened, 4–5 minutes. Add half the fajita spice and cook 30 seconds.\n\n3. Pat shrimp dry. Push veggies aside; add oil and shrimp with remaining spice. Cook until opaque, 3–4 minutes. Combine with veggies and squeeze lime over top.\n\n4. Warm tortillas. Fill with shrimp mixture, top with guacamole and crema, and serve with hot sauce and lime wedges.",
+    "pinkStar": 0,
+    "blueStar": 0
+  },
+  {
+    "id": 30,
+    "name": "Salmon in a Creamy Dijon Chive Sauce",
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/61670c5727bc454a694fd451-28604574-7798068e.jpg",
+    "ingredients": [
+      { "name": "veggie stock concentrate", "amount": "1 unit" },
+      { "name": "potatoes", "amount": "12 ounce" },
+      { "name": "sour cream", "amount": "4 tablespoon" },
+      { "name": "zucchini", "amount": "1 unit" },
+      { "name": "lemon", "amount": "1 unit" },
+      { "name": "chives", "amount": "¼ ounce" },
+      { "name": "dijon mustard", "amount": "2 teaspoon" },
+      { "name": "salmon", "amount": "10 ounce" },
+      { "name": "olive oil", "amount": "2 tablespoon" },
+      { "name": "butter", "amount": "2 tablespoon" },
+      { "name": "cooking oil", "amount": "2 tablespoon" },
+      { "name": "salt", "amount": "to taste" },
+      { "name": "black pepper", "amount": "to taste" }
+    ],
+    "instructions": "1. Preheat oven to 450°F. Cut potatoes into wedges and zucchini into half-moons. Zest and quarter lemon; mince chives.\n\n2. Toss potatoes with olive oil, salt, and pepper. Roast 10 minutes.\n\n3. Toss zucchini with olive oil, salt, and pepper. Add to baking sheet and roast 12–15 minutes more until potatoes are golden and zucchini tender.\n\n4. Pat salmon dry; season with salt and pepper. Heat butter and olive oil in a pan. Cook salmon skin-side down 5–7 minutes, flip and cook 1–2 minutes more. Remove and wipe pan.\n\n5. In same pan, add stock concentrate, Dijon, lemon juice, and water. Simmer 2–3 minutes. Remove from heat; stir in sour cream, half the chives, and butter. Adjust seasoning.\n\n6. Toss zucchini with lemon zest. Serve salmon with potatoes and zucchini, drizzle with sauce, and garnish with remaining chives.",
+    "pinkStar": 0,
+    "blueStar": 0
+  },
+  {
+    "id": 31,
+    "name": "Shrimp Spaghetti with a Kick",
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/6203c51288dbd95f422707d7-a539cdce.jpg",
+    "ingredients": [
+      { "name": "spaghetti", "amount": "6 ounce" },
+      { "name": "zucchini", "amount": "1 unit" },
+      { "name": "chili pepper", "amount": "1 unit" },
+      { "name": "shrimp", "amount": "10 ounce" },
+      { "name": "garlic herb butter", "amount": "2 tablespoon" },
+      { "name": "parmesan cheese", "amount": "¼ cup" },
+      { "name": "olive oil", "amount": "5 teaspoon" },
+      { "name": "salt", "amount": "to taste" },
+      { "name": "pepper", "amount": "to taste" }
+    ],
+    "instructions": "1. Bring a large pot of salted water to a boil. Cook spaghetti until al dente, 9–11 minutes. Reserve ½ cup pasta water, then drain.\n\n2. Slice zucchini and chili. Pat shrimp dry.\n\n3. Heat olive oil in a large pan. Cook zucchini and chili 2–3 minutes until lightly browned.\n\n4. Push zucchini aside; add more oil and cook shrimp 3–4 minutes until opaque.\n\n5. Add drained spaghetti, garlic herb butter, half the Parmesan, and reserved pasta water to the pan. Toss until coated, adding more pasta water if needed. Season.\n\n6. Divide between bowls. Top with remaining Parmesan and a drizzle of olive oil. Garnish with extra chili if desired.",
+    "pinkStar": 0,
+    "blueStar": 0
+  },
+  {
+    "id": 32,
+    "name": "White Cheddar Crunch Burgers",
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/651c1e478c06cbcbd9cc3849-a426b838.jpeg",
+    "ingredients": [
+      { "name": "potatoes", "amount": "12 ounce" },
+      { "name": "yellow onion", "amount": "1 unit" },
+      { "name": "brioche buns", "amount": "2 unit" },
+      { "name": "ground beef", "amount": "10 ounce" },
+      { "name": "white cheddar cheese", "amount": "½ cup" },
+      { "name": "smoky mustard", "amount": "2 ounce" },
+      { "name": "crispy fried onions", "amount": "1 ounce" },
+      { "name": "cooking oil", "amount": "1 tablespoon" },
+      { "name": "salt", "amount": "to taste" },
+      { "name": "pepper", "amount": "to taste" }
+    ],
+    "instructions": "1. Preheat oven to 450°F. Cut potatoes into wedges, toss with oil, salt, and pepper, and roast 20–25 minutes until golden and tender.\n\n2. Slice onion into rounds and halve buns.\n\n3. Heat oil in a pan and cook onion rounds until browned and tender, 2–4 minutes per side. Remove and wipe pan.\n\n4. Form beef into two patties. Season with salt and pepper. Cook 3–5 minutes per side to desired doneness. In final 1–2 minutes, top with cheddar and cover to melt.\n\n5. Toast buns and spread smoky mustard on cut sides.\n\n6. Assemble burgers with patties, griddled onions, and crispy fried onions. Serve with roasted potato wedges.",
+    "pinkStar": 0,
+    "blueStar": 0
+  },
+  {
+    "id": 33,
+    "name": "Rigatoni with Beef & Zucchini Ragù",
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/rigatoni-with-beef-zucchini-ragu-ada87ecd-cd3ab8e5.jpg",
+    "ingredients": [
+      { "name": "rigatoni pasta", "amount": "6 ounce" },
+      { "name": "zucchini", "amount": "1 unit" },
+      { "name": "tomato paste", "amount": "1.5 ounce" },
+      { "name": "parmesan cheese", "amount": "¼ cup" },
+      { "name": "shallot", "amount": "1 unit" },
+      { "name": "garlic", "amount": "1 clove" },
+      { "name": "ground beef", "amount": "10 ounce" },
+      { "name": "italian seasoning", "amount": "1 tablespoon" },
+      { "name": "cream cheese", "amount": "4 tablespoon" },
+      { "name": "beef stock concentrate", "amount": "1 unit" },
+  
+      { "name": "cooking oil", "amount": "1 teaspoon" },
+      { "name": "sugar", "amount": "½ teaspoon" },
+      { "name": "butter", "amount": "1 tablespoon" },
+      { "name": "salt", "amount": "to taste" },
+      { "name": "black pepper", "amount": "to taste" }
+    ],
+    "instructions": "1. Bring a large pot of salted water to a boil. Cook rigatoni until al dente, 9–11 minutes. Reserve 1 cup pasta water, then drain.\n\n2. Prep: Dice shallot. Mince/grate garlic. Grate zucchini on a box grater, then squeeze out as much liquid as possible (kitchen towel bundle or press in a strainer).\n\n3. Heat a drizzle of oil in a large pan over medium-high. Add ground beef, shallot, Italian seasoning, salt, and pepper. Cook 3–5 minutes, breaking up meat, until browned and mostly cooked.\n\n4. Add tomato paste; cook 1–2 minutes, stirring, until combined and beef is cooked through.\n\n5. Add grated zucchini, garlic, and a big pinch of salt; cook 2–3 minutes until zucchini is tender.\n\n6. Stir in cream cheese, stock concentrate, ½ cup reserved pasta water, and ½ tsp sugar. Simmer 1–2 minutes until slightly thickened. Season with salt and pepper.\n\n7. Reduce heat to medium-low. Stir in drained rigatoni, half the Parmesan, and 1 TBSP butter until combined. Add more pasta water as needed to loosen.\n\n8. Serve topped with remaining Parmesan.",
+    "pinkStar": 0,
+    "blueStar": 0
   }
 ]
