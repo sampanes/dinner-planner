@@ -669,7 +669,9 @@ recipeForm.addEventListener('submit', function(e) {
     const starSum = pinkStar + blueStar;
 
     const recipeData = {
-        id: starSum,
+        id: recipeForm.dataset.editingId
+            ? parseInt(recipeForm.dataset.editingId)
+            : Math.max(...recipes.map(r => r.id)) + 1,
         name,
         image: image || undefined,
         ingredients,
