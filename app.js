@@ -61,25 +61,19 @@ function computeOverlap(candidateIngredients, planIngredientPool) {
 function parseHashParams() {
     const hash = window.location.hash || '#/app';
     const queryIndex = hash.indexOf('?');
+    // FIXED: index is a number, not a string "-1"
     const queryString = queryIndex !== -1 ? hash.substring(queryIndex + 1) : '';
     const params = new URLSearchParams(queryString);
 
-    // 1. Get the directory of the current script (app.js)
-    // Use import.meta.url for modules, or document.currentScript.src for standard scripts
-    const scriptUrl = import.meta.url || (document.currentScript && document.currentScript.src);
-    
-    // 2. Resolve 'recipes.json' relative to that script's directory
-    const defaultSrc = new URL('recipes.json', scriptUrl).href;
-
     return {
-        src: params.get('src') || defaultSrc,
+        // Just use the relative path string; fetch() handles the rest
+        src: params.get('src') || 'recipes.json',
         seed: params.get('seed') || generateRandomSeed(),
         meals: Math.min(7, Math.max(3, parseInt(params.get('meals')) || 6)),
         overlap: Math.min(100, Math.max(0, parseInt(params.get('overlap')) || 0)),
         locks: (params.get('lock') || '').split('|').filter(Boolean).slice(0, 3)
     };
 }
-
 
 function updateHashParams(state) {
     const params = new URLSearchParams();
