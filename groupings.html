@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Magical Meal Shuffler</title>
+    <link rel="stylesheet" href="styles2.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="title">
+                <span class="skull">💀</span>
+                MAGICAL
+                <span class="skull">💀</span>
+            </h1>
+            <p class="subtitle">Meal Shuffler</p>
+        </header>
+
+        <!-- Controls Card -->
+        <div class="card controls-card">
+            <div class="control-group">
+                <label>Seed</label>
+                <div class="seed-control">
+                    <input type="text" id="seedInput" readonly>
+                    <button id="shuffleBtn" class="btn btn-small btn-pink">🎲</button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label for="mealsSlider">Meals: <span id="mealsValue">6</span></label>
+                <input type="range" id="mealsSlider" min="3" max="7" value="6">
+            </div>
+
+            <div class="control-group">
+                <label for="overlapSlider">
+                    Ingredient Overlap: <span id="overlapValue">0</span>%
+                    <span id="overlapHint" class="slider-hint">No grouping</span>
+                </label>
+                <input type="range" id="overlapSlider" min="0" max="100" value="0" step="5">
+            </div>
+
+            <div class="button-row">
+                <button id="copyLinkBtn" class="btn btn-pink">🔗 Copy Link</button>
+                <button id="resetBtn" class="btn btn-purple">🔄 Reset</button>
+            </div>
+        </div>
+
+        <!-- Error Card -->
+        <div id="errorCard" class="card error-card hidden">
+            <p class="error-icon">😢</p>
+            <p class="error-text">Failed to load recipes</p>
+            <p id="errorUrl" class="error-url"></p>
+            <button id="retryBtn" class="btn btn-pink">Retry</button>
+        </div>
+
+        <!-- Loading -->
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Loading recipes...</p>
+        </div>
+
+        <!-- Plan Section -->
+        <div id="planSection" class="hidden">
+            <h2 class="section-title">📋 Your Plan <span id="planCount" class="plan-count"></span></h2>
+            <div id="planTheme" class="plan-theme"></div>
+            <div id="planList" class="plan-list"></div>
+        </div>
+
+        <!-- Grocery List Section -->
+        <div id="grocerySection" class="hidden">
+            <button id="toggleGroceryBtn" class="btn btn-full btn-lavender">
+                🛒 Toggle Grocery List
+            </button>
+            <div id="groceryPanel" class="card grocery-panel hidden">
+                <div class="grocery-header">
+                    <h3>Grocery List</h3>
+                    <button id="copyGroceryBtn" class="btn btn-small btn-pink">📋 Copy</button>
+                </div>
+                <div id="groceryList" class="grocery-list"></div>
+            </div>
+        </div>
+
+        <!-- Recipe Modal -->
+        <div id="recipeModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modalTitle">Recipe Name</h2>
+                    <button id="closeModalBtn" class="btn btn-small btn-purple">✕</button>
+                </div>
+                <div id="modalImage" class="modal-image"></div>
+                <div class="modal-stars" id="modalStars"></div>
+                <h4>Ingredients</h4>
+                <ul id="modalIngredients" class="ingredient-list"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
