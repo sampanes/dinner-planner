@@ -587,6 +587,22 @@ input[type="range"]::-moz-range-thumb {
     transform: translateX(-50%) translateY(0);
 }
 
+.back-link {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 14px;
+    color: #c4b5fd; /* lavender to match theme */
+    text-decoration: none;
+    opacity: 0.9;
+    transition: opacity 0.2s, color 0.2s;
+}
+
+.back-link:hover {
+    opacity: 1;
+    color: #ffffff;
+    text-decoration: underline;
+}
+
 @media (max-width: 380px) {
     .button-row {
         flex-direction: column;
