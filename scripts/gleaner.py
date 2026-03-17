@@ -1,123 +1,76 @@
 import json
 import os
-import re
-import time
-# Note: You will need to install your preferred LLM SDK (e.g., 'google-generativeai')
-# import google.generativeai as genai 
+import sys
 
 """
-GLEANER.PY - The Automation Bridge
----------------------------------
-Context: This script implements the "Gleaner" logic defined in:
-- docs/00_Master_Blueprint.md (Section 3: Data Flow)
-- docs/03_Infrastructure_&_Logic_Bridge.md (Section 2: The Python Tool)
-
-Goal: Scans recipes.json, identifies new entries, and uses an LLM to generate 
-voice-friendly "sidecar" JSON for the Android app and Alexa Skill.
+GLEANER.PY - The Staging Area Generator (V4: Modular)
+--------------------------------------
+Usage:
+  python gleaner.py          -> Calls main() to generate PROMPT_STAGING.md
+  python gleaner.py --check  -> Calls checker_mode() for Git Hooks
 """
 
-# File Paths (Relative to /scripts)
 RECIPES_PATH = "../recipes.json"
 VOICE_PATH = "../recipes_voice.json"
+STAGING_FILE = "../PROMPT_STAGING.md"
+DOCS_REF = "docs/02_Alexa_Voice_Interface.md"
 
 def load_json(path):
     if not os.path.exists(path):
-        return {}
-    with open(path, 'r') as f:
+        return {} if "voice" in path else []
+    with open(path, 'r', encoding='utf-8') as f:
         return json.load(f)
 
-def save_json(path, data):
-    with open(path, 'w') as f:
-        json.dump(data, f, indent=2)
-
-def extract_timers(instruction_text):
-    """
-    Implements the Regex extraction logic described in 
-    docs/03_Infrastructure_&_Logic_Bridge.md
-    """
-    # Look for patterns like "9-11 minutes" or "5 minutes"
-    pattern = r'(\d+)(?:-(\d+))?\s*minutes'
-    matches = re.findall(pattern, instruction_text)
-    
-    timers = []
-    for match in matches:
-        # Use the lower bound of a range for the initial timer logic
-        minutes = int(match[0])
-        timers.append({
-            "type": "timer",
-            "minutes": minutes,
-            "text": f"It's been {minutes} minutes. Check on your progress."
-        })
-    return timers
-
-def generate_voice_script(recipe):
-    """
-    Calls the LLM to 'chunk' instructions as required by:
-    docs/01_Android_Architecture.md (Section 5: High-Fidelity Features)
-    """
-    recipe_name = recipe.get('name', 'Unknown Recipe')
-    instructions = recipe.get('instructions', '')
-    ingredients = recipe.get('ingredients', [])
-
-    # Placeholder for LLM logic
-    # In a real implementation, you would send 'instructions' to Gemini/Claude
-    # with a prompt to "Break into 15-word chunks and identify prep steps."
-    
-    voice_blocks = []
-    
-    # 1. Start with Ingredient Check (Required by docs/01_Android_Architecture.md)
-    ing_list = ", ".join([i['name'] for i in ingredients])
-    voice_blocks.append({
-        "type": "speech",
-        "text": f"Let's make {recipe_name}. Gather your ingredients: {ing_list}. Tap when ready."
-    })
-    voice_blocks.append({"type": "wait_for_tap"})
-
-    # 2. Process Instructions (Simplified logic for MVP)
-    # The real 'Gleaner' uses LLM here to avoid the "drone" effect.
-    steps = instructions.split('\n')
-    for step in steps:
-        if not step.strip(): continue
-        
-        voice_blocks.append({
-            "type": "speech",
-            "text": step.strip()
-        })
-        
-        # Check for timers in this step
-        step_timers = extract_timers(step)
-        voice_blocks.extend(step_timers)
-        
-        # Every major step should likely wait for confirmation
-        voice_blocks.append({"type": "wait_for_tap"})
-
-    return voice_blocks
-
-def main():
-    print("--- Starting Dinner Planner Gleaner ---")
-    
+def get_missing_recipes():
+    """Logic to find recipes missing from the voice sidecar."""
     recipes_data = load_json(RECIPES_PATH)
     voice_data = load_json(VOICE_PATH)
+    return [r for r in recipes_data if str(r.get('id')) not in voice_data]
 
-    # recipes.json is a list of objects per example_recipes.json
-    new_count = 0
-    for recipe in recipes_data:
-        recipe_id = str(recipe.get('id'))
-        
-        # Only process if not already in the sidecar
-        if recipe_id not in voice_data:
-            print(f"Gleaning voice data for: {recipe.get('name')} (ID: {recipe_id})")
-            
-            # This implements the 'LLM Enrichment' from 03_Infrastructure_&_Logic_Bridge.md
-            voice_script = generate_voice_script(recipe)
-            voice_data[recipe_id] = voice_script
-            new_count += 1
-
-    if new_count > 0:
-        save_json(VOICE_PATH, voice_data)
-        print(f"Successfully added {new_count} new voice scripts to {VOICE_PATH}")
+def checker_mode():
+    """Strictly for Git Hooks: Exits with 1 if out of sync."""
+    print("--- Dinner Planner: Sync Check ---")
+    missing = get_missing_recipes()
+    if missing:
+        print(f"[!] FAIL: {len(missing)} recipe(s) missing from {VOICE_PATH}.")
+        sys.exit(1)
     else:
-        print("No new recipes found. Everything is up to date.")
+        print("[✓] PASS: Everything is in sync.")
+        sys.exit(0)
+
+def main():
+    """Standard Mode: Generates the PROMPT_STAGING.md file."""
+    print("--- Dinner Planner: Staging Prompt Generator ---")
+    missing = get_missing_recipes()
+
+    if not missing:
+        print("Everything is up to date.")
+        if os.path.exists(STAGING_FILE):
+            os.remove(STAGING_FILE)
+            print(f"Cleaned up old {STAGING_FILE}.")
+        return
+
+    with open(STAGING_FILE, 'w', encoding='utf-8') as f:
+        f.write("# LLM WORK ORDER: Dinner Planner Voice Sidecar\n\n")
+        f.write("## SYSTEM INSTRUCTIONS\n")
+        f.write(f"- Reference: {DOCS_REF} for tone.\n")
+        f.write("- Break instructions into 15-word chunks for 'Brian' persona.\n")
+        f.write("- Create 'timer' objects for all 'minutes' mentions.\n")
+        f.write("- Every 'speech' block MUST be followed by a 'wait' block.\n")
+        f.write("- Use 'pinkStar' and 'blueStar' values for flavor text.\n")
+        f.write("- RETURN ONLY A SINGLE JSON OBJECT where keys are the Recipe IDs.\n\n")
+        
+        f.write("## RECIPES TO PROCESS\n")
+        for recipe in missing:
+            f.write(f"### ID: {recipe['id']} | {recipe['name']}\n")
+            f.write("```json\n")
+            f.write(json.dumps(recipe, indent=2))
+            f.write("\n```\n\n")
+
+    print(f"SUCCESS: {STAGING_FILE} generated with {len(missing)} recipes.")
 
 if __name__ == "__main__":
-    main()
+    if "--check" in sys.argv:
+        checker_mode()
+    else:
+        main()
