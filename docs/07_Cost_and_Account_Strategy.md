@@ -76,3 +76,68 @@ Before adding any new service, ask:
 4. does this make the system harder for a household to keep using?
 
 If the answer is mostly "yes, more cost and complexity," do not add it yet.
+
+## Recommended infrastructure boundary for v1
+
+The cleanest low-cost boundary is:
+- Git repo holds source docs and source recipes
+- local scripts generate runtime data
+- generated runtime data is packaged with the skill
+- Alexa-hosted logic serves voice and APL responses
+- persistent state is limited to lightweight household/session data
+
+That boundary avoids paying for a separate app backend just to read recipe JSON and track step numbers.
+
+## What should not trigger infrastructure expansion yet
+
+These are tempting, but should not automatically justify a backend:
+- wanting richer search before trying better local indexes
+- wanting more natural aliases before improving normalization
+- wanting resume before using hosted persistence correctly
+- wanting prettier visuals before state/rendering is clean
+
+## When a custom backend would finally be justified
+
+A real backend becomes easier to justify only when one or more of these become central requirements:
+- user-generated or remote recipe syncing across many homes
+- account-linked private household data that exceeds hosted convenience
+- analytics or reporting you truly need to operate the product
+- nontrivial integrations that cannot be packaged safely with the skill
+- scale or operational constraints that materially exceed the hosted path
+
+Even then, add the thinnest backend possible.
+
+## Cost stance on timers, lists, and platform features
+
+Prefer built-in Alexa platform features over external substitutes when they directly support the cooking experience.
+But also avoid building around platform branches that are outside the core product loop.
+
+### Good use of platform features
+- APL for glanceable Echo Show screens
+- hosted persistence for simple resume/history
+- Alexa timer APIs for recipe-driven timers
+
+### Low-priority or easy-to-overinvest areas
+- account linking before shared-household value exists
+- external list/task systems before the cooking loop is solid
+- analytics stacks before there is a real product question they answer
+
+## Operational simplicity as a cost category
+
+Money is not the only cost.
+For this project, the following also count as real cost:
+- more credentials to rotate
+- more services to debug
+- more deployment surfaces
+- more ways for the skill to fail during dinner
+
+A free architecture that is fragile is still expensive in practice.
+
+## Practical recommendation
+
+Treat every new dependency as guilty until proven helpful.
+The default answer for v1 should be:
+- keep it local if possible
+- keep it hosted if sufficient
+- keep it explicit if ambiguous
+- keep it small if uncertain

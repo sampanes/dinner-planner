@@ -130,3 +130,110 @@ Keep a small stable set of "golden recipes" used for regression testing:
 - one long recipe with multiple timers
 - one ambiguous-name recipe family like multiple spaghetti dishes
 - one dessert or bake recipe
+
+## Conversational test matrix
+
+For every feature, test more than the ideal utterance.
+A hands-free kitchen product needs synonym and interruption coverage.
+
+### Recipe start variants
+Test all of these patterns:
+- "start spaghetti"
+- "make spaghetti"
+- "cook spaghetti"
+- "open shrimp spaghetti"
+- "the shrimp one"
+- "the first one"
+
+### Step control variants
+Test:
+- next
+- go on
+- continue
+- back
+- previous
+- say that again
+- repeat that
+- where am I
+
+### Ingredient question variants
+Test:
+- how much garlic
+- how much garlic do I need
+- what's the garlic amount
+- what goes in the sauce
+- read the ingredients
+
+### Timer variants
+Test:
+- start that timer
+- yes
+- no
+- make it 8 minutes
+- what timers are running
+- how much time is left on the pasta timer
+- cancel the oven timer
+
+## Prompt-review discipline
+
+When a turn fails in testing, do not just fix the intent matcher.
+Review the prompt that led to the failure.
+Often the real bug is one of these:
+- the prompt was too long
+- the prompt invited language the handler could not support
+- the prompt did not narrow the user well enough
+- the prompt assumed the user was looking at the screen
+
+## APL-specific testing checklist
+
+For each important screen, verify:
+- title fits on smaller Echo Show viewports
+- current-step text still works with longer recipe names
+- candidate lists remain readable with 3 items
+- timers do not visually crowd out the current step
+- hint text is present but not noisy
+- the visual state updates on every step transition
+
+## Resume and persistence testing
+
+Test both warm-session and cold-session recovery.
+
+### Warm-session cases
+- skill remains open and user says resume
+- user answers a timer question after a short pause
+- user asks for ingredient amount after several step changes
+
+### Cold-session cases
+- skill is reopened later the same day
+- device stopped listening between turns
+- a partial cooking session should offer resume
+- a completed recipe should not accidentally resume as active
+
+## Failure-mode tests worth automating later
+
+Once the code exists, prioritize tests for:
+- missing session state with an active-looking screen
+- stale candidate list after a new search
+- stale yes/no state after user changes topic
+- stale timer reference after another timer was created
+- step index out of bounds after restart/back behavior
+- ingredient alias matching the wrong grouped ingredient
+
+## Manual certification-oriented smoke pass
+
+Before treating a build as reviewable, manually verify:
+- launch copy is short and clear
+- help is contextual
+- fallback is contextual
+- stop and cancel behave predictably
+- the skill never traps the user in a narrow flow
+- ambiguity is surfaced clearly instead of guessed silently
+
+## Suggested artifacts to keep from testing
+
+Store lightweight artifacts that future you can compare against:
+- sample normalized runtime JSON for golden recipes
+- validation reports
+- notable simulator transcripts
+- a short list of approved spoken prompts for key flows
+- screenshots of stable APL states once the UI exists
