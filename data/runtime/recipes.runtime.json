@@ -1,0 +1,5812 @@
+[
+  {
+    "id": "1",
+    "name": "Spaghetti Carbonara",
+    "displayName": "Spaghetti Carbonara",
+    "aliases": [
+      "spaghetti carbonara"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "spaghetti",
+        "displayName": "spaghetti",
+        "canonicalName": "spaghetti",
+        "aliases": [
+          "spaghetti"
+        ],
+        "amountText": "400g"
+      },
+      {
+        "id": "eggs",
+        "displayName": "eggs",
+        "canonicalName": "eggs",
+        "aliases": [
+          "eggs"
+        ],
+        "amountText": "3 large"
+      },
+      {
+        "id": "pancetta",
+        "displayName": "pancetta",
+        "canonicalName": "pancetta",
+        "aliases": [
+          "pancetta"
+        ],
+        "amountText": "150g"
+      },
+      {
+        "id": "parmesan-cheese",
+        "displayName": "parmesan cheese",
+        "canonicalName": "parmesan cheese",
+        "aliases": [
+          "parmesan cheese"
+        ],
+        "amountText": "50g"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Cook spaghetti according to package instructions",
+        "displayText": "Cook spaghetti according to package instructions",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Fry pancetta until crispy",
+        "displayText": "Fry pancetta until crispy",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Beat eggs with grated parmesan and pepper",
+        "displayText": "Beat eggs with grated parmesan and pepper",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Drain pasta, mix with pancetta, then quickly stir in egg mixture off heat",
+        "displayText": "Drain pasta, mix with pancetta, then quickly stir in egg mixture off heat",
+        "ingredientRefs": []
+      },
+      {
+        "index": 5,
+        "speakShort": "Serve immediately with extra parmesan",
+        "displayText": "Serve immediately with extra parmesan",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "carbonara",
+      "eggs",
+      "pancetta",
+      "parmesan cheese",
+      "pepper",
+      "spaghetti"
+    ],
+    "image": "https://images.unsplash.com/photo-1589227365533-cee630bd59bd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    "sourceStars": {
+      "pink": 1,
+      "blue": 1
+    }
+  },
+  {
+    "id": "2",
+    "name": "Chocolate Chip Cookies",
+    "displayName": "Chocolate Chip Cookies",
+    "aliases": [
+      "chocolate chip cookies"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "flour",
+        "displayName": "flour",
+        "canonicalName": "flour",
+        "aliases": [
+          "flour"
+        ],
+        "amountText": "2 1/4 cups"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "1 cup"
+      },
+      {
+        "id": "brown-sugar",
+        "displayName": "brown sugar",
+        "canonicalName": "brown sugar",
+        "aliases": [
+          "brown sugar"
+        ],
+        "amountText": "3/4 cup"
+      },
+      {
+        "id": "sugar",
+        "displayName": "sugar",
+        "canonicalName": "sugar",
+        "aliases": [
+          "sugar"
+        ],
+        "amountText": "3/4 cup"
+      },
+      {
+        "id": "eggs",
+        "displayName": "eggs",
+        "canonicalName": "eggs",
+        "aliases": [
+          "eggs"
+        ],
+        "amountText": "2 large"
+      },
+      {
+        "id": "chocolate-chips",
+        "displayName": "chocolate chips",
+        "canonicalName": "chocolate chips",
+        "aliases": [
+          "chocolate chips"
+        ],
+        "amountText": "2 cups"
+      },
+      {
+        "id": "vanilla-extract",
+        "displayName": "vanilla extract",
+        "canonicalName": "vanilla extract",
+        "aliases": [
+          "vanilla extract"
+        ],
+        "amountText": "1 tsp"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Preheat oven to 375\u00b0F (190\u00b0C)",
+        "displayText": "Preheat oven to 375\u00b0F (190\u00b0C)",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Cream butter and sugars until fluffy",
+        "displayText": "Cream butter and sugars until fluffy",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Beat in eggs one at a time, then add vanilla",
+        "displayText": "Beat in eggs one at a time, then add vanilla",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Mix in flour, then stir in chocolate chips",
+        "displayText": "Mix in flour, then stir in chocolate chips",
+        "ingredientRefs": []
+      },
+      {
+        "index": 5,
+        "speakShort": "Drop spoonfuls onto baking sheets and bake for 9-11 minutes",
+        "displayText": "Drop spoonfuls onto baking sheets and bake for 9-11 minutes",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "brown sugar",
+      "butter",
+      "chip",
+      "chocolate",
+      "chocolate chips",
+      "cookies",
+      "eggs",
+      "flour",
+      "sugar",
+      "vanilla extract"
+    ],
+    "image": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    "sourceStars": {
+      "pink": 1,
+      "blue": 1
+    }
+  },
+  {
+    "id": "3",
+    "name": "Pork Sausage Cavatappi Bolognese",
+    "displayName": "Pork Sausage Cavatappi Bolognese",
+    "aliases": [
+      "pork sausage cavatappi bolognese"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "zucchini",
+        "displayName": "zucchini",
+        "canonicalName": "zucchini",
+        "aliases": [
+          "zucchini"
+        ],
+        "amountText": "2"
+      },
+      {
+        "id": "onion",
+        "displayName": "onion",
+        "canonicalName": "onion",
+        "aliases": [
+          "onion"
+        ],
+        "amountText": "2"
+      },
+      {
+        "id": "italian-seasoning",
+        "displayName": "italian seasoning",
+        "canonicalName": "italian seasoning",
+        "aliases": [
+          "italian seasoning"
+        ],
+        "amountText": "2 tbsp"
+      },
+      {
+        "id": "tomato-paste",
+        "displayName": "tomato paste",
+        "canonicalName": "tomato paste",
+        "aliases": [
+          "tomato paste"
+        ],
+        "amountText": "2"
+      },
+      {
+        "id": "sour-cream",
+        "displayName": "sour cream",
+        "canonicalName": "sour cream",
+        "aliases": [
+          "sour cream"
+        ],
+        "amountText": "3 tbsp"
+      },
+      {
+        "id": "cavatappi-pasta",
+        "displayName": "cavatappi pasta",
+        "canonicalName": "cavatappi pasta",
+        "aliases": [
+          "cavatappi pasta"
+        ],
+        "amountText": "12 oz"
+      },
+      {
+        "id": "parmesan-cheese",
+        "displayName": "parmesan cheese",
+        "canonicalName": "parmesan cheese",
+        "aliases": [
+          "parmesan cheese"
+        ],
+        "amountText": "6 tbsp"
+      },
+      {
+        "id": "stock-concentrate",
+        "displayName": "stock concentrate",
+        "canonicalName": "stock concentrate",
+        "aliases": [
+          "stock concentrate"
+        ],
+        "amountText": "2"
+      },
+      {
+        "id": "italian-pork-sausage",
+        "displayName": "italian pork sausage",
+        "canonicalName": "italian pork sausage",
+        "aliases": [
+          "italian pork sausage"
+        ],
+        "amountText": "18 oz"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "2 tsp"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "2 tbsp"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "1\n\u2022 Adjust rack to top position and preheat oven to 450 degrees. Bring a large pot of salted water to a boil. Wash and dry produce. \u2022 Trim and halve zucchini lengthwise; slice crosswise into 1\u20442-inch-thick half-moons. Halve, peel, and thinly slice onion.\n\nRoast Zucchini\n2\n\u2022 Toss zucchini on a baking sheet with a drizzle of oil, half the Italian Seasoning (you\u2019ll use the rest later), and a pinch of salt and pepper. \u2022 Roast on top rack, tossing halfway through, until browned and tender, 14-16 minutes. \u2022 Tent with foil to keep warm.\n\nCook Pasta\n3\n\u2022 Once water is boiling, add cavatappi to pot. Cook, stirring occasionally, until al dente, 9-11 minutes. \u2022 Reserve 11\u20442 cups pasta cooking water (2 cups for 4 servings), then drain.\n\nCook Onion & Sausage\n4\n\u2022 While pasta cooks, remove sausage* from casing if necessary; discard casing. \u2022 Heat a drizzle of oil in a large pan over medium-high heat. Add onion and a pinch of salt and pepper. Cook, stirring occasionally, until softened, 5-6 minutes. \u2022 Add sausage and cook, breaking up meat into pieces, until browned, 3-4 minutes (it\u2019ll finish cooking in the next step).\n\nMake Sauce\n5\n\u2022 Add tomato paste and remaining Italian Seasoning to pan. Cook, stirring constantly, until fragrant, 1 minute. \u2022 Stir in stock concentrate, 1 cup reserved pasta cooking water (11\u20442 cups for 4 servings), and a big pinch of salt and pepper. Bring to a simmer; cook until sauce has slightly thickened and sausage is cooked through, 2-3 minutes. \u2022 Reduce heat to medium low.\n\nFinish & Serve\n6\n\u2022 Stir drained cavatappi, roasted zucchini, sour cream, and 1 TBSP butter (2 TBSP for 4 servings) into pan until thoroughly combined. TIP: If needed, stir in more reserved cooking water a splash at a time until pasta is coated in a creamy sauce. \u2022 Divide pasta between bowls. Sprinkle with Parmesan and serve.\n\nPork Sausage is fully cooked when internal temperature reaches 160\u00b0",
+        "displayText": "1\n\u2022 Adjust rack to top position and preheat oven to 450 degrees. Bring a large pot of salted water to a boil. Wash and dry produce. \u2022 Trim and halve zucchini lengthwise; slice crosswise into 1\u20442-inch-thick half-moons. Halve, peel, and thinly slice onion.\n\nRoast Zucchini\n2\n\u2022 Toss zucchini on a baking sheet with a drizzle of oil, half the Italian Seasoning (you\u2019ll use the rest later), and a pinch of salt and pepper. \u2022 Roast on top rack, tossing halfway through, until browned and tender, 14-16 minutes. \u2022 Tent with foil to keep warm.\n\nCook Pasta\n3\n\u2022 Once water is boiling, add cavatappi to pot. Cook, stirring occasionally, until al dente, 9-11 minutes. \u2022 Reserve 11\u20442 cups pasta cooking water (2 cups for 4 servings), then drain.\n\nCook Onion & Sausage\n4\n\u2022 While pasta cooks, remove sausage* from casing if necessary; discard casing. \u2022 Heat a drizzle of oil in a large pan over medium-high heat. Add onion and a pinch of salt and pepper. Cook, stirring occasionally, until softened, 5-6 minutes. \u2022 Add sausage and cook, breaking up meat into pieces, until browned, 3-4 minutes (it\u2019ll finish cooking in the next step).\n\nMake Sauce\n5\n\u2022 Add tomato paste and remaining Italian Seasoning to pan. Cook, stirring constantly, until fragrant, 1 minute. \u2022 Stir in stock concentrate, 1 cup reserved pasta cooking water (11\u20442 cups for 4 servings), and a big pinch of salt and pepper. Bring to a simmer; cook until sauce has slightly thickened and sausage is cooked through, 2-3 minutes. \u2022 Reduce heat to medium low.\n\nFinish & Serve\n6\n\u2022 Stir drained cavatappi, roasted zucchini, sour cream, and 1 TBSP butter (2 TBSP for 4 servings) into pan until thoroughly combined. TIP: If needed, stir in more reserved cooking water a splash at a time until pasta is coated in a creamy sauce. \u2022 Divide pasta between bowls. Sprinkle with Parmesan and serve.\n\nPork Sausage is fully cooked when internal temperature reaches 160\u00b0",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "bolognese",
+      "butter",
+      "cavatappi",
+      "cavatappi pasta",
+      "italian pork sausage",
+      "italian seasoning",
+      "oil",
+      "onion",
+      "parmesan cheese",
+      "pepper",
+      "pork",
+      "salt",
+      "sausage",
+      "sour cream",
+      "stock concentrate",
+      "tomato paste",
+      "zucchini"
+    ],
+    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/66707be398f15bd5272cfb67-0b9ef7d4.jpeg",
+    "sourceStars": {
+      "pink": 3,
+      "blue": 3
+    }
+  },
+  {
+    "id": "4",
+    "name": "One-Pan Cheesy Chicken Tortilla Melts",
+    "displayName": "One-Pan Cheesy Chicken Tortilla Melts",
+    "aliases": [
+      "one-pan cheesy chicken tortilla melts"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "long-green-pepper",
+        "displayName": "long green pepper",
+        "canonicalName": "long green pepper",
+        "aliases": [
+          "long green pepper"
+        ],
+        "amountText": "2 unit"
+      },
+      {
+        "id": "sour-cream",
+        "displayName": "sour cream",
+        "canonicalName": "sour cream",
+        "aliases": [
+          "sour cream"
+        ],
+        "amountText": "6 tablespoon"
+      },
+      {
+        "id": "cream-cheese",
+        "displayName": "cream cheese",
+        "canonicalName": "cream cheese",
+        "aliases": [
+          "cream cheese"
+        ],
+        "amountText": "8 tablespoon"
+      },
+      {
+        "id": "hot-sauce",
+        "displayName": "hot sauce",
+        "canonicalName": "hot sauce",
+        "aliases": [
+          "hot sauce"
+        ],
+        "amountText": "4 teaspoon"
+      },
+      {
+        "id": "chicken-thighs",
+        "displayName": "chicken thighs",
+        "canonicalName": "chicken thighs",
+        "aliases": [
+          "chicken thighs"
+        ],
+        "amountText": "20 ounce"
+      },
+      {
+        "id": "stock-concentrate",
+        "displayName": "stock concentrate",
+        "canonicalName": "stock concentrate",
+        "aliases": [
+          "stock concentrate"
+        ],
+        "amountText": "2 unit"
+      },
+      {
+        "id": "flour-tortillas",
+        "displayName": "flour tortillas",
+        "canonicalName": "flour tortillas",
+        "aliases": [
+          "flour tortillas"
+        ],
+        "amountText": "4 unit"
+      },
+      {
+        "id": "cheddar-cheese",
+        "displayName": "cheddar cheese",
+        "canonicalName": "cheddar cheese",
+        "aliases": [
+          "cheddar cheese"
+        ],
+        "amountText": "1 cup"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "1 teaspoon"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "2 tablespoon"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Wash and dry produce. Halve, core, and thinly slice green pepper into strips. In a small microwave-safe bowl, combine sour cream, cream cheese, 1 tsp water, and hot sauce to taste. Microwave until softened, 30 seconds. Stir to combine",
+        "displayText": "Wash and dry produce. Halve, core, and thinly slice green pepper into strips. In a small microwave-safe bowl, combine sour cream, cream cheese, 1 tsp water, and hot sauce to taste. Microwave until softened, 30 seconds. Stir to combine",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Heat a drizzle of oil in a large pan over medium-high heat. Add green pepper and cook, stirring occasionally, until slightly softened, 2\u20133 minutes",
+        "displayText": "Heat a drizzle of oil in a large pan over medium-high heat. Add green pepper and cook, stirring occasionally, until slightly softened, 2\u20133 minutes",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Add chicken to pan with green pepper. Season with salt and pepper. Cook, stirring occasionally, until chicken is browned and cooked through and green pepper is tender, 4\u20136 minutes. Stir in stock concentrate until combined. Turn off heat",
+        "displayText": "Add chicken to pan with green pepper. Season with salt and pepper. Cook, stirring occasionally, until chicken is browned and cooked through and green pepper is tender, 4\u20136 minutes. Stir in stock concentrate until combined. Turn off heat",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Place tortillas on a clean work surface. Spread one half of each tortilla with half the spicy cream sauce (save the rest for serving). Using a slotted spoon, top with chicken filling, then sprinkle with cheddar. Fold tortillas in half",
+        "displayText": "Place tortillas on a clean work surface. Spread one half of each tortilla with half the spicy cream sauce (save the rest for serving). Using a slotted spoon, top with chicken filling, then sprinkle with cheddar. Fold tortillas in half",
+        "ingredientRefs": []
+      },
+      {
+        "index": 5,
+        "speakShort": "Wipe out pan. Melt 2 TBSP butter over medium heat. Add tortilla melts; cook in batches until golden brown and cheese is melted, 3\u20134 minutes per side. Transfer to paper towel-lined cutting board",
+        "displayText": "Wipe out pan. Melt 2 TBSP butter over medium heat. Add tortilla melts; cook in batches until golden brown and cheese is melted, 3\u20134 minutes per side. Transfer to paper towel-lined cutting board",
+        "ingredientRefs": []
+      },
+      {
+        "index": 6,
+        "speakShort": "Cut tortilla melts into wedges. Serve with remaining spicy cream sauce on the side for dipping",
+        "displayText": "Cut tortilla melts into wedges. Serve with remaining spicy cream sauce on the side for dipping",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "butter",
+      "cheddar cheese",
+      "cheesy",
+      "chicken",
+      "chicken thighs",
+      "cream cheese",
+      "flour tortillas",
+      "hot sauce",
+      "long green pepper",
+      "melts",
+      "oil",
+      "one",
+      "pan",
+      "pepper",
+      "salt",
+      "sour cream",
+      "stock concentrate",
+      "tortilla"
+    ],
+    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/646466b806d34c35d66b85f7-39c786a8.jpeg",
+    "sourceStars": {
+      "pink": 4,
+      "blue": 5
+    }
+  },
+  {
+    "id": "5",
+    "name": "One-Pan Cheesy Beef Tortilla Melts",
+    "displayName": "One-Pan Cheesy Beef Tortilla Melts",
+    "aliases": [
+      "one-pan cheesy beef tortilla melts"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "ground-beef",
+        "displayName": "ground beef",
+        "canonicalName": "ground beef",
+        "aliases": [
+          "ground beef"
+        ],
+        "amountText": "20 ounce"
+      },
+      {
+        "id": "green-bell-pepper",
+        "displayName": "green bell pepper",
+        "canonicalName": "green bell pepper",
+        "aliases": [
+          "green bell pepper"
+        ],
+        "amountText": "2 unit"
+      },
+      {
+        "id": "flour-tortillas",
+        "displayName": "flour tortillas",
+        "canonicalName": "flour tortillas",
+        "aliases": [
+          "flour tortillas"
+        ],
+        "amountText": "4 unit"
+      },
+      {
+        "id": "cheddar-cheese",
+        "displayName": "cheddar cheese",
+        "canonicalName": "cheddar cheese",
+        "aliases": [
+          "cheddar cheese"
+        ],
+        "amountText": "1 cup"
+      },
+      {
+        "id": "stock-concentrate",
+        "displayName": "stock concentrate",
+        "canonicalName": "stock concentrate",
+        "aliases": [
+          "stock concentrate"
+        ],
+        "amountText": "2 unit"
+      },
+      {
+        "id": "sour-cream",
+        "displayName": "sour cream",
+        "canonicalName": "sour cream",
+        "aliases": [
+          "sour cream"
+        ],
+        "amountText": "8 tablespoon"
+      },
+      {
+        "id": "cream-cheese",
+        "displayName": "cream cheese",
+        "canonicalName": "cream cheese",
+        "aliases": [
+          "cream cheese"
+        ],
+        "amountText": "8 tablespoon"
+      },
+      {
+        "id": "hot-sauce",
+        "displayName": "hot sauce",
+        "canonicalName": "hot sauce",
+        "aliases": [
+          "hot sauce"
+        ],
+        "amountText": "4 teaspoon"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "1 teaspoon"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "2 tablespoon"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Wash and dry produce. Halve, core, and thinly slice bell pepper into strips. In a small microwave-safe bowl, combine sour cream, cream cheese, 1 tsp water, and hot sauce to taste. Microwave until softened, 30 seconds. Stir to combine",
+        "displayText": "Wash and dry produce. Halve, core, and thinly slice bell pepper into strips. In a small microwave-safe bowl, combine sour cream, cream cheese, 1 tsp water, and hot sauce to taste. Microwave until softened, 30 seconds. Stir to combine",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Heat a drizzle of oil in a large pan over medium-high heat. Add bell pepper and cook, stirring occasionally, until slightly softened, 2\u20133 minutes",
+        "displayText": "Heat a drizzle of oil in a large pan over medium-high heat. Add bell pepper and cook, stirring occasionally, until slightly softened, 2\u20133 minutes",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Add beef to pan with bell pepper. Season with salt and pepper. Cook, breaking up meat into pieces, until beef is browned and cooked through and bell pepper is tender, 3\u20134 minutes. Drain any excess grease. Stir in stock concentrate. Turn off heat",
+        "displayText": "Add beef to pan with bell pepper. Season with salt and pepper. Cook, breaking up meat into pieces, until beef is browned and cooked through and bell pepper is tender, 3\u20134 minutes. Drain any excess grease. Stir in stock concentrate. Turn off heat",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Place tortillas on a clean work surface. Spread one half of each with half the cream sauce (save the rest for serving). Top with beef filling and cheddar. Fold tortillas in half",
+        "displayText": "Place tortillas on a clean work surface. Spread one half of each with half the cream sauce (save the rest for serving). Top with beef filling and cheddar. Fold tortillas in half",
+        "ingredientRefs": []
+      },
+      {
+        "index": 5,
+        "speakShort": "Wipe out pan. Melt 2 TBSP butter over medium heat. Cook tortilla melts in batches until golden brown and cheese is melted, 3\u20134 minutes per side. Transfer to paper towel-lined cutting board",
+        "displayText": "Wipe out pan. Melt 2 TBSP butter over medium heat. Cook tortilla melts in batches until golden brown and cheese is melted, 3\u20134 minutes per side. Transfer to paper towel-lined cutting board",
+        "ingredientRefs": []
+      },
+      {
+        "index": 6,
+        "speakShort": "Cut melts into wedges and serve with remaining cream sauce on the side",
+        "displayText": "Cut melts into wedges and serve with remaining cream sauce on the side",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "beef",
+      "butter",
+      "cheddar cheese",
+      "cheesy",
+      "cream cheese",
+      "flour tortillas",
+      "green bell pepper",
+      "ground beef",
+      "hot sauce",
+      "melts",
+      "oil",
+      "one",
+      "pan",
+      "pepper",
+      "salt",
+      "sour cream",
+      "stock concentrate",
+      "tortilla"
+    ],
+    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/624326ad6cfe6a76cd3ae4c6-b1c92148.jpg",
+    "sourceStars": {
+      "pink": 4,
+      "blue": 5
+    }
+  },
+  {
+    "id": "6",
+    "name": "One Pot Spicy Rigatoni alla Rossa",
+    "displayName": "One Pot Spicy Rigatoni alla Rossa",
+    "aliases": [
+      "one pot spicy rigatoni alla rossa"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "tomato-paste",
+        "displayName": "tomato paste",
+        "canonicalName": "tomato paste",
+        "aliases": [
+          "tomato paste"
+        ],
+        "amountText": "2 unit"
+      },
+      {
+        "id": "italian-seasoning",
+        "displayName": "italian seasoning",
+        "canonicalName": "italian seasoning",
+        "aliases": [
+          "italian seasoning"
+        ],
+        "amountText": "2 tablespoon"
+      },
+      {
+        "id": "garlic-powder",
+        "displayName": "garlic powder",
+        "canonicalName": "garlic powder",
+        "aliases": [
+          "garlic powder"
+        ],
+        "amountText": "2 teaspoon"
+      },
+      {
+        "id": "veggie-stock-concentrate",
+        "displayName": "veggie stock concentrate",
+        "canonicalName": "veggie stock concentrate",
+        "aliases": [
+          "veggie stock concentrate"
+        ],
+        "amountText": "2 unit"
+      },
+      {
+        "id": "cream-cheese",
+        "displayName": "cream cheese",
+        "canonicalName": "cream cheese",
+        "aliases": [
+          "cream cheese"
+        ],
+        "amountText": "8 tablespoon"
+      },
+      {
+        "id": "rigatoni-pasta",
+        "displayName": "rigatoni pasta",
+        "canonicalName": "rigatoni pasta",
+        "aliases": [
+          "rigatoni pasta"
+        ],
+        "amountText": "14 ounce"
+      },
+      {
+        "id": "spinach",
+        "displayName": "spinach",
+        "canonicalName": "spinach",
+        "aliases": [
+          "spinach"
+        ],
+        "amountText": "10 ounce"
+      },
+      {
+        "id": "mozzarella-cheese",
+        "displayName": "mozzarella cheese",
+        "canonicalName": "mozzarella cheese",
+        "aliases": [
+          "mozzarella cheese"
+        ],
+        "amountText": "8 ounce"
+      },
+      {
+        "id": "chili-flakes",
+        "displayName": "chili flakes",
+        "canonicalName": "chili flakes",
+        "aliases": [
+          "chili flakes"
+        ],
+        "amountText": "1 teaspoon"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Heat a large drizzle of olive oil in a large pot over medium heat. Add tomato paste, Italian seasoning, garlic powder, stock concentrate, and chili flakes to taste. Cook, stirring, until fragrant and tomato paste darkens, 30\u201360 seconds. Whisk in cream cheese until melted and combined, 20\u201330 seconds",
+        "displayText": "Heat a large drizzle of olive oil in a large pot over medium heat. Add tomato paste, Italian seasoning, garlic powder, stock concentrate, and chili flakes to taste. Cook, stirring, until fragrant and tomato paste darkens, 30\u201360 seconds. Whisk in cream cheese until melted and combined, 20\u201330 seconds",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Stir in rigatoni and 2 cups water. Season with salt and pepper. Bring to a simmer. Cook, stirring constantly, until rigatoni is tender and sauce is creamy and thickened, 5\u20136 minutes. Remove from heat. Add spinach and stir until wilted, 30\u201360 seconds. (Add in batches if needed.)",
+        "displayText": "Stir in rigatoni and 2 cups water. Season with salt and pepper. Bring to a simmer. Cook, stirring constantly, until rigatoni is tender and sauce is creamy and thickened, 5\u20136 minutes. Remove from heat. Add spinach and stir until wilted, 30\u201360 seconds. (Add in batches if needed.)",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Tear mozzarella into bite-size pieces and sprinkle over pasta. Season with salt and pepper. Serve in shallow bowls with extra chili flakes on the side",
+        "displayText": "Tear mozzarella into bite-size pieces and sprinkle over pasta. Season with salt and pepper. Serve in shallow bowls with extra chili flakes on the side",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "alla",
+      "chili flakes",
+      "cream cheese",
+      "garlic powder",
+      "italian seasoning",
+      "mozzarella cheese",
+      "oil",
+      "one",
+      "pepper",
+      "pot",
+      "rigatoni",
+      "rigatoni pasta",
+      "rossa",
+      "salt",
+      "spicy",
+      "spinach",
+      "tomato paste",
+      "veggie stock concentrate"
+    ],
+    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/67325af6ba08659748634749-9f208505.jpeg",
+    "sourceStars": {
+      "pink": 5,
+      "blue": 3
+    }
+  },
+  {
+    "id": "7",
+    "name": "Cheesy Baked Pasta with Meat Sauce",
+    "displayName": "Cheesy Baked Pasta with Meat Sauce",
+    "aliases": [
+      "cheesy baked pasta with meat sauce"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "penne-pasta",
+        "displayName": "penne pasta",
+        "canonicalName": "penne pasta",
+        "aliases": [
+          "penne pasta"
+        ],
+        "amountText": "12 oz"
+      },
+      {
+        "id": "mozzarella-cheese",
+        "displayName": "mozzarella cheese",
+        "canonicalName": "mozzarella cheese",
+        "aliases": [
+          "mozzarella cheese"
+        ],
+        "amountText": "7.5 oz"
+      },
+      {
+        "id": "ground-beef",
+        "displayName": "ground beef",
+        "canonicalName": "ground beef",
+        "aliases": [
+          "ground beef"
+        ],
+        "amountText": "20 oz"
+      },
+      {
+        "id": "marinara-sauce",
+        "displayName": "marinara sauce",
+        "canonicalName": "marinara sauce",
+        "aliases": [
+          "marinara sauce"
+        ],
+        "amountText": "16 oz"
+      },
+      {
+        "id": "garlic",
+        "displayName": "garlic",
+        "canonicalName": "garlic",
+        "aliases": [
+          "garlic"
+        ],
+        "amountText": "2 tsp, grated"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "1 tbsp"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Bring a large pot of salted water to a boil. Add penne and cook until al dente, about 8 minutes. Reserve 1 cup pasta water, then drain and set aside",
+        "displayText": "Bring a large pot of salted water to a boil. Add penne and cook until al dente, about 8 minutes. Reserve 1 cup pasta water, then drain and set aside",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Preheat broiler to high. Grate garlic and tear mozzarella into \u00bd-inch pieces. In a large ovenproof skillet, heat olive oil over medium-high. Add beef, salt, and pepper; cook until browned and no longer pink, 3\u20135 minutes",
+        "displayText": "Preheat broiler to high. Grate garlic and tear mozzarella into \u00bd-inch pieces. In a large ovenproof skillet, heat olive oil over medium-high. Add beef, salt, and pepper; cook until browned and no longer pink, 3\u20135 minutes",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Stir garlic into beef; cook 1 minute. Add marinara and reserved pasta water. Simmer briefly, then stir in cooked pasta. Season to taste",
+        "displayText": "Stir garlic into beef; cook 1 minute. Add marinara and reserved pasta water. Simmer briefly, then stir in cooked pasta. Season to taste",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Top with mozzarella. Broil until cheese is melted and bubbling, 2\u20133 minutes. Serve hot",
+        "displayText": "Top with mozzarella. Broil until cheese is melted and bubbling, 2\u20133 minutes. Serve hot",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "baked",
+      "cheesy",
+      "garlic",
+      "ground beef",
+      "marinara sauce",
+      "meat",
+      "mozzarella cheese",
+      "oil",
+      "pasta",
+      "penne pasta",
+      "pepper",
+      "salt",
+      "sauce",
+      "with"
+    ],
+    "image": "https://marleyspoon.com/media/recipes/132054/main_photos/large/cheesy-bd632071803d1d0d863408d5d408aac8.jpeg",
+    "sourceStars": {
+      "pink": 5,
+      "blue": 5
+    }
+  },
+  {
+    "id": "8",
+    "name": "Pub-Style Shepherd\u2019s Pie",
+    "displayName": "Pub-Style Shepherd\u2019s Pie",
+    "aliases": [
+      "pub-style shepherd\u2019s pie"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "potatoes",
+        "displayName": "potatoes",
+        "canonicalName": "potatoes",
+        "aliases": [
+          "potatoes"
+        ],
+        "amountText": "32 ounce"
+      },
+      {
+        "id": "celery",
+        "displayName": "celery",
+        "canonicalName": "celery",
+        "aliases": [
+          "celery"
+        ],
+        "amountText": "5 ounce"
+      },
+      {
+        "id": "thyme",
+        "displayName": "thyme",
+        "canonicalName": "thyme",
+        "aliases": [
+          "thyme"
+        ],
+        "amountText": "1/4 ounce"
+      },
+      {
+        "id": "sour-cream",
+        "displayName": "sour cream",
+        "canonicalName": "sour cream",
+        "aliases": [
+          "sour cream"
+        ],
+        "amountText": "4 tablespoon"
+      },
+      {
+        "id": "crushed-tomatoes",
+        "displayName": "crushed tomatoes",
+        "canonicalName": "crushed tomatoes",
+        "aliases": [
+          "crushed tomatoes"
+        ],
+        "amountText": "13.76 ounce"
+      },
+      {
+        "id": "flour",
+        "displayName": "flour",
+        "canonicalName": "flour",
+        "aliases": [
+          "flour"
+        ],
+        "amountText": "2 tablespoon"
+      },
+      {
+        "id": "cheddar-cheese",
+        "displayName": "cheddar cheese",
+        "canonicalName": "cheddar cheese",
+        "aliases": [
+          "cheddar cheese"
+        ],
+        "amountText": "1 cup"
+      },
+      {
+        "id": "carrot",
+        "displayName": "carrot",
+        "canonicalName": "carrot",
+        "aliases": [
+          "carrot"
+        ],
+        "amountText": "6 ounce"
+      },
+      {
+        "id": "yellow-onion",
+        "displayName": "yellow onion",
+        "canonicalName": "yellow onion",
+        "aliases": [
+          "yellow onion"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "garlic-powder",
+        "displayName": "garlic powder",
+        "canonicalName": "garlic powder",
+        "aliases": [
+          "garlic powder"
+        ],
+        "amountText": "2 teaspoon"
+      },
+      {
+        "id": "ground-beef",
+        "displayName": "ground beef",
+        "canonicalName": "ground beef",
+        "aliases": [
+          "ground beef"
+        ],
+        "amountText": "20 ounce"
+      },
+      {
+        "id": "stock-concentrate",
+        "displayName": "stock concentrate",
+        "canonicalName": "stock concentrate",
+        "aliases": [
+          "stock concentrate"
+        ],
+        "amountText": "4 unit"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "1 tablespoon"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "3 tablespoon"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Heat broiler to high. Dice potatoes into \u00bd-inch pieces. Prep thyme, carrot, celery, and onion",
+        "displayText": "Heat broiler to high. Dice potatoes into \u00bd-inch pieces. Prep thyme, carrot, celery, and onion",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Boil potatoes in salted water until tender, 15\u201320 minutes. Drain, return to pot, and mash with sour cream, 1 tsp thyme, and 2 TBSP butter. Season with salt and pepper. Cover and set aside",
+        "displayText": "Boil potatoes in salted water until tender, 15\u201320 minutes. Drain, return to pot, and mash with sour cream, 1 tsp thyme, and 2 TBSP butter. Season with salt and pepper. Cover and set aside",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Heat oil in ovenproof pan over medium-high. Add carrot; cook 2\u20133 minutes. Add celery, onion, and more oil; cook until tender, 5\u20137 minutes. Stir in garlic powder and 2 tsp thyme; cook 30 seconds",
+        "displayText": "Heat oil in ovenproof pan over medium-high. Add carrot; cook 2\u20133 minutes. Add celery, onion, and more oil; cook until tender, 5\u20137 minutes. Stir in garlic powder and 2 tsp thyme; cook 30 seconds",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Add ground beef; season and cook until browned, 4\u20136 minutes. Stir in flour; cook 1 minute",
+        "displayText": "Add ground beef; season and cook until browned, 4\u20136 minutes. Stir in flour; cook 1 minute",
+        "ingredientRefs": []
+      },
+      {
+        "index": 5,
+        "speakShort": "Add crushed tomatoes and \u00bd cup water. Stir in stock concentrates. Bring to a boil and cook until thickened, 1\u20132 minutes. Season to taste. (Transfer to baking dish if pan is not ovenproof.)",
+        "displayText": "Add crushed tomatoes and \u00bd cup water. Stir in stock concentrates. Bring to a boil and cook until thickened, 1\u20132 minutes. Season to taste. (Transfer to baking dish if pan is not ovenproof.)",
+        "ingredientRefs": []
+      },
+      {
+        "index": 6,
+        "speakShort": "Spread mashed potatoes on top, leaving a gap around the edges. Sprinkle cheddar over top. Broil 3\u20134 minutes until browned. Serve hot",
+        "displayText": "Spread mashed potatoes on top, leaving a gap around the edges. Sprinkle cheddar over top. Broil 3\u20134 minutes until browned. Serve hot",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "butter",
+      "carrot",
+      "celery",
+      "cheddar cheese",
+      "crushed tomatoes",
+      "flour",
+      "garlic powder",
+      "ground beef",
+      "oil",
+      "pepper",
+      "pie",
+      "potatoes",
+      "pub",
+      "s",
+      "salt",
+      "shepherd",
+      "sour cream",
+      "stock concentrate",
+      "style",
+      "thyme",
+      "yellow onion"
+    ],
+    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/61f982bf055a054a23694946-dcaae436.jpg",
+    "sourceStars": {
+      "pink": 4,
+      "blue": 5
+    }
+  },
+  {
+    "id": "9",
+    "name": "Beef & Zucchini Baked Penne",
+    "displayName": "Beef & Zucchini Baked Penne",
+    "aliases": [
+      "beef & zucchini baked penne"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "zucchini",
+        "displayName": "zucchini",
+        "canonicalName": "zucchini",
+        "aliases": [
+          "zucchini"
+        ],
+        "amountText": "2 unit"
+      },
+      {
+        "id": "penne-pasta",
+        "displayName": "penne pasta",
+        "canonicalName": "penne pasta",
+        "aliases": [
+          "penne pasta"
+        ],
+        "amountText": "24 ounce"
+      },
+      {
+        "id": "ground-beef",
+        "displayName": "ground beef",
+        "canonicalName": "ground beef",
+        "aliases": [
+          "ground beef"
+        ],
+        "amountText": "40 ounce"
+      },
+      {
+        "id": "italian-seasoning",
+        "displayName": "italian seasoning",
+        "canonicalName": "italian seasoning",
+        "aliases": [
+          "italian seasoning"
+        ],
+        "amountText": "4 tablespoon"
+      },
+      {
+        "id": "garlic-powder",
+        "displayName": "garlic powder",
+        "canonicalName": "garlic powder",
+        "aliases": [
+          "garlic powder"
+        ],
+        "amountText": "4 teaspoon"
+      },
+      {
+        "id": "tomato-paste",
+        "displayName": "tomato paste",
+        "canonicalName": "tomato paste",
+        "aliases": [
+          "tomato paste"
+        ],
+        "amountText": "2 unit"
+      },
+      {
+        "id": "stock-concentrate",
+        "displayName": "stock concentrate",
+        "canonicalName": "stock concentrate",
+        "aliases": [
+          "stock concentrate"
+        ],
+        "amountText": "6 unit"
+      },
+      {
+        "id": "ricotta-cheese",
+        "displayName": "ricotta cheese",
+        "canonicalName": "ricotta cheese",
+        "aliases": [
+          "ricotta cheese"
+        ],
+        "amountText": "16 ounce"
+      },
+      {
+        "id": "mozzarella-cheese",
+        "displayName": "mozzarella cheese",
+        "canonicalName": "mozzarella cheese",
+        "aliases": [
+          "mozzarella cheese"
+        ],
+        "amountText": "1 cup"
+      },
+      {
+        "id": "chili-flakes",
+        "displayName": "chili flakes",
+        "canonicalName": "chili flakes",
+        "aliases": [
+          "chili flakes"
+        ],
+        "amountText": "2 teaspoon"
+      },
+      {
+        "id": "marinara-sauce",
+        "displayName": "marinara sauce",
+        "canonicalName": "marinara sauce",
+        "aliases": [
+          "marinara sauce"
+        ],
+        "amountText": "28 ounce"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "4 teaspoon"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Preheat oven to 425\u00b0F. Boil water. Quarter zucchini lengthwise, slice into quarter-moons",
+        "displayText": "Preheat oven to 425\u00b0F. Boil water. Quarter zucchini lengthwise, slice into quarter-moons",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Cook penne until al dente, 9\u201311 minutes. Reserve 1 cup pasta water, drain, and set aside",
+        "displayText": "Cook penne until al dente, 9\u201311 minutes. Reserve 1 cup pasta water, drain, and set aside",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "In a large pan, heat oil. Add beef, zucchini, Italian seasoning, garlic powder, salt, and pepper. Cook until beef is done and zucchini is tender, 5\u20137 minutes. Drain grease if needed",
+        "displayText": "In a large pan, heat oil. Add beef, zucchini, Italian seasoning, garlic powder, salt, and pepper. Cook until beef is done and zucchini is tender, 5\u20137 minutes. Drain grease if needed",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "In the pasta pot, combine beef mixture, marinara, tomato paste, stock concentrate, and \u00bd cup pasta water. Boil 2\u20133 min until thickened. Stir in penne. Season to taste",
+        "displayText": "In the pasta pot, combine beef mixture, marinara, tomato paste, stock concentrate, and \u00bd cup pasta water. Boil 2\u20133 min until thickened. Stir in penne. Season to taste",
+        "ingredientRefs": []
+      },
+      {
+        "index": 5,
+        "speakShort": "Transfer to a greased 9x13 dish. Dollop with ricotta, sprinkle with mozzarella. Bake 10\u201312 minutes until melted, then broil 2\u20133 minutes until golden",
+        "displayText": "Transfer to a greased 9x13 dish. Dollop with ricotta, sprinkle with mozzarella. Bake 10\u201312 minutes until melted, then broil 2\u20133 minutes until golden",
+        "ingredientRefs": []
+      },
+      {
+        "index": 6,
+        "speakShort": "Let cool 5 minutes. Top with chili flakes and serve",
+        "displayText": "Let cool 5 minutes. Top with chili flakes and serve",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "baked",
+      "beef",
+      "chili flakes",
+      "garlic powder",
+      "ground beef",
+      "italian seasoning",
+      "marinara sauce",
+      "mozzarella cheese",
+      "oil",
+      "penne",
+      "penne pasta",
+      "pepper",
+      "ricotta cheese",
+      "salt",
+      "stock concentrate",
+      "tomato paste",
+      "zucchini"
+    ],
+    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/64b6a1078c02aa0344141137-04980adc.jpeg",
+    "sourceStars": {
+      "pink": 5,
+      "blue": 3
+    }
+  },
+  {
+    "id": "10",
+    "name": "Cavatappi Beef Rag\u00f9",
+    "displayName": "Cavatappi Beef Rag\u00f9",
+    "aliases": [
+      "cavatappi beef rag\u00f9"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "carrot",
+        "displayName": "carrot",
+        "canonicalName": "carrot",
+        "aliases": [
+          "carrot"
+        ],
+        "amountText": "6 ounce"
+      },
+      {
+        "id": "parsley",
+        "displayName": "parsley",
+        "canonicalName": "parsley",
+        "aliases": [
+          "parsley"
+        ],
+        "amountText": "\u00bc ounce"
+      },
+      {
+        "id": "cavatappi-pasta",
+        "displayName": "cavatappi pasta",
+        "canonicalName": "cavatappi pasta",
+        "aliases": [
+          "cavatappi pasta"
+        ],
+        "amountText": "12 ounce"
+      },
+      {
+        "id": "ground-beef",
+        "displayName": "ground beef",
+        "canonicalName": "ground beef",
+        "aliases": [
+          "ground beef"
+        ],
+        "amountText": "20 ounce"
+      },
+      {
+        "id": "italian-seasoning",
+        "displayName": "italian seasoning",
+        "canonicalName": "italian seasoning",
+        "aliases": [
+          "italian seasoning"
+        ],
+        "amountText": "2 tablespoon"
+      },
+      {
+        "id": "marinara-sauce",
+        "displayName": "marinara sauce",
+        "canonicalName": "marinara sauce",
+        "aliases": [
+          "marinara sauce"
+        ],
+        "amountText": "28 ounce"
+      },
+      {
+        "id": "cream-cheese",
+        "displayName": "cream cheese",
+        "canonicalName": "cream cheese",
+        "aliases": [
+          "cream cheese"
+        ],
+        "amountText": "4 tablespoon"
+      },
+      {
+        "id": "parmesan-cheese",
+        "displayName": "parmesan cheese",
+        "canonicalName": "parmesan cheese",
+        "aliases": [
+          "parmesan cheese"
+        ],
+        "amountText": "\u00bd cup"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "2 teaspoon"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "2 tablespoon"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Boil a pot of salted water. Peel and finely chop carrot. Roughly chop parsley leaves",
+        "displayText": "Boil a pot of salted water. Peel and finely chop carrot. Roughly chop parsley leaves",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Add cavatappi and cook until al dente, 9\u201311 min. Drain and set aside",
+        "displayText": "Add cavatappi and cook until al dente, 9\u201311 min. Drain and set aside",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "In a pan, heat oil and cook carrot until browned and tender, 6\u20138 min. Season with salt and pepper",
+        "displayText": "In a pan, heat oil and cook carrot until browned and tender, 6\u20138 min. Season with salt and pepper",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Push carrot to the side. Add more oil, then beef. Brown and break up beef, season with Italian seasoning, salt, and pepper. Combine with carrot",
+        "displayText": "Push carrot to the side. Add more oil, then beef. Brown and break up beef, season with Italian seasoning, salt, and pepper. Combine with carrot",
+        "ingredientRefs": []
+      },
+      {
+        "index": 5,
+        "speakShort": "Add marinara and \u2153 cup water. Simmer 3\u20134 min. Stir in cream cheese. Add pasta, butter, and half the parsley. Stir to coat. Adjust seasoning",
+        "displayText": "Add marinara and \u2153 cup water. Simmer 3\u20134 min. Stir in cream cheese. Add pasta, butter, and half the parsley. Stir to coat. Adjust seasoning",
+        "ingredientRefs": []
+      },
+      {
+        "index": 6,
+        "speakShort": "Serve in bowls topped with Parmesan and remaining parsley",
+        "displayText": "Serve in bowls topped with Parmesan and remaining parsley",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "beef",
+      "butter",
+      "carrot",
+      "cavatappi",
+      "cavatappi pasta",
+      "cream cheese",
+      "ground beef",
+      "italian seasoning",
+      "marinara sauce",
+      "oil",
+      "parmesan cheese",
+      "parsley",
+      "pepper",
+      "rag",
+      "salt"
+    ],
+    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/61e6fd4580a3915e2e354527-8d4001c5.jpg",
+    "sourceStars": {
+      "pink": 4,
+      "blue": 3
+    }
+  },
+  {
+    "id": "11",
+    "name": "Beef Flautas Supreme",
+    "displayName": "Beef Flautas Supreme",
+    "aliases": [
+      "beef flautas supreme"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "yellow-onion",
+        "displayName": "yellow onion",
+        "canonicalName": "yellow onion",
+        "aliases": [
+          "yellow onion"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "ground-beef",
+        "displayName": "ground beef",
+        "canonicalName": "ground beef",
+        "aliases": [
+          "ground beef"
+        ],
+        "amountText": "20 ounce"
+      },
+      {
+        "id": "tex-mex-paste",
+        "displayName": "tex-mex paste",
+        "canonicalName": "tex-mex paste",
+        "aliases": [
+          "tex-mex paste"
+        ],
+        "amountText": "2 unit"
+      },
+      {
+        "id": "southwest-spice-blend",
+        "displayName": "southwest spice blend",
+        "canonicalName": "southwest spice blend",
+        "aliases": [
+          "southwest spice blend"
+        ],
+        "amountText": "2 tablespoon"
+      },
+      {
+        "id": "flour-tortillas",
+        "displayName": "flour tortillas",
+        "canonicalName": "flour tortillas",
+        "aliases": [
+          "flour tortillas"
+        ],
+        "amountText": "12 unit"
+      },
+      {
+        "id": "mexican-cheese-blend",
+        "displayName": "mexican cheese blend",
+        "canonicalName": "mexican cheese blend",
+        "aliases": [
+          "mexican cheese blend"
+        ],
+        "amountText": "1 cup"
+      },
+      {
+        "id": "lime",
+        "displayName": "lime",
+        "canonicalName": "lime",
+        "aliases": [
+          "lime"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "roma-tomato",
+        "displayName": "roma tomato",
+        "canonicalName": "roma tomato",
+        "aliases": [
+          "roma tomato"
+        ],
+        "amountText": "2 unit"
+      },
+      {
+        "id": "sour-cream",
+        "displayName": "sour cream",
+        "canonicalName": "sour cream",
+        "aliases": [
+          "sour cream"
+        ],
+        "amountText": "8 tablespoon"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "2 teaspoon"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "2 tablespoon"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Preheat oven to 425\u00b0F and line a baking sheet with foil. Thinly slice onion, then mince a bit for pico later",
+        "displayText": "Preheat oven to 425\u00b0F and line a baking sheet with foil. Thinly slice onion, then mince a bit for pico later",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "In a pan, cook sliced onion in oil 3 min. Add beef and Southwest Spice; cook until browned, 4\u20136 min. Stir in Tex-Mex paste and water; simmer 2\u20134 min. Off heat",
+        "displayText": "In a pan, cook sliced onion in oil 3 min. Add beef and Southwest Spice; cook until browned, 4\u20136 min. Stir in Tex-Mex paste and water; simmer 2\u20134 min. Off heat",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Rub tortillas with olive oil. Fill with beef and cheese, roll tightly into flautas. Place seam-down on sheet. Bake 8\u201312 min until crisp",
+        "displayText": "Rub tortillas with olive oil. Fill with beef and cheese, roll tightly into flautas. Place seam-down on sheet. Bake 8\u201312 min until crisp",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Dice tomato. In a bowl, combine tomato, minced onion, lime zest, and juice. In another bowl, mix sour cream with zest and juice; thin with water. Serve flautas with pico and crema",
+        "displayText": "Dice tomato. In a bowl, combine tomato, minced onion, lime zest, and juice. In another bowl, mix sour cream with zest and juice; thin with water. Serve flautas with pico and crema",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "beef",
+      "flautas",
+      "flour tortillas",
+      "ground beef",
+      "lime",
+      "mexican cheese blend",
+      "oil",
+      "roma tomato",
+      "salt",
+      "sour cream",
+      "southwest spice blend",
+      "supreme",
+      "tex-mex paste",
+      "yellow onion"
+    ],
+    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/60929fe277cc7513912c1eb1-f386ce1b.jpg",
+    "sourceStars": {
+      "pink": 3,
+      "blue": 5
+    }
+  },
+  {
+    "id": "12",
+    "name": "One-Pan Trattoria Tortelloni Bake",
+    "displayName": "One-Pan Trattoria Tortelloni Bake",
+    "aliases": [
+      "one-pan trattoria tortelloni bake"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "garlic",
+        "displayName": "garlic",
+        "canonicalName": "garlic",
+        "aliases": [
+          "garlic"
+        ],
+        "amountText": "4 clove"
+      },
+      {
+        "id": "roma-tomato",
+        "displayName": "roma tomato",
+        "canonicalName": "roma tomato",
+        "aliases": [
+          "roma tomato"
+        ],
+        "amountText": "4 unit"
+      },
+      {
+        "id": "panko-breadcrumbs",
+        "displayName": "panko breadcrumbs",
+        "canonicalName": "panko breadcrumbs",
+        "aliases": [
+          "panko breadcrumbs"
+        ],
+        "amountText": "\u00bd cup"
+      },
+      {
+        "id": "parmesan-cheese",
+        "displayName": "parmesan cheese",
+        "canonicalName": "parmesan cheese",
+        "aliases": [
+          "parmesan cheese"
+        ],
+        "amountText": "\u00bd cup"
+      },
+      {
+        "id": "italian-seasoning",
+        "displayName": "italian seasoning",
+        "canonicalName": "italian seasoning",
+        "aliases": [
+          "italian seasoning"
+        ],
+        "amountText": "2 tablespoon"
+      },
+      {
+        "id": "chili-flakes",
+        "displayName": "chili flakes",
+        "canonicalName": "chili flakes",
+        "aliases": [
+          "chili flakes"
+        ],
+        "amountText": "1 teaspoon"
+      },
+      {
+        "id": "stock-concentrate",
+        "displayName": "stock concentrate",
+        "canonicalName": "stock concentrate",
+        "aliases": [
+          "stock concentrate"
+        ],
+        "amountText": "2 unit"
+      },
+      {
+        "id": "cream-cheese",
+        "displayName": "cream cheese",
+        "canonicalName": "cream cheese",
+        "aliases": [
+          "cream cheese"
+        ],
+        "amountText": "8 tablespoon"
+      },
+      {
+        "id": "tomato-paste",
+        "displayName": "tomato paste",
+        "canonicalName": "tomato paste",
+        "aliases": [
+          "tomato paste"
+        ],
+        "amountText": "3 ounce"
+      },
+      {
+        "id": "cheese-tortelloni",
+        "displayName": "cheese tortelloni",
+        "canonicalName": "cheese tortelloni",
+        "aliases": [
+          "cheese tortelloni"
+        ],
+        "amountText": "18 ounce"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "2 teaspoon"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "3 tablespoon"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Preheat broiler. Mince garlic, dice tomatoes. In a bowl, mix panko, Parmesan, olive oil, salt, and pepper",
+        "displayText": "Preheat broiler. Mince garlic, dice tomatoes. In a bowl, mix panko, Parmesan, olive oil, salt, and pepper",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "In an ovenproof pan, heat olive oil. Add garlic, Italian Seasoning, chili flakes; cook 30 sec. Add tomatoes, salt, pepper; cook 1\u20132 min. Stir in tomato paste, then add water, stock, and cream cheese. Simmer until smooth",
+        "displayText": "In an ovenproof pan, heat olive oil. Add garlic, Italian Seasoning, chili flakes; cook 30 sec. Add tomatoes, salt, pepper; cook 1\u20132 min. Stir in tomato paste, then add water, stock, and cream cheese. Simmer until smooth",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Stir in tortelloni; cook 4\u20136 min until tender. Stir in butter. Adjust consistency with water if needed. (Transfer to baking dish if needed.)",
+        "displayText": "Stir in tortelloni; cook 4\u20136 min until tender. Stir in butter. Adjust consistency with water if needed. (Transfer to baking dish if needed.)",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Top with panko mix. Broil 2\u20134 min until golden. Serve with chili flakes if desired",
+        "displayText": "Top with panko mix. Broil 2\u20134 min until golden. Serve with chili flakes if desired",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "bake",
+      "butter",
+      "cheese tortelloni",
+      "chili flakes",
+      "cream cheese",
+      "garlic",
+      "italian seasoning",
+      "oil",
+      "one",
+      "pan",
+      "panko breadcrumbs",
+      "parmesan cheese",
+      "pepper",
+      "roma tomato",
+      "salt",
+      "stock concentrate",
+      "tomato paste",
+      "tortelloni",
+      "trattoria"
+    ],
+    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/6203c47ca9edd825f02b3f54-66a31f0c.jpg",
+    "sourceStars": {
+      "pink": 5,
+      "blue": 5
+    }
+  },
+  {
+    "id": "13",
+    "name": "Chicken Thyme with Zucchini Couscous",
+    "displayName": "Chicken Thyme with Zucchini Couscous",
+    "aliases": [
+      "chicken thyme with zucchini couscous"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "zucchini",
+        "displayName": "zucchini",
+        "canonicalName": "zucchini",
+        "aliases": [
+          "zucchini"
+        ],
+        "amountText": "2 unit"
+      },
+      {
+        "id": "garlic",
+        "displayName": "garlic",
+        "canonicalName": "garlic",
+        "aliases": [
+          "garlic"
+        ],
+        "amountText": "4 clove"
+      },
+      {
+        "id": "tomato",
+        "displayName": "tomato",
+        "canonicalName": "tomato",
+        "aliases": [
+          "tomato"
+        ],
+        "amountText": "2 unit"
+      },
+      {
+        "id": "scallions",
+        "displayName": "scallions",
+        "canonicalName": "scallions",
+        "aliases": [
+          "scallions"
+        ],
+        "amountText": "4 unit"
+      },
+      {
+        "id": "lemon",
+        "displayName": "lemon",
+        "canonicalName": "lemon",
+        "aliases": [
+          "lemon"
+        ],
+        "amountText": "2 unit"
+      },
+      {
+        "id": "israeli-couscous",
+        "displayName": "israeli couscous",
+        "canonicalName": "israeli couscous",
+        "aliases": [
+          "israeli couscous"
+        ],
+        "amountText": "5 ounce"
+      },
+      {
+        "id": "chicken-cutlets",
+        "displayName": "chicken cutlets",
+        "canonicalName": "chicken cutlets",
+        "aliases": [
+          "chicken cutlets"
+        ],
+        "amountText": "20 ounce"
+      },
+      {
+        "id": "thyme",
+        "displayName": "thyme",
+        "canonicalName": "thyme",
+        "aliases": [
+          "thyme"
+        ],
+        "amountText": "2 teaspoon"
+      },
+      {
+        "id": "stock-concentrate",
+        "displayName": "stock concentrate",
+        "canonicalName": "stock concentrate",
+        "aliases": [
+          "stock concentrate"
+        ],
+        "amountText": "4 unit"
+      },
+      {
+        "id": "cream-cheese",
+        "displayName": "cream cheese",
+        "canonicalName": "cream cheese",
+        "aliases": [
+          "cream cheese"
+        ],
+        "amountText": "4 tablespoon"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "2 teaspoon"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "4 tablespoon"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Dice zucchini, garlic, tomato, scallions, and zest the lemon. Quarter lemon",
+        "displayText": "Dice zucchini, garlic, tomato, scallions, and zest the lemon. Quarter lemon",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Saut\u00e9 zucchini with garlic, salt, pepper in oil until tender. Set aside",
+        "displayText": "Saut\u00e9 zucchini with garlic, salt, pepper in oil until tender. Set aside",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Toast couscous with garlic and butter. Add water and salt, simmer until tender",
+        "displayText": "Toast couscous with garlic and butter. Add water and salt, simmer until tender",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Season chicken with thyme, salt, pepper. Cook in zucchini pan until browned and cooked through. Rest under foil",
+        "displayText": "Season chicken with thyme, salt, pepper. Cook in zucchini pan until browned and cooked through. Rest under foil",
+        "ingredientRefs": []
+      },
+      {
+        "index": 5,
+        "speakShort": "In same pan, cook tomato and scallion whites in butter. Add stock and water, reduce. Remove from heat, whisk in cream cheese",
+        "displayText": "In same pan, cook tomato and scallion whites in butter. Add stock and water, reduce. Remove from heat, whisk in cream cheese",
+        "ingredientRefs": []
+      },
+      {
+        "index": 6,
+        "speakShort": "Slice chicken. Mix couscous with zucchini, scallion greens, lemon zest and juice. Plate couscous, top with chicken and sauce. Serve with lemon wedges",
+        "displayText": "Slice chicken. Mix couscous with zucchini, scallion greens, lemon zest and juice. Plate couscous, top with chicken and sauce. Serve with lemon wedges",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "butter",
+      "chicken",
+      "chicken cutlets",
+      "couscous",
+      "cream cheese",
+      "garlic",
+      "israeli couscous",
+      "lemon",
+      "oil",
+      "pepper",
+      "salt",
+      "scallions",
+      "stock concentrate",
+      "thyme",
+      "tomato",
+      "with",
+      "zucchini"
+    ],
+    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/6553c87a86d0f72f966fe43b-b8bd2116.jpeg",
+    "sourceStars": {
+      "pink": 3,
+      "blue": 2
+    }
+  },
+  {
+    "id": "14",
+    "name": "Beef Bulgogi Meatballs",
+    "displayName": "Beef Bulgogi Meatballs",
+    "aliases": [
+      "beef bulgogi meatballs"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "carrot",
+        "displayName": "carrot",
+        "canonicalName": "carrot",
+        "aliases": [
+          "carrot"
+        ],
+        "amountText": "24 ounce"
+      },
+      {
+        "id": "scallions",
+        "displayName": "scallions",
+        "canonicalName": "scallions",
+        "aliases": [
+          "scallions"
+        ],
+        "amountText": "4 unit"
+      },
+      {
+        "id": "ginger",
+        "displayName": "ginger",
+        "canonicalName": "ginger",
+        "aliases": [
+          "ginger"
+        ],
+        "amountText": "2 thumb"
+      },
+      {
+        "id": "jasmine-rice",
+        "displayName": "jasmine rice",
+        "canonicalName": "jasmine rice",
+        "aliases": [
+          "jasmine rice"
+        ],
+        "amountText": "1.5 cup"
+      },
+      {
+        "id": "ground-beef",
+        "displayName": "ground beef",
+        "canonicalName": "ground beef",
+        "aliases": [
+          "ground beef"
+        ],
+        "amountText": "20 ounce"
+      },
+      {
+        "id": "panko-breadcrumbs",
+        "displayName": "panko breadcrumbs",
+        "canonicalName": "panko breadcrumbs",
+        "aliases": [
+          "panko breadcrumbs"
+        ],
+        "amountText": "\u00bd cup"
+      },
+      {
+        "id": "bulgogi-sauce",
+        "displayName": "bulgogi sauce",
+        "canonicalName": "bulgogi sauce",
+        "aliases": [
+          "bulgogi sauce"
+        ],
+        "amountText": "16 tablespoon"
+      },
+      {
+        "id": "sour-cream",
+        "displayName": "sour cream",
+        "canonicalName": "sour cream",
+        "aliases": [
+          "sour cream"
+        ],
+        "amountText": "4 tablespoon"
+      },
+      {
+        "id": "sriracha",
+        "displayName": "sriracha",
+        "canonicalName": "sriracha",
+        "aliases": [
+          "sriracha"
+        ],
+        "amountText": "1 teaspoon"
+      },
+      {
+        "id": "sesame-seeds",
+        "displayName": "sesame seeds",
+        "canonicalName": "sesame seeds",
+        "aliases": [
+          "sesame seeds"
+        ],
+        "amountText": "1 tablespoon"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "2 teaspoon"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Preheat oven to 425\u00b0F. Peel and slice carrots; roast on baking sheet with oil, salt, and pepper until tender, 20\u201325 minutes",
+        "displayText": "Preheat oven to 425\u00b0F. Peel and slice carrots; roast on baking sheet with oil, salt, and pepper until tender, 20\u201325 minutes",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Peel and mince ginger. Slice scallions, separating whites and greens",
+        "displayText": "Peel and mince ginger. Slice scallions, separating whites and greens",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Saut\u00e9 half the ginger in oil; add rice, water, and salt. Simmer until tender, 15\u201318 minutes",
+        "displayText": "Saut\u00e9 half the ginger in oil; add rice, water, and salt. Simmer until tender, 15\u201318 minutes",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Mix beef, scallion whites, panko, remaining ginger, and some bulgogi sauce. Form into meatballs and bake 14\u201316 min",
+        "displayText": "Mix beef, scallion whites, panko, remaining ginger, and some bulgogi sauce. Form into meatballs and bake 14\u201316 min",
+        "ingredientRefs": []
+      },
+      {
+        "index": 5,
+        "speakShort": "Mix sour cream with sriracha and water until drizzle consistency. Toss cooked meatballs in remaining bulgogi sauce",
+        "displayText": "Mix sour cream with sriracha and water until drizzle consistency. Toss cooked meatballs in remaining bulgogi sauce",
+        "ingredientRefs": []
+      },
+      {
+        "index": 6,
+        "speakShort": "Plate rice with carrots and meatballs. Drizzle crema on top and garnish with scallion greens and sesame seeds",
+        "displayText": "Plate rice with carrots and meatballs. Drizzle crema on top and garnish with scallion greens and sesame seeds",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "beef",
+      "bulgogi",
+      "bulgogi sauce",
+      "carrot",
+      "ginger",
+      "ground beef",
+      "jasmine rice",
+      "meatballs",
+      "oil",
+      "panko breadcrumbs",
+      "pepper",
+      "salt",
+      "scallions",
+      "sesame seeds",
+      "sour cream",
+      "sriracha"
+    ],
+    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/5e9dcf26ae5fdf1c8e663326-819884a9.jpg",
+    "sourceStars": {
+      "pink": 4,
+      "blue": 1
+    }
+  },
+  {
+    "id": "15",
+    "name": "Firecracker Meatballs",
+    "displayName": "Firecracker Meatballs",
+    "aliases": [
+      "firecracker meatballs"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "scallions",
+        "displayName": "scallions",
+        "canonicalName": "scallions",
+        "aliases": [
+          "scallions"
+        ],
+        "amountText": "4 unit"
+      },
+      {
+        "id": "ginger",
+        "displayName": "ginger",
+        "canonicalName": "ginger",
+        "aliases": [
+          "ginger"
+        ],
+        "amountText": "2 thumb"
+      },
+      {
+        "id": "mayonnaise",
+        "displayName": "mayonnaise",
+        "canonicalName": "mayonnaise",
+        "aliases": [
+          "mayonnaise"
+        ],
+        "amountText": "4 tablespoon"
+      },
+      {
+        "id": "sour-cream",
+        "displayName": "sour cream",
+        "canonicalName": "sour cream",
+        "aliases": [
+          "sour cream"
+        ],
+        "amountText": "4 tablespoon"
+      },
+      {
+        "id": "honey",
+        "displayName": "honey",
+        "canonicalName": "honey",
+        "aliases": [
+          "honey"
+        ],
+        "amountText": "4 teaspoon"
+      },
+      {
+        "id": "soy-sauce",
+        "displayName": "soy sauce",
+        "canonicalName": "soy sauce",
+        "aliases": [
+          "soy sauce"
+        ],
+        "amountText": "4 tablespoon"
+      },
+      {
+        "id": "sriracha",
+        "displayName": "sriracha",
+        "canonicalName": "sriracha",
+        "aliases": [
+          "sriracha"
+        ],
+        "amountText": "2 teaspoon"
+      },
+      {
+        "id": "sesame-seeds",
+        "displayName": "sesame seeds",
+        "canonicalName": "sesame seeds",
+        "aliases": [
+          "sesame seeds"
+        ],
+        "amountText": "2 tablespoon"
+      },
+      {
+        "id": "jasmine-rice",
+        "displayName": "jasmine rice",
+        "canonicalName": "jasmine rice",
+        "aliases": [
+          "jasmine rice"
+        ],
+        "amountText": "1 cup"
+      },
+      {
+        "id": "ground-beef",
+        "displayName": "ground beef",
+        "canonicalName": "ground beef",
+        "aliases": [
+          "ground beef"
+        ],
+        "amountText": "20 ounce"
+      },
+      {
+        "id": "panko-breadcrumbs",
+        "displayName": "panko breadcrumbs",
+        "canonicalName": "panko breadcrumbs",
+        "aliases": [
+          "panko breadcrumbs"
+        ],
+        "amountText": "\u00bd cup"
+      },
+      {
+        "id": "green-beans",
+        "displayName": "green beans",
+        "canonicalName": "green beans",
+        "aliases": [
+          "green beans"
+        ],
+        "amountText": "12 ounce"
+      },
+      {
+        "id": "korean-chili-flakes",
+        "displayName": "korean chili flakes",
+        "canonicalName": "korean chili flakes",
+        "aliases": [
+          "korean chili flakes"
+        ],
+        "amountText": "1 teaspoon"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "1 tablespoon"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Preheat oven to 425\u00b0F. Slice scallions (whites/minced, greens/garnish). Mince ginger",
+        "displayText": "Preheat oven to 425\u00b0F. Slice scallions (whites/minced, greens/garnish). Mince ginger",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "In a bowl, mix mayo, sour cream, honey, 2 tsp soy sauce, and sriracha to taste for sauce",
+        "displayText": "In a bowl, mix mayo, sour cream, honey, 2 tsp soy sauce, and sriracha to taste for sauce",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Toast half the sesame seeds in oil, then add rice, water, and salt. Simmer covered 15\u201318 min",
+        "displayText": "Toast half the sesame seeds in oil, then add rice, water, and salt. Simmer covered 15\u201318 min",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "In another bowl, mix beef, panko, ginger, scallion whites, remaining soy sauce, salt, and pepper. Form into meatballs",
+        "displayText": "In another bowl, mix beef, panko, ginger, scallion whites, remaining soy sauce, salt, and pepper. Form into meatballs",
+        "ingredientRefs": []
+      },
+      {
+        "index": 5,
+        "speakShort": "Place meatballs and green beans (with oil, salt, pepper) on a baking sheet. Roast 14\u201316 min",
+        "displayText": "Place meatballs and green beans (with oil, salt, pepper) on a baking sheet. Roast 14\u201316 min",
+        "ingredientRefs": []
+      },
+      {
+        "index": 6,
+        "speakShort": "Fluff rice. Toss meatballs in firecracker sauce. Plate rice, meatballs, and green beans. Garnish with scallion greens, sesame seeds, and chili flakes to taste",
+        "displayText": "Fluff rice. Toss meatballs in firecracker sauce. Plate rice, meatballs, and green beans. Garnish with scallion greens, sesame seeds, and chili flakes to taste",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "firecracker",
+      "ginger",
+      "green beans",
+      "ground beef",
+      "honey",
+      "jasmine rice",
+      "korean chili flakes",
+      "mayonnaise",
+      "meatballs",
+      "oil",
+      "panko breadcrumbs",
+      "pepper",
+      "salt",
+      "scallions",
+      "sesame seeds",
+      "sour cream",
+      "soy sauce",
+      "sriracha"
+    ],
+    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/5ea70fe14c4efb3fb12140f1-af8fa452.jpg",
+    "sourceStars": {
+      "pink": 3,
+      "blue": 1
+    }
+  },
+  {
+    "id": "16",
+    "name": "Sweet Chili Beef & Green Bean Bowls",
+    "displayName": "Sweet Chili Beef & Green Bean Bowls",
+    "aliases": [
+      "sweet chili beef & green bean bowls"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "jasmine-rice",
+        "displayName": "jasmine rice",
+        "canonicalName": "jasmine rice",
+        "aliases": [
+          "jasmine rice"
+        ],
+        "amountText": "1.5 cup"
+      },
+      {
+        "id": "green-beans",
+        "displayName": "green beans",
+        "canonicalName": "green beans",
+        "aliases": [
+          "green beans"
+        ],
+        "amountText": "12 ounce"
+      },
+      {
+        "id": "lime",
+        "displayName": "lime",
+        "canonicalName": "lime",
+        "aliases": [
+          "lime"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "cilantro",
+        "displayName": "cilantro",
+        "canonicalName": "cilantro",
+        "aliases": [
+          "cilantro"
+        ],
+        "amountText": "\u00bc ounce"
+      },
+      {
+        "id": "ground-beef",
+        "displayName": "ground beef",
+        "canonicalName": "ground beef",
+        "aliases": [
+          "ground beef"
+        ],
+        "amountText": "20 ounce"
+      },
+      {
+        "id": "sweet-soy-glaze",
+        "displayName": "sweet soy glaze",
+        "canonicalName": "sweet soy glaze",
+        "aliases": [
+          "sweet soy glaze"
+        ],
+        "amountText": "8 tablespoon"
+      },
+      {
+        "id": "sweet-thai-chili-sauce",
+        "displayName": "sweet thai chili sauce",
+        "canonicalName": "sweet thai chili sauce",
+        "aliases": [
+          "sweet thai chili sauce"
+        ],
+        "amountText": "2 ounce"
+      },
+      {
+        "id": "crispy-fried-onions",
+        "displayName": "crispy fried onions",
+        "canonicalName": "crispy fried onions",
+        "aliases": [
+          "crispy fried onions"
+        ],
+        "amountText": "2 unit"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "1 teaspoon"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "4 tablespoon"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "sugar",
+        "displayName": "sugar",
+        "canonicalName": "sugar",
+        "aliases": [
+          "sugar"
+        ],
+        "amountText": "1 teaspoon"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Cook rice in salted water until tender, 15-18 min. Set aside",
+        "displayText": "Cook rice in salted water until tender, 15-18 min. Set aside",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Trim and chop green beans, quarter lime, chop cilantro",
+        "displayText": "Trim and chop green beans, quarter lime, chop cilantro",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Brown ground beef in oil, 3-4 min undisturbed, then break up and cook through. Drain excess grease if needed",
+        "displayText": "Brown ground beef in oil, 3-4 min undisturbed, then break up and cook through. Drain excess grease if needed",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Steam green beans in microwave with splash of water (1-2 min) or on stovetop (5-7 min)",
+        "displayText": "Steam green beans in microwave with splash of water (1-2 min) or on stovetop (5-7 min)",
+        "ingredientRefs": []
+      },
+      {
+        "index": 5,
+        "speakShort": "Add green beans to beef along with chili sauce, 2\u00bd TBSP sweet soy glaze, \u00bd tsp sugar, and 1 TBSP butter. Cook 1-2 min. Finish with lime juice",
+        "displayText": "Add green beans to beef along with chili sauce, 2\u00bd TBSP sweet soy glaze, \u00bd tsp sugar, and 1 TBSP butter. Cook 1-2 min. Finish with lime juice",
+        "ingredientRefs": []
+      },
+      {
+        "index": 6,
+        "speakShort": "Fluff rice, stir in 1 TBSP butter, season. Serve rice topped with beef, onions, cilantro, and lime wedges",
+        "displayText": "Fluff rice, stir in 1 TBSP butter, season. Serve rice topped with beef, onions, cilantro, and lime wedges",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "bean",
+      "beef",
+      "bowls",
+      "butter",
+      "chili",
+      "cilantro",
+      "crispy fried onions",
+      "green",
+      "green beans",
+      "ground beef",
+      "jasmine rice",
+      "lime",
+      "oil",
+      "pepper",
+      "salt",
+      "sugar",
+      "sweet",
+      "sweet soy glaze",
+      "sweet thai chili sauce"
+    ],
+    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/sweet-chili-beef-green-bean-bowls-03527292.jpg",
+    "sourceStars": {
+      "pink": 2,
+      "blue": 1
+    }
+  },
+  {
+    "id": "17",
+    "name": "Mozzarella & Herb Chicken",
+    "displayName": "Mozzarella & Herb Chicken",
+    "aliases": [
+      "mozzarella & herb chicken"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "lemon",
+        "displayName": "lemon",
+        "canonicalName": "lemon",
+        "aliases": [
+          "lemon"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "panko-breadcrumbs",
+        "displayName": "panko breadcrumbs",
+        "canonicalName": "panko breadcrumbs",
+        "aliases": [
+          "panko breadcrumbs"
+        ],
+        "amountText": "\u00bd cup"
+      },
+      {
+        "id": "mozzarella-cheese",
+        "displayName": "mozzarella cheese",
+        "canonicalName": "mozzarella cheese",
+        "aliases": [
+          "mozzarella cheese"
+        ],
+        "amountText": "1 cup"
+      },
+      {
+        "id": "italian-seasoning",
+        "displayName": "italian seasoning",
+        "canonicalName": "italian seasoning",
+        "aliases": [
+          "italian seasoning"
+        ],
+        "amountText": "1 tablespoon"
+      },
+      {
+        "id": "chicken-cutlets",
+        "displayName": "chicken cutlets",
+        "canonicalName": "chicken cutlets",
+        "aliases": [
+          "chicken cutlets"
+        ],
+        "amountText": "20 ounce"
+      },
+      {
+        "id": "sour-cream",
+        "displayName": "sour cream",
+        "canonicalName": "sour cream",
+        "aliases": [
+          "sour cream"
+        ],
+        "amountText": "4 tablespoon"
+      },
+      {
+        "id": "carrot",
+        "displayName": "carrot",
+        "canonicalName": "carrot",
+        "aliases": [
+          "carrot"
+        ],
+        "amountText": "24 ounce"
+      },
+      {
+        "id": "israeli-couscous",
+        "displayName": "israeli couscous",
+        "canonicalName": "israeli couscous",
+        "aliases": [
+          "israeli couscous"
+        ],
+        "amountText": "5 ounce"
+      },
+      {
+        "id": "stock-concentrate",
+        "displayName": "stock concentrate",
+        "canonicalName": "stock concentrate",
+        "aliases": [
+          "stock concentrate"
+        ],
+        "amountText": "2 unit"
+      },
+      {
+        "id": "chili-flakes",
+        "displayName": "chili flakes",
+        "canonicalName": "chili flakes",
+        "aliases": [
+          "chili flakes"
+        ],
+        "amountText": "1 teaspoon"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "7 teaspoon"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "4 tablespoon"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Preheat oven to 425\u00b0F. Wash produce. Peel and cut carrots diagonally. Zest and quarter lemon",
+        "displayText": "Preheat oven to 425\u00b0F. Wash produce. Peel and cut carrots diagonally. Zest and quarter lemon",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Mix panko, mozzarella, 1 tsp Italian seasoning, 1 TBSP olive oil, salt, and pepper. Toss carrots with oil, salt, pepper, and chili flakes. Roast carrots on top rack for 5 min",
+        "displayText": "Mix panko, mozzarella, 1 tsp Italian seasoning, 1 TBSP olive oil, salt, and pepper. Toss carrots with oil, salt, pepper, and chili flakes. Roast carrots on top rack for 5 min",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Pat chicken dry; season. Spread sour cream on top and press panko mix on top (not bottom)",
+        "displayText": "Pat chicken dry; season. Spread sour cream on top and press panko mix on top (not bottom)",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Add chicken to baking sheet. Roast 15-20 min until cooked through. Remove carrots early if done",
+        "displayText": "Add chicken to baking sheet. Roast 15-20 min until cooked through. Remove carrots early if done",
+        "ingredientRefs": []
+      },
+      {
+        "index": 5,
+        "speakShort": "Toast couscous in butter, then add water and stock concentrate. Simmer 6-8 min until tender",
+        "displayText": "Toast couscous in butter, then add water and stock concentrate. Simmer 6-8 min until tender",
+        "ingredientRefs": []
+      },
+      {
+        "index": 6,
+        "speakShort": "Finish couscous with butter, lemon zest, and juice. Season. Plate chicken, carrots, and couscous. Serve with lemon wedges",
+        "displayText": "Finish couscous with butter, lemon zest, and juice. Season. Plate chicken, carrots, and couscous. Serve with lemon wedges",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "butter",
+      "carrot",
+      "chicken",
+      "chicken cutlets",
+      "chili flakes",
+      "herb",
+      "israeli couscous",
+      "italian seasoning",
+      "lemon",
+      "mozzarella",
+      "mozzarella cheese",
+      "oil",
+      "panko breadcrumbs",
+      "pepper",
+      "salt",
+      "sour cream",
+      "stock concentrate"
+    ],
+    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/61cb23cb04b953527f52bd5a-75d9f746.jpg",
+    "sourceStars": {
+      "pink": 2,
+      "blue": 1
+    }
+  },
+  {
+    "id": "18",
+    "name": "Turkey Rag\u00f9 Spaghetti",
+    "displayName": "Turkey Rag\u00f9 Spaghetti",
+    "aliases": [
+      "turkey rag\u00f9 spaghetti"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "zucchini",
+        "displayName": "zucchini",
+        "canonicalName": "zucchini",
+        "aliases": [
+          "zucchini"
+        ],
+        "amountText": "2 unit"
+      },
+      {
+        "id": "spaghetti",
+        "displayName": "spaghetti",
+        "canonicalName": "spaghetti",
+        "aliases": [
+          "spaghetti"
+        ],
+        "amountText": "12 ounce"
+      },
+      {
+        "id": "ground-turkey",
+        "displayName": "ground turkey",
+        "canonicalName": "ground turkey",
+        "aliases": [
+          "ground turkey"
+        ],
+        "amountText": "20 ounce"
+      },
+      {
+        "id": "tuscan-heat-spice",
+        "displayName": "tuscan heat spice",
+        "canonicalName": "tuscan heat spice",
+        "aliases": [
+          "tuscan heat spice"
+        ],
+        "amountText": "2 tablespoon"
+      },
+      {
+        "id": "garlic-powder",
+        "displayName": "garlic powder",
+        "canonicalName": "garlic powder",
+        "aliases": [
+          "garlic powder"
+        ],
+        "amountText": "2 teaspoon"
+      },
+      {
+        "id": "marinara-sauce",
+        "displayName": "marinara sauce",
+        "canonicalName": "marinara sauce",
+        "aliases": [
+          "marinara sauce"
+        ],
+        "amountText": "10 ounce"
+      },
+      {
+        "id": "stock-concentrate",
+        "displayName": "stock concentrate",
+        "canonicalName": "stock concentrate",
+        "aliases": [
+          "stock concentrate"
+        ],
+        "amountText": "2 unit"
+      },
+      {
+        "id": "cream-cheese",
+        "displayName": "cream cheese",
+        "canonicalName": "cream cheese",
+        "aliases": [
+          "cream cheese"
+        ],
+        "amountText": "4 tablespoon"
+      },
+      {
+        "id": "sour-cream",
+        "displayName": "sour cream",
+        "canonicalName": "sour cream",
+        "aliases": [
+          "sour cream"
+        ],
+        "amountText": "4 tablespoon"
+      },
+      {
+        "id": "parmesan-cheese",
+        "displayName": "parmesan cheese",
+        "canonicalName": "parmesan cheese",
+        "aliases": [
+          "parmesan cheese"
+        ],
+        "amountText": "\u00bd cup"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "1 teaspoon"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "2 tablespoon"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Bring salted water to a boil. Wash produce. Grate zucchini",
+        "displayText": "Bring salted water to a boil. Wash produce. Grate zucchini",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Cook spaghetti until al dente, 9\u201311 min. Reserve \u00be cup pasta water, then drain",
+        "displayText": "Cook spaghetti until al dente, 9\u201311 min. Reserve \u00be cup pasta water, then drain",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Heat oil in pan. Cook turkey, Tuscan Heat Spice, garlic powder, salt & pepper until browned. Add zucchini and cook 2\u20133 min. Add marinara, stock, and pasta water; simmer 1\u20132 min. Lower heat and stir in cream cheese, sour cream, half the Parmesan, and butter. Season to taste",
+        "displayText": "Heat oil in pan. Cook turkey, Tuscan Heat Spice, garlic powder, salt & pepper until browned. Add zucchini and cook 2\u20133 min. Add marinara, stock, and pasta water; simmer 1\u20132 min. Lower heat and stir in cream cheese, sour cream, half the Parmesan, and butter. Season to taste",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Toss spaghetti into sauce. Add more water if needed. Plate and top with remaining Parmesan",
+        "displayText": "Toss spaghetti into sauce. Add more water if needed. Plate and top with remaining Parmesan",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "butter",
+      "cream cheese",
+      "garlic powder",
+      "ground turkey",
+      "marinara sauce",
+      "oil",
+      "parmesan cheese",
+      "pepper",
+      "rag",
+      "salt",
+      "sour cream",
+      "spaghetti",
+      "stock concentrate",
+      "turkey",
+      "tuscan heat spice",
+      "zucchini"
+    ],
+    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/turkey-ragu-spaghetti-9e4a7e0b.jpg",
+    "sourceStars": {
+      "pink": 4,
+      "blue": 2
+    }
+  },
+  {
+    "id": "19",
+    "name": "Italian Sausage Rigatoni",
+    "displayName": "Italian Sausage Rigatoni",
+    "aliases": [
+      "italian sausage rigatoni"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "romesco-sauce",
+        "displayName": "romesco sauce",
+        "canonicalName": "romesco sauce",
+        "aliases": [
+          "romesco sauce"
+        ],
+        "amountText": "12 tablespoon"
+      },
+      {
+        "id": "parmesan-cheese",
+        "displayName": "parmesan cheese",
+        "canonicalName": "parmesan cheese",
+        "aliases": [
+          "parmesan cheese"
+        ],
+        "amountText": "6 tablespoon"
+      },
+      {
+        "id": "peas",
+        "displayName": "peas",
+        "canonicalName": "peas",
+        "aliases": [
+          "peas"
+        ],
+        "amountText": "8 ounce"
+      },
+      {
+        "id": "stock-concentrate",
+        "displayName": "stock concentrate",
+        "canonicalName": "stock concentrate",
+        "aliases": [
+          "stock concentrate"
+        ],
+        "amountText": "4 unit"
+      },
+      {
+        "id": "rigatoni-pasta",
+        "displayName": "rigatoni pasta",
+        "canonicalName": "rigatoni pasta",
+        "aliases": [
+          "rigatoni pasta"
+        ],
+        "amountText": "14 ounce"
+      },
+      {
+        "id": "italian-pork-sausage",
+        "displayName": "italian pork sausage",
+        "canonicalName": "italian pork sausage",
+        "aliases": [
+          "italian pork sausage"
+        ],
+        "amountText": "18 ounce"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Preheat oven to 450\u00b0F. Remove sausage casing if needed. In oven tray, combine sausage (broken up), rigatoni, peas, romesco, stock concentrate, and 1\u00bc cups hot water. Stir to mix",
+        "displayText": "Preheat oven to 450\u00b0F. Remove sausage casing if needed. In oven tray, combine sausage (broken up), rigatoni, peas, romesco, stock concentrate, and 1\u00bc cups hot water. Stir to mix",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Cover tray tightly with foil and bake 20 min. Uncover, stir gently, and bake another 12\u201315 min until sausage is cooked and pasta is al dente",
+        "displayText": "Cover tray tightly with foil and bake 20 min. Uncover, stir gently, and bake another 12\u201315 min until sausage is cooked and pasta is al dente",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Top with Parmesan and serve",
+        "displayText": "Top with Parmesan and serve",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "italian",
+      "italian pork sausage",
+      "parmesan cheese",
+      "peas",
+      "pepper",
+      "rigatoni",
+      "rigatoni pasta",
+      "romesco sauce",
+      "sausage",
+      "stock concentrate"
+    ],
+    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/677d63b0a90519950138cdf5-1c1598c6.jpeg",
+    "sourceStars": {
+      "pink": 3,
+      "blue": 3
+    }
+  },
+  {
+    "id": "20",
+    "name": "Pork Sausage Rigatoni Rosa",
+    "displayName": "Pork Sausage Rigatoni Rosa",
+    "aliases": [
+      "pork sausage rigatoni rosa"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "rigatoni-pasta",
+        "displayName": "rigatoni pasta",
+        "canonicalName": "rigatoni pasta",
+        "aliases": [
+          "rigatoni pasta"
+        ],
+        "amountText": "6 ounce"
+      },
+      {
+        "id": "zucchini",
+        "displayName": "zucchini",
+        "canonicalName": "zucchini",
+        "aliases": [
+          "zucchini"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "garlic",
+        "displayName": "garlic",
+        "canonicalName": "garlic",
+        "aliases": [
+          "garlic"
+        ],
+        "amountText": "1 clove"
+      },
+      {
+        "id": "italian-pork-sausage",
+        "displayName": "italian pork sausage",
+        "canonicalName": "italian pork sausage",
+        "aliases": [
+          "italian pork sausage"
+        ],
+        "amountText": "9 ounce"
+      },
+      {
+        "id": "tomato-paste",
+        "displayName": "tomato paste",
+        "canonicalName": "tomato paste",
+        "aliases": [
+          "tomato paste"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "cream-cheese",
+        "displayName": "cream cheese",
+        "canonicalName": "cream cheese",
+        "aliases": [
+          "cream cheese"
+        ],
+        "amountText": "4 tablespoon"
+      },
+      {
+        "id": "stock-concentrate",
+        "displayName": "stock concentrate",
+        "canonicalName": "stock concentrate",
+        "aliases": [
+          "stock concentrate"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "chili-flakes",
+        "displayName": "chili flakes",
+        "canonicalName": "chili flakes",
+        "aliases": [
+          "chili flakes"
+        ],
+        "amountText": "1 teaspoon"
+      },
+      {
+        "id": "parmesan-cheese",
+        "displayName": "parmesan cheese",
+        "canonicalName": "parmesan cheese",
+        "aliases": [
+          "parmesan cheese"
+        ],
+        "amountText": "6 tablespoon"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "2 teaspoon"
+      },
+      {
+        "id": "sugar",
+        "displayName": "sugar",
+        "canonicalName": "sugar",
+        "aliases": [
+          "sugar"
+        ],
+        "amountText": "\u00bd teaspoon"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "1 tablespoon"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Boil salted water and cook rigatoni 9\u201311 min until al dente. Reserve 1 cup pasta water, then drain. Slice zucchini into half-moons and mince garlic",
+        "displayText": "Boil salted water and cook rigatoni 9\u201311 min until al dente. Reserve 1 cup pasta water, then drain. Slice zucchini into half-moons and mince garlic",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Saut\u00e9 zucchini in oil 5\u20136 min. Remove. Cook sausage in same pan until almost done",
+        "displayText": "Saut\u00e9 zucchini in oil 5\u20136 min. Remove. Cook sausage in same pan until almost done",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Add garlic and tomato paste; cook 1\u20132 min. Stir in cream cheese, stock, \u00bd cup pasta water, butter, sugar, and chili flakes. Mix until smooth",
+        "displayText": "Add garlic and tomato paste; cook 1\u20132 min. Stir in cream cheese, stock, \u00bd cup pasta water, butter, sugar, and chili flakes. Mix until smooth",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Add pasta and zucchini. Stir in half the Parmesan. Add more water as needed for creamy texture. Top with remaining Parmesan and serve",
+        "displayText": "Add pasta and zucchini. Stir in half the Parmesan. Add more water as needed for creamy texture. Top with remaining Parmesan and serve",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "butter",
+      "chili flakes",
+      "cream cheese",
+      "garlic",
+      "italian pork sausage",
+      "oil",
+      "parmesan cheese",
+      "pepper",
+      "pork",
+      "rigatoni",
+      "rigatoni pasta",
+      "rosa",
+      "salt",
+      "sausage",
+      "stock concentrate",
+      "sugar",
+      "tomato paste",
+      "zucchini"
+    ],
+    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/645a65528287f79d14049049-3adf3746.jpg",
+    "sourceStars": {
+      "pink": 3,
+      "blue": 4
+    }
+  },
+  {
+    "id": "21",
+    "name": "Turkey & Queso Nacho Crunch Burritos",
+    "displayName": "Turkey & Queso Nacho Crunch Burritos",
+    "aliases": [
+      "turkey & queso nacho crunch burritos"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "flour-tortillas",
+        "displayName": "flour tortillas",
+        "canonicalName": "flour tortillas",
+        "aliases": [
+          "flour tortillas"
+        ],
+        "amountText": "2 unit"
+      },
+      {
+        "id": "ground-turkey",
+        "displayName": "ground turkey",
+        "canonicalName": "ground turkey",
+        "aliases": [
+          "ground turkey"
+        ],
+        "amountText": "10 ounce"
+      },
+      {
+        "id": "blue-corn-tortilla-chips",
+        "displayName": "blue corn tortilla chips",
+        "canonicalName": "blue corn tortilla chips",
+        "aliases": [
+          "blue corn tortilla chips"
+        ],
+        "amountText": "1.5 ounce"
+      },
+      {
+        "id": "queso-blanco",
+        "displayName": "queso blanco",
+        "canonicalName": "queso blanco",
+        "aliases": [
+          "queso blanco"
+        ],
+        "amountText": "3 ounce"
+      },
+      {
+        "id": "tomato",
+        "displayName": "tomato",
+        "canonicalName": "tomato",
+        "aliases": [
+          "tomato"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "lime",
+        "displayName": "lime",
+        "canonicalName": "lime",
+        "aliases": [
+          "lime"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "scallions",
+        "displayName": "scallions",
+        "canonicalName": "scallions",
+        "aliases": [
+          "scallions"
+        ],
+        "amountText": "2 unit"
+      },
+      {
+        "id": "jasmine-rice",
+        "displayName": "jasmine rice",
+        "canonicalName": "jasmine rice",
+        "aliases": [
+          "jasmine rice"
+        ],
+        "amountText": "3/4 cup"
+      },
+      {
+        "id": "southwest-spice-blend",
+        "displayName": "southwest spice blend",
+        "canonicalName": "southwest spice blend",
+        "aliases": [
+          "southwest spice blend"
+        ],
+        "amountText": "1 tablespoon"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "1 teaspoon"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Cook rice in salted water until tender, about 15 minutes. Keep covered off heat",
+        "displayText": "Cook rice in salted water until tender, about 15 minutes. Keep covered off heat",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Dice tomato. Slice scallions, separating whites and greens. Quarter lime",
+        "displayText": "Dice tomato. Slice scallions, separating whites and greens. Quarter lime",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Heat oil in a large pan. Add ground turkey, scallion whites, and Southwest Spice Blend. Cook, breaking up meat, until browned and cooked through",
+        "displayText": "Heat oil in a large pan. Add ground turkey, scallion whites, and Southwest Spice Blend. Cook, breaking up meat, until browned and cooked through",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Warm queso in a small bowl. Crush tortilla chips slightly for crunch",
+        "displayText": "Warm queso in a small bowl. Crush tortilla chips slightly for crunch",
+        "ingredientRefs": []
+      },
+      {
+        "index": 5,
+        "speakShort": "Stir lime zest and juice into rice along with scallion greens. Season to taste",
+        "displayText": "Stir lime zest and juice into rice along with scallion greens. Season to taste",
+        "ingredientRefs": []
+      },
+      {
+        "index": 6,
+        "speakShort": "Warm tortillas. Fill each with rice, turkey mixture, tomato, queso, and crushed chips",
+        "displayText": "Warm tortillas. Fill each with rice, turkey mixture, tomato, queso, and crushed chips",
+        "ingredientRefs": []
+      },
+      {
+        "index": 7,
+        "speakShort": "Roll into burritos, slice if desired, and serve with extra lime wedges",
+        "displayText": "Roll into burritos, slice if desired, and serve with extra lime wedges",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "blue corn tortilla chips",
+      "burritos",
+      "crunch",
+      "flour tortillas",
+      "ground turkey",
+      "jasmine rice",
+      "lime",
+      "nacho",
+      "oil",
+      "pepper",
+      "queso",
+      "queso blanco",
+      "salt",
+      "scallions",
+      "southwest spice blend",
+      "tomato",
+      "turkey"
+    ],
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/686405270203e9f8dbb4c73c-73411493-8290f7cc.jpeg",
+    "sourceStars": {
+      "pink": 3,
+      "blue": 4
+    }
+  },
+  {
+    "id": "22",
+    "name": "Chicken Sausage and Spinach Ravioli",
+    "displayName": "Chicken Sausage and Spinach Ravioli",
+    "aliases": [
+      "chicken sausage and spinach ravioli"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "scallions",
+        "displayName": "scallions",
+        "canonicalName": "scallions",
+        "aliases": [
+          "scallions"
+        ],
+        "amountText": "4 unit"
+      },
+      {
+        "id": "roma-tomato",
+        "displayName": "roma tomato",
+        "canonicalName": "roma tomato",
+        "aliases": [
+          "roma tomato"
+        ],
+        "amountText": "2 unit"
+      },
+      {
+        "id": "lemon",
+        "displayName": "lemon",
+        "canonicalName": "lemon",
+        "aliases": [
+          "lemon"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "italian-chicken-sausage-mix",
+        "displayName": "italian chicken sausage mix",
+        "canonicalName": "italian chicken sausage mix",
+        "aliases": [
+          "italian chicken sausage mix"
+        ],
+        "amountText": "18 ounce"
+      },
+      {
+        "id": "italian-seasoning",
+        "displayName": "italian seasoning",
+        "canonicalName": "italian seasoning",
+        "aliases": [
+          "italian seasoning"
+        ],
+        "amountText": "2 tablespoon"
+      },
+      {
+        "id": "spinach-and-ricotta-ravioli",
+        "displayName": "spinach and ricotta ravioli",
+        "canonicalName": "spinach and ricotta ravioli",
+        "aliases": [
+          "spinach and ricotta ravioli"
+        ],
+        "amountText": "18 ounce"
+      },
+      {
+        "id": "stock-concentrate",
+        "displayName": "stock concentrate",
+        "canonicalName": "stock concentrate",
+        "aliases": [
+          "stock concentrate"
+        ],
+        "amountText": "2 unit"
+      },
+      {
+        "id": "sour-cream",
+        "displayName": "sour cream",
+        "canonicalName": "sour cream",
+        "aliases": [
+          "sour cream"
+        ],
+        "amountText": "8 tablespoon"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "2 teaspoon"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "2 tablespoon"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Bring salted water to a boil. Slice scallions (separate whites and greens), dice tomato, quarter lemon",
+        "displayText": "Bring salted water to a boil. Slice scallions (separate whites and greens), dice tomato, quarter lemon",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Heat oil in large pan. Add scallion whites, sausage, and Italian seasoning. Cook 3\u20135 min until browned. Stir in tomato and cook 1\u20132 min",
+        "displayText": "Heat oil in large pan. Add scallion whites, sausage, and Italian seasoning. Cook 3\u20135 min until browned. Stir in tomato and cook 1\u20132 min",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Cook ravioli in boiling water 4\u20135 min until floating. Reserve \u00bd cup pasta water, then drain well",
+        "displayText": "Cook ravioli in boiling water 4\u20135 min until floating. Reserve \u00bd cup pasta water, then drain well",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Stir stock concentrate, lemon juice, and splash of pasta water into sausage pan. Simmer 1\u20132 min. Stir in sour cream and butter. Season. Add more pasta water if needed for creaminess",
+        "displayText": "Stir stock concentrate, lemon juice, and splash of pasta water into sausage pan. Simmer 1\u20132 min. Stir in sour cream and butter. Season. Add more pasta water if needed for creaminess",
+        "ingredientRefs": []
+      },
+      {
+        "index": 5,
+        "speakShort": "Gently stir ravioli into sauce. Adjust salt, pepper, and lemon to taste",
+        "displayText": "Gently stir ravioli into sauce. Adjust salt, pepper, and lemon to taste",
+        "ingredientRefs": []
+      },
+      {
+        "index": 6,
+        "speakShort": "Divide into bowls and garnish with scallion greens. Serve with extra lemon wedges",
+        "displayText": "Divide into bowls and garnish with scallion greens. Serve with extra lemon wedges",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "and",
+      "butter",
+      "chicken",
+      "italian chicken sausage mix",
+      "italian seasoning",
+      "lemon",
+      "oil",
+      "pepper",
+      "ravioli",
+      "roma tomato",
+      "salt",
+      "sausage",
+      "scallions",
+      "sour cream",
+      "spinach",
+      "spinach and ricotta ravioli",
+      "stock concentrate"
+    ],
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/5db88f3a508f707ab355cde4-5ce05c01.jpg",
+    "sourceStars": {
+      "pink": 4,
+      "blue": 4
+    }
+  },
+  {
+    "id": "23",
+    "name": "Creamy Chicken & Bacon Spaghetti",
+    "displayName": "Creamy Chicken & Bacon Spaghetti",
+    "aliases": [
+      "creamy chicken & bacon spaghetti"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "tomato",
+        "displayName": "tomato",
+        "canonicalName": "tomato",
+        "aliases": [
+          "tomato"
+        ],
+        "amountText": "2 unit"
+      },
+      {
+        "id": "garlic",
+        "displayName": "garlic",
+        "canonicalName": "garlic",
+        "aliases": [
+          "garlic"
+        ],
+        "amountText": "1 clove"
+      },
+      {
+        "id": "tuscan-heat-spice",
+        "displayName": "tuscan heat spice",
+        "canonicalName": "tuscan heat spice",
+        "aliases": [
+          "tuscan heat spice"
+        ],
+        "amountText": "1 tablespoon"
+      },
+      {
+        "id": "spaghetti",
+        "displayName": "spaghetti",
+        "canonicalName": "spaghetti",
+        "aliases": [
+          "spaghetti"
+        ],
+        "amountText": "6 ounce"
+      },
+      {
+        "id": "chicken-cutlets",
+        "displayName": "chicken cutlets",
+        "canonicalName": "chicken cutlets",
+        "aliases": [
+          "chicken cutlets"
+        ],
+        "amountText": "10 ounce"
+      },
+      {
+        "id": "cream-cheese",
+        "displayName": "cream cheese",
+        "canonicalName": "cream cheese",
+        "aliases": [
+          "cream cheese"
+        ],
+        "amountText": "4 tablespoon"
+      },
+      {
+        "id": "parmesan-cheese",
+        "displayName": "parmesan cheese",
+        "canonicalName": "parmesan cheese",
+        "aliases": [
+          "parmesan cheese"
+        ],
+        "amountText": "3 tablespoon"
+      },
+      {
+        "id": "bacon",
+        "displayName": "bacon",
+        "canonicalName": "bacon",
+        "aliases": [
+          "bacon"
+        ],
+        "amountText": "4 ounce"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Preheat oven to 400\u00b0F. Cut tomatoes into wedges. Wrap garlic in foil with olive oil, salt, and pepper. Roast tomatoes (with Tuscan Heat Spice) and garlic 20\u201325 minutes",
+        "displayText": "Preheat oven to 400\u00b0F. Cut tomatoes into wedges. Wrap garlic in foil with olive oil, salt, and pepper. Roast tomatoes (with Tuscan Heat Spice) and garlic 20\u201325 minutes",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Cook bacon in a pan until crispy, 6\u201310 minutes. Remove and chop",
+        "displayText": "Cook bacon in a pan until crispy, 6\u201310 minutes. Remove and chop",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Boil salted water and cook spaghetti 9\u201311 minutes until al dente. Reserve \u00be cup pasta water, then drain",
+        "displayText": "Boil salted water and cook spaghetti 9\u201311 minutes until al dente. Reserve \u00be cup pasta water, then drain",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Season chicken with Tuscan Heat Spice, salt, and pepper. Cook in oil 3\u20135 minutes per side until cooked through. Keep warm",
+        "displayText": "Season chicken with Tuscan Heat Spice, salt, and pepper. Cook in oil 3\u20135 minutes per side until cooked through. Keep warm",
+        "ingredientRefs": []
+      },
+      {
+        "index": 5,
+        "speakShort": "In pasta pot, melt butter. Mash roasted garlic with Tuscan Heat Spice. Stir in reserved pasta water, cream cheese, half the Parmesan, and more butter until smooth",
+        "displayText": "In pasta pot, melt butter. Mash roasted garlic with Tuscan Heat Spice. Stir in reserved pasta water, cream cheese, half the Parmesan, and more butter until smooth",
+        "ingredientRefs": []
+      },
+      {
+        "index": 6,
+        "speakShort": "Toss spaghetti in sauce until coated. Plate with sliced chicken and roasted tomatoes. Top with bacon and remaining Parmesan",
+        "displayText": "Toss spaghetti in sauce until coated. Plate with sliced chicken and roasted tomatoes. Top with bacon and remaining Parmesan",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "bacon",
+      "butter",
+      "chicken",
+      "chicken cutlets",
+      "cream cheese",
+      "creamy",
+      "garlic",
+      "oil",
+      "parmesan cheese",
+      "pepper",
+      "salt",
+      "spaghetti",
+      "tomato",
+      "tuscan heat spice"
+    ],
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/675743c5daedc2bd1295827f-f9a73627.jpeg",
+    "sourceStars": {
+      "pink": 3,
+      "blue": 2
+    }
+  },
+  {
+    "id": "24",
+    "name": "Garlic Butter Shrimp Scampi",
+    "displayName": "Garlic Butter Shrimp Scampi",
+    "aliases": [
+      "garlic butter shrimp scampi"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "stock-concentrate",
+        "displayName": "stock concentrate",
+        "canonicalName": "stock concentrate",
+        "aliases": [
+          "stock concentrate"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "lemon",
+        "displayName": "lemon",
+        "canonicalName": "lemon",
+        "aliases": [
+          "lemon"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "shrimp",
+        "displayName": "shrimp",
+        "canonicalName": "shrimp",
+        "aliases": [
+          "shrimp"
+        ],
+        "amountText": "10 ounce"
+      },
+      {
+        "id": "garlic",
+        "displayName": "garlic",
+        "canonicalName": "garlic",
+        "aliases": [
+          "garlic"
+        ],
+        "amountText": "2 clove"
+      },
+      {
+        "id": "linguine-pasta",
+        "displayName": "linguine pasta",
+        "canonicalName": "linguine pasta",
+        "aliases": [
+          "linguine pasta"
+        ],
+        "amountText": "6 ounce"
+      },
+      {
+        "id": "parmesan-cheese",
+        "displayName": "parmesan cheese",
+        "canonicalName": "parmesan cheese",
+        "aliases": [
+          "parmesan cheese"
+        ],
+        "amountText": "3 tablespoon"
+      },
+      {
+        "id": "broccoli",
+        "displayName": "broccoli",
+        "canonicalName": "broccoli",
+        "aliases": [
+          "broccoli"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "chili-flakes",
+        "displayName": "chili flakes",
+        "canonicalName": "chili flakes",
+        "aliases": [
+          "chili flakes"
+        ],
+        "amountText": "1 teaspoon"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "1 tablespoon"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "3 tablespoon"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Preheat oven to 450\u00b0F. Cut broccoli into florets. Zest and quarter lemon. Mince garlic",
+        "displayText": "Preheat oven to 450\u00b0F. Cut broccoli into florets. Zest and quarter lemon. Mince garlic",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Toss broccoli with olive oil, salt, and pepper. Roast 12\u201315 minutes until crispy",
+        "displayText": "Toss broccoli with olive oil, salt, and pepper. Roast 12\u201315 minutes until crispy",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Cook linguine in salted boiling water 9\u201311 minutes until al dente. Reserve \u00bd cup pasta water, then drain",
+        "displayText": "Cook linguine in salted boiling water 9\u201311 minutes until al dente. Reserve \u00bd cup pasta water, then drain",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Soften butter and mix with lemon zest, half the Parmesan, a pinch of garlic, and chili flakes",
+        "displayText": "Soften butter and mix with lemon zest, half the Parmesan, a pinch of garlic, and chili flakes",
+        "ingredientRefs": []
+      },
+      {
+        "index": 5,
+        "speakShort": "Pat shrimp dry. Toss with olive oil, remaining garlic, salt, and pepper. Cook in a hot pan 2\u20134 minutes until opaque",
+        "displayText": "Pat shrimp dry. Toss with olive oil, remaining garlic, salt, and pepper. Cook in a hot pan 2\u20134 minutes until opaque",
+        "ingredientRefs": []
+      },
+      {
+        "index": 6,
+        "speakShort": "Add pasta, broccoli, stock concentrate, garlic butter, and reserved pasta water to shrimp. Toss until coated. Finish with lemon juice, salt, and pepper. Serve topped with remaining Parmesan and chili flakes",
+        "displayText": "Add pasta, broccoli, stock concentrate, garlic butter, and reserved pasta water to shrimp. Toss until coated. Finish with lemon juice, salt, and pepper. Serve topped with remaining Parmesan and chili flakes",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "broccoli",
+      "butter",
+      "chili flakes",
+      "garlic",
+      "lemon",
+      "linguine pasta",
+      "oil",
+      "parmesan cheese",
+      "pepper",
+      "salt",
+      "scampi",
+      "shrimp",
+      "stock concentrate"
+    ],
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/68b6ccba51932a34199cfdfb-e9b5ef03-12a017d3.jpeg",
+    "sourceStars": {
+      "pink": 4,
+      "blue": 3
+    }
+  },
+  {
+    "id": "25",
+    "name": "Garlicky Shrimp Couscous Bowls",
+    "displayName": "Garlicky Shrimp Couscous Bowls",
+    "aliases": [
+      "garlicky shrimp couscous bowls"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "broccoli",
+        "displayName": "broccoli",
+        "canonicalName": "broccoli",
+        "aliases": [
+          "broccoli"
+        ],
+        "amountText": "8 ounce"
+      },
+      {
+        "id": "garlic",
+        "displayName": "garlic",
+        "canonicalName": "garlic",
+        "aliases": [
+          "garlic"
+        ],
+        "amountText": "2 clove"
+      },
+      {
+        "id": "parsley",
+        "displayName": "parsley",
+        "canonicalName": "parsley",
+        "aliases": [
+          "parsley"
+        ],
+        "amountText": "1/4 ounce"
+      },
+      {
+        "id": "lemon",
+        "displayName": "lemon",
+        "canonicalName": "lemon",
+        "aliases": [
+          "lemon"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "chili-flakes",
+        "displayName": "chili flakes",
+        "canonicalName": "chili flakes",
+        "aliases": [
+          "chili flakes"
+        ],
+        "amountText": "1 teaspoon"
+      },
+      {
+        "id": "israeli-couscous",
+        "displayName": "israeli couscous",
+        "canonicalName": "israeli couscous",
+        "aliases": [
+          "israeli couscous"
+        ],
+        "amountText": "2.5 ounce"
+      },
+      {
+        "id": "veggie-stock-concentrate",
+        "displayName": "veggie stock concentrate",
+        "canonicalName": "veggie stock concentrate",
+        "aliases": [
+          "veggie stock concentrate"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "shrimp",
+        "displayName": "shrimp",
+        "canonicalName": "shrimp",
+        "aliases": [
+          "shrimp"
+        ],
+        "amountText": "10 ounce"
+      },
+      {
+        "id": "garlic-powder",
+        "displayName": "garlic powder",
+        "canonicalName": "garlic powder",
+        "aliases": [
+          "garlic powder"
+        ],
+        "amountText": "1 teaspoon"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "5 teaspoon"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "1 tablespoon"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Preheat oven to 450\u00b0F. Cut broccoli if needed. Mince garlic, chop parsley, quarter lemon",
+        "displayText": "Preheat oven to 450\u00b0F. Cut broccoli if needed. Mince garlic, chop parsley, quarter lemon",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Toss broccoli with olive oil, chili flakes, salt, and pepper. Roast 12\u201315 minutes",
+        "displayText": "Toss broccoli with olive oil, chili flakes, salt, and pepper. Roast 12\u201315 minutes",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "In a small pot, saut\u00e9 half the garlic in olive oil. Add couscous, stock concentrate, water, and salt. Simmer covered 6\u20138 minutes until tender",
+        "displayText": "In a small pot, saut\u00e9 half the garlic in olive oil. Add couscous, stock concentrate, water, and salt. Simmer covered 6\u20138 minutes until tender",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Pat shrimp dry. Cook in olive oil with garlic powder, salt, and pepper 3\u20134 minutes. Add water and cook until evaporated. Lower heat; add butter, remaining garlic, chili flakes. Toss with half the parsley and lemon juice",
+        "displayText": "Pat shrimp dry. Cook in olive oil with garlic powder, salt, and pepper 3\u20134 minutes. Add water and cook until evaporated. Lower heat; add butter, remaining garlic, chili flakes. Toss with half the parsley and lemon juice",
+        "ingredientRefs": []
+      },
+      {
+        "index": 5,
+        "speakShort": "Fluff couscous. Stir in remaining parsley, lemon juice, and olive oil. Season",
+        "displayText": "Fluff couscous. Stir in remaining parsley, lemon juice, and olive oil. Season",
+        "ingredientRefs": []
+      },
+      {
+        "index": 6,
+        "speakShort": "Divide couscous into bowls. Top with shrimp and broccoli. Spoon garlic butter over and serve with lemon wedges",
+        "displayText": "Divide couscous into bowls. Top with shrimp and broccoli. Spoon garlic butter over and serve with lemon wedges",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "bowls",
+      "broccoli",
+      "butter",
+      "chili flakes",
+      "couscous",
+      "garlic",
+      "garlic powder",
+      "garlicky",
+      "israeli couscous",
+      "lemon",
+      "oil",
+      "parsley",
+      "pepper",
+      "salt",
+      "shrimp",
+      "veggie stock concentrate"
+    ],
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/garlicky-shrimp-couscous-bowls-518874cd.jpg",
+    "sourceStars": {
+      "pink": 5,
+      "blue": 2
+    }
+  },
+  {
+    "id": "26",
+    "name": "Lemony Chicken & Grains Spinach Salad",
+    "displayName": "Lemony Chicken & Grains Spinach Salad",
+    "aliases": [
+      "lemony chicken & grains spinach salad"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "feta-cheese",
+        "displayName": "feta cheese",
+        "canonicalName": "feta cheese",
+        "aliases": [
+          "feta cheese"
+        ],
+        "amountText": "1/2 cup"
+      },
+      {
+        "id": "spinach",
+        "displayName": "spinach",
+        "canonicalName": "spinach",
+        "aliases": [
+          "spinach"
+        ],
+        "amountText": "2.5 ounce"
+      },
+      {
+        "id": "yogurt",
+        "displayName": "yogurt",
+        "canonicalName": "yogurt",
+        "aliases": [
+          "yogurt"
+        ],
+        "amountText": "2 tablespoon"
+      },
+      {
+        "id": "green-goddess-dressing",
+        "displayName": "green goddess dressing",
+        "canonicalName": "green goddess dressing",
+        "aliases": [
+          "green goddess dressing"
+        ],
+        "amountText": "2 ounce"
+      },
+      {
+        "id": "lemon-herb-diced-chicken-thighs",
+        "displayName": "lemon-herb diced chicken thighs",
+        "canonicalName": "lemon-herb diced chicken thighs",
+        "aliases": [
+          "lemon-herb diced chicken thighs"
+        ],
+        "amountText": "10 ounce"
+      },
+      {
+        "id": "microwavable-grain-blend",
+        "displayName": "microwavable grain blend",
+        "canonicalName": "microwavable grain blend",
+        "aliases": [
+          "microwavable grain blend"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Heat oil in a large pan over medium-high. Add chicken and cook until beginning to brown, 2\u20134 minutes",
+        "displayText": "Heat oil in a large pan over medium-high. Add chicken and cook until beginning to brown, 2\u20134 minutes",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Separate grain blend in package, then add to pan with chicken along with 2 TBSP water. Cover and cook until warmed through and chicken is fully cooked, 2\u20134 minutes. Season with salt and pepper",
+        "displayText": "Separate grain blend in package, then add to pan with chicken along with 2 TBSP water. Cover and cook until warmed through and chicken is fully cooked, 2\u20134 minutes. Season with salt and pepper",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "In a large bowl, whisk together green goddess dressing, yogurt, olive oil, salt, and pepper",
+        "displayText": "In a large bowl, whisk together green goddess dressing, yogurt, olive oil, salt, and pepper",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Add spinach and chicken-grain mixture to bowl; toss to coat. Divide between bowls and sprinkle with feta",
+        "displayText": "Add spinach and chicken-grain mixture to bowl; toss to coat. Divide between bowls and sprinkle with feta",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "chicken",
+      "feta cheese",
+      "grains",
+      "green goddess dressing",
+      "lemon-herb diced chicken thighs",
+      "lemony",
+      "microwavable grain blend",
+      "oil",
+      "pepper",
+      "salad",
+      "salt",
+      "spinach",
+      "yogurt"
+    ],
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/67619f9cbdfa7f79d1f16a13-d487407a-79ca89c1.jpeg",
+    "sourceStars": {
+      "pink": 0,
+      "blue": 1
+    }
+  },
+  {
+    "id": "27",
+    "name": "Mushroom Ravioli in a Tomato Cream Sauce",
+    "displayName": "Mushroom Ravioli in a Tomato Cream Sauce",
+    "aliases": [
+      "mushroom ravioli in a tomato cream sauce"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "grape-tomatoes",
+        "displayName": "grape tomatoes",
+        "canonicalName": "grape tomatoes",
+        "aliases": [
+          "grape tomatoes"
+        ],
+        "amountText": "4 ounce"
+      },
+      {
+        "id": "ricotta-cheese",
+        "displayName": "ricotta cheese",
+        "canonicalName": "ricotta cheese",
+        "aliases": [
+          "ricotta cheese"
+        ],
+        "amountText": "4 ounce"
+      },
+      {
+        "id": "italian-seasoning",
+        "displayName": "italian seasoning",
+        "canonicalName": "italian seasoning",
+        "aliases": [
+          "italian seasoning"
+        ],
+        "amountText": "1 tablespoon"
+      },
+      {
+        "id": "marinara-sauce",
+        "displayName": "marinara sauce",
+        "canonicalName": "marinara sauce",
+        "aliases": [
+          "marinara sauce"
+        ],
+        "amountText": "14 ounce"
+      },
+      {
+        "id": "stock-concentrate",
+        "displayName": "stock concentrate",
+        "canonicalName": "stock concentrate",
+        "aliases": [
+          "stock concentrate"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "cream-cheese",
+        "displayName": "cream cheese",
+        "canonicalName": "cream cheese",
+        "aliases": [
+          "cream cheese"
+        ],
+        "amountText": "2 tablespoon"
+      },
+      {
+        "id": "mushroom-ravioli",
+        "displayName": "mushroom ravioli",
+        "canonicalName": "mushroom ravioli",
+        "aliases": [
+          "mushroom ravioli"
+        ],
+        "amountText": "9 ounce"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "2 teaspoon"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "1 tablespoon"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Bring a medium pot of salted water to a boil. Halve large tomatoes. Stir ricotta with olive oil, salt, and pepper",
+        "displayText": "Bring a medium pot of salted water to a boil. Halve large tomatoes. Stir ricotta with olive oil, salt, and pepper",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Heat olive oil in a large pan. Add tomatoes and Italian seasoning; cook 2\u20133 minutes. Stir in stock concentrate, marinara, cream cheese, and water. Simmer until thickened",
+        "displayText": "Heat olive oil in a large pan. Add tomatoes and Italian seasoning; cook 2\u20133 minutes. Stir in stock concentrate, marinara, cream cheese, and water. Simmer until thickened",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Cook ravioli in boiling water until tender and floating, 3\u20134 minutes. Reserve \u00bc cup pasta water, then drain",
+        "displayText": "Cook ravioli in boiling water until tender and floating, 3\u20134 minutes. Reserve \u00bc cup pasta water, then drain",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Add ravioli and butter to sauce; toss to coat. Add reserved pasta water as needed for creaminess. Season",
+        "displayText": "Add ravioli and butter to sauce; toss to coat. Add reserved pasta water as needed for creaminess. Season",
+        "ingredientRefs": []
+      },
+      {
+        "index": 5,
+        "speakShort": "Divide between bowls and top with a dollop of ricotta",
+        "displayText": "Divide between bowls and top with a dollop of ricotta",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "a",
+      "butter",
+      "cream",
+      "cream cheese",
+      "grape tomatoes",
+      "in",
+      "italian seasoning",
+      "marinara sauce",
+      "mushroom",
+      "mushroom ravioli",
+      "oil",
+      "pepper",
+      "ravioli",
+      "ricotta cheese",
+      "salt",
+      "sauce",
+      "stock concentrate",
+      "tomato"
+    ],
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/mushroom-ravioli-in-a-tomato-cream-sauce-22a0ad00.jpg",
+    "sourceStars": {
+      "pink": 4,
+      "blue": 4
+    }
+  },
+  {
+    "id": "28",
+    "name": "One-Pan Baja Chicken Quesadillas",
+    "displayName": "One-Pan Baja Chicken Quesadillas",
+    "aliases": [
+      "one-pan baja chicken quesadillas"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "yellow-onion",
+        "displayName": "yellow onion",
+        "canonicalName": "yellow onion",
+        "aliases": [
+          "yellow onion"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "diced-chicken-thighs",
+        "displayName": "diced chicken thighs",
+        "canonicalName": "diced chicken thighs",
+        "aliases": [
+          "diced chicken thighs"
+        ],
+        "amountText": "10 ounce"
+      },
+      {
+        "id": "blackening-spice",
+        "displayName": "blackening spice",
+        "canonicalName": "blackening spice",
+        "aliases": [
+          "blackening spice"
+        ],
+        "amountText": "1 tablespoon"
+      },
+      {
+        "id": "lime",
+        "displayName": "lime",
+        "canonicalName": "lime",
+        "aliases": [
+          "lime"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "tomato",
+        "displayName": "tomato",
+        "canonicalName": "tomato",
+        "aliases": [
+          "tomato"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "sour-cream",
+        "displayName": "sour cream",
+        "canonicalName": "sour cream",
+        "aliases": [
+          "sour cream"
+        ],
+        "amountText": "3 tablespoon"
+      },
+      {
+        "id": "flour-tortillas",
+        "displayName": "flour tortillas",
+        "canonicalName": "flour tortillas",
+        "aliases": [
+          "flour tortillas"
+        ],
+        "amountText": "2 unit"
+      },
+      {
+        "id": "pepper-jack-cheese",
+        "displayName": "pepper jack cheese",
+        "canonicalName": "pepper jack cheese",
+        "aliases": [
+          "pepper jack cheese"
+        ],
+        "amountText": "1/2 cup"
+      },
+      {
+        "id": "mexican-cheese-blend",
+        "displayName": "mexican cheese blend",
+        "canonicalName": "mexican cheese blend",
+        "aliases": [
+          "mexican cheese blend"
+        ],
+        "amountText": "1/2 cup"
+      },
+      {
+        "id": "hot-sauce",
+        "displayName": "hot sauce",
+        "canonicalName": "hot sauce",
+        "aliases": [
+          "hot sauce"
+        ],
+        "amountText": "1 teaspoon"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "1 tablespoon"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "1 tablespoon"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Dice onion. Pat chicken dry",
+        "displayText": "Dice onion. Pat chicken dry",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Heat oil in a large pan. Cook chicken with blackening spice, onion, salt, and pepper until browned and cooked through, 4\u20136 minutes. Remove and wipe pan",
+        "displayText": "Heat oil in a large pan. Cook chicken with blackening spice, onion, salt, and pepper until browned and cooked through, 4\u20136 minutes. Remove and wipe pan",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Make salsa: combine diced tomato, lime juice, reserved onion, salt, and pepper",
+        "displayText": "Make salsa: combine diced tomato, lime juice, reserved onion, salt, and pepper",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Make lime crema: mix sour cream, lime juice, zest, and a splash of water to thin. Season",
+        "displayText": "Make lime crema: mix sour cream, lime juice, zest, and a splash of water to thin. Season",
+        "ingredientRefs": []
+      },
+      {
+        "index": 5,
+        "speakShort": "Assemble quesadillas: layer cheeses and chicken on half of each tortilla; fold. Cook in butter and oil until golden and crispy, 1\u20132 minutes per side",
+        "displayText": "Assemble quesadillas: layer cheeses and chicken on half of each tortilla; fold. Cook in butter and oil until golden and crispy, 1\u20132 minutes per side",
+        "ingredientRefs": []
+      },
+      {
+        "index": 6,
+        "speakShort": "Slice and serve with salsa, lime crema, hot sauce, and lime wedges",
+        "displayText": "Slice and serve with salsa, lime crema, hot sauce, and lime wedges",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "baja",
+      "blackening spice",
+      "butter",
+      "chicken",
+      "diced chicken thighs",
+      "flour tortillas",
+      "hot sauce",
+      "lime",
+      "mexican cheese blend",
+      "oil",
+      "one",
+      "pan",
+      "pepper",
+      "pepper jack cheese",
+      "quesadillas",
+      "salt",
+      "sour cream",
+      "tomato",
+      "yellow onion"
+    ],
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/648888970b7af205da01b370-c4eb04a5.jpeg",
+    "sourceStars": {
+      "pink": 4,
+      "blue": 5
+    }
+  },
+  {
+    "id": "29",
+    "name": "One-Pan Cantina Shrimp Fajitas",
+    "displayName": "One-Pan Cantina Shrimp Fajitas",
+    "aliases": [
+      "one-pan cantina shrimp fajitas"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "poblano-pepper",
+        "displayName": "poblano pepper",
+        "canonicalName": "poblano pepper",
+        "aliases": [
+          "poblano pepper"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "red-onion",
+        "displayName": "red onion",
+        "canonicalName": "red onion",
+        "aliases": [
+          "red onion"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "lime",
+        "displayName": "lime",
+        "canonicalName": "lime",
+        "aliases": [
+          "lime"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "shrimp",
+        "displayName": "shrimp",
+        "canonicalName": "shrimp",
+        "aliases": [
+          "shrimp"
+        ],
+        "amountText": "10 ounce"
+      },
+      {
+        "id": "fajita-spice-blend",
+        "displayName": "fajita spice blend",
+        "canonicalName": "fajita spice blend",
+        "aliases": [
+          "fajita spice blend"
+        ],
+        "amountText": "1 tablespoon"
+      },
+      {
+        "id": "flour-tortillas",
+        "displayName": "flour tortillas",
+        "canonicalName": "flour tortillas",
+        "aliases": [
+          "flour tortillas"
+        ],
+        "amountText": "6 unit"
+      },
+      {
+        "id": "guacamole",
+        "displayName": "guacamole",
+        "canonicalName": "guacamole",
+        "aliases": [
+          "guacamole"
+        ],
+        "amountText": "4 tablespoon"
+      },
+      {
+        "id": "smoky-red-pepper-crema",
+        "displayName": "smoky red pepper crema",
+        "canonicalName": "smoky red pepper crema",
+        "aliases": [
+          "smoky red pepper crema"
+        ],
+        "amountText": "4 tablespoon"
+      },
+      {
+        "id": "hot-sauce",
+        "displayName": "hot sauce",
+        "canonicalName": "hot sauce",
+        "aliases": [
+          "hot sauce"
+        ],
+        "amountText": "1 teaspoon"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "2 teaspoon"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Slice poblano and onion; quarter lime. Mix guacamole with lime juice and a dash of hot sauce",
+        "displayText": "Slice poblano and onion; quarter lime. Mix guacamole with lime juice and a dash of hot sauce",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Heat oil in a large pan. Cook poblano and onion until softened, 4\u20135 minutes. Add half the fajita spice and cook 30 seconds",
+        "displayText": "Heat oil in a large pan. Cook poblano and onion until softened, 4\u20135 minutes. Add half the fajita spice and cook 30 seconds",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Pat shrimp dry. Push veggies aside; add oil and shrimp with remaining spice. Cook until opaque, 3\u20134 minutes. Combine with veggies and squeeze lime over top",
+        "displayText": "Pat shrimp dry. Push veggies aside; add oil and shrimp with remaining spice. Cook until opaque, 3\u20134 minutes. Combine with veggies and squeeze lime over top",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Warm tortillas. Fill with shrimp mixture, top with guacamole and crema, and serve with hot sauce and lime wedges",
+        "displayText": "Warm tortillas. Fill with shrimp mixture, top with guacamole and crema, and serve with hot sauce and lime wedges",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "cantina",
+      "fajita spice blend",
+      "fajitas",
+      "flour tortillas",
+      "guacamole",
+      "hot sauce",
+      "lime",
+      "oil",
+      "one",
+      "pan",
+      "pepper",
+      "poblano pepper",
+      "red onion",
+      "salt",
+      "shrimp",
+      "smoky red pepper crema"
+    ],
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/61952aac1e429c3c246b4c40-b1558197.jpg",
+    "sourceStars": {
+      "pink": 4,
+      "blue": 3
+    }
+  },
+  {
+    "id": "30",
+    "name": "Salmon in a Creamy Dijon Chive Sauce",
+    "displayName": "Salmon in a Creamy Dijon Chive Sauce",
+    "aliases": [
+      "salmon in a creamy dijon chive sauce"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "veggie-stock-concentrate",
+        "displayName": "veggie stock concentrate",
+        "canonicalName": "veggie stock concentrate",
+        "aliases": [
+          "veggie stock concentrate"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "potatoes",
+        "displayName": "potatoes",
+        "canonicalName": "potatoes",
+        "aliases": [
+          "potatoes"
+        ],
+        "amountText": "12 ounce"
+      },
+      {
+        "id": "sour-cream",
+        "displayName": "sour cream",
+        "canonicalName": "sour cream",
+        "aliases": [
+          "sour cream"
+        ],
+        "amountText": "4 tablespoon"
+      },
+      {
+        "id": "zucchini",
+        "displayName": "zucchini",
+        "canonicalName": "zucchini",
+        "aliases": [
+          "zucchini"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "lemon",
+        "displayName": "lemon",
+        "canonicalName": "lemon",
+        "aliases": [
+          "lemon"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "chives",
+        "displayName": "chives",
+        "canonicalName": "chives",
+        "aliases": [
+          "chives"
+        ],
+        "amountText": "1/4 ounce"
+      },
+      {
+        "id": "dijon-mustard",
+        "displayName": "dijon mustard",
+        "canonicalName": "dijon mustard",
+        "aliases": [
+          "dijon mustard"
+        ],
+        "amountText": "2 teaspoon"
+      },
+      {
+        "id": "salmon",
+        "displayName": "salmon",
+        "canonicalName": "salmon",
+        "aliases": [
+          "salmon"
+        ],
+        "amountText": "10 ounce"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "2 tablespoon"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Preheat oven to 450\u00b0F. Cut potatoes into wedges and zucchini into half-moons. Zest and quarter lemon; mince chives",
+        "displayText": "Preheat oven to 450\u00b0F. Cut potatoes into wedges and zucchini into half-moons. Zest and quarter lemon; mince chives",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Toss potatoes with olive oil, salt, and pepper. Roast 10 minutes",
+        "displayText": "Toss potatoes with olive oil, salt, and pepper. Roast 10 minutes",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Toss zucchini with olive oil, salt, and pepper. Add to baking sheet and roast 12\u201315 minutes more until potatoes are golden and zucchini tender",
+        "displayText": "Toss zucchini with olive oil, salt, and pepper. Add to baking sheet and roast 12\u201315 minutes more until potatoes are golden and zucchini tender",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Pat salmon dry; season with salt and pepper. Heat butter and olive oil in a pan. Cook salmon skin-side down 5\u20137 minutes, flip and cook 1\u20132 minutes more. Remove and wipe pan",
+        "displayText": "Pat salmon dry; season with salt and pepper. Heat butter and olive oil in a pan. Cook salmon skin-side down 5\u20137 minutes, flip and cook 1\u20132 minutes more. Remove and wipe pan",
+        "ingredientRefs": []
+      },
+      {
+        "index": 5,
+        "speakShort": "In same pan, add stock concentrate, Dijon, lemon juice, and water. Simmer 2\u20133 minutes. Remove from heat; stir in sour cream, half the chives, and butter. Adjust seasoning",
+        "displayText": "In same pan, add stock concentrate, Dijon, lemon juice, and water. Simmer 2\u20133 minutes. Remove from heat; stir in sour cream, half the chives, and butter. Adjust seasoning",
+        "ingredientRefs": []
+      },
+      {
+        "index": 6,
+        "speakShort": "Toss zucchini with lemon zest. Serve salmon with potatoes and zucchini, drizzle with sauce, and garnish with remaining chives",
+        "displayText": "Toss zucchini with lemon zest. Serve salmon with potatoes and zucchini, drizzle with sauce, and garnish with remaining chives",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "a",
+      "butter",
+      "chive",
+      "chives",
+      "creamy",
+      "dijon",
+      "dijon mustard",
+      "in",
+      "lemon",
+      "oil",
+      "pepper",
+      "potatoes",
+      "salmon",
+      "salt",
+      "sauce",
+      "sour cream",
+      "veggie stock concentrate",
+      "zucchini"
+    ],
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/61670c5727bc454a694fd451-28604574-7798068e.jpg",
+    "sourceStars": {
+      "pink": 3,
+      "blue": 3
+    }
+  },
+  {
+    "id": "31",
+    "name": "Shrimp Spaghetti with a Kick",
+    "displayName": "Shrimp Spaghetti with a Kick",
+    "aliases": [
+      "shrimp spaghetti with a kick"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "spaghetti",
+        "displayName": "spaghetti",
+        "canonicalName": "spaghetti",
+        "aliases": [
+          "spaghetti"
+        ],
+        "amountText": "6 ounce"
+      },
+      {
+        "id": "zucchini",
+        "displayName": "zucchini",
+        "canonicalName": "zucchini",
+        "aliases": [
+          "zucchini"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "chili-pepper",
+        "displayName": "chili pepper",
+        "canonicalName": "chili pepper",
+        "aliases": [
+          "chili pepper"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "shrimp",
+        "displayName": "shrimp",
+        "canonicalName": "shrimp",
+        "aliases": [
+          "shrimp"
+        ],
+        "amountText": "10 ounce"
+      },
+      {
+        "id": "garlic-herb-butter",
+        "displayName": "garlic herb butter",
+        "canonicalName": "garlic herb butter",
+        "aliases": [
+          "garlic herb butter"
+        ],
+        "amountText": "2 tablespoon"
+      },
+      {
+        "id": "parmesan-cheese",
+        "displayName": "parmesan cheese",
+        "canonicalName": "parmesan cheese",
+        "aliases": [
+          "parmesan cheese"
+        ],
+        "amountText": "1/4 cup"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "5 teaspoon"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Bring a large pot of salted water to a boil. Cook spaghetti until al dente, 9\u201311 minutes. Reserve \u00bd cup pasta water, then drain",
+        "displayText": "Bring a large pot of salted water to a boil. Cook spaghetti until al dente, 9\u201311 minutes. Reserve \u00bd cup pasta water, then drain",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Slice zucchini and chili. Pat shrimp dry",
+        "displayText": "Slice zucchini and chili. Pat shrimp dry",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Heat olive oil in a large pan. Cook zucchini and chili 2\u20133 minutes until lightly browned",
+        "displayText": "Heat olive oil in a large pan. Cook zucchini and chili 2\u20133 minutes until lightly browned",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Push zucchini aside; add more oil and cook shrimp 3\u20134 minutes until opaque",
+        "displayText": "Push zucchini aside; add more oil and cook shrimp 3\u20134 minutes until opaque",
+        "ingredientRefs": []
+      },
+      {
+        "index": 5,
+        "speakShort": "Add drained spaghetti, garlic herb butter, half the Parmesan, and reserved pasta water to the pan. Toss until coated, adding more pasta water if needed. Season",
+        "displayText": "Add drained spaghetti, garlic herb butter, half the Parmesan, and reserved pasta water to the pan. Toss until coated, adding more pasta water if needed. Season",
+        "ingredientRefs": []
+      },
+      {
+        "index": 6,
+        "speakShort": "Divide between bowls. Top with remaining Parmesan and a drizzle of olive oil. Garnish with extra chili if desired",
+        "displayText": "Divide between bowls. Top with remaining Parmesan and a drizzle of olive oil. Garnish with extra chili if desired",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "a",
+      "chili pepper",
+      "garlic herb butter",
+      "kick",
+      "oil",
+      "parmesan cheese",
+      "pepper",
+      "salt",
+      "shrimp",
+      "spaghetti",
+      "with",
+      "zucchini"
+    ],
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/6203c51288dbd95f422707d7-a539cdce.jpg",
+    "sourceStars": {
+      "pink": 4,
+      "blue": 2
+    }
+  },
+  {
+    "id": "32",
+    "name": "White Cheddar Crunch Burgers",
+    "displayName": "White Cheddar Crunch Burgers",
+    "aliases": [
+      "white cheddar crunch burgers"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "potatoes",
+        "displayName": "potatoes",
+        "canonicalName": "potatoes",
+        "aliases": [
+          "potatoes"
+        ],
+        "amountText": "12 ounce"
+      },
+      {
+        "id": "yellow-onion",
+        "displayName": "yellow onion",
+        "canonicalName": "yellow onion",
+        "aliases": [
+          "yellow onion"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "brioche-buns",
+        "displayName": "brioche buns",
+        "canonicalName": "brioche buns",
+        "aliases": [
+          "brioche buns"
+        ],
+        "amountText": "2 unit"
+      },
+      {
+        "id": "ground-beef",
+        "displayName": "ground beef",
+        "canonicalName": "ground beef",
+        "aliases": [
+          "ground beef"
+        ],
+        "amountText": "10 ounce"
+      },
+      {
+        "id": "cheddar-cheese",
+        "displayName": "cheddar cheese",
+        "canonicalName": "cheddar cheese",
+        "aliases": [
+          "cheddar cheese"
+        ],
+        "amountText": "1/4 cup"
+      },
+      {
+        "id": "smoky-mustard",
+        "displayName": "smoky mustard",
+        "canonicalName": "smoky mustard",
+        "aliases": [
+          "smoky mustard"
+        ],
+        "amountText": "2 ounce"
+      },
+      {
+        "id": "crispy-fried-onions",
+        "displayName": "crispy fried onions",
+        "canonicalName": "crispy fried onions",
+        "aliases": [
+          "crispy fried onions"
+        ],
+        "amountText": "1 ounce"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "1 tablespoon"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Preheat oven to 450\u00b0F. Cut potatoes into wedges, toss with oil, salt, and pepper, and roast 20\u201325 minutes until golden and tender",
+        "displayText": "Preheat oven to 450\u00b0F. Cut potatoes into wedges, toss with oil, salt, and pepper, and roast 20\u201325 minutes until golden and tender",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Slice onion into rounds and halve buns",
+        "displayText": "Slice onion into rounds and halve buns",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Heat oil in a pan and cook onion rounds until browned and tender, 2\u20134 minutes per side. Remove and wipe pan",
+        "displayText": "Heat oil in a pan and cook onion rounds until browned and tender, 2\u20134 minutes per side. Remove and wipe pan",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Form beef into two patties. Season with salt and pepper. Cook 3\u20135 minutes per side to desired doneness. In final 1\u20132 minutes, top with cheddar and cover to melt",
+        "displayText": "Form beef into two patties. Season with salt and pepper. Cook 3\u20135 minutes per side to desired doneness. In final 1\u20132 minutes, top with cheddar and cover to melt",
+        "ingredientRefs": []
+      },
+      {
+        "index": 5,
+        "speakShort": "Toast buns and spread smoky mustard on cut sides",
+        "displayText": "Toast buns and spread smoky mustard on cut sides",
+        "ingredientRefs": []
+      },
+      {
+        "index": 6,
+        "speakShort": "Assemble burgers with patties, griddled onions, and crispy fried onions. Serve with roasted potato wedges",
+        "displayText": "Assemble burgers with patties, griddled onions, and crispy fried onions. Serve with roasted potato wedges",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "brioche buns",
+      "burgers",
+      "cheddar",
+      "cheddar cheese",
+      "crispy fried onions",
+      "crunch",
+      "ground beef",
+      "oil",
+      "pepper",
+      "potatoes",
+      "salt",
+      "smoky mustard",
+      "white",
+      "yellow onion"
+    ],
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/651c1e478c06cbcbd9cc3849-a426b838.jpeg",
+    "sourceStars": {
+      "pink": 4,
+      "blue": 4
+    }
+  },
+  {
+    "id": "33",
+    "name": "Rigatoni with Beef & Zucchini Rag\u00f9",
+    "displayName": "Rigatoni with Beef & Zucchini Rag\u00f9",
+    "aliases": [
+      "rigatoni with beef & zucchini rag\u00f9"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "rigatoni-pasta",
+        "displayName": "rigatoni pasta",
+        "canonicalName": "rigatoni pasta",
+        "aliases": [
+          "rigatoni pasta"
+        ],
+        "amountText": "6 ounce"
+      },
+      {
+        "id": "zucchini",
+        "displayName": "zucchini",
+        "canonicalName": "zucchini",
+        "aliases": [
+          "zucchini"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "tomato-paste",
+        "displayName": "tomato paste",
+        "canonicalName": "tomato paste",
+        "aliases": [
+          "tomato paste"
+        ],
+        "amountText": "1.5 ounce"
+      },
+      {
+        "id": "parmesan-cheese",
+        "displayName": "parmesan cheese",
+        "canonicalName": "parmesan cheese",
+        "aliases": [
+          "parmesan cheese"
+        ],
+        "amountText": "1/4 cup"
+      },
+      {
+        "id": "shallot",
+        "displayName": "shallot",
+        "canonicalName": "shallot",
+        "aliases": [
+          "shallot"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "garlic",
+        "displayName": "garlic",
+        "canonicalName": "garlic",
+        "aliases": [
+          "garlic"
+        ],
+        "amountText": "1 clove"
+      },
+      {
+        "id": "ground-beef",
+        "displayName": "ground beef",
+        "canonicalName": "ground beef",
+        "aliases": [
+          "ground beef"
+        ],
+        "amountText": "10 ounce"
+      },
+      {
+        "id": "italian-seasoning",
+        "displayName": "italian seasoning",
+        "canonicalName": "italian seasoning",
+        "aliases": [
+          "italian seasoning"
+        ],
+        "amountText": "1 tablespoon"
+      },
+      {
+        "id": "cream-cheese",
+        "displayName": "cream cheese",
+        "canonicalName": "cream cheese",
+        "aliases": [
+          "cream cheese"
+        ],
+        "amountText": "4 tablespoon"
+      },
+      {
+        "id": "stock-concentrate",
+        "displayName": "stock concentrate",
+        "canonicalName": "stock concentrate",
+        "aliases": [
+          "stock concentrate"
+        ],
+        "amountText": "1 unit"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "1 teaspoon"
+      },
+      {
+        "id": "sugar",
+        "displayName": "sugar",
+        "canonicalName": "sugar",
+        "aliases": [
+          "sugar"
+        ],
+        "amountText": "1/4 teaspoon"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "1 tablespoon"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "speakShort": "Bring a large pot of salted water to a boil. Cook rigatoni until al dente, 9\u201311 minutes. Reserve 1 cup pasta water, then drain",
+        "displayText": "Bring a large pot of salted water to a boil. Cook rigatoni until al dente, 9\u201311 minutes. Reserve 1 cup pasta water, then drain",
+        "ingredientRefs": []
+      },
+      {
+        "index": 2,
+        "speakShort": "Prep: Dice shallot. Mince/grate garlic. Grate zucchini on a box grater, then squeeze out as much liquid as possible (kitchen towel bundle or press in a strainer)",
+        "displayText": "Prep: Dice shallot. Mince/grate garlic. Grate zucchini on a box grater, then squeeze out as much liquid as possible (kitchen towel bundle or press in a strainer)",
+        "ingredientRefs": []
+      },
+      {
+        "index": 3,
+        "speakShort": "Heat a drizzle of oil in a large pan over medium-high. Add ground beef, shallot, Italian seasoning, salt, and pepper. Cook 3\u20135 minutes, breaking up meat, until browned and mostly cooked",
+        "displayText": "Heat a drizzle of oil in a large pan over medium-high. Add ground beef, shallot, Italian seasoning, salt, and pepper. Cook 3\u20135 minutes, breaking up meat, until browned and mostly cooked",
+        "ingredientRefs": []
+      },
+      {
+        "index": 4,
+        "speakShort": "Add tomato paste; cook 1\u20132 minutes, stirring, until combined and beef is cooked through",
+        "displayText": "Add tomato paste; cook 1\u20132 minutes, stirring, until combined and beef is cooked through",
+        "ingredientRefs": []
+      },
+      {
+        "index": 5,
+        "speakShort": "Add grated zucchini, garlic, and a big pinch of salt; cook 2\u20133 minutes until zucchini is tender",
+        "displayText": "Add grated zucchini, garlic, and a big pinch of salt; cook 2\u20133 minutes until zucchini is tender",
+        "ingredientRefs": []
+      },
+      {
+        "index": 6,
+        "speakShort": "Stir in cream cheese, stock concentrate, \u00bd cup reserved pasta water, and \u00bd tsp sugar. Simmer 1\u20132 minutes until slightly thickened. Season with salt and pepper",
+        "displayText": "Stir in cream cheese, stock concentrate, \u00bd cup reserved pasta water, and \u00bd tsp sugar. Simmer 1\u20132 minutes until slightly thickened. Season with salt and pepper",
+        "ingredientRefs": []
+      },
+      {
+        "index": 7,
+        "speakShort": "Reduce heat to medium-low. Stir in drained rigatoni, half the Parmesan, and 1 TBSP butter until combined. Add more pasta water as needed to loosen",
+        "displayText": "Reduce heat to medium-low. Stir in drained rigatoni, half the Parmesan, and 1 TBSP butter until combined. Add more pasta water as needed to loosen",
+        "ingredientRefs": []
+      },
+      {
+        "index": 8,
+        "speakShort": "Serve topped with remaining Parmesan",
+        "displayText": "Serve topped with remaining Parmesan",
+        "ingredientRefs": []
+      }
+    ],
+    "searchTokens": [
+      "beef",
+      "butter",
+      "cream cheese",
+      "garlic",
+      "ground beef",
+      "italian seasoning",
+      "oil",
+      "parmesan cheese",
+      "pepper",
+      "rag",
+      "rigatoni",
+      "rigatoni pasta",
+      "salt",
+      "shallot",
+      "stock concentrate",
+      "sugar",
+      "tomato paste",
+      "with",
+      "zucchini"
+    ],
+    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/rigatoni-with-beef-zucchini-ragu-ada87ecd-cd3ab8e5.jpg",
+    "sourceStars": {
+      "pink": 4,
+      "blue": 4
+    }
+  }
+]

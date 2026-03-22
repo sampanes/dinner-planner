@@ -8,7 +8,7 @@ The project direction is intentionally narrow:
 - recipe authoring stays local and Git-based
 - normalization does most of the hard work up front
 - no hidden phone puppet-master architecture
-- stay inside free or near-free tooling for as long as possible
+- stay inside free (absolute last resort: near-free) tooling
 
 ## Reading order
 
@@ -28,7 +28,7 @@ The project direction is intentionally narrow:
 This repo should optimize for these priorities:
 1. reliability in the kitchen
 2. natural voice flow
-3. low recurring cost
+3. low (zero) recurring cost (will be used by two people in one household, 1x per day max)
 4. easy household use
 5. extensibility through stronger recipe normalization
 
@@ -38,5 +38,5 @@ These are deliberately out of scope for the current doc set:
 - Android as the orchestration brain
 - Firebase/FCM relay design
 - Bluetooth audio ducking tricks
-- LLM calls at runtime
+- LLM calls at runtime (remember 0 cost ideal)
 - "smart" cloud automation that is harder to trust than a normalized recipe file

@@ -13,7 +13,7 @@ let commonIngredientsDict = {};
 // Function to load recipes from JSON file
 async function loadRecipes() {
     try {
-        const response = await fetch('recipes.json');
+        const response = await fetch('data/source/recipes.json');
         if (!response.ok) {
             throw new Error('Failed to load recipes');
         }

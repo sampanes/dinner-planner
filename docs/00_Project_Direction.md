@@ -24,7 +24,7 @@ A user should be able to say:
 ## Product principles
 
 ### 1. Voice is primary in the kitchen
-Echo Show is the main kitchen interaction surface.
+Echo Show is the main kitchen interaction surface. Images and a nice Alexa Show User Interface is an end goal, though some debugging may be done on an Echo Dot (no screen). Or online/mobile phone if possible.
 
 ### 2. The cooking session is the source of truth
 The active session owns current recipe, current step, offered timer context, timer mapping, pending disambiguation, and recent conversation context.

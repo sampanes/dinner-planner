@@ -83,7 +83,7 @@ def write_recipes(recipes, out_path):
         f.write("]\n")
 
 def main():
-    path = Path(__file__).parent / "recipes.json"
+    path = Path(__file__).resolve().parent.parent / "data" / "source" / "recipes.json"
 
     if not path.exists():
         print("❌ File not found:", path)

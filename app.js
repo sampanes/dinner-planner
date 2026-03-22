@@ -67,7 +67,7 @@ function parseHashParams() {
 
     return {
         // Just use the relative path string; fetch() handles the rest
-        src: params.get('src') || 'recipes.json',
+        src: params.get('src') || 'data/source/recipes.json',
         seed: params.get('seed') || generateRandomSeed(),
         meals: Math.min(7, Math.max(3, parseInt(params.get('meals')) || 6)),
         overlap: Math.min(100, Math.max(0, parseInt(params.get('overlap')) || 0)),
