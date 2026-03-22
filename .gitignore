@@ -1,1 +1,33 @@
 *.bak
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# Node / Alexa local tooling
+node_modules/
+.ask/
+dist/
+build/
+coverage/
+
+# Logs
+*.log
+
+# Local-only scratch files
+PROMPT_STAGING.md
+
+Do not ignore:
+
+- data/source/
+- data/runtime/
+- data/reports/
