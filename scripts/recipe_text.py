@@ -10,32 +10,32 @@ import unicodedata
 
 # Characters that have a plain ASCII spelling.
 FRACTIONS = {
-    "½": "1/2",
-    "¼": "1/4",
-    "¾": "3/4",
-    "⅓": "1/3",
-    "⅔": "2/3",
-    "⅛": "1/8",
-    "⅜": "3/8",
-    "⅝": "5/8",
-    "⅞": "7/8",
+    "\u00bd": "1/2",
+    "\u00bc": "1/4",
+    "\u00be": "3/4",
+    "\u2153": "1/3",
+    "\u2154": "2/3",
+    "\u215b": "1/8",
+    "\u215c": "3/8",
+    "\u215d": "5/8",
+    "\u215e": "7/8",
 }
 
 SIMPLE_REPLACEMENTS = {
-    "‐": "-",  # hyphen
-    "‑": "-",  # non-breaking hyphen
-    "‒": "-",  # figure dash
-    "–": "-",  # en dash
-    "—": "-",  # em dash
-    "‘": "'",
-    "’": "'",
-    "“": '"',
-    "”": '"',
-    "…": "...",
-    " ": " ",
-    "•": "-",  # bullet
-    "×": "x",
-    "⁄": "/",  # fraction slash
+    "\u2010": "-",  # hyphen
+    "\u2011": "-",  # non-breaking hyphen
+    "\u2012": "-",  # figure dash
+    "\u2013": "-",  # en dash
+    "\u2014": "-",  # em dash
+    "\u2018": "'",
+    "\u2019": "'",
+    "\u201c": '"',
+    "\u201d": '"',
+    "\u2026": "...",
+    "\u00a0": " ",
+    "\u2022": "-",  # bullet
+    "\u00d7": "x",
+    "\u2044": "/",  # fraction slash
 }
 
 FRACTION_CLASS = "[" + "".join(FRACTIONS) + "]"
@@ -49,16 +49,16 @@ def normalize_text(text: str) -> str:
         return ""
 
     # HelloFresh glyph artifact: "11/2 cups" is "1 1/2 cups" when the slash is U+2044.
-    text = re.sub(r"(?<=\d)(\d)⁄(\d)", r" \1/\2", text)
-    # "1½" -> "1 1/2", "½ cup" -> "1/2 cup"
+    text = re.sub(r"(?<=\d)(\d)\u2044(\d)", r" \1/\2", text)
+    # "1\u00bd" -> "1 1/2", "\u00bd cup" -> "1/2 cup"
     text = re.sub(
         r"(\d)?(" + FRACTION_CLASS + ")",
         lambda m: ((m.group(1) + " ") if m.group(1) else "") + FRACTIONS[m.group(2)],
         text,
     )
-    # Degrees: "375°F" -> "375 degrees F", "160°." -> "160 degrees."
-    text = re.sub(r"°\s*([FC])\b", r" degrees \1", text)
-    text = text.replace("°", " degrees")
+    # Degrees: "375\u00b0F" -> "375 degrees F", "160\u00b0." -> "160 degrees."
+    text = re.sub(r"\u00b0\s*([FC])\b", r" degrees \1", text)
+    text = text.replace("\u00b0", " degrees")
 
     for old, new in SIMPLE_REPLACEMENTS.items():
         text = text.replace(old, new)

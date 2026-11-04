@@ -25,8 +25,8 @@ SOURCE_PATH = Path(__file__).resolve().parent.parent / "data" / "source" / "reci
 def normalize_instructions(text: str) -> str:
     # A bullet in the middle of a line starts a new line; a bullet at the start
     # of a line becomes a plain "- " bullet.
-    text = re.sub(r"[ \t]+•[ \t]+", "\n- ", text)
-    text = re.sub(r"(^|\n)[ \t]*•[ \t]*", r"\1- ", text)
+    text = re.sub(r"[ \t]+\u2022[ \t]+", "\n- ", text)
+    text = re.sub(r"(^|\n)[ \t]*\u2022[ \t]*", r"\1- ", text)
     return normalize_text(text)
 
 

@@ -25,32 +25,32 @@ from recipe_text import (  # noqa: E402
 
 class NormalizeTextTests(unittest.TestCase):
     def test_fractions_and_glued_fraction_slash(self):
-        self.assertEqual(normalize_text("Reserve 11⁄2 cups"), "Reserve 1 1/2 cups")
-        self.assertEqual(normalize_text("1⁄2-inch-thick"), "1/2-inch-thick")
-        self.assertEqual(normalize_text("½ cup"), "1/2 cup")
-        self.assertEqual(normalize_text("1½ cups"), "1 1/2 cups")
-        self.assertEqual(normalize_text("⅓ cup"), "1/3 cup")
+        self.assertEqual(normalize_text("Reserve 11\u20442 cups"), "Reserve 1 1/2 cups")
+        self.assertEqual(normalize_text("1\u20442-inch-thick"), "1/2-inch-thick")
+        self.assertEqual(normalize_text("\u00bd cup"), "1/2 cup")
+        self.assertEqual(normalize_text("1\u00bd cups"), "1 1/2 cups")
+        self.assertEqual(normalize_text("\u2153 cup"), "1/3 cup")
 
     def test_degrees(self):
-        self.assertEqual(normalize_text("375°F (190°C)"), "375 degrees F (190 degrees C)")
-        self.assertEqual(normalize_text("reaches 160°."), "reaches 160 degrees.")
+        self.assertEqual(normalize_text("375\u00b0F (190\u00b0C)"), "375 degrees F (190 degrees C)")
+        self.assertEqual(normalize_text("reaches 160\u00b0."), "reaches 160 degrees.")
 
     def test_dashes_quotes_accents(self):
-        self.assertEqual(normalize_text("2–3 minutes"), "2-3 minutes")
-        self.assertEqual(normalize_text("Shepherd’s Pie"), "Shepherd's Pie")
-        self.assertEqual(normalize_text("Beef Ragù sauté"), "Beef Ragu saute")
-        self.assertEqual(normalize_text("a — b"), "a - b")
+        self.assertEqual(normalize_text("2\u20133 minutes"), "2-3 minutes")
+        self.assertEqual(normalize_text("Shepherd\u2019s Pie"), "Shepherd's Pie")
+        self.assertEqual(normalize_text("Beef Rag\u00f9 saut\u00e9"), "Beef Ragu saute")
+        self.assertEqual(normalize_text("a \u2014 b"), "a - b")
 
     def test_keeps_newlines_and_collapses_spaces(self):
         self.assertEqual(normalize_text("a  b \n  c\t d"), "a b\nc d")
-        self.assertEqual(non_ascii_count(normalize_text("• x é")), 0)
+        self.assertEqual(non_ascii_count(normalize_text("\u2022 x \u00e9")), 0)
 
 
 class SlugTests(unittest.TestCase):
     def test_slugify(self):
         self.assertEqual(slugify("Beef & Zucchini Baked Penne"), "beef-zucchini-baked-penne")
-        self.assertEqual(slugify("Pub-Style Shepherd’s Pie"), "pub-style-shepherd-s-pie")
-        self.assertEqual(slugify("Cavatappi Beef Ragù"), "cavatappi-beef-ragu")
+        self.assertEqual(slugify("Pub-Style Shepherd\u2019s Pie"), "pub-style-shepherd-s-pie")
+        self.assertEqual(slugify("Cavatappi Beef Rag\u00f9"), "cavatappi-beef-ragu")
 
 
 class ParseInstructionsTests(unittest.TestCase):
@@ -85,7 +85,7 @@ class ParseInstructionsTests(unittest.TestCase):
         self.assertEqual(notes, ["Pork is fully cooked at 160 degrees."])
 
     def test_raw_hellofresh_bullets_before_normalization(self):
-        raw = "1\n• Wash produce. • Slice onion.\n\nCook\n2\n• Cook it, 5 minutes."
+        raw = "1\n\u2022 Wash produce. \u2022 Slice onion.\n\nCook\n2\n\u2022 Cook it, 5 minutes."
         steps, _ = parse_instructions(normalize_source.normalize_instructions(raw))
         self.assertEqual(steps[0]["parts"], ["Wash produce.", "Slice onion."])
         self.assertEqual(steps[1]["section"], "Cook")

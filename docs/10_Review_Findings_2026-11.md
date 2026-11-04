@@ -3,6 +3,27 @@
 A review of the repo as it stood after the phase 0 commit, plus a check of what
 changed on the Alexa platform since March 2026. Nothing in this pass changed code.
 
+## Status update (2026-11-04)
+
+Commits 71b685f through 2d7c4df resolved most of the code findings below:
+
+- [RESOLVED] Web app problem 1 (localStorage shadowing): the repo copy now loads on
+  every visit, local edits are flagged with a reload/keep banner, and a visible
+  reload button replaces the hidden "your" link.
+- [RESOLVED] Web app problem 3 (step splitting): HelloFresh-style instructions are
+  parsed into per-chunk runtime steps, and the validation report warns about long
+  steps, numbering gaps, and non-ASCII source text.
+- [RESOLVED] Web app problem 4 (non-ASCII): source recipes are normalized to ASCII,
+  UI files use escapes/entities, and the Python normalizer and its tests spell the
+  characters they handle as `\uXXXX` escapes.
+- [RESOLVED] The `Do not ignore:` block in `.gitignore` is now a comment.
+- [OPEN] 14 runtime steps are still over 200 chars; see
+  `data/reports/validation_report.md`.
+- [OPEN] Web app problem 2: browser edits still live only in that browser (and are
+  not seen by the meal-plan page) until exported with the download button.
+- [OPEN] The Alexa real-device retry has not been done yet. Doc 11 has the
+  platform recheck.
+
 ## Summary
 
 - The static site works and the meal-plan page is the strongest part of the repo.
