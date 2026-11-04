@@ -113,6 +113,11 @@ class ConversionTests(unittest.TestCase):
         self.assertEqual(hf.short_name("Zucchini Pomodoro & 2x Beef Penne Bake Zucchini Pomodoro with Ricotta & Mozzarella"), "Zucchini Pomodoro & Beef Penne Bake")
         self.assertEqual(hf.short_name("White Cheddar Crunch Beef Burgers Now get 50% more protein"), "White Cheddar Crunch Beef Burgers")
         self.assertEqual(hf.short_name("Beef & Cheese Tostadas"), "Beef & Cheese Tostadas")
+        self.assertEqual(hf.short_name("Italian Chicken Sausage Stuffed Peppers Gluten-free friendly or classic-the choice is yours!"), "Italian Chicken Sausage Stuffed Peppers")
+        self.assertEqual(hf.short_name("Cheesy Pork Sausage Marinara Includes recyclable aluminum tray"), "Cheesy Pork Sausage Marinara")
+        self.assertEqual(hf.short_name("Juicy Cheddar Cheeseburger Fixin's (Ground Beef, Cheddar, Brioche Buns) Great for grilling!"), "Juicy Cheddar Cheeseburger Fixin's")
+        for untouched in ("Salmon in a Creamy Dijon Chive Sauce", "Pork Chili 'n' Cheese Stuffed Poblanos", "Lone Star Poblano Mac & Cheese", "Chicken Thyme with Zucchini Couscous", "One-Pan Italian Chicken Orzotto"):
+            self.assertEqual(hf.short_name(untouched), untouched)
 
     def test_parse_hf_ingredient(self):
         self.assertEqual(hf.parse_hf_ingredient("1 unit Yellow Onion"), ("1 unit", "yellow onion"))
@@ -147,6 +152,48 @@ class ConversionTests(unittest.TestCase):
         self.assertEqual(notes, [])
         self.assertTrue(text.isascii())
 
+    def test_parse_hf_ingredient_newer_card_forms(self):
+        self.assertEqual(hf.parse_hf_ingredient("teaspoon (tsp) Salt"), ("to taste", "salt"))
+        self.assertEqual(hf.parse_hf_ingredient("teaspoon (tsp) Black Pepper"), ("to taste", "pepper"))
+        self.assertEqual(hf.parse_hf_ingredient("1 teaspoon (tsp) Cooking Oil"), ("1 teaspoon", "oil"))
+        self.assertEqual(hf.parse_hf_ingredient("½ teaspoon (tsp) Sugar"), ("1/2 teaspoon", "sugar"))
+        self.assertEqual(hf.parse_hf_ingredient("1 tablespoon (tbsp) Butter"), ("1 tablespoon", "butter"))
+        self.assertEqual(hf.parse_hf_ingredient("4 tablespoon PHILADELPHIA® Cream Cheese"), ("4 tablespoon", "cream cheese"))
+        self.assertEqual(hf.parse_hf_ingredient("1 unit Beef Stock Concentrate"), ("1 unit", "stock concentrate"))
+
+    def test_step_bullets_three_card_formats(self):
+        wrapped = "• Bring a large pot of salted water to a boil. Once boiling, add\npenne to pot. Cook until al dente,\n9-11 minutes.\n• Meanwhile, wash and dry produce."
+        self.assertEqual(
+            hf.step_bullets(wrapped),
+            ["Bring a large pot of salted water to a boil. Once boiling, add penne to pot. Cook until al dente, 9-11 minutes.", "Meanwhile, wash and dry produce."],
+        )
+        lines = "Wash and dry produce. \nHalve, peel, and thinly slice onion. \nHeat a drizzle of oil in a large pan. TIP: Lower heat if needed."
+        self.assertEqual(
+            hf.step_bullets(lines),
+            ["Wash and dry produce.", "Halve, peel, and thinly slice onion.", "Heat a drizzle of oil in a large pan. TIP: Lower heat if needed."],
+        )
+        markup = (
+            '<ul><li><p><strong>Wash and dry produce.\n</strong></p></li><li><p>Halve, core, and thinly slice<strong> </strong>'
+            '<span><strong><span style="color: rgb(242, 0, 13)">green pepper</span> </strong></span>into strips.</p></li>'
+            '<li><p>Reserve<strong> 1 cup pasta cooking water </strong><span style="color: rgb(0, 86, 44)">(1½ cups for 4 servings)</span>, then drain &amp; set aside.</p></li></ul>'
+        )
+        self.assertEqual(
+            hf.step_bullets(markup),
+            ["Wash and dry produce.", "Halve, core, and thinly slice green pepper into strips.", "Reserve 1 cup pasta cooking water (1 1/2 cups for 4 servings), then drain & set aside."],
+        )
+        text = hf.steps_to_instructions([{"@type": "HowToStep", "text": markup}, {"@type": "HowToStep", "text": lines}])
+        steps, _notes = parse_instructions(text)
+        self.assertEqual([len(step["parts"]) for step in steps], [3, 3])
+        self.assertTrue(text.isascii())
+
+    def test_image_at(self):
+        full = f"https://img.hellofresh.com/{hf.IMAGE_TRANSFORM}/hellofresh_s3/image/61f98622422b687c017a9408-0d509f38.jpg"
+        self.assertEqual(hf.image_at(full, 240, 160), "https://img.hellofresh.com/c_fill,w_240,h_160,f_auto,q_auto/hellofresh_s3/image/61f98622422b687c017a9408-0d509f38.jpg")
+        unsplash = "https://images.unsplash.com/photo-1589227365533-cee630bd59bd?auto=format&fit=crop&w=1200&h=800&q=80"
+        self.assertEqual(hf.image_at(unsplash, 240, 160), "https://images.unsplash.com/photo-1589227365533-cee630bd59bd?auto=format&fit=crop&w=240&h=160&q=80")
+        other = "https://marleyspoon.com/media/recipes/132054/main_photos/large/cheesy.jpg"
+        self.assertEqual(hf.image_at(other, 240, 160), other)
+
     def test_to_source_recipe_scales_to_four(self):
         recipe = hf.to_source_recipe(RECIPE_LD, 99)
         self.assertEqual(recipe["id"], 99)
@@ -180,7 +227,8 @@ class SimilarityTests(unittest.TestCase):
 
     def test_rating_weight(self):
         self.assertEqual(find_similar.rating_weight({"pinkStar": 5, "blueStar": 5}), 1.0)
-        self.assertEqual(find_similar.rating_weight({"pinkStar": 0, "blueStar": 0}), -1.0)
+        self.assertEqual(find_similar.rating_weight({"pinkStar": 0, "blueStar": 0}), 0.0, "freshly imported, not rated yet")
+        self.assertAlmostEqual(find_similar.rating_weight({"pinkStar": 0, "blueStar": 1}), -0.8)
         self.assertAlmostEqual(find_similar.rating_weight({"pinkStar": 2, "blueStar": 3}), 0.0)
 
     def test_ranking_prefers_the_liked_dish_and_drops_what_you_have(self):

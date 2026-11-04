@@ -146,6 +146,19 @@ const elements = {
 
 // ========== RECIPE FETCHING ==========
 // Mirrors slugify() in scripts/recipe_text.py so links match the generated pages.
+// A smaller rendition of a uniform photo url for cards; the modal keeps the full 1200x800 crop.
+// Mirrors image_at() in scripts/hellofresh.py.
+function imageAt(url, width, height) {
+    if (!url) return url;
+    if (url.startsWith('https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/')) {
+        return url.replace('c_fill,w_1200,h_800,f_auto,q_auto', `c_fill,w_${width},h_${height},f_auto,q_auto`);
+    }
+    if (url.startsWith('https://images.unsplash.com/')) {
+        return url.replace('w=1200&h=800', `w=${width}&h=${height}`);
+    }
+    return url;
+}
+
 function recipeSlug(name) {
     return name.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
         .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
@@ -424,8 +437,10 @@ function renderImage(imageUrl, recipeName) {
     return `
         <div class="recipe-image">
             <img
-                src="${imageUrl}"
+                src="${imageAt(imageUrl, 600, 400)}"
                 alt="${recipeName}"
+                loading="lazy"
+                decoding="async"
                 onerror="this.parentElement.innerHTML='<div class=\\'placeholder\\'>\u{1F37D}\uFE0F</div>'"
             >
         </div>

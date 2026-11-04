@@ -95,9 +95,11 @@ def is_internal(text: str) -> bool:
 
 
 def rating_weight(recipe: dict) -> float:
-    """-1.0 (hated) .. +1.0 (loved); 2.5 average stars is 0."""
+    """-1.0 (hated) .. +1.0 (loved); 2.5 average stars is 0; 0/0 is unrated and counts for nothing."""
     pink = float(recipe.get("pinkStar", 0) or 0)
     blue = float(recipe.get("blueStar", 0) or 0)
+    if pink == 0 and blue == 0:
+        return 0.0
     return ((pink + blue) / 2 - 2.5) / 2.5
 
 

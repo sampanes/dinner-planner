@@ -1,302 +1,5 @@
 [
   {
-    "id": "1",
-    "name": "Spaghetti Carbonara",
-    "displayName": "Spaghetti Carbonara",
-    "slug": "spaghetti-carbonara",
-    "pageUrl": "https://sampanes.github.io/dinner-planner/recipes/spaghetti-carbonara.html",
-    "aliases": [
-      "spaghetti carbonara"
-    ],
-    "categories": [],
-    "tags": [],
-    "ingredients": [
-      {
-        "id": "spaghetti",
-        "displayName": "spaghetti",
-        "canonicalName": "spaghetti",
-        "aliases": [
-          "spaghetti"
-        ],
-        "amountText": "400g",
-        "text": "400g spaghetti"
-      },
-      {
-        "id": "eggs",
-        "displayName": "eggs",
-        "canonicalName": "eggs",
-        "aliases": [
-          "eggs"
-        ],
-        "amountText": "3 large",
-        "text": "3 large eggs"
-      },
-      {
-        "id": "pancetta",
-        "displayName": "pancetta",
-        "canonicalName": "pancetta",
-        "aliases": [
-          "pancetta"
-        ],
-        "amountText": "150g",
-        "text": "150g pancetta"
-      },
-      {
-        "id": "parmesan-cheese",
-        "displayName": "parmesan cheese",
-        "canonicalName": "parmesan cheese",
-        "aliases": [
-          "parmesan cheese"
-        ],
-        "amountText": "50g",
-        "text": "50g parmesan cheese"
-      },
-      {
-        "id": "pepper",
-        "displayName": "pepper",
-        "canonicalName": "pepper",
-        "aliases": [
-          "pepper"
-        ],
-        "amountText": "to taste",
-        "text": "pepper, to taste"
-      }
-    ],
-    "steps": [
-      {
-        "index": 1,
-        "sourceStep": 1,
-        "section": null,
-        "speakShort": "Cook spaghetti according to package instructions.",
-        "displayText": "Cook spaghetti according to package instructions.",
-        "ingredientRefs": [
-          "spaghetti"
-        ],
-        "timerHints": []
-      },
-      {
-        "index": 2,
-        "sourceStep": 2,
-        "section": null,
-        "speakShort": "Fry pancetta until crispy.",
-        "displayText": "Fry pancetta until crispy.",
-        "ingredientRefs": [
-          "pancetta"
-        ],
-        "timerHints": []
-      },
-      {
-        "index": 3,
-        "sourceStep": 3,
-        "section": null,
-        "speakShort": "Beat eggs with grated parmesan and pepper.",
-        "displayText": "Beat eggs with grated parmesan and pepper.",
-        "ingredientRefs": [
-          "eggs",
-          "pepper"
-        ],
-        "timerHints": []
-      },
-      {
-        "index": 4,
-        "sourceStep": 4,
-        "section": null,
-        "speakShort": "Drain pasta, mix with pancetta, then quickly stir in egg mixture off heat.",
-        "displayText": "Drain pasta, mix with pancetta, then quickly stir in egg mixture off heat.",
-        "ingredientRefs": [
-          "eggs",
-          "pancetta"
-        ],
-        "timerHints": []
-      },
-      {
-        "index": 5,
-        "sourceStep": 5,
-        "section": null,
-        "speakShort": "Serve immediately with extra parmesan.",
-        "displayText": "Serve immediately with extra parmesan.",
-        "ingredientRefs": [],
-        "timerHints": []
-      }
-    ],
-    "notes": [],
-    "searchTokens": [
-      "carbonara",
-      "eggs",
-      "pancetta",
-      "parmesan cheese",
-      "pepper",
-      "spaghetti"
-    ],
-    "image": "https://images.unsplash.com/photo-1589227365533-cee630bd59bd?auto=format&fit=crop&w=1200&h=800&q=80",
-    "sourceStars": {
-      "pink": 1,
-      "blue": 1
-    }
-  },
-  {
-    "id": "2",
-    "name": "Chocolate Chip Cookies",
-    "displayName": "Chocolate Chip Cookies",
-    "slug": "chocolate-chip-cookies",
-    "pageUrl": "https://sampanes.github.io/dinner-planner/recipes/chocolate-chip-cookies.html",
-    "aliases": [
-      "chocolate chip cookies"
-    ],
-    "categories": [],
-    "tags": [],
-    "ingredients": [
-      {
-        "id": "flour",
-        "displayName": "flour",
-        "canonicalName": "flour",
-        "aliases": [
-          "flour"
-        ],
-        "amountText": "2 1/4 cups",
-        "text": "2 1/4 cups flour"
-      },
-      {
-        "id": "butter",
-        "displayName": "butter",
-        "canonicalName": "butter",
-        "aliases": [
-          "butter"
-        ],
-        "amountText": "1 cup",
-        "text": "1 cup butter"
-      },
-      {
-        "id": "brown-sugar",
-        "displayName": "brown sugar",
-        "canonicalName": "brown sugar",
-        "aliases": [
-          "brown sugar"
-        ],
-        "amountText": "3/4 cup",
-        "text": "3/4 cup brown sugar"
-      },
-      {
-        "id": "sugar",
-        "displayName": "sugar",
-        "canonicalName": "sugar",
-        "aliases": [
-          "sugar"
-        ],
-        "amountText": "3/4 cup",
-        "text": "3/4 cup sugar"
-      },
-      {
-        "id": "eggs",
-        "displayName": "eggs",
-        "canonicalName": "eggs",
-        "aliases": [
-          "eggs"
-        ],
-        "amountText": "2 large",
-        "text": "2 large eggs"
-      },
-      {
-        "id": "chocolate-chips",
-        "displayName": "chocolate chips",
-        "canonicalName": "chocolate chips",
-        "aliases": [
-          "chocolate chips"
-        ],
-        "amountText": "2 cups",
-        "text": "2 cups chocolate chips"
-      },
-      {
-        "id": "vanilla-extract",
-        "displayName": "vanilla extract",
-        "canonicalName": "vanilla extract",
-        "aliases": [
-          "vanilla extract"
-        ],
-        "amountText": "1 tsp",
-        "text": "1 tsp vanilla extract"
-      }
-    ],
-    "steps": [
-      {
-        "index": 1,
-        "sourceStep": 1,
-        "section": null,
-        "speakShort": "Preheat oven to 375 degrees F (190 degrees C).",
-        "displayText": "Preheat oven to 375 degrees F (190 degrees C).",
-        "ingredientRefs": [],
-        "timerHints": []
-      },
-      {
-        "index": 2,
-        "sourceStep": 2,
-        "section": null,
-        "speakShort": "Cream butter and sugars until fluffy.",
-        "displayText": "Cream butter and sugars until fluffy.",
-        "ingredientRefs": [
-          "butter",
-          "sugar"
-        ],
-        "timerHints": []
-      },
-      {
-        "index": 3,
-        "sourceStep": 3,
-        "section": null,
-        "speakShort": "Beat in eggs one at a time, then add vanilla.",
-        "displayText": "Beat in eggs one at a time, then add vanilla.",
-        "ingredientRefs": [
-          "eggs"
-        ],
-        "timerHints": []
-      },
-      {
-        "index": 4,
-        "sourceStep": 4,
-        "section": null,
-        "speakShort": "Mix in flour, then stir in chocolate chips.",
-        "displayText": "Mix in flour, then stir in chocolate chips.",
-        "ingredientRefs": [
-          "flour",
-          "chocolate-chips"
-        ],
-        "timerHints": []
-      },
-      {
-        "index": 5,
-        "sourceStep": 5,
-        "section": null,
-        "speakShort": "Drop spoonfuls onto baking sheets and bake for 9-11 minutes.",
-        "displayText": "Drop spoonfuls onto baking sheets and bake for 9-11 minutes.",
-        "ingredientRefs": [],
-        "timerHints": [
-          {
-            "text": "9-11 minutes",
-            "seconds": 660
-          }
-        ]
-      }
-    ],
-    "notes": [],
-    "searchTokens": [
-      "brown sugar",
-      "butter",
-      "chip",
-      "chocolate",
-      "chocolate chips",
-      "cookies",
-      "eggs",
-      "flour",
-      "sugar",
-      "vanilla extract"
-    ],
-    "image": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=1200&h=800&q=80",
-    "sourceStars": {
-      "pink": 1,
-      "blue": 1
-    }
-  },
-  {
     "id": "3",
     "name": "Pork Sausage Cavatappi Bolognese",
     "displayName": "Pork Sausage Cavatappi Bolognese",
@@ -8166,6 +7869,3562 @@
     "sourceStars": {
       "pink": 4,
       "blue": 4
+    }
+  },
+  {
+    "id": "34",
+    "name": "One-Pan Cheesy Turkey Tortilla Melts",
+    "displayName": "One-Pan Cheesy Turkey Tortilla Melts",
+    "slug": "one-pan-cheesy-turkey-tortilla-melts",
+    "pageUrl": "https://sampanes.github.io/dinner-planner/recipes/one-pan-cheesy-turkey-tortilla-melts.html",
+    "aliases": [
+      "one-pan cheesy turkey tortilla melts"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "flour-tortillas",
+        "displayName": "flour tortillas",
+        "canonicalName": "flour tortillas",
+        "aliases": [
+          "flour tortillas"
+        ],
+        "amountText": "4 unit",
+        "text": "4 flour tortillas"
+      },
+      {
+        "id": "sour-cream",
+        "displayName": "sour cream",
+        "canonicalName": "sour cream",
+        "aliases": [
+          "sour cream"
+        ],
+        "amountText": "6 tablespoon",
+        "text": "6 tablespoon sour cream"
+      },
+      {
+        "id": "cheddar-cheese",
+        "displayName": "cheddar cheese",
+        "canonicalName": "cheddar cheese",
+        "aliases": [
+          "cheddar cheese"
+        ],
+        "amountText": "1 cup",
+        "text": "1 cup cheddar cheese"
+      },
+      {
+        "id": "ground-turkey",
+        "displayName": "ground turkey",
+        "canonicalName": "ground turkey",
+        "aliases": [
+          "ground turkey"
+        ],
+        "amountText": "20 ounce",
+        "text": "20 ounce ground turkey"
+      },
+      {
+        "id": "cream-cheese",
+        "displayName": "cream cheese",
+        "canonicalName": "cream cheese",
+        "aliases": [
+          "cream cheese"
+        ],
+        "amountText": "8 tablespoon",
+        "text": "8 tablespoon cream cheese"
+      },
+      {
+        "id": "long-green-pepper",
+        "displayName": "long green pepper",
+        "canonicalName": "long green pepper",
+        "aliases": [
+          "long green pepper"
+        ],
+        "amountText": "2 unit",
+        "text": "2 long green pepper"
+      },
+      {
+        "id": "stock-concentrate",
+        "displayName": "stock concentrate",
+        "canonicalName": "stock concentrate",
+        "aliases": [
+          "stock concentrate"
+        ],
+        "amountText": "2 unit",
+        "text": "2 stock concentrate"
+      },
+      {
+        "id": "hot-sauce",
+        "displayName": "hot sauce",
+        "canonicalName": "hot sauce",
+        "aliases": [
+          "hot sauce"
+        ],
+        "amountText": "4 teaspoon",
+        "text": "4 teaspoon hot sauce"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste",
+        "text": "salt, to taste"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "2 teaspoon",
+        "text": "2 teaspoon oil"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "2 tablespoon",
+        "text": "2 tablespoon butter"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste",
+        "text": "pepper, to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Wash and dry produce.",
+        "displayText": "Wash and dry produce.",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 2,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Halve, core, and thinly slice green pepper into strips.",
+        "displayText": "Halve, core, and thinly slice green pepper into strips.",
+        "ingredientRefs": [
+          "long-green-pepper",
+          "pepper"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 3,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "In a small microwave-safe bowl, combine sour cream, cream cheese, 1 tsp water (2 tsp for 4 servings), and hot sauce to taste. (Start with half the hot sauce, then taste and add more from there if you like things spicy.) Microwave until softened, 30 seconds. Stir to combine.",
+        "displayText": "In a small microwave-safe bowl, combine sour cream, cream cheese, 1 tsp water (2 tsp for 4 servings), and hot sauce to taste. (Start with half the hot sauce, then taste and add more from there if you like things spicy.) Microwave until softened, 30 seconds. Stir to combine.",
+        "ingredientRefs": [
+          "sour-cream",
+          "cheddar-cheese",
+          "cream-cheese",
+          "hot-sauce"
+        ],
+        "timerHints": [
+          {
+            "text": "30 seconds",
+            "seconds": 30
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "sourceStep": 2,
+        "section": null,
+        "speakShort": "Heat a drizzle of oil in a large, preferably nonstick, pan over medium-high heat. Add green pepper and cook, stirring occasionally, until slightly softened, 2-3 minutes.",
+        "displayText": "Heat a drizzle of oil in a large, preferably nonstick, pan over medium-high heat. Add green pepper and cook, stirring occasionally, until slightly softened, 2-3 minutes.",
+        "ingredientRefs": [
+          "long-green-pepper",
+          "oil",
+          "pepper"
+        ],
+        "timerHints": [
+          {
+            "text": "2-3 minutes",
+            "seconds": 180
+          }
+        ]
+      },
+      {
+        "index": 5,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "Add beef* to pan with green pepper. Season with a big pinch of salt and pepper. Cook, breaking up meat into pieces, until beef is browned and cooked through and green pepper is tender, 4-6 minutes. Carefully drain any excess grease from pan.",
+        "displayText": "Add beef* to pan with green pepper. Season with a big pinch of salt and pepper. Cook, breaking up meat into pieces, until beef is browned and cooked through and green pepper is tender, 4-6 minutes. Carefully drain any excess grease from pan.",
+        "ingredientRefs": [
+          "long-green-pepper",
+          "salt",
+          "pepper"
+        ],
+        "timerHints": [
+          {
+            "text": "4-6 minutes",
+            "seconds": 360
+          }
+        ]
+      },
+      {
+        "index": 6,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "Stir in stock concentrate until combined. Turn off heat.",
+        "displayText": "Stir in stock concentrate until combined. Turn off heat.",
+        "ingredientRefs": [
+          "stock-concentrate"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 7,
+        "sourceStep": 4,
+        "section": null,
+        "speakShort": "Place tortillas on a clean work surface.",
+        "displayText": "Place tortillas on a clean work surface.",
+        "ingredientRefs": [
+          "flour-tortillas"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 8,
+        "sourceStep": 4,
+        "section": null,
+        "speakShort": "Spread one half of each tortilla with half the cream sauce (save the rest for serving). Using a slotted spoon, top cream sauce with beef filling, then sprinkle with cheddar. Fold tortillas in half to create tortilla melts.",
+        "displayText": "Spread one half of each tortilla with half the cream sauce (save the rest for serving). Using a slotted spoon, top cream sauce with beef filling, then sprinkle with cheddar. Fold tortillas in half to create tortilla melts.",
+        "ingredientRefs": [
+          "flour-tortillas"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 9,
+        "sourceStep": 5,
+        "section": null,
+        "speakShort": "Wipe out pan used for filling. Melt 1 TBSP butter (2 TBSP for 4 servings) in same pan over medium heat.",
+        "displayText": "Wipe out pan used for filling. Melt 1 TBSP butter (2 TBSP for 4 servings) in same pan over medium heat.",
+        "ingredientRefs": [
+          "butter"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 10,
+        "sourceStep": 5,
+        "section": null,
+        "speakShort": "Add tortilla melts (work in batches for 4); cook until tortillas are golden brown and cheese melts, 3-4 minutes per side.",
+        "displayText": "Add tortilla melts (work in batches for 4); cook until tortillas are golden brown and cheese melts, 3-4 minutes per side.",
+        "ingredientRefs": [
+          "flour-tortillas",
+          "cheddar-cheese",
+          "cream-cheese"
+        ],
+        "timerHints": [
+          {
+            "text": "3-4 minutes",
+            "seconds": 240
+          }
+        ]
+      },
+      {
+        "index": 11,
+        "sourceStep": 5,
+        "section": null,
+        "speakShort": "Transfer to a paper-towel-lined cutting board.",
+        "displayText": "Transfer to a paper-towel-lined cutting board.",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 12,
+        "sourceStep": 6,
+        "section": null,
+        "speakShort": "Cut tortilla melts into wedges.",
+        "displayText": "Cut tortilla melts into wedges.",
+        "ingredientRefs": [
+          "flour-tortillas"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 13,
+        "sourceStep": 6,
+        "section": null,
+        "speakShort": "Divide between plates and serve with remaining cream sauce on top or on the side for dipping. TIP: This dish pairs well with ripe red wines like Black Saint Peter Old Vine Zinfandel.",
+        "displayText": "Divide between plates and serve with remaining cream sauce on top or on the side for dipping. TIP: This dish pairs well with ripe red wines like Black Saint Peter Old Vine Zinfandel.",
+        "ingredientRefs": [],
+        "timerHints": []
+      }
+    ],
+    "notes": [],
+    "searchTokens": [
+      "butter",
+      "cheddar cheese",
+      "cheesy",
+      "cream cheese",
+      "flour tortillas",
+      "ground turkey",
+      "hot sauce",
+      "long green pepper",
+      "melts",
+      "oil",
+      "one",
+      "pan",
+      "pepper",
+      "salt",
+      "sour cream",
+      "stock concentrate",
+      "tortilla",
+      "turkey"
+    ],
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/unknown_brand_abbreviationUSRC_R25318D_Hero_CheesyBeefTortillaMelt_W46_2_2025_Web-2fbb364b.jpg",
+    "sourceStars": {
+      "pink": 0,
+      "blue": 0
+    }
+  },
+  {
+    "id": "35",
+    "name": "Penne with Beef & Zucchini Ragu",
+    "displayName": "Penne with Beef & Zucchini Ragu",
+    "slug": "penne-with-beef-zucchini-ragu",
+    "pageUrl": "https://sampanes.github.io/dinner-planner/recipes/penne-with-beef-zucchini-ragu.html",
+    "aliases": [
+      "penne with beef & zucchini ragu"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "penne-pasta",
+        "displayName": "penne pasta",
+        "canonicalName": "penne pasta",
+        "aliases": [
+          "penne pasta"
+        ],
+        "amountText": "12 ounce",
+        "text": "12 ounce penne pasta"
+      },
+      {
+        "id": "shallot",
+        "displayName": "shallot",
+        "canonicalName": "shallot",
+        "aliases": [
+          "shallot"
+        ],
+        "amountText": "2 unit",
+        "text": "2 shallot"
+      },
+      {
+        "id": "garlic",
+        "displayName": "garlic",
+        "canonicalName": "garlic",
+        "aliases": [
+          "garlic"
+        ],
+        "amountText": "2 clove",
+        "text": "2 clove garlic"
+      },
+      {
+        "id": "zucchini",
+        "displayName": "zucchini",
+        "canonicalName": "zucchini",
+        "aliases": [
+          "zucchini"
+        ],
+        "amountText": "2 unit",
+        "text": "2 zucchini"
+      },
+      {
+        "id": "ground-beef",
+        "displayName": "ground beef",
+        "canonicalName": "ground beef",
+        "aliases": [
+          "ground beef"
+        ],
+        "amountText": "20 ounce",
+        "text": "20 ounce ground beef"
+      },
+      {
+        "id": "italian-seasoning",
+        "displayName": "italian seasoning",
+        "canonicalName": "italian seasoning",
+        "aliases": [
+          "italian seasoning"
+        ],
+        "amountText": "2 tablespoon",
+        "text": "2 tablespoon italian seasoning"
+      },
+      {
+        "id": "tomato-paste",
+        "displayName": "tomato paste",
+        "canonicalName": "tomato paste",
+        "aliases": [
+          "tomato paste"
+        ],
+        "amountText": "2 unit",
+        "text": "2 tomato paste"
+      },
+      {
+        "id": "cream-cheese",
+        "displayName": "cream cheese",
+        "canonicalName": "cream cheese",
+        "aliases": [
+          "cream cheese"
+        ],
+        "amountText": "8 tablespoon",
+        "text": "8 tablespoon cream cheese"
+      },
+      {
+        "id": "stock-concentrate",
+        "displayName": "stock concentrate",
+        "canonicalName": "stock concentrate",
+        "aliases": [
+          "stock concentrate"
+        ],
+        "amountText": "2 unit",
+        "text": "2 stock concentrate"
+      },
+      {
+        "id": "parmesan-cheese",
+        "displayName": "parmesan cheese",
+        "canonicalName": "parmesan cheese",
+        "aliases": [
+          "parmesan cheese"
+        ],
+        "amountText": "6 tablespoon",
+        "text": "6 tablespoon parmesan cheese"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste",
+        "text": "salt, to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste",
+        "text": "pepper, to taste"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "2 teaspoon",
+        "text": "2 teaspoon oil"
+      },
+      {
+        "id": "sugar",
+        "displayName": "sugar",
+        "canonicalName": "sugar",
+        "aliases": [
+          "sugar"
+        ],
+        "amountText": "1 teaspoon",
+        "text": "1 teaspoon sugar"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "2 tablespoon",
+        "text": "2 tablespoon butter"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Bring a large pot of salted water to a boil. Once boiling, add penne to pot. Cook, stirring occasionally, until al dente, 9-11 minutes. Reserve 1 cup pasta cooking water (1 1/2 cups for 4 servings), then drain.",
+        "displayText": "Bring a large pot of salted water to a boil. Once boiling, add penne to pot. Cook, stirring occasionally, until al dente, 9-11 minutes. Reserve 1 cup pasta cooking water (1 1/2 cups for 4 servings), then drain.",
+        "ingredientRefs": [],
+        "timerHints": [
+          {
+            "text": "9-11 minutes",
+            "seconds": 660
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Meanwhile, wash and dry produce.",
+        "displayText": "Meanwhile, wash and dry produce.",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 3,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Halve, peel, and finely dice shallot. Peel and mince or grate garlic.",
+        "displayText": "Halve, peel, and finely dice shallot. Peel and mince or grate garlic.",
+        "ingredientRefs": [
+          "shallot",
+          "garlic"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 4,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Trim and grate zucchini on the largest holes of a box grater.",
+        "displayText": "Trim and grate zucchini on the largest holes of a box grater.",
+        "ingredientRefs": [
+          "zucchini"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 5,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Place zucchini in the center of a clean kitchen towel. Gather into a tight bundle and squeeze over the sink to remove as much liquid as possible. TIP: Alternatively, place grated zucchini in a fine-mesh strainer and press down with a spatula.",
+        "displayText": "Place zucchini in the center of a clean kitchen towel. Gather into a tight bundle and squeeze over the sink to remove as much liquid as possible. TIP: Alternatively, place grated zucchini in a fine-mesh strainer and press down with a spatula.",
+        "ingredientRefs": [
+          "zucchini"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 6,
+        "sourceStep": 2,
+        "section": null,
+        "speakShort": "Heat a drizzle of oil in a large pan over medium-high heat. Add beef*, shallot, Italian Seasoning, a big pinch of salt, and pepper.",
+        "displayText": "Heat a drizzle of oil in a large pan over medium-high heat. Add beef*, shallot, Italian Seasoning, a big pinch of salt, and pepper.",
+        "ingredientRefs": [
+          "shallot",
+          "italian-seasoning",
+          "salt",
+          "pepper",
+          "oil"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 7,
+        "sourceStep": 2,
+        "section": null,
+        "speakShort": "Cook, breaking up meat into pieces, until browned and mostly cooked through, 3-5 minutes (it'll finish cooking in the next step).",
+        "displayText": "Cook, breaking up meat into pieces, until browned and mostly cooked through, 3-5 minutes (it'll finish cooking in the next step).",
+        "ingredientRefs": [],
+        "timerHints": [
+          {
+            "text": "3-5 minutes",
+            "seconds": 300
+          }
+        ]
+      },
+      {
+        "index": 8,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "Add tomato paste to pan with beef. Cook, stirring, until tomato paste is well combined and beef is cooked through, 1-2 minutes.",
+        "displayText": "Add tomato paste to pan with beef. Cook, stirring, until tomato paste is well combined and beef is cooked through, 1-2 minutes.",
+        "ingredientRefs": [
+          "tomato-paste"
+        ],
+        "timerHints": [
+          {
+            "text": "1-2 minutes",
+            "seconds": 120
+          }
+        ]
+      },
+      {
+        "index": 9,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "Stir in zucchini, garlic, and a big pinch of salt. Cook, stirring, until zucchini is tender, 2-3 minutes.",
+        "displayText": "Stir in zucchini, garlic, and a big pinch of salt. Cook, stirring, until zucchini is tender, 2-3 minutes.",
+        "ingredientRefs": [
+          "garlic",
+          "zucchini",
+          "salt"
+        ],
+        "timerHints": [
+          {
+            "text": "2-3 minutes",
+            "seconds": 180
+          }
+        ]
+      },
+      {
+        "index": 10,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "Stir in PHILADELPHIA Cream Cheese, stock concentrate, 1/2 cup reserved pasta cooking water (ladle straight from the pot if pasta isn't finished cooking yet), and 1/2 tsp sugar (for 4 servings, use 2/3 cup pasta cooking water and 1 tsp sugar).",
+        "displayText": "Stir in PHILADELPHIA Cream Cheese, stock concentrate, 1/2 cup reserved pasta cooking water (ladle straight from the pot if pasta isn't finished cooking yet), and 1/2 tsp sugar (for 4 servings, use 2/3 cup pasta cooking water and 1 tsp sugar).",
+        "ingredientRefs": [
+          "cream-cheese",
+          "stock-concentrate",
+          "parmesan-cheese",
+          "sugar"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 11,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "Simmer until sauce has slightly thickened, 1-2 minutes. Season with salt and pepper. TIP: If you've got some on hand, add a pinch of chili flakes from your pantry for a spicy kick.",
+        "displayText": "Simmer until sauce has slightly thickened, 1-2 minutes. Season with salt and pepper. TIP: If you've got some on hand, add a pinch of chili flakes from your pantry for a spicy kick.",
+        "ingredientRefs": [
+          "salt",
+          "pepper"
+        ],
+        "timerHints": [
+          {
+            "text": "1-2 minutes",
+            "seconds": 120
+          }
+        ]
+      },
+      {
+        "index": 12,
+        "sourceStep": 4,
+        "section": null,
+        "speakShort": "Reduce heat to medium low. Stir drained penne, half the Parmesan, and 1 TBSP butter (2 TBSP for 4 servings) into pan with sauce until combined. TIP: If needed, stir in more reserved cooking water a splash at a time until pasta is coated in a creamy sauce.",
+        "displayText": "Reduce heat to medium low. Stir drained penne, half the Parmesan, and 1 TBSP butter (2 TBSP for 4 servings) into pan with sauce until combined. TIP: If needed, stir in more reserved cooking water a splash at a time until pasta is coated in a creamy sauce.",
+        "ingredientRefs": [
+          "butter"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 13,
+        "sourceStep": 4,
+        "section": null,
+        "speakShort": "Divide pasta between plates or bowls. Top with remaining Parmesan and serve.",
+        "displayText": "Divide pasta between plates or bowls. Top with remaining Parmesan and serve.",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 14,
+        "sourceStep": 4,
+        "section": null,
+        "speakShort": "***Ground Beef is fully cooked when internal temperature reaches 160o.***",
+        "displayText": "***Ground Beef is fully cooked when internal temperature reaches 160o.***",
+        "ingredientRefs": [
+          "ground-beef"
+        ],
+        "timerHints": []
+      }
+    ],
+    "notes": [],
+    "searchTokens": [
+      "beef",
+      "butter",
+      "cream cheese",
+      "garlic",
+      "ground beef",
+      "italian seasoning",
+      "oil",
+      "parmesan cheese",
+      "penne",
+      "penne pasta",
+      "pepper",
+      "ragu",
+      "salt",
+      "shallot",
+      "stock concentrate",
+      "sugar",
+      "tomato paste",
+      "with",
+      "zucchini"
+    ],
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/penne-with-beef-zucchini-ragu-27890d9b.jpg",
+    "sourceStars": {
+      "pink": 0,
+      "blue": 0
+    }
+  },
+  {
+    "id": "36",
+    "name": "Southwest Beef Nacho Bar",
+    "displayName": "Southwest Beef Nacho Bar",
+    "slug": "southwest-beef-nacho-bar",
+    "pageUrl": "https://sampanes.github.io/dinner-planner/recipes/southwest-beef-nacho-bar.html",
+    "aliases": [
+      "southwest beef nacho bar"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "flour-tortillas",
+        "displayName": "flour tortillas",
+        "canonicalName": "flour tortillas",
+        "aliases": [
+          "flour tortillas"
+        ],
+        "amountText": "12 unit",
+        "text": "12 flour tortillas"
+      },
+      {
+        "id": "green-bell-pepper",
+        "displayName": "green bell pepper",
+        "canonicalName": "green bell pepper",
+        "aliases": [
+          "green bell pepper"
+        ],
+        "amountText": "2 unit",
+        "text": "2 green bell pepper"
+      },
+      {
+        "id": "onion",
+        "displayName": "onion",
+        "canonicalName": "onion",
+        "aliases": [
+          "onion"
+        ],
+        "amountText": "2 unit",
+        "text": "2 onion"
+      },
+      {
+        "id": "tomato",
+        "displayName": "tomato",
+        "canonicalName": "tomato",
+        "aliases": [
+          "tomato"
+        ],
+        "amountText": "2 unit",
+        "text": "2 tomato"
+      },
+      {
+        "id": "lime",
+        "displayName": "lime",
+        "canonicalName": "lime",
+        "aliases": [
+          "lime"
+        ],
+        "amountText": "2 unit",
+        "text": "2 lime"
+      },
+      {
+        "id": "southwest-spice-blend",
+        "displayName": "southwest spice blend",
+        "canonicalName": "southwest spice blend",
+        "aliases": [
+          "southwest spice blend"
+        ],
+        "amountText": "2 tablespoon",
+        "text": "2 tablespoon southwest spice blend"
+      },
+      {
+        "id": "ground-beef",
+        "displayName": "ground beef",
+        "canonicalName": "ground beef",
+        "aliases": [
+          "ground beef"
+        ],
+        "amountText": "20 ounce",
+        "text": "20 ounce ground beef"
+      },
+      {
+        "id": "mexican-spice-blend",
+        "displayName": "mexican spice blend",
+        "canonicalName": "mexican spice blend",
+        "aliases": [
+          "mexican spice blend"
+        ],
+        "amountText": "2 tablespoon",
+        "text": "2 tablespoon mexican spice blend"
+      },
+      {
+        "id": "stock-concentrate",
+        "displayName": "stock concentrate",
+        "canonicalName": "stock concentrate",
+        "aliases": [
+          "stock concentrate"
+        ],
+        "amountText": "2 unit",
+        "text": "2 stock concentrate"
+      },
+      {
+        "id": "flour",
+        "displayName": "flour",
+        "canonicalName": "flour",
+        "aliases": [
+          "flour"
+        ],
+        "amountText": "2 tablespoon",
+        "text": "2 tablespoon flour"
+      },
+      {
+        "id": "cream-cheese",
+        "displayName": "cream cheese",
+        "canonicalName": "cream cheese",
+        "aliases": [
+          "cream cheese"
+        ],
+        "amountText": "8 tablespoon",
+        "text": "8 tablespoon cream cheese"
+      },
+      {
+        "id": "pepper-jack-cheese",
+        "displayName": "pepper jack cheese",
+        "canonicalName": "pepper jack cheese",
+        "aliases": [
+          "pepper jack cheese"
+        ],
+        "amountText": "1 cup",
+        "text": "1 cup pepper jack cheese"
+      },
+      {
+        "id": "sour-cream",
+        "displayName": "sour cream",
+        "canonicalName": "sour cream",
+        "aliases": [
+          "sour cream"
+        ],
+        "amountText": "6 tablespoon",
+        "text": "6 tablespoon sour cream"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste",
+        "text": "salt, to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste",
+        "text": "pepper, to taste"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "10 teaspoon",
+        "text": "10 teaspoon oil"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "2 tablespoon",
+        "text": "2 tablespoon butter"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Adjust rack to top position (top and middle positions for 4 servings) and preheat oven to 425 degrees. Wash and dry produce.",
+        "displayText": "Adjust rack to top position (top and middle positions for 4 servings) and preheat oven to 425 degrees. Wash and dry produce.",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 2,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Gently prick each tortilla in a few places with a fork, then cut each tortilla into 6 triangles for a total of 36 pieces (72 pieces for 4).",
+        "displayText": "Gently prick each tortilla in a few places with a fork, then cut each tortilla into 6 triangles for a total of 36 pieces (72 pieces for 4).",
+        "ingredientRefs": [
+          "flour-tortillas"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 3,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Place tortillas on a baking sheet and toss with a large drizzle of oil, salt, and pepper. Spread out in an even layer (it's OK if there is some overlap!). Bake on top rack until lightly golden brown, 8-10 minutes (for 4, bake 12-15 minutes, stirring tortillas halfway through). TIP: Watch carefully to avoid burning.",
+        "displayText": "Place tortillas on a baking sheet and toss with a large drizzle of oil, salt, and pepper. Spread out in an even layer (it's OK if there is some overlap!). Bake on top rack until lightly golden brown, 8-10 minutes (for 4, bake 12-15 minutes, stirring tortillas halfway through). TIP: Watch carefully to avoid burning.",
+        "ingredientRefs": [
+          "flour-tortillas",
+          "green-bell-pepper",
+          "salt",
+          "pepper",
+          "oil"
+        ],
+        "timerHints": [
+          {
+            "text": "8-10 minutes",
+            "seconds": 600
+          },
+          {
+            "text": "12-15 minutes",
+            "seconds": 900
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Remove from oven and set aside to cool.",
+        "displayText": "Remove from oven and set aside to cool.",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 5,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "TIP: If you added any other items to your meal (apps, sides, and/or dessert), you can get started on them now!",
+        "displayText": "TIP: If you added any other items to your meal (apps, sides, and/or dessert), you can get started on them now!",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 6,
+        "sourceStep": 2,
+        "section": null,
+        "speakShort": "While tortilla chips bake, halve, peel, and thinly slice onion into 1/4-inch strips. Halve, core, and thinly slice bell pepper into 1/4-inch strips. Quarter lime. Dice tomato into 1/4-inch pieces.",
+        "displayText": "While tortilla chips bake, halve, peel, and thinly slice onion into 1/4-inch strips. Halve, core, and thinly slice bell pepper into 1/4-inch strips. Quarter lime. Dice tomato into 1/4-inch pieces.",
+        "ingredientRefs": [
+          "flour-tortillas",
+          "green-bell-pepper",
+          "onion",
+          "tomato",
+          "lime",
+          "pepper"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 7,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "Once tortilla chips have finished baking, toss onion on one side of a second baking sheet with a drizzle of oil, 1 tsp Southwest Spice Blend (2 tsp for 4 servings), salt, and pepper. (For 4, spread out across entire sheet).",
+        "displayText": "Once tortilla chips have finished baking, toss onion on one side of a second baking sheet with a drizzle of oil, 1 tsp Southwest Spice Blend (2 tsp for 4 servings), salt, and pepper. (For 4, spread out across entire sheet).",
+        "ingredientRefs": [
+          "flour-tortillas",
+          "green-bell-pepper",
+          "onion",
+          "southwest-spice-blend",
+          "salt",
+          "pepper",
+          "oil"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 8,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "Toss bell pepper on empty side of sheet (for 4, toss on a third baking sheet) with a drizzle of oil, 1 tsp Southwest Spice Blend (2 tsp for 4), salt, and pepper.",
+        "displayText": "Toss bell pepper on empty side of sheet (for 4, toss on a third baking sheet) with a drizzle of oil, 1 tsp Southwest Spice Blend (2 tsp for 4), salt, and pepper.",
+        "ingredientRefs": [
+          "green-bell-pepper",
+          "southwest-spice-blend",
+          "salt",
+          "pepper",
+          "oil"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 9,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "Roast veggies on top rack until softened and lightly charred, 15-20 minutes. (For 4, roast onion on top rack and bell pepper on middle rack.)",
+        "displayText": "Roast veggies on top rack until softened and lightly charred, 15-20 minutes. (For 4, roast onion on top rack and bell pepper on middle rack.)",
+        "ingredientRefs": [
+          "green-bell-pepper",
+          "onion",
+          "pepper"
+        ],
+        "timerHints": [
+          {
+            "text": "15-20 minutes",
+            "seconds": 1200
+          }
+        ]
+      },
+      {
+        "index": 10,
+        "sourceStep": 4,
+        "section": null,
+        "speakShort": "Meanwhile, heat a drizzle of oil in a large, preferably nonstick, pan over medium-high heat. Add beef*, stock concentrate, Mexican Spice Blend, and 2 TBSP water (4 TBSP for 4 servings). Cook, breaking up meat into pieces, until cooked through, 4-6 minutes.",
+        "displayText": "Meanwhile, heat a drizzle of oil in a large, preferably nonstick, pan over medium-high heat. Add beef*, stock concentrate, Mexican Spice Blend, and 2 TBSP water (4 TBSP for 4 servings). Cook, breaking up meat into pieces, until cooked through, 4-6 minutes.",
+        "ingredientRefs": [
+          "mexican-spice-blend",
+          "stock-concentrate",
+          "oil"
+        ],
+        "timerHints": [
+          {
+            "text": "4-6 minutes",
+            "seconds": 360
+          }
+        ]
+      },
+      {
+        "index": 11,
+        "sourceStep": 4,
+        "section": null,
+        "speakShort": "Carefully drain any excess grease from pan.",
+        "displayText": "Carefully drain any excess grease from pan.",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 12,
+        "sourceStep": 4,
+        "section": null,
+        "speakShort": "Turn off heat; transfer beef mixture to a serving bowl and cover to keep warm. Wipe out pan.",
+        "displayText": "Turn off heat; transfer beef mixture to a serving bowl and cover to keep warm. Wipe out pan.",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 13,
+        "sourceStep": 5,
+        "section": null,
+        "speakShort": "Melt 1 TBSP butter (2 TBSP for 4 servings) in pan used for beef over medium-low heat.",
+        "displayText": "Melt 1 TBSP butter (2 TBSP for 4 servings) in pan used for beef over medium-low heat.",
+        "ingredientRefs": [
+          "butter"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 14,
+        "sourceStep": 5,
+        "section": null,
+        "speakShort": "Sprinkle flour and remaining Southwest Spice Blend over melted butter; cook, stirring constantly, until fragrant, 1-2 minutes.",
+        "displayText": "Sprinkle flour and remaining Southwest Spice Blend over melted butter; cook, stirring constantly, until fragrant, 1-2 minutes.",
+        "ingredientRefs": [
+          "southwest-spice-blend",
+          "flour",
+          "butter"
+        ],
+        "timerHints": [
+          {
+            "text": "1-2 minutes",
+            "seconds": 120
+          }
+        ]
+      },
+      {
+        "index": 15,
+        "sourceStep": 5,
+        "section": null,
+        "speakShort": "Slowly whisk in 3/4 cup water (1 1/2 cups for 4), then add cream cheese. Season with salt and pepper. Cook, whisking, until cream cheese melts and sauce has thickened, 3-5 minutes.",
+        "displayText": "Slowly whisk in 3/4 cup water (1 1/2 cups for 4), then add cream cheese. Season with salt and pepper. Cook, whisking, until cream cheese melts and sauce has thickened, 3-5 minutes.",
+        "ingredientRefs": [
+          "green-bell-pepper",
+          "cream-cheese",
+          "pepper-jack-cheese",
+          "salt",
+          "pepper"
+        ],
+        "timerHints": [
+          {
+            "text": "3-5 minutes",
+            "seconds": 300
+          }
+        ]
+      },
+      {
+        "index": 16,
+        "sourceStep": 5,
+        "section": null,
+        "speakShort": "Remove from heat and stir in pepper jack and a big squeeze of lime juice. Taste and season with salt and pepper.",
+        "displayText": "Remove from heat and stir in pepper jack and a big squeeze of lime juice. Taste and season with salt and pepper.",
+        "ingredientRefs": [
+          "green-bell-pepper",
+          "lime",
+          "salt",
+          "pepper"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 17,
+        "sourceStep": 6,
+        "section": null,
+        "speakShort": "Serve tortilla chips, queso, Southwest beef (if needed, reheat beef in microwave for 1-2 minutes before serving), roasted veggies, tomato, sour cream, and remaining lime wedges family style and let everyone build their own nachos.",
+        "displayText": "Serve tortilla chips, queso, Southwest beef (if needed, reheat beef in microwave for 1-2 minutes before serving), roasted veggies, tomato, sour cream, and remaining lime wedges family style and let everyone build their own nachos.",
+        "ingredientRefs": [
+          "flour-tortillas",
+          "tomato",
+          "lime",
+          "sour-cream"
+        ],
+        "timerHints": [
+          {
+            "text": "1-2 minutes",
+            "seconds": 120
+          }
+        ]
+      },
+      {
+        "index": 18,
+        "sourceStep": 6,
+        "section": null,
+        "speakShort": "***Ground Beef is fully cooked when internal temperature reaches 160 degrees.***",
+        "displayText": "***Ground Beef is fully cooked when internal temperature reaches 160 degrees.***",
+        "ingredientRefs": [
+          "ground-beef"
+        ],
+        "timerHints": []
+      }
+    ],
+    "notes": [],
+    "searchTokens": [
+      "bar",
+      "beef",
+      "butter",
+      "cream cheese",
+      "flour",
+      "flour tortillas",
+      "green bell pepper",
+      "ground beef",
+      "lime",
+      "mexican spice blend",
+      "nacho",
+      "oil",
+      "onion",
+      "pepper",
+      "pepper jack cheese",
+      "salt",
+      "sour cream",
+      "southwest",
+      "southwest spice blend",
+      "stock concentrate",
+      "tomato"
+    ],
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/66b1500b78d91450badf816f-1715295d.jpeg",
+    "sourceStars": {
+      "pink": 0,
+      "blue": 0
+    }
+  },
+  {
+    "id": "37",
+    "name": "Beef Rigatoni Rosa",
+    "displayName": "Beef Rigatoni Rosa",
+    "slug": "beef-rigatoni-rosa",
+    "pageUrl": "https://sampanes.github.io/dinner-planner/recipes/beef-rigatoni-rosa.html",
+    "aliases": [
+      "beef rigatoni rosa"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "rigatoni-pasta",
+        "displayName": "rigatoni pasta",
+        "canonicalName": "rigatoni pasta",
+        "aliases": [
+          "rigatoni pasta"
+        ],
+        "amountText": "12 ounce",
+        "text": "12 ounce rigatoni pasta"
+      },
+      {
+        "id": "tomato-paste",
+        "displayName": "tomato paste",
+        "canonicalName": "tomato paste",
+        "aliases": [
+          "tomato paste"
+        ],
+        "amountText": "2 unit",
+        "text": "2 tomato paste"
+      },
+      {
+        "id": "zucchini",
+        "displayName": "zucchini",
+        "canonicalName": "zucchini",
+        "aliases": [
+          "zucchini"
+        ],
+        "amountText": "2 unit",
+        "text": "2 zucchini"
+      },
+      {
+        "id": "cream-cheese",
+        "displayName": "cream cheese",
+        "canonicalName": "cream cheese",
+        "aliases": [
+          "cream cheese"
+        ],
+        "amountText": "8 tablespoon",
+        "text": "8 tablespoon cream cheese"
+      },
+      {
+        "id": "ground-beef",
+        "displayName": "ground beef",
+        "canonicalName": "ground beef",
+        "aliases": [
+          "ground beef"
+        ],
+        "amountText": "20 ounce",
+        "text": "20 ounce ground beef"
+      },
+      {
+        "id": "stock-concentrate",
+        "displayName": "stock concentrate",
+        "canonicalName": "stock concentrate",
+        "aliases": [
+          "stock concentrate"
+        ],
+        "amountText": "2 unit",
+        "text": "2 stock concentrate"
+      },
+      {
+        "id": "parmesan-cheese",
+        "displayName": "parmesan cheese",
+        "canonicalName": "parmesan cheese",
+        "aliases": [
+          "parmesan cheese"
+        ],
+        "amountText": "12 tablespoon",
+        "text": "12 tablespoon parmesan cheese"
+      },
+      {
+        "id": "chili-flakes",
+        "displayName": "chili flakes",
+        "canonicalName": "chili flakes",
+        "aliases": [
+          "chili flakes"
+        ],
+        "amountText": "2 teaspoon",
+        "text": "2 teaspoon chili flakes"
+      },
+      {
+        "id": "garlic",
+        "displayName": "garlic",
+        "canonicalName": "garlic",
+        "aliases": [
+          "garlic"
+        ],
+        "amountText": "2 clove",
+        "text": "2 clove garlic"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste",
+        "text": "salt, to taste"
+      },
+      {
+        "id": "sugar",
+        "displayName": "sugar",
+        "canonicalName": "sugar",
+        "aliases": [
+          "sugar"
+        ],
+        "amountText": "1 teaspoon",
+        "text": "1 teaspoon sugar"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "4 teaspoon",
+        "text": "4 teaspoon oil"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "2 tablespoon",
+        "text": "2 tablespoon butter"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste",
+        "text": "pepper, to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Wash and dry produce.",
+        "displayText": "Wash and dry produce.",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 2,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Bring a large pot of salted water to a boil. Once water is boiling, add rigatoni; cook, stirring occasionally, until al dente, 9-11 minutes.",
+        "displayText": "Bring a large pot of salted water to a boil. Once water is boiling, add rigatoni; cook, stirring occasionally, until al dente, 9-11 minutes.",
+        "ingredientRefs": [],
+        "timerHints": [
+          {
+            "text": "9-11 minutes",
+            "seconds": 660
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Reserve 1 cup pasta cooking water (1 1/2 cups for 4 servings), then drain and set aside.",
+        "displayText": "Reserve 1 cup pasta cooking water (1 1/2 cups for 4 servings), then drain and set aside.",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 4,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Meanwhile, trim and halve zucchini lengthwise; slice crosswise into 1/4-inch-thick half-moons. Peel and mince or grate garlic.",
+        "displayText": "Meanwhile, trim and halve zucchini lengthwise; slice crosswise into 1/4-inch-thick half-moons. Peel and mince or grate garlic.",
+        "ingredientRefs": [
+          "zucchini",
+          "garlic"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 5,
+        "sourceStep": 2,
+        "section": null,
+        "speakShort": "While pasta cooks, heat a drizzle of oil in a large pan over medium-high heat. Add zucchini; season with salt and pepper. Cook, stirring occasionally, until browned and tender, 5-6 minutes. Remove pan from heat; transfer zucchini to a plate.",
+        "displayText": "While pasta cooks, heat a drizzle of oil in a large pan over medium-high heat. Add zucchini; season with salt and pepper. Cook, stirring occasionally, until browned and tender, 5-6 minutes. Remove pan from heat; transfer zucchini to a plate.",
+        "ingredientRefs": [
+          "zucchini",
+          "salt",
+          "oil",
+          "pepper"
+        ],
+        "timerHints": [
+          {
+            "text": "5-6 minutes",
+            "seconds": 360
+          }
+        ]
+      },
+      {
+        "index": 6,
+        "sourceStep": 2,
+        "section": null,
+        "speakShort": "Remove sausage* from casing if necessary; discard casing. Heat another drizzle of oil in same pan over medium-high heat. Add sausage to pan and cook, breaking up meat into pieces, until almost cooked through, 3-4 minutes (it'll finish cooking in the next step).",
+        "displayText": "Remove sausage* from casing if necessary; discard casing. Heat another drizzle of oil in same pan over medium-high heat. Add sausage to pan and cook, breaking up meat into pieces, until almost cooked through, 3-4 minutes (it'll finish cooking in the next step).",
+        "ingredientRefs": [
+          "oil"
+        ],
+        "timerHints": [
+          {
+            "text": "3-4 minutes",
+            "seconds": 240
+          }
+        ]
+      },
+      {
+        "index": 7,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "Stir garlic and tomato paste into pan with sausage; cook until garlic is fragrant, tomato paste is well distributed, and sausage is fully cooked, 1-2 minutes.",
+        "displayText": "Stir garlic and tomato paste into pan with sausage; cook until garlic is fragrant, tomato paste is well distributed, and sausage is fully cooked, 1-2 minutes.",
+        "ingredientRefs": [
+          "tomato-paste",
+          "garlic"
+        ],
+        "timerHints": [
+          {
+            "text": "1-2 minutes",
+            "seconds": 120
+          }
+        ]
+      },
+      {
+        "index": 8,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "Stir in cream cheese, stock concentrate, 1/2 cup reserved pasta cooking water (ladle straight from the pot if pasta hasn't finished cooking yet), 1 TBSP butter, 1/2 tsp sugar, and a pinch of chili flakes to taste. (For 4 servings, use 3/4 cup pasta cooking water, 2 TBSP butter, and 1 tsp sugar.) Remove from heat.",
+        "displayText": "Stir in cream cheese, stock concentrate, 1/2 cup reserved pasta cooking water (ladle straight from the pot if pasta hasn't finished cooking yet), 1 TBSP butter, 1/2 tsp sugar, and a pinch of chili flakes to taste. (For 4 servings, use 3/4 cup pasta cooking water, 2 TBSP butter, and 1 tsp sugar.) Remove from heat.",
+        "ingredientRefs": [
+          "cream-cheese",
+          "stock-concentrate",
+          "parmesan-cheese",
+          "chili-flakes",
+          "sugar",
+          "butter"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 9,
+        "sourceStep": 4,
+        "section": null,
+        "speakShort": "Add drained rigatoni and zucchini to pan with sauce. Stir in half the Parmesan. Season with salt and pepper to taste. TIP: If needed, stir in more reserved pasta cooking water a splash at a time until pasta is coated in a creamy sauce.",
+        "displayText": "Add drained rigatoni and zucchini to pan with sauce. Stir in half the Parmesan. Season with salt and pepper to taste. TIP: If needed, stir in more reserved pasta cooking water a splash at a time until pasta is coated in a creamy sauce.",
+        "ingredientRefs": [
+          "zucchini",
+          "salt",
+          "pepper"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 10,
+        "sourceStep": 4,
+        "section": null,
+        "speakShort": "Divide between bowls; top with remaining Parmesan and serve.",
+        "displayText": "Divide between bowls; top with remaining Parmesan and serve.",
+        "ingredientRefs": [],
+        "timerHints": []
+      }
+    ],
+    "notes": [],
+    "searchTokens": [
+      "beef",
+      "butter",
+      "chili flakes",
+      "cream cheese",
+      "garlic",
+      "ground beef",
+      "oil",
+      "parmesan cheese",
+      "pepper",
+      "rigatoni",
+      "rigatoni pasta",
+      "rosa",
+      "salt",
+      "stock concentrate",
+      "sugar",
+      "tomato paste",
+      "zucchini"
+    ],
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/unknown_brand_abbreviationUSRC_R45331C_Hero_PorkSausageRigatoniRosa_W47_3_2025_Web-40dbd2f7.jpg",
+    "sourceStars": {
+      "pink": 0,
+      "blue": 0
+    }
+  },
+  {
+    "id": "38",
+    "name": "Beef & Mushroom Shepherd's Pie",
+    "displayName": "Beef & Mushroom Shepherd's Pie",
+    "slug": "beef-mushroom-shepherd-s-pie",
+    "pageUrl": "https://sampanes.github.io/dinner-planner/recipes/beef-mushroom-shepherd-s-pie.html",
+    "aliases": [
+      "beef & mushroom shepherd's pie"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "potatoes",
+        "displayName": "potatoes",
+        "canonicalName": "potatoes",
+        "aliases": [
+          "potatoes"
+        ],
+        "amountText": "32 ounce",
+        "text": "32 ounce potatoes"
+      },
+      {
+        "id": "sour-cream",
+        "displayName": "sour cream",
+        "canonicalName": "sour cream",
+        "aliases": [
+          "sour cream"
+        ],
+        "amountText": "3 tablespoon",
+        "text": "3 tablespoon sour cream"
+      },
+      {
+        "id": "cheddar-cheese",
+        "displayName": "cheddar cheese",
+        "canonicalName": "cheddar cheese",
+        "aliases": [
+          "cheddar cheese"
+        ],
+        "amountText": "1 cup",
+        "text": "1 cup cheddar cheese"
+      },
+      {
+        "id": "button-mushrooms",
+        "displayName": "button mushrooms",
+        "canonicalName": "button mushrooms",
+        "aliases": [
+          "button mushrooms"
+        ],
+        "amountText": "16 ounce",
+        "text": "16 ounce button mushrooms"
+      },
+      {
+        "id": "carrot",
+        "displayName": "carrot",
+        "canonicalName": "carrot",
+        "aliases": [
+          "carrot"
+        ],
+        "amountText": "12 ounce",
+        "text": "12 ounce carrot"
+      },
+      {
+        "id": "onion",
+        "displayName": "onion",
+        "canonicalName": "onion",
+        "aliases": [
+          "onion"
+        ],
+        "amountText": "2 unit",
+        "text": "2 onion"
+      },
+      {
+        "id": "thyme",
+        "displayName": "thyme",
+        "canonicalName": "thyme",
+        "aliases": [
+          "thyme"
+        ],
+        "amountText": "1/2 ounce",
+        "text": "1/2 ounce thyme"
+      },
+      {
+        "id": "garlic-powder",
+        "displayName": "garlic powder",
+        "canonicalName": "garlic powder",
+        "aliases": [
+          "garlic powder"
+        ],
+        "amountText": "2 teaspoon",
+        "text": "2 teaspoon garlic powder"
+      },
+      {
+        "id": "flour",
+        "displayName": "flour",
+        "canonicalName": "flour",
+        "aliases": [
+          "flour"
+        ],
+        "amountText": "2 tablespoon",
+        "text": "2 tablespoon flour"
+      },
+      {
+        "id": "tomato-paste",
+        "displayName": "tomato paste",
+        "canonicalName": "tomato paste",
+        "aliases": [
+          "tomato paste"
+        ],
+        "amountText": "2 unit",
+        "text": "2 tomato paste"
+      },
+      {
+        "id": "veggie-stock-concentrate",
+        "displayName": "veggie stock concentrate",
+        "canonicalName": "veggie stock concentrate",
+        "aliases": [
+          "veggie stock concentrate"
+        ],
+        "amountText": "6 unit",
+        "text": "6 veggie stock concentrate"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "4 teaspoon",
+        "text": "4 teaspoon oil"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "6 tablespoon",
+        "text": "6 tablespoon butter"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste",
+        "text": "salt, to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste",
+        "text": "pepper, to taste"
+      },
+      {
+        "id": "ground-beef",
+        "displayName": "ground beef",
+        "canonicalName": "ground beef",
+        "aliases": [
+          "ground beef"
+        ],
+        "amountText": "20 ounce",
+        "text": "20 ounce ground beef"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "2 teaspoon",
+        "text": "2 teaspoon oil"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Wash and dry produce.",
+        "displayText": "Wash and dry produce.",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 2,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Dice potatoes into 1/2-inch pieces; place in a large pot with enough salted water to cover by 2 inches. Bring to a boil and cook until tender, 15-20 minutes.",
+        "displayText": "Dice potatoes into 1/2-inch pieces; place in a large pot with enough salted water to cover by 2 inches. Bring to a boil and cook until tender, 15-20 minutes.",
+        "ingredientRefs": [
+          "potatoes"
+        ],
+        "timerHints": [
+          {
+            "text": "15-20 minutes",
+            "seconds": 1200
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Reserve 1/2 cup potato cooking liquid, then drain and return potatoes to pot.",
+        "displayText": "Reserve 1/2 cup potato cooking liquid, then drain and return potatoes to pot.",
+        "ingredientRefs": [
+          "potatoes"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 4,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Keep covered off heat until ready to mash.",
+        "displayText": "Keep covered off heat until ready to mash.",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 5,
+        "sourceStep": 2,
+        "section": null,
+        "speakShort": "While potatoes cook, trim and quarter mushrooms (skip if your mushrooms are pre-sliced!). Trim, peel, and finely dice carrots. Halve, peel, and dice half the onion (whole onion for 4 servings). Strip half the thyme leaves from stems (all the leaves for 4); mince leaves.",
+        "displayText": "While potatoes cook, trim and quarter mushrooms (skip if your mushrooms are pre-sliced!). Trim, peel, and finely dice carrots. Halve, peel, and dice half the onion (whole onion for 4 servings). Strip half the thyme leaves from stems (all the leaves for 4); mince leaves.",
+        "ingredientRefs": [
+          "potatoes",
+          "button-mushrooms",
+          "carrot",
+          "onion",
+          "thyme"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 6,
+        "sourceStep": 2,
+        "section": null,
+        "speakShort": "Heat a drizzle of oil in a large, preferably ovenproof, pan over medium-high heat.",
+        "displayText": "Heat a drizzle of oil in a large, preferably ovenproof, pan over medium-high heat.",
+        "ingredientRefs": [
+          "oil",
+          "oil"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 7,
+        "sourceStep": 2,
+        "section": null,
+        "speakShort": "**Add beef or turkey; season with salt and pepper. Cook, breaking up meat into pieces, until browned and cooked through, 4-6 minutes. Turn off heat; transfer to a paper-towel-lined plate.",
+        "displayText": "**Add beef or turkey; season with salt and pepper. Cook, breaking up meat into pieces, until browned and cooked through, 4-6 minutes. Turn off heat; transfer to a paper-towel-lined plate.",
+        "ingredientRefs": [
+          "salt",
+          "pepper"
+        ],
+        "timerHints": [
+          {
+            "text": "4-6 minutes",
+            "seconds": 360
+          }
+        ]
+      },
+      {
+        "index": 8,
+        "sourceStep": 2,
+        "section": null,
+        "speakShort": "Carefully discard any excess grease from pan.**",
+        "displayText": "Carefully discard any excess grease from pan.**",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 9,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "Heat a drizzle of olive oil in a large, preferably ovenproof, pan over medium-high heat. Add mushrooms and a big pinch of salt. Cook, stirring occasionally, until lightly browned, 5 minutes.",
+        "displayText": "Heat a drizzle of olive oil in a large, preferably ovenproof, pan over medium-high heat. Add mushrooms and a big pinch of salt. Cook, stirring occasionally, until lightly browned, 5 minutes.",
+        "ingredientRefs": [
+          "button-mushrooms",
+          "oil",
+          "salt",
+          "oil"
+        ],
+        "timerHints": [
+          {
+            "text": "5 minutes",
+            "seconds": 300
+          }
+        ]
+      },
+      {
+        "index": 10,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "Add another drizzle of olive oil to pan, then stir in carrots, diced onion, and salt.",
+        "displayText": "Add another drizzle of olive oil to pan, then stir in carrots, diced onion, and salt.",
+        "ingredientRefs": [
+          "carrot",
+          "onion",
+          "oil",
+          "salt",
+          "oil"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 11,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "Cook, stirring, until veggies are softened, 5-7 minutes more.",
+        "displayText": "Cook, stirring, until veggies are softened, 5-7 minutes more.",
+        "ingredientRefs": [],
+        "timerHints": [
+          {
+            "text": "5-7 minutes",
+            "seconds": 420
+          }
+        ]
+      },
+      {
+        "index": 12,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "**Use pan used for beef or turkey here.**",
+        "displayText": "**Use pan used for beef or turkey here.**",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 13,
+        "sourceStep": 4,
+        "section": null,
+        "speakShort": "Stir 1 TBSP butter (2 TBSP for 4 servings) into same pan, then add thyme, garlic powder, and flour. Cook, stirring, 1 minute.",
+        "displayText": "Stir 1 TBSP butter (2 TBSP for 4 servings) into same pan, then add thyme, garlic powder, and flour. Cook, stirring, 1 minute.",
+        "ingredientRefs": [
+          "thyme",
+          "garlic-powder",
+          "flour",
+          "butter"
+        ],
+        "timerHints": [
+          {
+            "text": "1 minute",
+            "seconds": 60
+          }
+        ]
+      },
+      {
+        "index": 14,
+        "sourceStep": 4,
+        "section": null,
+        "speakShort": "Stir in tomato paste until incorporated.",
+        "displayText": "Stir in tomato paste until incorporated.",
+        "ingredientRefs": [
+          "tomato-paste"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 15,
+        "sourceStep": 4,
+        "section": null,
+        "speakShort": "Add 3/4 cup water (1 cup for 4) and stock concentrates, scraping up browned bits.",
+        "displayText": "Add 3/4 cup water (1 cup for 4) and stock concentrates, scraping up browned bits.",
+        "ingredientRefs": [
+          "veggie-stock-concentrate"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 16,
+        "sourceStep": 4,
+        "section": null,
+        "speakShort": "Bring to a boil; reduce to a low simmer and cook until thickened, 2-3 minutes. Season with salt and pepper. TIP: If pan isn't ovenproof, transfer mixture to a baking dish now.",
+        "displayText": "Bring to a boil; reduce to a low simmer and cook until thickened, 2-3 minutes. Season with salt and pepper. TIP: If pan isn't ovenproof, transfer mixture to a baking dish now.",
+        "ingredientRefs": [
+          "salt",
+          "pepper"
+        ],
+        "timerHints": [
+          {
+            "text": "2-3 minutes",
+            "seconds": 180
+          }
+        ]
+      },
+      {
+        "index": 17,
+        "sourceStep": 4,
+        "section": null,
+        "speakShort": "**After adding stock concentrates, stir in beef or turkey. Cook through the rest of this step, adding splashes of water if filling seems too thick.**",
+        "displayText": "**After adding stock concentrates, stir in beef or turkey. Cook through the rest of this step, adding splashes of water if filling seems too thick.**",
+        "ingredientRefs": [
+          "veggie-stock-concentrate"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 18,
+        "sourceStep": 5,
+        "section": null,
+        "speakShort": "Mash drained potatoes with sour cream, half the cheddar (you'll use the rest in the next step), and 2 TBSP butter (3 TBSP for 4 servings) until smooth and creamy, adding splashes of reserved potato cooking liquid as needed. Season with salt and pepper.",
+        "displayText": "Mash drained potatoes with sour cream, half the cheddar (you'll use the rest in the next step), and 2 TBSP butter (3 TBSP for 4 servings) until smooth and creamy, adding splashes of reserved potato cooking liquid as needed. Season with salt and pepper.",
+        "ingredientRefs": [
+          "potatoes",
+          "sour-cream",
+          "butter",
+          "salt",
+          "pepper"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 19,
+        "sourceStep": 6,
+        "section": null,
+        "speakShort": "Heat broiler to high.",
+        "displayText": "Heat broiler to high.",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 20,
+        "sourceStep": 6,
+        "section": null,
+        "speakShort": "Once filling has thickened, spoon mashed potatoes on top; spread in an even layer, leaving a 1-inch border around edge of pan.",
+        "displayText": "Once filling has thickened, spoon mashed potatoes on top; spread in an even layer, leaving a 1-inch border around edge of pan.",
+        "ingredientRefs": [
+          "potatoes"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 21,
+        "sourceStep": 6,
+        "section": null,
+        "speakShort": "Sprinkle mashed potatoes with remaining cheddar.",
+        "displayText": "Sprinkle mashed potatoes with remaining cheddar.",
+        "ingredientRefs": [
+          "potatoes"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 22,
+        "sourceStep": 7,
+        "section": null,
+        "speakShort": "Broil shepherd's pie until cheese is lightly browned, 3-4 minutes. TIP: Watch carefully to avoid burning.",
+        "displayText": "Broil shepherd's pie until cheese is lightly browned, 3-4 minutes. TIP: Watch carefully to avoid burning.",
+        "ingredientRefs": [
+          "cheddar-cheese"
+        ],
+        "timerHints": [
+          {
+            "text": "3-4 minutes",
+            "seconds": 240
+          }
+        ]
+      },
+      {
+        "index": 23,
+        "sourceStep": 7,
+        "section": null,
+        "speakShort": "Let rest at least 5 minutes, then divide between plates and serve.",
+        "displayText": "Let rest at least 5 minutes, then divide between plates and serve.",
+        "ingredientRefs": [],
+        "timerHints": [
+          {
+            "text": "5 minutes",
+            "seconds": 300
+          }
+        ]
+      },
+      {
+        "index": 24,
+        "sourceStep": 7,
+        "section": null,
+        "speakShort": "***Ground Beef is fully cooked when internal temperature reaches 160o.***",
+        "displayText": "***Ground Beef is fully cooked when internal temperature reaches 160o.***",
+        "ingredientRefs": [
+          "ground-beef"
+        ],
+        "timerHints": []
+      }
+    ],
+    "notes": [],
+    "searchTokens": [
+      "beef",
+      "butter",
+      "button mushrooms",
+      "carrot",
+      "cheddar cheese",
+      "flour",
+      "garlic powder",
+      "ground beef",
+      "mushroom",
+      "oil",
+      "onion",
+      "pepper",
+      "pie",
+      "potatoes",
+      "s",
+      "salt",
+      "shepherd",
+      "sour cream",
+      "thyme",
+      "tomato paste",
+      "veggie stock concentrate"
+    ],
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/64074e63632fb426890097d7-0cc6ea5e.jpg",
+    "sourceStars": {
+      "pink": 0,
+      "blue": 0
+    }
+  },
+  {
+    "id": "39",
+    "name": "One-Pan Beef Tortelloni Bake",
+    "displayName": "One-Pan Beef Tortelloni Bake",
+    "slug": "one-pan-beef-tortelloni-bake",
+    "pageUrl": "https://sampanes.github.io/dinner-planner/recipes/one-pan-beef-tortelloni-bake.html",
+    "aliases": [
+      "one-pan beef tortelloni bake"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "tortelloni",
+        "displayName": "tortelloni",
+        "canonicalName": "tortelloni",
+        "aliases": [
+          "tortelloni"
+        ],
+        "amountText": "18 ounce",
+        "text": "18 ounce tortelloni"
+      },
+      {
+        "id": "tomato-paste",
+        "displayName": "tomato paste",
+        "canonicalName": "tomato paste",
+        "aliases": [
+          "tomato paste"
+        ],
+        "amountText": "2 unit",
+        "text": "2 tomato paste"
+      },
+      {
+        "id": "peas",
+        "displayName": "peas",
+        "canonicalName": "peas",
+        "aliases": [
+          "peas"
+        ],
+        "amountText": "8 ounce",
+        "text": "8 ounce peas"
+      },
+      {
+        "id": "cream-cheese",
+        "displayName": "cream cheese",
+        "canonicalName": "cream cheese",
+        "aliases": [
+          "cream cheese"
+        ],
+        "amountText": "8 tablespoon",
+        "text": "8 tablespoon cream cheese"
+      },
+      {
+        "id": "ground-beef",
+        "displayName": "ground beef",
+        "canonicalName": "ground beef",
+        "aliases": [
+          "ground beef"
+        ],
+        "amountText": "20 ounce",
+        "text": "20 ounce ground beef"
+      },
+      {
+        "id": "italian-seasoning",
+        "displayName": "italian seasoning",
+        "canonicalName": "italian seasoning",
+        "aliases": [
+          "italian seasoning"
+        ],
+        "amountText": "2 tablespoon",
+        "text": "2 tablespoon italian seasoning"
+      },
+      {
+        "id": "parmesan-cheese",
+        "displayName": "parmesan cheese",
+        "canonicalName": "parmesan cheese",
+        "aliases": [
+          "parmesan cheese"
+        ],
+        "amountText": "6 tablespoon",
+        "text": "6 tablespoon parmesan cheese"
+      },
+      {
+        "id": "stock-concentrate",
+        "displayName": "stock concentrate",
+        "canonicalName": "stock concentrate",
+        "aliases": [
+          "stock concentrate"
+        ],
+        "amountText": "2 unit",
+        "text": "2 stock concentrate"
+      },
+      {
+        "id": "tomato",
+        "displayName": "tomato",
+        "canonicalName": "tomato",
+        "aliases": [
+          "tomato"
+        ],
+        "amountText": "4 unit",
+        "text": "4 tomato"
+      },
+      {
+        "id": "panko-breadcrumbs",
+        "displayName": "panko breadcrumbs",
+        "canonicalName": "panko breadcrumbs",
+        "aliases": [
+          "panko breadcrumbs"
+        ],
+        "amountText": "1/2 cup",
+        "text": "1/2 cup panko breadcrumbs"
+      },
+      {
+        "id": "chili-flakes",
+        "displayName": "chili flakes",
+        "canonicalName": "chili flakes",
+        "aliases": [
+          "chili flakes"
+        ],
+        "amountText": "2 teaspoon",
+        "text": "2 teaspoon chili flakes"
+      },
+      {
+        "id": "garlic",
+        "displayName": "garlic",
+        "canonicalName": "garlic",
+        "aliases": [
+          "garlic"
+        ],
+        "amountText": "4 clove",
+        "text": "4 clove garlic"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste",
+        "text": "salt, to taste"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "4 teaspoon",
+        "text": "4 teaspoon oil"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "4 tablespoon",
+        "text": "4 tablespoon butter"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste",
+        "text": "pepper, to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Heat broiler to high. Wash and dry produce.",
+        "displayText": "Heat broiler to high. Wash and dry produce.",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 2,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Peel and mince garlic. Dice tomatoes.",
+        "displayText": "Peel and mince garlic. Dice tomatoes.",
+        "ingredientRefs": [
+          "garlic"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 3,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "In a small bowl, combine panko, Parmesan, a drizzle of olive oil, salt, and pepper.",
+        "displayText": "In a small bowl, combine panko, Parmesan, a drizzle of olive oil, salt, and pepper.",
+        "ingredientRefs": [
+          "salt",
+          "oil",
+          "pepper"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 4,
+        "sourceStep": 2,
+        "section": null,
+        "speakShort": "Heat a drizzle of olive oil in a large, preferably ovenproof, pan over medium-high heat. Add garlic, Italian Seasoning, and a pinch of chili flakes to taste; cook until fragrant, 30 seconds.",
+        "displayText": "Heat a drizzle of olive oil in a large, preferably ovenproof, pan over medium-high heat. Add garlic, Italian Seasoning, and a pinch of chili flakes to taste; cook until fragrant, 30 seconds.",
+        "ingredientRefs": [
+          "italian-seasoning",
+          "chili-flakes",
+          "garlic",
+          "oil"
+        ],
+        "timerHints": [
+          {
+            "text": "30 seconds",
+            "seconds": 30
+          }
+        ]
+      },
+      {
+        "index": 5,
+        "sourceStep": 2,
+        "section": null,
+        "speakShort": "Add tomatoes and season with salt and pepper. Cook, stirring, until slightly softened, 1-2 minutes.",
+        "displayText": "Add tomatoes and season with salt and pepper. Cook, stirring, until slightly softened, 1-2 minutes.",
+        "ingredientRefs": [
+          "salt",
+          "pepper"
+        ],
+        "timerHints": [
+          {
+            "text": "1-2 minutes",
+            "seconds": 120
+          }
+        ]
+      },
+      {
+        "index": 6,
+        "sourceStep": 2,
+        "section": null,
+        "speakShort": "Add tomato paste; cook, stirring, 1 minute.",
+        "displayText": "Add tomato paste; cook, stirring, 1 minute.",
+        "ingredientRefs": [
+          "tomato-paste",
+          "tomato"
+        ],
+        "timerHints": [
+          {
+            "text": "1 minute",
+            "seconds": 60
+          }
+        ]
+      },
+      {
+        "index": 7,
+        "sourceStep": 2,
+        "section": null,
+        "speakShort": "Stir in 1 cup water (1 1/2 cups for 4), stock concentrate, and cream cheese. Bring to a simmer and cook, stirring, until fully combined. Season generously with salt and pepper.",
+        "displayText": "Stir in 1 cup water (1 1/2 cups for 4), stock concentrate, and cream cheese. Bring to a simmer and cook, stirring, until fully combined. Season generously with salt and pepper.",
+        "ingredientRefs": [
+          "cream-cheese",
+          "parmesan-cheese",
+          "stock-concentrate",
+          "salt",
+          "pepper"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 8,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "Add tortelloni and peas to pan with sauce; cook, stirring, until sauce has thickened and tortelloni are tender, 4-6 minutes. (TIP: If sauce thickens before tortelloni are tender, add a splash of water.) Turn off heat.",
+        "displayText": "Add tortelloni and peas to pan with sauce; cook, stirring, until sauce has thickened and tortelloni are tender, 4-6 minutes. (TIP: If sauce thickens before tortelloni are tender, add a splash of water.) Turn off heat.",
+        "ingredientRefs": [
+          "tortelloni",
+          "peas"
+        ],
+        "timerHints": [
+          {
+            "text": "4-6 minutes",
+            "seconds": 360
+          }
+        ]
+      },
+      {
+        "index": 9,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "Stir in 2 TBSP butter (3 TBSP for 4 servings) until melted. Season with salt and pepper. If sauce seems too thick, add a splash of water. TIP: If pan isn't ovenproof, transfer mixture to a baking dish now.",
+        "displayText": "Stir in 2 TBSP butter (3 TBSP for 4 servings) until melted. Season with salt and pepper. If sauce seems too thick, add a splash of water. TIP: If pan isn't ovenproof, transfer mixture to a baking dish now.",
+        "ingredientRefs": [
+          "salt",
+          "butter",
+          "pepper"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 10,
+        "sourceStep": 4,
+        "section": null,
+        "speakShort": "Evenly sprinkle tortelloni with panko mixture.",
+        "displayText": "Evenly sprinkle tortelloni with panko mixture.",
+        "ingredientRefs": [
+          "tortelloni"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 11,
+        "sourceStep": 4,
+        "section": null,
+        "speakShort": "Transfer pan to oven; broil until panko is golden brown, 2-4 minutes. TIP: Watch carefully to avoid burning.",
+        "displayText": "Transfer pan to oven; broil until panko is golden brown, 2-4 minutes. TIP: Watch carefully to avoid burning.",
+        "ingredientRefs": [],
+        "timerHints": [
+          {
+            "text": "2-4 minutes",
+            "seconds": 240
+          }
+        ]
+      },
+      {
+        "index": 12,
+        "sourceStep": 4,
+        "section": null,
+        "speakShort": "Garnish tortelloni with remaining chili flakes if desired. Divide between plates and serve.",
+        "displayText": "Garnish tortelloni with remaining chili flakes if desired. Divide between plates and serve.",
+        "ingredientRefs": [
+          "tortelloni",
+          "chili-flakes"
+        ],
+        "timerHints": []
+      }
+    ],
+    "notes": [],
+    "searchTokens": [
+      "bake",
+      "beef",
+      "butter",
+      "chili flakes",
+      "cream cheese",
+      "garlic",
+      "ground beef",
+      "italian seasoning",
+      "oil",
+      "one",
+      "pan",
+      "panko breadcrumbs",
+      "parmesan cheese",
+      "peas",
+      "pepper",
+      "salt",
+      "stock concentrate",
+      "tomato",
+      "tomato paste",
+      "tortelloni"
+    ],
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/HFUSRC_R60905C_Hero_OnePanTrattoriaTortelloniBake_W03_36_2026_Web-7274fe66.jpg",
+    "sourceStars": {
+      "pink": 0,
+      "blue": 0
+    }
+  },
+  {
+    "id": "40",
+    "name": "Southwest Beef Cavatappi",
+    "displayName": "Southwest Beef Cavatappi",
+    "slug": "southwest-beef-cavatappi",
+    "pageUrl": "https://sampanes.github.io/dinner-planner/recipes/southwest-beef-cavatappi.html",
+    "aliases": [
+      "southwest beef cavatappi"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "long-green-pepper",
+        "displayName": "long green pepper",
+        "canonicalName": "long green pepper",
+        "aliases": [
+          "long green pepper"
+        ],
+        "amountText": "2 unit",
+        "text": "2 long green pepper"
+      },
+      {
+        "id": "scallions",
+        "displayName": "scallions",
+        "canonicalName": "scallions",
+        "aliases": [
+          "scallions"
+        ],
+        "amountText": "4 unit",
+        "text": "4 scallions"
+      },
+      {
+        "id": "cavatappi-pasta",
+        "displayName": "cavatappi pasta",
+        "canonicalName": "cavatappi pasta",
+        "aliases": [
+          "cavatappi pasta"
+        ],
+        "amountText": "12 ounce",
+        "text": "12 ounce cavatappi pasta"
+      },
+      {
+        "id": "ground-beef",
+        "displayName": "ground beef",
+        "canonicalName": "ground beef",
+        "aliases": [
+          "ground beef"
+        ],
+        "amountText": "20 ounce",
+        "text": "20 ounce ground beef"
+      },
+      {
+        "id": "southwest-spice-blend",
+        "displayName": "southwest spice blend",
+        "canonicalName": "southwest spice blend",
+        "aliases": [
+          "southwest spice blend"
+        ],
+        "amountText": "2 tablespoon",
+        "text": "2 tablespoon southwest spice blend"
+      },
+      {
+        "id": "tomato-paste",
+        "displayName": "tomato paste",
+        "canonicalName": "tomato paste",
+        "aliases": [
+          "tomato paste"
+        ],
+        "amountText": "2 unit",
+        "text": "2 tomato paste"
+      },
+      {
+        "id": "stock-concentrate",
+        "displayName": "stock concentrate",
+        "canonicalName": "stock concentrate",
+        "aliases": [
+          "stock concentrate"
+        ],
+        "amountText": "4 unit",
+        "text": "4 stock concentrate"
+      },
+      {
+        "id": "sour-cream",
+        "displayName": "sour cream",
+        "canonicalName": "sour cream",
+        "aliases": [
+          "sour cream"
+        ],
+        "amountText": "3 tablespoon",
+        "text": "3 tablespoon sour cream"
+      },
+      {
+        "id": "smoky-red-pepper-crema",
+        "displayName": "smoky red pepper crema",
+        "canonicalName": "smoky red pepper crema",
+        "aliases": [
+          "smoky red pepper crema"
+        ],
+        "amountText": "8 tablespoon",
+        "text": "8 tablespoon smoky red pepper crema"
+      },
+      {
+        "id": "mexican-cheese-blend",
+        "displayName": "mexican cheese blend",
+        "canonicalName": "mexican cheese blend",
+        "aliases": [
+          "mexican cheese blend"
+        ],
+        "amountText": "1 cup",
+        "text": "1 cup mexican cheese blend"
+      },
+      {
+        "id": "hot-sauce",
+        "displayName": "hot sauce",
+        "canonicalName": "hot sauce",
+        "aliases": [
+          "hot sauce"
+        ],
+        "amountText": "2 teaspoon",
+        "text": "2 teaspoon hot sauce"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste",
+        "text": "salt, to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste",
+        "text": "pepper, to taste"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "2 tablespoon",
+        "text": "2 tablespoon oil"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "2 tablespoon",
+        "text": "2 tablespoon butter"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Bring a large pot of salted water to a boil. Wash and dry produce.",
+        "displayText": "Bring a large pot of salted water to a boil. Wash and dry produce.",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 2,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Halve, deseed, and thinly slice green pepper into strips. Trim and thinly slice scallions, separating whites from greens.",
+        "displayText": "Halve, deseed, and thinly slice green pepper into strips. Trim and thinly slice scallions, separating whites from greens.",
+        "ingredientRefs": [
+          "long-green-pepper",
+          "scallions",
+          "pepper"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 3,
+        "sourceStep": 2,
+        "section": null,
+        "speakShort": "Once water is boiling, add cavatappi to pot. Cook, stirring occasionally, until al dente, 9-11 minutes.",
+        "displayText": "Once water is boiling, add cavatappi to pot. Cook, stirring occasionally, until al dente, 9-11 minutes.",
+        "ingredientRefs": [],
+        "timerHints": [
+          {
+            "text": "9-11 minutes",
+            "seconds": 660
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "sourceStep": 2,
+        "section": null,
+        "speakShort": "Reserve 1 cup pasta cooking water (2 cups for 4 servings), then drain.",
+        "displayText": "Reserve 1 cup pasta cooking water (2 cups for 4 servings), then drain.",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 5,
+        "sourceStep": 2,
+        "section": null,
+        "speakShort": "Meanwhile, heat a large drizzle of oil in a medium pan (large pan for 4) over medium-high heat. Add green pepper and season with salt and pepper; cook, stirring occasionally, until slightly softened, 4-5 minutes.",
+        "displayText": "Meanwhile, heat a large drizzle of oil in a medium pan (large pan for 4) over medium-high heat. Add green pepper and season with salt and pepper; cook, stirring occasionally, until slightly softened, 4-5 minutes.",
+        "ingredientRefs": [
+          "long-green-pepper",
+          "salt",
+          "pepper",
+          "oil"
+        ],
+        "timerHints": [
+          {
+            "text": "4-5 minutes",
+            "seconds": 300
+          }
+        ]
+      },
+      {
+        "index": 6,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "Add a drizzle of oil to pan with green pepper. Add beef*, scallion whites, and Southwest Spice Blend; season with salt and pepper. Cook, breaking up meat into pieces, until beef is browned and cooked through, 4-6 minutes.",
+        "displayText": "Add a drizzle of oil to pan with green pepper. Add beef*, scallion whites, and Southwest Spice Blend; season with salt and pepper. Cook, breaking up meat into pieces, until beef is browned and cooked through, 4-6 minutes.",
+        "ingredientRefs": [
+          "long-green-pepper",
+          "scallions",
+          "southwest-spice-blend",
+          "salt",
+          "pepper",
+          "oil"
+        ],
+        "timerHints": [
+          {
+            "text": "4-6 minutes",
+            "seconds": 360
+          }
+        ]
+      },
+      {
+        "index": 7,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "TIP: If there's excess grease in your pan, carefully pour it out.",
+        "displayText": "TIP: If there's excess grease in your pan, carefully pour it out.",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 8,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "Add tomato paste; cook, stirring occasionally, until combined, 30 seconds.",
+        "displayText": "Add tomato paste; cook, stirring occasionally, until combined, 30 seconds.",
+        "ingredientRefs": [
+          "tomato-paste"
+        ],
+        "timerHints": [
+          {
+            "text": "30 seconds",
+            "seconds": 30
+          }
+        ]
+      },
+      {
+        "index": 9,
+        "sourceStep": 4,
+        "section": null,
+        "speakShort": "Add 1/2 cup reserved pasta cooking water (3/4 cup for 4 servings) and stock concentrates to pan with beef mixture. Season with 1/2 tsp salt (1 tsp for 4) and a pinch of pepper. Bring to a simmer and cook, stirring, until thickened, 2-3 minutes.",
+        "displayText": "Add 1/2 cup reserved pasta cooking water (3/4 cup for 4 servings) and stock concentrates to pan with beef mixture. Season with 1/2 tsp salt (1 tsp for 4) and a pinch of pepper. Bring to a simmer and cook, stirring, until thickened, 2-3 minutes.",
+        "ingredientRefs": [
+          "long-green-pepper",
+          "stock-concentrate",
+          "salt",
+          "pepper"
+        ],
+        "timerHints": [
+          {
+            "text": "2-3 minutes",
+            "seconds": 180
+          }
+        ]
+      },
+      {
+        "index": 10,
+        "sourceStep": 5,
+        "section": null,
+        "speakShort": "Reduce heat to low and stir in drained cavatappi, sour cream, smoky red pepper crema, half the Mexican cheese blend (you'll use the rest in the next step), 1 TBSP butter (2 TBSP for 4 servings), and hot sauce to taste.",
+        "displayText": "Reduce heat to low and stir in drained cavatappi, sour cream, smoky red pepper crema, half the Mexican cheese blend (you'll use the rest in the next step), 1 TBSP butter (2 TBSP for 4 servings), and hot sauce to taste.",
+        "ingredientRefs": [
+          "long-green-pepper",
+          "sour-cream",
+          "smoky-red-pepper-crema",
+          "mexican-cheese-blend",
+          "hot-sauce",
+          "pepper",
+          "butter"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 11,
+        "sourceStep": 5,
+        "section": null,
+        "speakShort": "Season with salt and pepper to taste.",
+        "displayText": "Season with salt and pepper to taste.",
+        "ingredientRefs": [
+          "long-green-pepper",
+          "salt",
+          "pepper"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 12,
+        "sourceStep": 5,
+        "section": null,
+        "speakShort": "TIP: If needed, stir in more reserved pasta cooking water a splash at a time until pasta is coated in a creamy sauce.",
+        "displayText": "TIP: If needed, stir in more reserved pasta cooking water a splash at a time until pasta is coated in a creamy sauce.",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 13,
+        "sourceStep": 6,
+        "section": null,
+        "speakShort": "Top beef cavatappi with remaining Mexican cheese blend; cover pan until cheese melts, 1-2 minutes. Divide between bowls; top with scallion greens and serve.",
+        "displayText": "Top beef cavatappi with remaining Mexican cheese blend; cover pan until cheese melts, 1-2 minutes. Divide between bowls; top with scallion greens and serve.",
+        "ingredientRefs": [
+          "scallions",
+          "mexican-cheese-blend"
+        ],
+        "timerHints": [
+          {
+            "text": "1-2 minutes",
+            "seconds": 120
+          }
+        ]
+      },
+      {
+        "index": 14,
+        "sourceStep": 6,
+        "section": null,
+        "speakShort": "***Ground Beef is fully cooked when internal temperature reaches 160o.***",
+        "displayText": "***Ground Beef is fully cooked when internal temperature reaches 160o.***",
+        "ingredientRefs": [
+          "ground-beef"
+        ],
+        "timerHints": []
+      }
+    ],
+    "notes": [],
+    "searchTokens": [
+      "beef",
+      "butter",
+      "cavatappi",
+      "cavatappi pasta",
+      "ground beef",
+      "hot sauce",
+      "long green pepper",
+      "mexican cheese blend",
+      "oil",
+      "pepper",
+      "salt",
+      "scallions",
+      "smoky red pepper crema",
+      "sour cream",
+      "southwest",
+      "southwest spice blend",
+      "stock concentrate",
+      "tomato paste"
+    ],
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/6385274a366b22b2640ed845-36773552.jpg",
+    "sourceStars": {
+      "pink": 0,
+      "blue": 0
+    }
+  },
+  {
+    "id": "41",
+    "name": "Lone Star Poblano Mac & Cheese",
+    "displayName": "Lone Star Poblano Mac & Cheese",
+    "slug": "lone-star-poblano-mac-cheese",
+    "pageUrl": "https://sampanes.github.io/dinner-planner/recipes/lone-star-poblano-mac-cheese.html",
+    "aliases": [
+      "lone star poblano mac & cheese"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "poblano-pepper",
+        "displayName": "poblano pepper",
+        "canonicalName": "poblano pepper",
+        "aliases": [
+          "poblano pepper"
+        ],
+        "amountText": "2 unit",
+        "text": "2 poblano pepper"
+      },
+      {
+        "id": "roma-tomato",
+        "displayName": "roma tomato",
+        "canonicalName": "roma tomato",
+        "aliases": [
+          "roma tomato"
+        ],
+        "amountText": "2 unit",
+        "text": "2 roma tomato"
+      },
+      {
+        "id": "garlic",
+        "displayName": "garlic",
+        "canonicalName": "garlic",
+        "aliases": [
+          "garlic"
+        ],
+        "amountText": "2 clove",
+        "text": "2 clove garlic"
+      },
+      {
+        "id": "cavatappi-pasta",
+        "displayName": "cavatappi pasta",
+        "canonicalName": "cavatappi pasta",
+        "aliases": [
+          "cavatappi pasta"
+        ],
+        "amountText": "12 ounce",
+        "text": "12 ounce cavatappi pasta"
+      },
+      {
+        "id": "panko-breadcrumbs",
+        "displayName": "panko breadcrumbs",
+        "canonicalName": "panko breadcrumbs",
+        "aliases": [
+          "panko breadcrumbs"
+        ],
+        "amountText": "1 cup",
+        "text": "1 cup panko breadcrumbs"
+      },
+      {
+        "id": "southwest-spice-blend",
+        "displayName": "southwest spice blend",
+        "canonicalName": "southwest spice blend",
+        "aliases": [
+          "southwest spice blend"
+        ],
+        "amountText": "2 tablespoon",
+        "text": "2 tablespoon southwest spice blend"
+      },
+      {
+        "id": "cream-sauce-base",
+        "displayName": "cream sauce base",
+        "canonicalName": "cream sauce base",
+        "aliases": [
+          "cream sauce base"
+        ],
+        "amountText": "16 ounce",
+        "text": "16 ounce cream sauce base"
+      },
+      {
+        "id": "cream-cheese",
+        "displayName": "cream cheese",
+        "canonicalName": "cream cheese",
+        "aliases": [
+          "cream cheese"
+        ],
+        "amountText": "4 tablespoon",
+        "text": "4 tablespoon cream cheese"
+      },
+      {
+        "id": "pepper-jack-cheese",
+        "displayName": "pepper jack cheese",
+        "canonicalName": "pepper jack cheese",
+        "aliases": [
+          "pepper jack cheese"
+        ],
+        "amountText": "1 cup",
+        "text": "1 cup pepper jack cheese"
+      },
+      {
+        "id": "monterey-jack-cheese",
+        "displayName": "monterey jack cheese",
+        "canonicalName": "monterey jack cheese",
+        "aliases": [
+          "monterey jack cheese"
+        ],
+        "amountText": "1/2 cup",
+        "text": "1/2 cup monterey jack cheese"
+      },
+      {
+        "id": "mexican-cheese-blend",
+        "displayName": "mexican cheese blend",
+        "canonicalName": "mexican cheese blend",
+        "aliases": [
+          "mexican cheese blend"
+        ],
+        "amountText": "1 cup",
+        "text": "1 cup mexican cheese blend"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "4 teaspoon",
+        "text": "4 teaspoon oil"
+      },
+      {
+        "id": "butter",
+        "displayName": "butter",
+        "canonicalName": "butter",
+        "aliases": [
+          "butter"
+        ],
+        "amountText": "2 tablespoon",
+        "text": "2 tablespoon butter"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste",
+        "text": "salt, to taste"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste",
+        "text": "pepper, to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Adjust rack to top position and preheat oven to 425 degrees. Bring a medium pot of salted water to a boil (use a large pot for 4 servings). Wash and dry produce.",
+        "displayText": "Adjust rack to top position and preheat oven to 425 degrees. Bring a medium pot of salted water to a boil (use a large pot for 4 servings). Wash and dry produce.",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 2,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Halve poblano lengthwise; remove stem and seeds. Dice tomato. Place garlic on a small piece of foil; drizzle with olive oil and season with salt and pepper. Cinch into a packet.",
+        "displayText": "Halve poblano lengthwise; remove stem and seeds. Dice tomato. Place garlic on a small piece of foil; drizzle with olive oil and season with salt and pepper. Cinch into a packet.",
+        "ingredientRefs": [
+          "poblano-pepper",
+          "roma-tomato",
+          "garlic",
+          "oil",
+          "salt",
+          "pepper"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 3,
+        "sourceStep": 2,
+        "section": null,
+        "speakShort": "Place poblano halves cut sides down on a baking sheet. Drizzle with olive oil; season with salt and pepper. Place garlic foil packet on same sheet.",
+        "displayText": "Place poblano halves cut sides down on a baking sheet. Drizzle with olive oil; season with salt and pepper. Place garlic foil packet on same sheet.",
+        "ingredientRefs": [
+          "poblano-pepper",
+          "garlic",
+          "oil",
+          "salt",
+          "pepper"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 4,
+        "sourceStep": 2,
+        "section": null,
+        "speakShort": "Roast on top rack until poblano is tender and lightly blistered and garlic is softened, 15-17 minutes.",
+        "displayText": "Roast on top rack until poblano is tender and lightly blistered and garlic is softened, 15-17 minutes.",
+        "ingredientRefs": [
+          "garlic"
+        ],
+        "timerHints": [
+          {
+            "text": "15-17 minutes",
+            "seconds": 1020
+          }
+        ]
+      },
+      {
+        "index": 5,
+        "sourceStep": 2,
+        "section": null,
+        "speakShort": "Remove from oven. Once cool enough to handle, transfer everything to a cutting board. Dice poblano. Mash garlic with a fork.",
+        "displayText": "Remove from oven. Once cool enough to handle, transfer everything to a cutting board. Dice poblano. Mash garlic with a fork.",
+        "ingredientRefs": [
+          "garlic"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 6,
+        "sourceStep": 2,
+        "section": null,
+        "speakShort": "Heat broiler to high or heat oven to 500 degrees.",
+        "displayText": "Heat broiler to high or heat oven to 500 degrees.",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 7,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "Once water is boiling, add cavatappi to pot. Cook, stirring occasionally, until al dente, 9-11 minutes.",
+        "displayText": "Once water is boiling, add cavatappi to pot. Cook, stirring occasionally, until al dente, 9-11 minutes.",
+        "ingredientRefs": [],
+        "timerHints": [
+          {
+            "text": "9-11 minutes",
+            "seconds": 660
+          }
+        ]
+      },
+      {
+        "index": 8,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "Reserve 3/4 cup pasta cooking water, then drain.",
+        "displayText": "Reserve 3/4 cup pasta cooking water, then drain.",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 9,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "Meanwhile, place 1 TBSP butter (2 TBSP for 4 servings) in a small microwave-safe bowl; microwave until melted, 30 seconds.",
+        "displayText": "Meanwhile, place 1 TBSP butter (2 TBSP for 4 servings) in a small microwave-safe bowl; microwave until melted, 30 seconds.",
+        "ingredientRefs": [
+          "butter"
+        ],
+        "timerHints": [
+          {
+            "text": "30 seconds",
+            "seconds": 30
+          }
+        ]
+      },
+      {
+        "index": 10,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "Stir in panko and half the Southwest Spice (you'll use the rest later). Season with salt and pepper.",
+        "displayText": "Stir in panko and half the Southwest Spice (you'll use the rest later). Season with salt and pepper.",
+        "ingredientRefs": [
+          "poblano-pepper",
+          "salt",
+          "pepper"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 11,
+        "sourceStep": 4,
+        "section": null,
+        "speakShort": "Heat pot used for cavatappi over medium heat. Add cream sauce base, cream cheese, and remaining Southwest Spice; bring to a simmer, whisking, until smooth, 1-2 minutes.",
+        "displayText": "Heat pot used for cavatappi over medium heat. Add cream sauce base, cream cheese, and remaining Southwest Spice; bring to a simmer, whisking, until smooth, 1-2 minutes.",
+        "ingredientRefs": [
+          "cream-sauce-base",
+          "cream-cheese",
+          "pepper-jack-cheese",
+          "monterey-jack-cheese"
+        ],
+        "timerHints": [
+          {
+            "text": "1-2 minutes",
+            "seconds": 120
+          }
+        ]
+      },
+      {
+        "index": 12,
+        "sourceStep": 4,
+        "section": null,
+        "speakShort": "Reduce heat to low and whisk in pepper jack, Monterey Jack, and Mexican cheese until melted and smooth.",
+        "displayText": "Reduce heat to low and whisk in pepper jack, Monterey Jack, and Mexican cheese until melted and smooth.",
+        "ingredientRefs": [
+          "poblano-pepper",
+          "cream-cheese",
+          "pepper-jack-cheese",
+          "monterey-jack-cheese",
+          "pepper"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 13,
+        "sourceStep": 5,
+        "section": null,
+        "speakShort": "Stir drained cavatappi, mashed garlic, diced poblano, and tomato into pot with cheese sauce. If needed, stir in reserved pasta cooking water a splash at a time until cavatappi is coated in a creamy sauce. Season with salt and pepper.",
+        "displayText": "Stir drained cavatappi, mashed garlic, diced poblano, and tomato into pot with cheese sauce. If needed, stir in reserved pasta cooking water a splash at a time until cavatappi is coated in a creamy sauce. Season with salt and pepper.",
+        "ingredientRefs": [
+          "poblano-pepper",
+          "roma-tomato",
+          "garlic",
+          "cream-cheese",
+          "pepper-jack-cheese",
+          "monterey-jack-cheese",
+          "salt",
+          "pepper"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 14,
+        "sourceStep": 6,
+        "section": null,
+        "speakShort": "Transfer mac & cheese to an 8-by-8-inch baking dish (for 4 servings, use a 9-by-13-inch baking dish). Sprinkle with seasoned panko; broil or bake until panko is browned and crispy, 2-3 minutes. TIP: Watch carefully to avoid burning.",
+        "displayText": "Transfer mac & cheese to an 8-by-8-inch baking dish (for 4 servings, use a 9-by-13-inch baking dish). Sprinkle with seasoned panko; broil or bake until panko is browned and crispy, 2-3 minutes. TIP: Watch carefully to avoid burning.",
+        "ingredientRefs": [
+          "cream-cheese",
+          "pepper-jack-cheese",
+          "monterey-jack-cheese"
+        ],
+        "timerHints": [
+          {
+            "text": "2-3 minutes",
+            "seconds": 180
+          }
+        ]
+      },
+      {
+        "index": 15,
+        "sourceStep": 6,
+        "section": null,
+        "speakShort": "Divide between plates or serve directly from baking dish.",
+        "displayText": "Divide between plates or serve directly from baking dish.",
+        "ingredientRefs": [],
+        "timerHints": []
+      }
+    ],
+    "notes": [],
+    "searchTokens": [
+      "butter",
+      "cavatappi pasta",
+      "cheese",
+      "cream cheese",
+      "cream sauce base",
+      "garlic",
+      "lone",
+      "mac",
+      "mexican cheese blend",
+      "monterey jack cheese",
+      "oil",
+      "panko breadcrumbs",
+      "pepper",
+      "pepper jack cheese",
+      "poblano",
+      "poblano pepper",
+      "roma tomato",
+      "salt",
+      "southwest spice blend",
+      "star"
+    ],
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/6182a16831db7215d52e870a-4d8bffd5.jpg",
+    "sourceStars": {
+      "pink": 0,
+      "blue": 0
+    }
+  },
+  {
+    "id": "42",
+    "name": "Zucchini Cheddar Tortilla Melts",
+    "displayName": "Zucchini Cheddar Tortilla Melts",
+    "slug": "zucchini-cheddar-tortilla-melts",
+    "pageUrl": "https://sampanes.github.io/dinner-planner/recipes/zucchini-cheddar-tortilla-melts.html",
+    "aliases": [
+      "zucchini cheddar tortilla melts"
+    ],
+    "categories": [],
+    "tags": [],
+    "ingredients": [
+      {
+        "id": "flour-tortillas",
+        "displayName": "flour tortillas",
+        "canonicalName": "flour tortillas",
+        "aliases": [
+          "flour tortillas"
+        ],
+        "amountText": "4 unit",
+        "text": "4 flour tortillas"
+      },
+      {
+        "id": "cheddar-cheese",
+        "displayName": "cheddar cheese",
+        "canonicalName": "cheddar cheese",
+        "aliases": [
+          "cheddar cheese"
+        ],
+        "amountText": "1 cup",
+        "text": "1 cup cheddar cheese"
+      },
+      {
+        "id": "fry-seasoning",
+        "displayName": "fry seasoning",
+        "canonicalName": "fry seasoning",
+        "aliases": [
+          "fry seasoning"
+        ],
+        "amountText": "2 tablespoon",
+        "text": "2 tablespoon fry seasoning"
+      },
+      {
+        "id": "onion",
+        "displayName": "onion",
+        "canonicalName": "onion",
+        "aliases": [
+          "onion"
+        ],
+        "amountText": "2 unit",
+        "text": "2 onion"
+      },
+      {
+        "id": "sour-cream",
+        "displayName": "sour cream",
+        "canonicalName": "sour cream",
+        "aliases": [
+          "sour cream"
+        ],
+        "amountText": "8 tablespoon",
+        "text": "8 tablespoon sour cream"
+      },
+      {
+        "id": "zucchini",
+        "displayName": "zucchini",
+        "canonicalName": "zucchini",
+        "aliases": [
+          "zucchini"
+        ],
+        "amountText": "2 unit",
+        "text": "2 zucchini"
+      },
+      {
+        "id": "lemon",
+        "displayName": "lemon",
+        "canonicalName": "lemon",
+        "aliases": [
+          "lemon"
+        ],
+        "amountText": "2 unit",
+        "text": "2 lemon"
+      },
+      {
+        "id": "apple",
+        "displayName": "apple",
+        "canonicalName": "apple",
+        "aliases": [
+          "apple"
+        ],
+        "amountText": "2 unit",
+        "text": "2 apple"
+      },
+      {
+        "id": "stock-concentrate",
+        "displayName": "stock concentrate",
+        "canonicalName": "stock concentrate",
+        "aliases": [
+          "stock concentrate"
+        ],
+        "amountText": "2 unit",
+        "text": "2 stock concentrate"
+      },
+      {
+        "id": "monterey-jack-cheese",
+        "displayName": "monterey jack cheese",
+        "canonicalName": "monterey jack cheese",
+        "aliases": [
+          "monterey jack cheese"
+        ],
+        "amountText": "1/2 cup",
+        "text": "1/2 cup monterey jack cheese"
+      },
+      {
+        "id": "mixed-greens",
+        "displayName": "mixed greens",
+        "canonicalName": "mixed greens",
+        "aliases": [
+          "mixed greens"
+        ],
+        "amountText": "4 ounce",
+        "text": "4 ounce mixed greens"
+      },
+      {
+        "id": "salt",
+        "displayName": "salt",
+        "canonicalName": "salt",
+        "aliases": [
+          "salt"
+        ],
+        "amountText": "to taste",
+        "text": "salt, to taste"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "2 teaspoon",
+        "text": "2 teaspoon oil"
+      },
+      {
+        "id": "oil",
+        "displayName": "oil",
+        "canonicalName": "oil",
+        "aliases": [
+          "oil"
+        ],
+        "amountText": "2 tablespoon",
+        "text": "2 tablespoon oil"
+      },
+      {
+        "id": "pepper",
+        "displayName": "pepper",
+        "canonicalName": "pepper",
+        "aliases": [
+          "pepper"
+        ],
+        "amountText": "to taste",
+        "text": "pepper, to taste"
+      }
+    ],
+    "steps": [
+      {
+        "index": 1,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Wash and dry produce.",
+        "displayText": "Wash and dry produce.",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 2,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Halve, peel, and thinly slice onion.",
+        "displayText": "Halve, peel, and thinly slice onion.",
+        "ingredientRefs": [
+          "onion"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 3,
+        "sourceStep": 1,
+        "section": null,
+        "speakShort": "Heat a drizzle of oil in a large pan over medium heat. Add onion; season with salt and pepper. Cook, stirring occasionally, until softened, 7-9 minutes. TIP: Lower heat and add a splash of water if onion begins to brown too quickly.",
+        "displayText": "Heat a drizzle of oil in a large pan over medium heat. Add onion; season with salt and pepper. Cook, stirring occasionally, until softened, 7-9 minutes. TIP: Lower heat and add a splash of water if onion begins to brown too quickly.",
+        "ingredientRefs": [
+          "onion",
+          "salt",
+          "oil",
+          "oil",
+          "pepper"
+        ],
+        "timerHints": [
+          {
+            "text": "7-9 minutes",
+            "seconds": 540
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "sourceStep": 2,
+        "section": null,
+        "speakShort": "While onion cooks, halve lemon. Halve, core, and thinly slice apple. Trim and halve zucchini lengthwise; thinly slice crosswise into half-moons.",
+        "displayText": "While onion cooks, halve lemon. Halve, core, and thinly slice apple. Trim and halve zucchini lengthwise; thinly slice crosswise into half-moons.",
+        "ingredientRefs": [
+          "onion",
+          "zucchini",
+          "lemon",
+          "apple"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 5,
+        "sourceStep": 2,
+        "section": null,
+        "speakShort": "In a small bowl, combine sour cream, 1/2 tsp Fry Seasoning (1 tsp for 4 servings), and a squeeze of lemon juice to taste; season with salt and pepper. (You'll use the rest of the Fry Seasoning in the next step.) In a large bowl, toss apple and mixed greens with a drizzle of olive oil and a squeeze of lemon juice to taste. Season with salt and pepper.",
+        "displayText": "In a small bowl, combine sour cream, 1/2 tsp Fry Seasoning (1 tsp for 4 servings), and a squeeze of lemon juice to taste; season with salt and pepper. (You'll use the rest of the Fry Seasoning in the next step.) In a large bowl, toss apple and mixed greens with a drizzle of olive oil and a squeeze of lemon juice to taste. Season with salt and pepper.",
+        "ingredientRefs": [
+          "fry-seasoning",
+          "sour-cream",
+          "lemon",
+          "apple",
+          "mixed-greens",
+          "salt",
+          "oil",
+          "oil",
+          "pepper"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 6,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "Once onion is softened, add zucchini and a drizzle of oil to pan. Cook, stirring occasionally, until onion is caramelized and zucchini is tender, 3-4 minutes. Season with salt, pepper, and remaining Fry Seasoning.",
+        "displayText": "Once onion is softened, add zucchini and a drizzle of oil to pan. Cook, stirring occasionally, until onion is caramelized and zucchini is tender, 3-4 minutes. Season with salt, pepper, and remaining Fry Seasoning.",
+        "ingredientRefs": [
+          "fry-seasoning",
+          "onion",
+          "zucchini",
+          "salt",
+          "oil",
+          "oil",
+          "pepper"
+        ],
+        "timerHints": [
+          {
+            "text": "3-4 minutes",
+            "seconds": 240
+          }
+        ]
+      },
+      {
+        "index": 7,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "Add stock concentrate and 2 TBSP water (4 TBSP for 4 servings). Cook, stirring, until liquid has mostly evaporated, 1-2 minutes. Season with salt and pepper. TIP: For an extra-rich filling, stir in 1 TBSP butter (2 TBSP for 4).",
+        "displayText": "Add stock concentrate and 2 TBSP water (4 TBSP for 4 servings). Cook, stirring, until liquid has mostly evaporated, 1-2 minutes. Season with salt and pepper. TIP: For an extra-rich filling, stir in 1 TBSP butter (2 TBSP for 4).",
+        "ingredientRefs": [
+          "stock-concentrate",
+          "salt",
+          "pepper"
+        ],
+        "timerHints": [
+          {
+            "text": "1-2 minutes",
+            "seconds": 120
+          }
+        ]
+      },
+      {
+        "index": 8,
+        "sourceStep": 3,
+        "section": null,
+        "speakShort": "Turn off heat; transfer filling to a plate. Wipe out pan.",
+        "displayText": "Turn off heat; transfer filling to a plate. Wipe out pan.",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 9,
+        "sourceStep": 4,
+        "section": null,
+        "speakShort": "Place tortillas on a clean work surface. Evenly sprinkle with cheddar, then top with zucchini filling and Monterey Jack. Fold tortillas in half to create tortilla melts.",
+        "displayText": "Place tortillas on a clean work surface. Evenly sprinkle with cheddar, then top with zucchini filling and Monterey Jack. Fold tortillas in half to create tortilla melts.",
+        "ingredientRefs": [
+          "flour-tortillas",
+          "zucchini"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 10,
+        "sourceStep": 5,
+        "section": null,
+        "speakShort": "Heat a drizzle of oil in pan used for filling over medium-high heat. Add tortilla melts and cook until golden brown on the first side, 1-2 minutes. Flip and cook 1 minute more. TIP: Depending on the size of your pan, you may need to work in batches.",
+        "displayText": "Heat a drizzle of oil in pan used for filling over medium-high heat. Add tortilla melts and cook until golden brown on the first side, 1-2 minutes. Flip and cook 1 minute more. TIP: Depending on the size of your pan, you may need to work in batches.",
+        "ingredientRefs": [
+          "flour-tortillas",
+          "oil",
+          "oil"
+        ],
+        "timerHints": [
+          {
+            "text": "1-2 minutes",
+            "seconds": 120
+          },
+          {
+            "text": "1 minute",
+            "seconds": 60
+          }
+        ]
+      },
+      {
+        "index": 11,
+        "sourceStep": 5,
+        "section": null,
+        "speakShort": "Transfer to a paper-towel-lined plate.",
+        "displayText": "Transfer to a paper-towel-lined plate.",
+        "ingredientRefs": [],
+        "timerHints": []
+      },
+      {
+        "index": 12,
+        "sourceStep": 6,
+        "section": null,
+        "speakShort": "Transfer tortilla melts to a cutting board; cut into three wedges each.",
+        "displayText": "Transfer tortilla melts to a cutting board; cut into three wedges each.",
+        "ingredientRefs": [
+          "flour-tortillas"
+        ],
+        "timerHints": []
+      },
+      {
+        "index": 13,
+        "sourceStep": 6,
+        "section": null,
+        "speakShort": "Divide tortilla melts and salad between plates. Serve with crema on the side for dipping.",
+        "displayText": "Divide tortilla melts and salad between plates. Serve with crema on the side for dipping.",
+        "ingredientRefs": [
+          "flour-tortillas"
+        ],
+        "timerHints": []
+      }
+    ],
+    "notes": [],
+    "searchTokens": [
+      "apple",
+      "cheddar",
+      "cheddar cheese",
+      "flour tortillas",
+      "fry seasoning",
+      "lemon",
+      "melts",
+      "mixed greens",
+      "monterey jack cheese",
+      "oil",
+      "onion",
+      "pepper",
+      "salt",
+      "sour cream",
+      "stock concentrate",
+      "tortilla",
+      "zucchini"
+    ],
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/zucchini-cheddar-tortilla-melts-b78d0547-6501e550.jpg",
+    "sourceStars": {
+      "pink": 0,
+      "blue": 0
     }
   }
 ]

@@ -13,6 +13,7 @@ the tests can run offline.
 from __future__ import annotations
 
 import gzip
+import html
 import json
 import re
 import sys
@@ -216,6 +217,45 @@ def uniform_image_url(url: str) -> str:
     return url
 
 
+def image_at(url: str, width: int, height: int) -> str:
+    """A smaller rendition of a uniform photo url for thumbnails; the full crop stays 1200x800.
+
+    Mirrors imageAt() in script.js and app.js.
+    """
+    if not url:
+        return url
+    if url.startswith(f"{IMAGE_HOST}/{IMAGE_TRANSFORM}/"):
+        return url.replace(IMAGE_TRANSFORM, f"c_fill,w_{width},h_{height},f_auto,q_auto", 1)
+    if url.startswith("https://images.unsplash.com/"):
+        return url.replace("w=1200&h=800", f"w={width}&h={height}", 1)
+    return url
+
+
+CONNECTORS = {"with", "and", "or", "in", "a", "an", "the", "of", "&", "'n'", "n", "de", "al", "alla", "au", "for", "on", "to", "style", "la", "le"}
+
+
+def strip_marketing(name: str) -> str:
+    """Cut a Title Case dish name where a lowercase sentence begins.
+
+    "Cheesy Pork Sausage Marinara Includes recyclable aluminum tray" ->
+    "Cheesy Pork Sausage Marinara". A run of lowercase words with at least two
+    content words (connectors like "with" and "&" do not count) is the tail;
+    the capitalized word that introduces it goes too. A parenthetical also
+    ends the name.
+    """
+    name = re.split(r"\s+\(", name, maxsplit=1)[0].strip()
+    words = name.split()
+    for index in range(2, len(words)):
+        if not words[index][:1].islower():
+            continue
+        run = words[index:]
+        if sum(1 for word in run if word[:1].islower() and word.lower() not in CONNECTORS) < 2:
+            continue
+        cut = index - 1 if index >= 3 and words[index - 1][:1].isupper() else index
+        return " ".join(words[:cut]).strip()
+    return name
+
+
 def short_name(full_name: str) -> str:
     """"Chicken Sausage Cavatappi Bolognese with Zucchini & Parmesan" -> the headline.
 
@@ -227,23 +267,35 @@ def short_name(full_name: str) -> str:
     repeat = TITLE_REPEAT.match(name)
     if repeat:
         name = name[: repeat.end()].strip()
+    name = strip_marketing(name)
     head, sep, _tail = name.partition(" with ")
     if sep and len(head.split()) >= 3:
         return head.strip()
     return name
 
 
+BRAND_MARK = re.compile(r"\S+®\s*")  # "PHILADELPHIA(R) Cream Cheese" -> "Cream Cheese"
+UNIT_ABBREVIATION = re.compile(r"^\((?:tsp|tbsp|oz|lb|g|ml)\)\s*", re.IGNORECASE)  # "(tsp) Cooking Oil"
+
+
 def parse_hf_ingredient(text: str) -> tuple[str, str]:
-    """"1 unit Yellow Onion" -> ("1 unit", "yellow onion"); " Salt" -> ("to taste", "salt")."""
-    text = normalize_text(text).strip()
+    """"1 unit Yellow Onion" -> ("1 unit", "yellow onion"); " Salt" -> ("to taste", "salt").
+
+    Newer cards write "1 teaspoon (tsp) Cooking Oil" and, for pantry items
+    with no amount, "teaspoon (tsp) Salt".
+    """
+    text = normalize_text(BRAND_MARK.sub("", text)).strip()
     match = AMOUNT_PATTERN.match(text)
     if not match:
-        return "to taste", apply_replacements(text, replace_tuples)
+        words = text.split(" ", 1)
+        if words and words[0].lower() in UNITS and len(words) == 2:
+            text = UNIT_ABBREVIATION.sub("", words[1].strip())
+        return "to taste", apply_replacements(text.strip(), replace_tuples)
     amount, rest = match.group(1), match.group(2).strip()
     words = rest.split(" ", 1)
     if words and words[0].lower() in UNITS and len(words) == 2:
         amount = f"{amount} {words[0].lower()}"
-        rest = words[1]
+        rest = UNIT_ABBREVIATION.sub("", words[1].strip())
     return amount, apply_replacements(rest.strip(), replace_tuples)
 
 
@@ -264,12 +316,40 @@ def scale_amount(amount: str, factor: Fraction) -> str:
     return f"{text} {rest}".strip()
 
 
-def steps_to_instructions(steps: list) -> str:
-    """HowToStep list -> the bare-number layout the parser reads.
+SENTENCE_END = re.compile(r"[.!?:]\s*$")
 
-    Each HelloFresh step is a few "- " bullets; the card's hard line wraps are
-    joined back into sentences.
+
+def step_bullets(text: str) -> list[str]:
+    """The sub-steps of one HelloFresh step, in any of the three card formats.
+
+    2022 cards: "• bullet\\nwrapped line\\n• bullet" (hard wraps mid-sentence).
+    2021 cards: one sub-step per line, no bullet glyph.
+    2025 cards: "<ul><li><p>bullet</p></li>...</ul>" with styling spans.
     """
+    text = html.unescape(text)
+    if re.search(r"<(?:li|p|ul|br)\b", text, re.IGNORECASE):
+        parts = re.split(r"<li\b[^>]*>", text, flags=re.IGNORECASE)
+        items = parts[1:] if len(parts) > 1 else re.split(r"<br\s*/?>|</p>", text, flags=re.IGNORECASE)
+        cleaned = [re.sub(r"\s+", " ", normalize_text(re.sub(r"<[^>]+>", " ", item))).strip() for item in items]
+        # Tags became spaces, so "<strong>sour cream</strong>," reads "sour cream ,".
+        cleaned = [re.sub(r"\s+([,.;:!?)])", r"\1", item) for item in cleaned]
+        return [item for item in cleaned if item]
+    bullets: list[str] = []
+    for line in normalize_text(text).split("\n"):
+        line = line.strip()
+        if not line:
+            continue
+        if line.startswith("- "):
+            bullets.append(line[2:].strip())
+        elif bullets and not SENTENCE_END.search(bullets[-1]):
+            bullets[-1] = f"{bullets[-1]} {line}"  # a hard wrap inside a sentence
+        else:
+            bullets.append(line)
+    return bullets
+
+
+def steps_to_instructions(steps: list) -> str:
+    """HowToStep list -> the bare-number layout the parser reads."""
     blocks = []
     for index, step in enumerate(steps, 1):
         if isinstance(step, dict):
@@ -277,11 +357,9 @@ def steps_to_instructions(steps: list) -> str:
             heading = normalize_text(step.get("name", "")).strip()
         else:
             text, heading = str(step), ""
-        text = normalize_text(text)
-        text = re.sub(r"[ \t]*\n[ \t]*", " ", text)
-        bullets = [part.strip() for part in re.split(r"\s*-\s+(?=[A-Z(])", " " + text) if part.strip()]
+        bullets = step_bullets(text)
         lines = []
-        if heading and heading != text[:len(heading)]:
+        if heading and not text.strip().startswith(heading):
             lines.append(heading)
         lines.append(str(index))
         lines.extend(f"- {bullet}" for bullet in bullets)

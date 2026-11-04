@@ -17,6 +17,19 @@ function serializeRecipes(list) {
 }
 
 // Mirrors slugify() in scripts/recipe_text.py so links match the generated pages.
+// A smaller rendition of a uniform photo url for thumbnails; the full crop stays 1200x800.
+// Mirrors image_at() in scripts/hellofresh.py.
+function imageAt(url, width, height) {
+    if (!url) return url;
+    if (url.startsWith('https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/')) {
+        return url.replace('c_fill,w_1200,h_800,f_auto,q_auto', `c_fill,w_${width},h_${height},f_auto,q_auto`);
+    }
+    if (url.startsWith('https://images.unsplash.com/')) {
+        return url.replace('w=1200&h=800', `w=${width}&h=${height}`);
+    }
+    return url;
+}
+
 function recipeSlug(name) {
     return name.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
         .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
@@ -224,7 +237,7 @@ function renderRecipeList(filter = '') {
         recipeCard.innerHTML = `
             <div class="flex items-start gap-3 w-full">
                 ${recipe.image ?
-                    `<img src="${recipe.image}" alt="${recipe.name}" class="w-12 h-12 object-cover rounded-lg">` :
+                    `<img src="${imageAt(recipe.image, 96, 96)}" alt="${recipe.name}" class="w-12 h-12 object-cover rounded-lg" loading="lazy" decoding="async">` :
                     `<div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
                         <i class="fas fa-utensils text-gray-400"></i>
                     </div>`
@@ -300,7 +313,7 @@ function showRecipeDetails(id) {
                     </div>
                 </div>
                 ${recipe.image ?
-                    `<img src="${recipe.image}" alt="${recipe.name}" class="w-24 h-24 object-cover rounded-lg shadow">` :
+                    `<img src="${imageAt(recipe.image, 192, 192)}" alt="${recipe.name}" class="w-24 h-24 object-cover rounded-lg shadow" decoding="async">` :
                     `<div class="w-24 h-24 bg-gray-200 rounded-lg shadow flex items-center justify-center">
                         <i class="fas fa-utensils text-3xl text-gray-400"></i>
                     </div>`

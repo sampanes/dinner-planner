@@ -18,6 +18,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from hellofresh import image_at  # noqa: E402
 from recipe_text import (  # noqa: E402
     MAX_SPOKEN_STEP_CHARS,
     ingredient_refs,
@@ -389,7 +390,7 @@ def render_recipe_page(recipe: dict) -> str:
 def render_index_page(runtime_recipes: list[dict]) -> str:
     items = []
     for recipe in sorted(runtime_recipes, key=lambda r: r["name"].lower()):
-        thumb = f'<img src="{esc(recipe["image"])}" alt="">' if recipe["image"] else ""
+        thumb = f'<img src="{esc(image_at(recipe["image"], 128, 128))}" alt="" loading="lazy">' if recipe["image"] else ""
         source_steps = len({step["sourceStep"] for step in recipe["steps"]})
         items.append(
             f'      <li>{thumb}<a href="{esc(recipe["slug"])}.html">{esc(recipe["name"])}</a>'
