@@ -25,6 +25,7 @@ coverage/
 
 # Local-only scratch files
 PROMPT_STAGING.md
+trash*
 
 Do not ignore:
 

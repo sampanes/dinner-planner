@@ -22,6 +22,7 @@ The project direction is intentionally narrow:
 8. `07_Cost_and_Account_Strategy.md` — how to keep this free or near-free
 9. `08_Backlog_and_Open_Questions.md` — open issues and later ideas
 10. `09_Alexa_Platform_Constraints_and_Product_Decisions.md` — Alexa-specific constraints and the product decisions they imply
+11. `10_Review_Findings_2026-11.md` - review of the current code and the failed Alexa hello-world attempt
 
 ## Design stance
 
