@@ -2,9 +2,29 @@
 
 This directory is the contract between authoring, build scripts, and clients.
 
-- `source/` contains human-edited recipe data.
-- `runtime/` contains generated files committed to Git for review and Alexa use.
-- `reports/` contains generated validation output and other build artifacts worth reviewing.
+- `source/recipes.json` is the human-edited recipe data. ASCII only; run
+  `python scripts/normalize_source.py` after pasting anything in.
+- `runtime/` holds generated files committed to Git for review and for any
+  client (recipe pages today, a voice client if one ever exists).
+- `reports/validation_report.md` is the generated list of build warnings.
 
-The current web app reads from `data/source/recipes.json`.
-The Alexa path should read from `data/runtime/` once the runtime model grows into the full documented schema.
+The web pages (`index.html`, `groupings.html`) read `source/recipes.json`
+directly. The generated recipe pages under `/recipes` are built from the
+runtime data.
+
+## Runtime recipe shape
+
+`runtime/recipes.runtime.json` is a list of recipes:
+
+- `id`, `name`, `displayName`, `slug`, `pageUrl`, `image`, `aliases`,
+  `searchTokens`, `sourceStars`
+- `ingredients[]`: `id`, `displayName`, `canonicalName`, `aliases`,
+  `amountText`, `text` ("400g spaghetti")
+- `steps[]`: one entry per spoken chunk. `index` is the runtime position,
+  `sourceStep` is the number on the card, `section` is the HelloFresh-style
+  heading when there is one, `speakShort` and `displayText` are the text,
+  `ingredientRefs` and `timerHints` are heuristics.
+- `notes[]`: card text that is not a step (for example a doneness note).
+
+`runtime/aliases.index.json` and `runtime/ingredients.index.json` map an
+alias or canonical ingredient name to recipe ids.
