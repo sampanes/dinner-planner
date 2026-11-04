@@ -86,17 +86,17 @@ def main():
     path = Path(__file__).resolve().parent.parent / "data" / "source" / "recipes.json"
 
     if not path.exists():
-        print("❌ File not found:", path)
+        print("ERROR: File not found:", path)
         return
     if path.stat().st_size == 0:
-        print("❌ File is empty:", path)
+        print("ERROR: File is empty:", path)
         return
 
     with open(path, "r", encoding="utf-8") as f:
         try:
             data = json.load(f)
         except json.JSONDecodeError as e:
-            print("❌ JSON decode error:", e)
+            print("ERROR: JSON decode error:", e)
             return
 
     # Apply replacements and normalization
