@@ -11,12 +11,12 @@
         <!-- Header -->
         <header class="header">
             <h1 class="title">
-                <span class="skull">💀</span>
+                <span class="skull">&#x1F480;</span>
                 MAGICAL
-                <span class="skull">💀</span>
+                <span class="skull">&#x1F480;</span>
             </h1>
             <p class="subtitle">Meal Shuffler</p>
-            <a href="index.html" class="back-link">← Back to Recipes</a>
+            <a href="index.html" class="back-link">&#x2190; Back to Recipes</a>
         </header>
 
         <!-- Controls Card -->
@@ -25,7 +25,7 @@
                 <label>Seed</label>
                 <div class="seed-control">
                     <input type="text" id="seedInput" readonly>
-                    <button id="shuffleBtn" class="btn btn-small btn-pink">🎲</button>
+                    <button id="shuffleBtn" class="btn btn-small btn-pink">&#x1F3B2;</button>
                 </div>
             </div>
 
@@ -43,14 +43,14 @@
             </div>
 
             <div class="button-row">
-                <button id="copyLinkBtn" class="btn btn-pink">🔗 Copy Link</button>
-                <button id="resetBtn" class="btn btn-purple">🔄 Reset</button>
+                <button id="copyLinkBtn" class="btn btn-pink">&#x1F517; Copy Link</button>
+                <button id="resetBtn" class="btn btn-purple">&#x1F504; Reset</button>
             </div>
         </div>
 
         <!-- Error Card -->
         <div id="errorCard" class="card error-card hidden">
-            <p class="error-icon">😢</p>
+            <p class="error-icon">&#x1F622;</p>
             <p class="error-text">Failed to load recipes</p>
             <p id="errorUrl" class="error-url"></p>
             <button id="retryBtn" class="btn btn-pink">Retry</button>
@@ -64,7 +64,7 @@
 
         <!-- Plan Section -->
         <div id="planSection" class="hidden">
-            <h2 class="section-title">📋 Your Plan <span id="planCount" class="plan-count"></span></h2>
+            <h2 class="section-title">&#x1F4CB; Your Plan <span id="planCount" class="plan-count"></span></h2>
             <div id="planTheme" class="plan-theme"></div>
             <div id="planList" class="plan-list"></div>
         </div>
@@ -72,12 +72,12 @@
         <!-- Grocery List Section -->
         <div id="grocerySection" class="hidden">
             <button id="toggleGroceryBtn" class="btn btn-full btn-lavender">
-                🛒 Toggle Grocery List
+                &#x1F6D2; Toggle Grocery List
             </button>
             <div id="groceryPanel" class="card grocery-panel hidden">
                 <div class="grocery-header">
                     <h3>Grocery List</h3>
-                    <button id="copyGroceryBtn" class="btn btn-small btn-pink">📋 Copy</button>
+                    <button id="copyGroceryBtn" class="btn btn-small btn-pink">&#x1F4CB; Copy</button>
                 </div>
                 <div id="groceryList" class="grocery-list"></div>
             </div>
@@ -88,10 +88,11 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h2 id="modalTitle">Recipe Name</h2>
-                    <button id="closeModalBtn" class="btn btn-small btn-purple">✕</button>
+                    <button id="closeModalBtn" class="btn btn-small btn-purple">&#x2715;</button>
                 </div>
                 <div id="modalImage" class="modal-image"></div>
                 <div class="modal-stars" id="modalStars"></div>
+                <p class="modal-link"><a id="modalPageLink" class="btn btn-small btn-lavender" href="#" target="_blank" rel="noopener">Full recipe page</a></p>
                 <h4>Ingredients</h4>
                 <ul id="modalIngredients" class="ingredient-list"></ul>
             </div>

@@ -10,33 +10,83 @@ const EXCLUDE_INGREDIENTS = ['salt', 'pepper', 'oil', 'butter', 'parmesan cheese
 let recipes = [];
 let commonIngredientsDict = {};
 
-// Function to load recipes from JSON file
+// Canonical JSON for comparing the browser copy against the repo copy
+// (ignores the transient sortKey that rendering adds).
+function serializeRecipes(list) {
+    return JSON.stringify(list.map(({ sortKey, ...recipe }) => recipe));
+}
+
+// Mirrors slugify() in scripts/recipe_text.py so links match the generated pages.
+function recipeSlug(name) {
+    return name.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+// Fetch the recipes committed in the repo (data/source/recipes.json).
+async function fetchRepoRecipes() {
+    const response = await fetch('data/source/recipes.json', { cache: 'no-cache' });
+    if (!response.ok) {
+        throw new Error(`Failed to load recipes (HTTP ${response.status})`);
+    }
+    const list = await response.json();
+    list.forEach((recipe, index) => {
+        if (!recipe.id) {
+            recipe.id = index + 1;
+        }
+    });
+    return list;
+}
+
+// Adopt the repo copy as this browser's working set, discarding local edits.
+function adoptRepoRecipes(list) {
+    recipes = list;
+    const text = serializeRecipes(list);
+    localStorage.setItem('recipes', text);
+    localStorage.setItem('recipesBase', text);
+    hideLocalEditsBanner();
+}
+
+// Reload from the repo on demand (the reload button and the banner).
 async function loadRecipes() {
     try {
-        const response = await fetch('data/source/recipes.json');
-        if (!response.ok) {
-            throw new Error('Failed to load recipes');
-        }
-        recipes = await response.json();
-        
-        // Ensure all recipes have IDs
-        recipes.forEach((recipe, index) => {
-            if (!recipe.id) {
-                recipe.id = index + 1;
-            }
-        });
-                        
-        // Save to localStorage
-        localStorage.setItem('recipes', JSON.stringify(recipes));
-        
-        console.log("loadRecipes called:", recipes);
-
-        renderRecipeList();
+        adoptRepoRecipes(await fetchRepoRecipes());
+        extractCommonIngredientsDict();
+        renderRecipeList(recipeSearch.value);
+        updateIngredientStats();
+        clearRecipeDetails();
     } catch (error) {
         console.error('Error loading recipes:', error);
-        // Fallback to empty array
-        recipes = [];
+        alert(error.message);
     }
+}
+
+function confirmReload() {
+    const unsaved = serializeRecipes(recipes) !== localStorage.getItem('recipesBase');
+    if (unsaved && !confirm('Reload from the repo? Local edits in this browser will be discarded (download them first to keep them).')) {
+        return;
+    }
+    loadRecipes();
+}
+
+function showLocalEditsBanner(repo) {
+    const count = repo ? repo.length : 0;
+    document.getElementById('localEditsText').textContent =
+        `This browser has local edits (${recipes.length} recipes) that differ from the repo (${count} recipes). ` +
+        'Download them to keep them, or reload from the repo to discard them.';
+    document.getElementById('localEditsBanner').classList.remove('hidden');
+}
+
+function hideLocalEditsBanner() {
+    document.getElementById('localEditsBanner').classList.add('hidden');
+}
+
+function clearRecipeDetails() {
+    recipeDetails.innerHTML = `
+        <div class="text-center py-20 text-gray-400">
+            <i class="fas fa-utensils text-5xl mb-4"></i>
+            <p class="text-xl">Select a recipe or create a new one</p>
+        </div>
+    `;
 }
 
 // DOM elements
@@ -59,15 +109,30 @@ clearIngredientFiltersBtn.addEventListener('click', () => {
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const savedRecipes = localStorage.getItem('recipes');
+    // The repo copy is the source of truth. Edits made with the form in this
+    // browser are kept only while they differ from the repo copy they were
+    // based on, and a banner says so until they are downloaded or discarded.
+    const saved = localStorage.getItem('recipes');
+    const base = localStorage.getItem('recipesBase');
+    let repo = null;
+    try {
+        repo = await fetchRepoRecipes();
+    } catch (error) {
+        console.error('Error loading recipes:', error);
+    }
 
-    // THIS IS WHERE we load what's available for viewing
-    if (savedRecipes) {
-        // We have a saved recipes in local storage so just use that
-        recipes = JSON.parse(savedRecipes);
+    if (repo) {
+        const repoText = serializeRecipes(repo);
+        if (!saved || saved === base || saved === repoText) {
+            adoptRepoRecipes(repo);
+        } else {
+            recipes = JSON.parse(saved);
+            showLocalEditsBanner(repo);
+        }
+    } else if (saved) {
+        recipes = JSON.parse(saved);
     } else {
-        // Brand new, so load recipes from a json file
-        await loadRecipes();
+        recipes = [];
     }
 
     extractCommonIngredientsDict();
@@ -123,14 +188,14 @@ function renderRecipeList(filter = '') {
         return nameMatch;
     });
 
-    // 🧠 First: recalculate id = pinkStar + blueStar
+    // First: recalculate sortKey = pinkStar + blueStar
     filteredRecipes.forEach(recipe => {
         const pink = parseInt(recipe.pinkStar) || 0;
         const blue = parseInt(recipe.blueStar) || 0;
         recipe.sortKey = pink + blue; // Don't overwrite .id if it's used elsewhere
     });
 
-    // 🧮 Sort by sortKey (star total) descending, then name
+    // Sort by sortKey (star total) descending, then name
     filteredRecipes.sort((a, b) => {
         if (b.sortKey !== a.sortKey) {
             return b.sortKey - a.sortKey;
@@ -152,14 +217,14 @@ function renderRecipeList(filter = '') {
         }
     }
 
-    // 👇 Normal rendering logic stays unchanged
+    // Normal rendering logic
     filteredRecipes.forEach(recipe => {
         const recipeCard = document.createElement('div');
         recipeCard.className = 'recipe-card bg-white p-4 rounded-lg mb-3 cursor-pointer hover:bg-gray-50 border border-gray-200';
         recipeCard.innerHTML = `
             <div class="flex items-start gap-3 w-full">
-                ${recipe.image ? 
-                    `<img src="${recipe.image}" alt="${recipe.name}" class="w-12 h-12 object-cover rounded-lg">` : 
+                ${recipe.image ?
+                    `<img src="${recipe.image}" alt="${recipe.name}" class="w-12 h-12 object-cover rounded-lg">` :
                     `<div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
                         <i class="fas fa-utensils text-gray-400"></i>
                     </div>`
@@ -171,12 +236,12 @@ function renderRecipeList(filter = '') {
                     <p class="text-xs text-gray-500">${recipe.ingredients.length} ingredients</p>
                         <div class="flex flex-col text-[10px] leading-none items-end">
                             <div class="flex gap-0.5">
-                                ${'<span class="text-gray-300">★</span>'.repeat(5 - Math.min(recipe.pinkStar || 0, 5))}
-                                ${'<span class="text-pink-500">★</span>'.repeat(Math.min(recipe.pinkStar || 0, 5))}
+                                ${'<span class="text-gray-300">\u2605</span>'.repeat(5 - Math.min(recipe.pinkStar || 0, 5))}
+                                ${'<span class="text-pink-500">\u2605</span>'.repeat(Math.min(recipe.pinkStar || 0, 5))}
                             </div>
                             <div class="flex gap-0.5">
-                                ${'<span class="text-blue-500">★</span>'.repeat(Math.min(recipe.blueStar || 0, 5))}
-                                ${'<span class="text-gray-300">★</span>'.repeat(5 - Math.min(recipe.blueStar || 0, 5))}
+                                ${'<span class="text-blue-500">\u2605</span>'.repeat(Math.min(recipe.blueStar || 0, 5))}
+                                ${'<span class="text-gray-300">\u2605</span>'.repeat(5 - Math.min(recipe.blueStar || 0, 5))}
                             </div>
                         </div>
                     </div>
@@ -192,7 +257,7 @@ function renderRecipeList(filter = '') {
 function showRecipeDetails(id) {
     const recipe = recipes.find(r => r.id === id);
     if (!recipe) return;
-    
+
     let ingredientsHtml = '';
     recipe.ingredients.forEach(ing => {
         ingredientsHtml += `
@@ -202,7 +267,7 @@ function showRecipeDetails(id) {
             </li>
         `;
     });
-    
+
     recipeDetails.innerHTML = `
         <div>
             <div class="flex justify-between items-start mb-6">
@@ -210,14 +275,18 @@ function showRecipeDetails(id) {
                     <h2 class="text-3xl font-bold text-gray-800 mb-2">${recipe.name}</h2>
                     <div class="flex items-center gap-2 text-sm text-gray-500">
                         <span>${recipe.ingredients.length} ingredients</span>
-                        <span>•</span>
+                        <span>\u2022</span>
                         <button class="text-amber-600 hover:text-amber-700" onclick="editRecipe(${recipe.id})">
                             <i class="fas fa-edit mr-1"></i> Edit
                         </button>
-                        <span>•</span>
+                        <span>\u2022</span>
                         <button class="text-red-500 hover:text-red-600" onclick="deleteRecipe(${recipe.id})">
                             <i class="fas fa-trash-alt mr-1"></i> Delete
                         </button>
+                        <span>\u2022</span>
+                        <a class="text-amber-600 hover:text-amber-700" href="recipes/${recipeSlug(recipe.name)}.html" target="_blank" rel="noopener" title="Standalone page (share this link with Alexa+)">
+                            <i class="fas fa-up-right-from-square mr-1"></i> Page
+                        </a>
                     </div>
                     <div class="flex gap-4 mt-2">
                         <div class="flex items-center">
@@ -230,14 +299,14 @@ function showRecipeDetails(id) {
                         </div>
                     </div>
                 </div>
-                ${recipe.image ? 
-                    `<img src="${recipe.image}" alt="${recipe.name}" class="w-24 h-24 object-cover rounded-lg shadow">` : 
+                ${recipe.image ?
+                    `<img src="${recipe.image}" alt="${recipe.name}" class="w-24 h-24 object-cover rounded-lg shadow">` :
                     `<div class="w-24 h-24 bg-gray-200 rounded-lg shadow flex items-center justify-center">
                         <i class="fas fa-utensils text-3xl text-gray-400"></i>
                     </div>`
                 }
             </div>
-            
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                 <div>
                     <h3 class="text-xl font-semibold text-gray-800 mb-3 pb-2 border-b border-gray-200">Ingredients</h3>
@@ -250,7 +319,7 @@ function showRecipeDetails(id) {
                     <div class="whitespace-pre-line text-gray-700">${recipe.instructions}</div>
                 </div>
             </div>
-            
+
             <div class="flex justify-end">
                 <button onclick="editRecipe(${recipe.id})" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition-colors">
                     <i class="fas fa-edit mr-2"></i> Edit Recipe
@@ -264,20 +333,20 @@ function showRecipeDetails(id) {
 function editRecipe(id) {
     const recipe = recipes.find(r => r.id === id);
     if (!recipe) return;
-    
+
     // Fill the form with recipe data
     document.getElementById('recipeName').value = recipe.name;
     document.getElementById('recipeImage').value = recipe.image || '';
     document.getElementById('recipeInstructions').value = recipe.instructions;
-    
+
     // Clear ingredients container
     ingredientsContainer.innerHTML = '';
-    
+
     // Add ingredients to form
     recipe.ingredients.forEach(ing => {
         addIngredientField(ing.name, ing.amount);
     });
-    
+
     // Store the ID we're editing
     recipeForm.dataset.editingId = id;
 
@@ -286,7 +355,7 @@ function editRecipe(id) {
     renderStarRating('blueStarContainer', 'blue', recipe.blueStar || 0);
 
     // Show the modal
-    newRecipeModal.classList.remove('hidden');  
+    newRecipeModal.classList.remove('hidden');
 }
 
 // Delete recipe
@@ -295,12 +364,7 @@ function deleteRecipe(id) {
         recipes = recipes.filter(r => r.id !== id);
         saveRecipes();
         renderRecipeList();
-        recipeDetails.innerHTML = `
-            <div class="text-center py-20 text-gray-400">
-                <i class="fas fa-utensils text-5xl mb-4"></i>
-                <p class="text-xl">Select a recipe or create a new one</p>
-            </div>
-        `;
+        clearRecipeDetails();
     }
 }
 
@@ -311,23 +375,23 @@ function addIngredientField(name = '', amount = '') {
     ingredientDiv.className = 'flex gap-2 items-center relative';
     ingredientDiv.innerHTML = `
         <div class="flex-1 relative">
-            <input type="text" 
-                    class="ingredient-name w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500" 
-                    placeholder="Ingredient" 
+            <input type="text"
+                    class="ingredient-name w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                    placeholder="Ingredient"
                     value="${name}"
                     data-id="${ingredientId}">
         </div>
-        <input type="text" 
-                class="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500" 
-                placeholder="Amount" 
+        <input type="text"
+                class="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                placeholder="Amount"
                 value="${amount}">
         <button type="button" class="remove-ingredient text-red-500 hover:text-red-700">
             <i class="fas fa-times"></i>
         </button>
     `;
-    
+
     ingredientsContainer.appendChild(ingredientDiv);
-    
+
     // Set up fuzzy search for the new ingredient field
     setupIngredientSearch(ingredientDiv.querySelector('.ingredient-name'));
 }
@@ -340,19 +404,19 @@ function setupIngredientSearch(inputElement) {
             hideSuggestions();
             return;
         }
-        
+
         // Find matches using fuzzy search
         const ingredientNames = Object.keys(commonIngredientsDict);
         // Pass ingredientNames into your fuzzy search algorithm
         const matches = fuzzySearch(searchTerm, ingredientNames);
-        
+
         if (matches.length > 0) {
             showSuggestions(this, matches);
         } else {
             hideSuggestions();
         }
     });
-    
+
     // Hide suggestions when clicking elsewhere
     document.addEventListener('click', function(e) {
         if (!e.target.closest('.ingredient-suggestions')) {
@@ -365,7 +429,7 @@ function setupIngredientSearch(inputElement) {
 function fuzzySearch(term, list) {
     return list.filter(item => {
         const itemLower = item.toLowerCase();
-        
+
         // Simple fuzzy matching - check if all characters appear in order
         let searchIndex = 0;
         for (let i = 0; i < itemLower.length; i++) {
@@ -382,41 +446,41 @@ function fuzzySearch(term, list) {
 function showSuggestions(inputElement, matches) {
     // Remove any existing suggestion dropdown
     hideSuggestions();
-    
+
     // Create a new dropdown
     const dropdown = document.createElement('div');
     dropdown.className = 'ingredient-suggestions absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto';
-    
+
     const list = document.createElement('ul');
     list.className = 'py-1';
-    
+
     matches.forEach(match => {
         const li = document.createElement('li');
         li.className = 'px-3 py-2 hover:bg-amber-50 cursor-pointer';
         li.textContent = match;
-        
+
         // Highlight matching characters
         const highlighted = highlightMatch(match, inputElement.value.toLowerCase());
         li.innerHTML = highlighted;
-        
+
         li.addEventListener('click', function() {
             inputElement.value = match;
             hideSuggestions();
             inputElement.focus();
         });
-        
+
         list.appendChild(li);
     });
-    
+
     dropdown.appendChild(list);
-    
+
     // Position the dropdown below the input
     const inputRect = inputElement.getBoundingClientRect();
     dropdown.style.position = 'absolute';
     dropdown.style.left = '0';
     dropdown.style.top = `${inputRect.height + 2}px`;
     dropdown.style.width = `${inputRect.width}px`;
-    
+
     // Add to DOM
     inputElement.parentNode.appendChild(dropdown);
 }
@@ -424,13 +488,13 @@ function showSuggestions(inputElement, matches) {
 // Highlight matching characters
 function highlightMatch(text, searchTerm) {
     if (!searchTerm) return text;
-    
+
     const lowerText = text.toLowerCase();
     const lowerSearch = searchTerm.toLowerCase();
-    
+
     let result = '';
     let searchIndex = 0;
-    
+
     for (let i = 0; i < text.length; i++) {
         if (searchIndex < lowerSearch.length && lowerText[i] === lowerSearch[searchIndex]) {
             result += `<span class="font-bold text-amber-600">${text[i]}</span>`;
@@ -439,7 +503,7 @@ function highlightMatch(text, searchTerm) {
             result += text[i];
         }
     }
-    
+
     return result;
 }
 
@@ -453,14 +517,14 @@ function hideSuggestions() {
 
 // Save recipes to localStorage
 function saveRecipes() {
-    localStorage.setItem('recipes', JSON.stringify(recipes));
+    localStorage.setItem('recipes', serializeRecipes(recipes));
     updateIngredientStats(); // Update stats whenever recipes change
 }
 
 // Calculate ingredient usage statistics
 function calculateIngredientStats() {
     const stats = {};
-    
+
     recipes.forEach(recipe => {
         recipe.ingredients.forEach(ing => {
             const name = ing.name.toLowerCase();
@@ -476,7 +540,7 @@ function calculateIngredientStats() {
 function updateIngredientStats(filter = '') {
     const stats = calculateIngredientStats();
     const container = document.getElementById('ingredientStatsList');
-    
+
     // Sort by most used first
     const sortedIngredients = Object.entries(stats).sort((a, b) => b[1] - a[1]);
 
@@ -573,7 +637,7 @@ function downloadRecipes() {
     const data = JSON.stringify(recipes, null, 2);
     const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-    
+
     const a = document.createElement('a');
     a.href = url;
     a.download = 'recipes.json';
@@ -585,6 +649,9 @@ function downloadRecipes() {
 
 // Event listeners
 document.getElementById('downloadRecipesBtn').addEventListener('click', downloadRecipes);
+document.getElementById('reloadRecipesBtn').addEventListener('click', confirmReload);
+document.getElementById('bannerReloadBtn').addEventListener('click', confirmReload);
+document.getElementById('bannerDismissBtn').addEventListener('click', hideLocalEditsBanner);
 
 // Event listeners
 newRecipeBtn.addEventListener('click', function() {
@@ -592,10 +659,10 @@ newRecipeBtn.addEventListener('click', function() {
     recipeForm.reset();
     ingredientsContainer.innerHTML = '';
     delete recipeForm.dataset.editingId;
-    
+
     // Add one empty ingredient field by default
     addIngredientField();
-    
+
     // Set default star ratings to 0
     renderStarRating('pinkStarContainer', 'pink', 0);
     renderStarRating('blueStarContainer', 'blue', 0);
@@ -637,11 +704,11 @@ document.getElementById('toggleSaltBtn').addEventListener('click', function () {
 // Handle form submission
 recipeForm.addEventListener('submit', function(e) {
     e.preventDefault();
-    
+
     const name = document.getElementById('recipeName').value.trim();
     const image = document.getElementById('recipeImage').value.trim();
     const instructions = document.getElementById('recipeInstructions').value.trim();
-    
+
     // Collect ingredients
     const ingredients = [];
     const ingredientInputs = ingredientsContainer.querySelectorAll('.ingredient-name');
@@ -658,12 +725,12 @@ recipeForm.addEventListener('submit', function(e) {
             });
         }
     });
-    
+
     if (!name || !instructions || ingredients.length === 0) {
         alert('Please fill in all required fields (name, at least one ingredient, and instructions)');
         return;
     }
-    
+
     const pinkStar = getStarValue('pinkStarContainer');
     const blueStar = getStarValue('blueStarContainer');
     const starSum = pinkStar + blueStar;
@@ -690,16 +757,16 @@ recipeForm.addEventListener('submit', function(e) {
     } else {
         recipes.push(recipeData);  // <- just push, no manual id
     }
-    
+
     // Save and update UI
     saveRecipes();
     renderRecipeList();
-    
+
     // If we were editing, show the updated recipe
     if (editingId) {
         showRecipeDetails(parseInt(editingId));
     }
-    
+
     // Close modal
     newRecipeModal.classList.add('hidden');
 });

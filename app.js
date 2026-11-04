@@ -140,10 +140,17 @@ const elements = {
     modalImage: document.getElementById('modalImage'),
     modalStars: document.getElementById('modalStars'),
     modalIngredients: document.getElementById('modalIngredients'),
-    closeModalBtn: document.getElementById('closeModalBtn')
+    closeModalBtn: document.getElementById('closeModalBtn'),
+    modalPageLink: document.getElementById('modalPageLink')
 };
 
 // ========== RECIPE FETCHING ==========
+// Mirrors slugify() in scripts/recipe_text.py so links match the generated pages.
+function recipeSlug(name) {
+    return name.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
 async function fetchRecipes(url) {
     try {
         const response = await fetch(url);
@@ -163,7 +170,7 @@ function generatePlan() {
     const lockedRecipes = locks
         .map(name => recipes.find(r => r.name === name))
         .filter(Boolean);
-    
+
     // 2. Start plan with locked recipes
     let plan = [...lockedRecipes];
 
@@ -174,11 +181,11 @@ function generatePlan() {
             planIngredientPool.add(ing);
         }
     }
-    
+
     // 4. Create candidate pool (exclude already-locked recipes)
     const lockedNames = new Set(locks);
     const candidates = recipes.filter(r => !lockedNames.has(r.name));
-    
+
     // 5. Deterministically shuffle candidates using seeded PRNG
     const rng = createPRNG(seed);
     const shuffledCandidates = fisherYatesShuffle(candidates, rng);
@@ -209,7 +216,7 @@ function generatePlan() {
             // If not enough overlap, skip this candidate (plan may end up smaller)
         }
     }
-    
+
     appState.plan = plan;
     return plan;
 }
@@ -217,11 +224,11 @@ function generatePlan() {
 // ========== INTELLIGENT THEME DETECTION ==========
 function detectTheme(plan) {
     if (!plan || plan.length === 0) return null;
-    
+
     // Collect all ingredients across all planned recipes
     const allIngredients = new Set();
     const ingredientCounts = new Map();
-    
+
     plan.forEach(recipe => {
         recipe.ingredients.forEach(ing => {
             const name = ing.name.toLowerCase().trim();
@@ -229,12 +236,12 @@ function detectTheme(plan) {
             ingredientCounts.set(name, (ingredientCounts.get(name) || 0) + 1);
         });
     });
-    
+
     // Define cuisine/theme patterns with their characteristic ingredients
     const cuisinePatterns = {
         'Italian': ['pasta', 'tomato', 'basil', 'oregano', 'parmesan', 'mozzarella', 'garlic', 'olive oil', 'breadcrumbs', 'lasagna', 'risotto', 'pizza', 'spaghetti', 'marinara', 'alfredo', 'pesto', 'ricotta', 'prosciutto', 'salami', 'pepperoni', 'anchovy', 'olive', 'capers', 'wine', 'rosemary', 'thyme', 'sage', 'focaccia', 'ciabatta'],
         'Asian': ['soy sauce', 'ginger', 'rice', 'sesame', 'teriyaki', 'sriracha', 'miso', 'noodle', 'wok', 'bok choy', 'shiitake', 'edamame', 'tofu', 'soybean', 'fish sauce', 'curry', 'coconut milk', 'lime', 'lemongrass', 'chili', 'garlic', 'scallion', 'ginger', 'rice vinegar', 'mirin', 'sake', 'ramen', 'udon', 'sushi', 'tempura', 'teriyaki', 'stir fry', 'wonton', 'dim sum', 'pho', 'banh mi', 'kimchi', 'gochujang', 'sesame oil'],
-        'Mexican': ['tortilla', 'cilantro', 'lime', 'jalapeño', 'cumin', 'beans', 'cheese', 'salsa', 'guacamole', 'avocado', 'chipotle', 'taco', 'burrito', 'enchilada', 'quesadilla', 'fajita', 'tamale', 'chili powder', 'paprika', 'oregano', 'sour cream', 'refried', 'rice', 'corn', 'serrano', 'onion', 'garlic', 'tomato', 'lime', 'cilantro', 'pepper'],
+        'Mexican': ['tortilla', 'cilantro', 'lime', 'jalapeno', 'cumin', 'beans', 'cheese', 'salsa', 'guacamole', 'avocado', 'chipotle', 'taco', 'burrito', 'enchilada', 'quesadilla', 'fajita', 'tamale', 'chili powder', 'paprika', 'oregano', 'sour cream', 'refried', 'rice', 'corn', 'serrano', 'onion', 'garlic', 'tomato', 'lime', 'cilantro', 'pepper'],
         'Indian': ['curry', 'turmeric', 'garam masala', 'cumin', 'coriander', 'lentil', 'paneer', 'garlic', 'ginger', 'onion', 'tomato', 'cilantro', 'mint', 'chili', 'cardamom', 'clove', 'cinnamon', 'bay leaf', 'mustard seed', 'fenugreek', 'saffron', 'ghee', 'butter', 'cream', 'yogurt', 'naan', 'basmati', 'biryani', 'tikka', 'masala', 'dhal', 'samosa', 'pakora', 'tandoori', 'korma', 'biryani'],
         'Mediterranean': ['olive oil', 'lemon', 'feta', 'cucumber', 'hummus', 'chickpea', 'parsley', 'tomato', 'garlic', 'onion', 'bell pepper', 'eggplant', 'zucchini', 'lamb', 'chicken', 'fish', 'yogurt', 'tzatziki', 'tabbouleh', 'falafel', 'pita', 'bread', 'focaccia', 'bruschetta', 'caprese', 'antipasto', 'grape leaf', 'artichoke', 'olive', 'feta', 'goat cheese'],
         'American': ['burger', 'fries', 'bacon', 'cheese', 'ketchup', 'mustard', 'mayo', 'lettuce', 'tomato', 'onion', 'pickle', 'bun', 'steak', 'bbq', 'ribs', 'brisket', 'mac and cheese', 'casserole', 'mashed potato', 'corn', 'green bean', 'apple pie', 'brownie', 'cookie', 'pancake', 'waffle', 'syrup', 'batter', 'bread crumbs'],
@@ -244,7 +251,7 @@ function detectTheme(plan) {
         'Seafood': ['salmon', 'shrimp', 'fish', 'crab', 'lobster', 'scallop', 'clam', 'mussel', 'oyster', 'tuna', 'cod', 'tilapia', 'halibut', 'trout', 'anchovy', 'sardine', 'sea bass', 'mahi', 'swordfish', 'squid', 'calamari', 'octopus', 'coconut shrimp', 'fish and chips', 'cioppino', 'paella', 'bouillabaisse', 'lobster roll', 'crab cake'],
         'BBQ & Grill': ['bbq', 'barbecue', 'grill', 'smoke', 'ribs', 'brisket', 'pulled pork', 'chicken', 'burger', 'steak', 'hot dog', 'sausage', 'kebab', 'sauce', 'rub', 'marinade', 'smoky', 'char', 'grill', 'pit', 'smoker', ' BBQ sauce', 'coleslaw', 'cornbread', ' baked bean', 'pickle', 'onion'],
         'Soup & Stew': ['soup', 'stew', 'broth', 'stock', 'chicken', 'beef', 'pork', 'vegetable', 'noodle', 'rice', 'bean', 'lentil', 'potato', 'carrot', 'celery', 'onion', 'garlic', 'tomato', 'cream', 'herbs', 'thyme', 'bay leaf', 'rosemary', 'slow cook', 'crockpot', 'chili', 'gumbo', 'chowder', 'minestrone', 'potage'],
-        'Spicy': ['hot', 'spicy', 'jalapeño', 'serrano', 'habanero', 'cayenne', 'chili', 'pepper', 'sriracha', 'tabasco', 'wasabi', 'ginger', 'garlic', 'curry', 'cumin', 'paprika', 'cayenne', 'red pepper', 'chipotle', 'ghost pepper', 'scorpion', 'carolina reaper', 'thai', 'indian', 'mexican', 'korean', 'szechuan', 'fire', 'heat'],
+        'Spicy': ['hot', 'spicy', 'jalapeno', 'serrano', 'habanero', 'cayenne', 'chili', 'pepper', 'sriracha', 'tabasco', 'wasabi', 'ginger', 'garlic', 'curry', 'cumin', 'paprika', 'cayenne', 'red pepper', 'chipotle', 'ghost pepper', 'scorpion', 'carolina reaper', 'thai', 'indian', 'mexican', 'korean', 'szechuan', 'fire', 'heat'],
         'Vegetarian': ['tofu', 'tempeh', 'seitan', 'eggplant', 'mushroom', 'spinach', 'kale', 'chickpea', 'black bean', 'lentil', 'quinoa', 'rice', 'pasta', 'vegetable', 'cheese', 'egg', 'milk', 'cream', 'butter', 'plant-based', 'meatless', 'veggie', 'vegetable broth', 'nut', 'almond', 'cashew', 'walnut', 'pecan', 'avocado', 'hummus'],
         'Light & Fresh': ['lettuce', 'spinach', 'arugula', 'kale', 'cucumber', 'tomato', 'avocado', 'lemon', 'lime', 'orange', 'grapefruit', 'berry', 'melon', 'fruit', 'fresh', 'raw', 'light', 'crisp', 'citrus', 'herbs', 'mint', 'basil', 'cilantro', 'parsley', 'dill', 'chive', 'green', 'salad', 'vinaigrette', 'dressing'],
         'Rich & Decadent': ['butter', 'cream', 'cheese', 'bacon', 'truffle', 'lobster', 'filet', 'ribeye', 'pork belly', 'duck', 'foie gras', 'heavy cream', 'sour cream', 'cream cheese', 'parmesan', 'gorgonzola', 'truffle oil', 'wine', 'brandy', 'champagne', 'chocolate', 'caramel', 'butterscotch', 'dulce de leche', 'ganache', 'fondant', 'aussie'],
@@ -252,15 +259,15 @@ function detectTheme(plan) {
         'Farm to Table': ['farm', 'fresh', 'local', 'seasonal', 'organic', 'garden', 'heirloom', 'ripe', 'vine', 'tree', 'root', 'herb', 'rosemary', 'thyme', 'sage', 'oregano', 'basil', 'mint', 'dill', 'parsley', 'cilantro', 'chive', 'scallion', 'shallot', 'leek', 'radish', 'beet', 'carrot', 'turnip', 'squash', 'zucchini'],
         'Pasta & Noodles': ['pasta', 'noodle', 'spaghetti', 'penne', 'fettuccine', 'rigatoni', 'lasagna', 'macaroni', 'linguine', 'vermicelli', 'ramen', 'udon', 'soba', 'rice noodle', 'lo mein', 'pho', 'carbonara', 'alfredo', 'marinara', 'pesto', 'bolognese', 'meatball', 'clam sauce', 'pomodoro', 'aglio e olio', 'noodle', 'stir fry', 'lo mein', 'pad thai', 'yakisoba']
     };
-    
+
     // Calculate scores for each cuisine
     const scores = {};
     const totalIngredients = allIngredients.size;
-    
+
     for (const [cuisine, ingredients] of Object.entries(cuisinePatterns)) {
         let matchCount = 0;
         let weightedCount = 0;
-        
+
         for (const ingredient of allIngredients) {
             for (const pattern of ingredients) {
                 if (ingredient.includes(pattern) || pattern.includes(ingredient)) {
@@ -271,7 +278,7 @@ function detectTheme(plan) {
                 }
             }
         }
-        
+
         // Calculate score with weighting based on ingredient frequency
         if (matchCount > 0) {
             // Normalize by total ingredients and give bonus for multiple matching ingredients
@@ -282,7 +289,7 @@ function detectTheme(plan) {
             };
         }
     }
-    
+
     // Get the top matching cuisines
     const sortedCuisines = Object.entries(scores)
         .sort((a, b) => {
@@ -292,79 +299,79 @@ function detectTheme(plan) {
             return scoreB - scoreA;
         })
         .filter(([_, data]) => data.raw >= 2 || data.weighted >= 3); // Minimum threshold
-    
+
     // Determine the main theme
     let theme = null;
-    let themeIcon = '🍽️';
-    
+    let themeIcon = '\u{1F37D}\uFE0F';
+
     if (sortedCuisines.length > 0) {
         const topCuisine = sortedCuisines[0][0];
-        
+
         // Map cuisine to display name and icon
         const cuisineDisplay = {
-            'Italian': { name: '🍝 Italian Night', icon: '🍝' },
-            'Asian': { name: '🥡 Asian Fusion', icon: '🥡' },
-            'Mexican': { name: '🌮 Taco Fiesta', icon: '🌮' },
-            'Indian': { name: '🍛 Curry House', icon: '🍛' },
-            'Mediterranean': { name: '🫒 Mediterranean', icon: '🫒' },
-            'American': { name: '🍔 All-American', icon: '🍔' },
-            'Breakfast': { name: '☕ Breakfast Club', icon: '☕' },
-            'Comfort Food': { name: '🍲 Comfort Classics', icon: '🍲' },
-            'Healthy': { name: '🥗 Fresh & Healthy', icon: '🥗' },
-            'Seafood': { name: '🦐 Seafood Feast', icon: '🦐' },
-            'BBQ & Grill': { name: '🔥 BBQ & Grilling', icon: '🔥' },
-            'Soup & Stew': { name: '🥣 Soups & Stews', icon: '🥣' },
-            'Spicy': { name: '🌶️ Spicy Kick', icon: '🌶️' },
-            'Vegetarian': { name: '🥬 Meatless Meals', icon: '🥬' },
-            'Light & Fresh': { name: '💚 Light & Fresh', icon: '💚' },
-            'Rich & Decadent': { name: '✨ Rich & Decadent', icon: '✨' },
-            'Quick & Easy': { name: '⚡ Quick & Easy', icon: '⚡' },
-            'Farm to Table': { name: '🌿 Farm Fresh', icon: '🌿' },
-            'Pasta & Noodles': { name: '🍜 Pasta & Noodles', icon: '🍜' }
+            'Italian': { name: '\u{1F35D} Italian Night', icon: '\u{1F35D}' },
+            'Asian': { name: '\u{1F961} Asian Fusion', icon: '\u{1F961}' },
+            'Mexican': { name: '\u{1F32E} Taco Fiesta', icon: '\u{1F32E}' },
+            'Indian': { name: '\u{1F35B} Curry House', icon: '\u{1F35B}' },
+            'Mediterranean': { name: '\u{1FAD2} Mediterranean', icon: '\u{1FAD2}' },
+            'American': { name: '\u{1F354} All-American', icon: '\u{1F354}' },
+            'Breakfast': { name: '\u2615 Breakfast Club', icon: '\u2615' },
+            'Comfort Food': { name: '\u{1F372} Comfort Classics', icon: '\u{1F372}' },
+            'Healthy': { name: '\u{1F957} Fresh & Healthy', icon: '\u{1F957}' },
+            'Seafood': { name: '\u{1F990} Seafood Feast', icon: '\u{1F990}' },
+            'BBQ & Grill': { name: '\u{1F525} BBQ & Grilling', icon: '\u{1F525}' },
+            'Soup & Stew': { name: '\u{1F963} Soups & Stews', icon: '\u{1F963}' },
+            'Spicy': { name: '\u{1F336}\uFE0F Spicy Kick', icon: '\u{1F336}\uFE0F' },
+            'Vegetarian': { name: '\u{1F96C} Meatless Meals', icon: '\u{1F96C}' },
+            'Light & Fresh': { name: '\u{1F49A} Light & Fresh', icon: '\u{1F49A}' },
+            'Rich & Decadent': { name: '\u2728 Rich & Decadent', icon: '\u2728' },
+            'Quick & Easy': { name: '\u26A1 Quick & Easy', icon: '\u26A1' },
+            'Farm to Table': { name: '\u{1F33F} Farm Fresh', icon: '\u{1F33F}' },
+            'Pasta & Noodles': { name: '\u{1F35C} Pasta & Noodles', icon: '\u{1F35C}' }
         };
-        
-        const display = cuisineDisplay[topCuisine] || { name: topCuisine, icon: '🍽️' };
+
+        const display = cuisineDisplay[topCuisine] || { name: topCuisine, icon: '\u{1F37D}\uFE0F' };
         theme = display.name;
         themeIcon = display.icon;
-        
+
         // Check if we have a second strong match to blend themes
         if (sortedCuisines.length >= 2 && sortedCuisines[1][1].weighted >= sortedCuisines[0][1].weighted * 0.6) {
             const secondCuisine = sortedCuisines[1][0];
-            const secondDisplay = cuisineDisplay[secondCuisine] || { name: secondCuisine, icon: '🍽️' };
+            const secondDisplay = cuisineDisplay[secondCuisine] || { name: secondCuisine, icon: '\u{1F37D}\uFE0F' };
             // Create a blended theme name
             if (topCuisine === 'Healthy' && secondCuisine === 'Asian') {
-                theme = '🥗 Asian-Inspired Healthy';
-                themeIcon = '🥗';
+                theme = '\u{1F957} Asian-Inspired Healthy';
+                themeIcon = '\u{1F957}';
             } else if (topCuisine === 'Comfort Food' && secondCuisine === 'Italian') {
-                theme = '🍝 Italian Comfort';
-                themeIcon = '🍝';
+                theme = '\u{1F35D} Italian Comfort';
+                themeIcon = '\u{1F35D}';
             } else if (topCuisine === 'Seafood' && secondCuisine === 'Mediterranean') {
-                theme = '🐟 Mediterranean Seafood';
-                themeIcon = '🐟';
+                theme = '\u{1F41F} Mediterranean Seafood';
+                themeIcon = '\u{1F41F}';
             }
         }
     }
-    
+
     // Fallback: analyze by ingredient diversity and commonality
     if (!theme) {
         const uniqueIngredients = allIngredients.size;
         const avgFrequency = plan.length * (plan[0]?.ingredients?.length || 1) / uniqueIngredients;
-        
+
         if (avgFrequency > 2.5) {
-            theme = '🔄 Batch Cook Friendly';
-            themeIcon = '🔄';
+            theme = '\u{1F504} Batch Cook Friendly';
+            themeIcon = '\u{1F504}';
         } else if (uniqueIngredients < 8) {
-            theme = '🎯 Simple & Focused';
-            themeIcon = '🎯';
+            theme = '\u{1F3AF} Simple & Focused';
+            themeIcon = '\u{1F3AF}';
         } else if (uniqueIngredients > 20) {
-            theme = '🌈 Variety Pack';
-            themeIcon = '🌈';
+            theme = '\u{1F308} Variety Pack';
+            themeIcon = '\u{1F308}';
         } else {
-            theme = '🍽️ Mixed Menu';
-            themeIcon = '🍽️';
+            theme = '\u{1F37D}\uFE0F Mixed Menu';
+            themeIcon = '\u{1F37D}\uFE0F';
         }
     }
-    
+
     return { theme, icon: themeIcon };
 }
 
@@ -372,7 +379,7 @@ function detectTheme(plan) {
 function generateGroceryList() {
     const { plan } = appState;
     const groceryMap = new Map();
-    
+
     plan.forEach(recipe => {
         recipe.ingredients.forEach(ing => {
             const name = ing.name.toLowerCase();
@@ -388,7 +395,7 @@ function generateGroceryList() {
             item.mealCount++;
         });
     });
-    
+
     return Array.from(groceryMap.values())
         .sort((a, b) => a.name.localeCompare(b.name));
 }
@@ -403,11 +410,11 @@ function groceryListToText(groceryList) {
 function renderStars(pinkStar, blueStar) {
     return `
         <div class="star-group">
-            <span class="star-pink">💖</span>
+            <span class="star-pink">\u{1F496}</span>
             <span>${pinkStar}</span>
         </div>
         <div class="star-group">
-            <span class="star-blue">💙</span>
+            <span class="star-blue">\u{1F499}</span>
             <span>${blueStar}</span>
         </div>
     `;
@@ -416,10 +423,10 @@ function renderStars(pinkStar, blueStar) {
 function renderImage(imageUrl, recipeName) {
     return `
         <div class="recipe-image">
-            <img 
-                src="${imageUrl}" 
+            <img
+                src="${imageUrl}"
                 alt="${recipeName}"
-                onerror="this.parentElement.innerHTML='<div class=\\'placeholder\\'>🍽️</div>'"
+                onerror="this.parentElement.innerHTML='<div class=\\'placeholder\\'>\u{1F37D}\uFE0F</div>'"
             >
         </div>
     `;
@@ -427,7 +434,7 @@ function renderImage(imageUrl, recipeName) {
 
 function renderRecipeCard(recipe, index) {
     const isLocked = appState.locks.includes(recipe.name);
-    
+
     return `
         <div class="recipe-card ${isLocked ? 'locked' : ''}" data-index="${index}">
             ${renderImage(recipe.image, recipe.name)}
@@ -438,7 +445,7 @@ function renderRecipeCard(recipe, index) {
                 </div>
                 <div class="recipe-actions">
                     <button class="lock-btn ${isLocked ? 'locked' : 'unlocked'}" data-name="${encodeURIComponent(recipe.name)}">
-                        ${isLocked ? '🔒 Locked' : '🔓 Lock'}
+                        ${isLocked ? '\u{1F512} Locked' : '\u{1F513} Lock'}
                     </button>
                 </div>
             </div>
@@ -469,13 +476,13 @@ function renderPlan() {
 
     const { plan, meals, overlap } = appState;
     if (plan.length < meals && overlap > 0) {
-        elements.planCount.textContent = `(${plan.length} of ${meals} — overlap filtered)`;
+        elements.planCount.textContent = `(${plan.length} of ${meals} - overlap filtered)`;
     } else {
         elements.planCount.textContent = `(${plan.length} meals)`;
     }
-    
+
     elements.planList.innerHTML = appState.plan.map(renderRecipeCard).join('');
-    
+
     elements.planList.querySelectorAll('.recipe-card').forEach(card => {
         card.addEventListener('click', (e) => {
             if (e.target.closest('.lock-btn')) return;
@@ -483,7 +490,7 @@ function renderPlan() {
             openModal(appState.plan[index]);
         });
     });
-    
+
     elements.planList.querySelectorAll('.lock-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -495,12 +502,12 @@ function renderPlan() {
 
 function renderGroceryList() {
     const groceryList = generateGroceryList();
-    
+
     if (groceryList.length === 0) {
         elements.groceryList.innerHTML = '<p style="color:var(--text-secondary);text-align:center;">No ingredients needed</p>';
         return;
     }
-    
+
     elements.groceryList.innerHTML = groceryList.map(item => `
         <div class="grocery-item">
             <div class="grocery-name">${item.name}</div>
@@ -522,16 +529,16 @@ function getOverlapHintText(value) {
 
 function renderUI() {
     const { loading, error, plan, meals, seed, locks, overlap } = appState;
-    
+
     elements.loading.classList.toggle('hidden', !loading);
     elements.errorCard.classList.toggle('hidden', !error);
     elements.planSection.classList.toggle('hidden', loading || !!error);
     elements.grocerySection.classList.toggle('hidden', loading || !!error);
-    
+
     if (error) {
         elements.errorUrl.textContent = appState.src;
     }
-    
+
     elements.seedInput.value = seed;
     elements.mealsSlider.value = meals;
     elements.mealsValue.textContent = meals;
@@ -543,21 +550,22 @@ function renderUI() {
 // ========== MODAL ==========
 function openModal(recipe) {
     elements.modalTitle.textContent = recipe.name;
-    
+
     elements.modalImage.innerHTML = `
-        <img 
-            src="${recipe.image}" 
+        <img
+            src="${recipe.image}"
             alt="${recipe.name}"
-            onerror="this.parentElement.innerHTML='<div class=\\'placeholder\\'>🍽️</div>'"
+            onerror="this.parentElement.innerHTML='<div class=\\'placeholder\\'>\u{1F37D}\uFE0F</div>'"
         >
     `;
-    
+
     elements.modalStars.innerHTML = renderStars(recipe.pinkStar, recipe.blueStar);
-    
-    elements.modalIngredients.innerHTML = recipe.ingredients.map(ing => 
+    elements.modalPageLink.href = 'recipes/' + recipeSlug(recipe.name) + '.html';
+
+    elements.modalIngredients.innerHTML = recipe.ingredients.map(ing =>
         `<li><span class="amount">${ing.amount}</span> ${ing.name}</li>`
     ).join('');
-    
+
     elements.recipeModal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
 }
@@ -584,7 +592,7 @@ function showToast(message) {
 function toggleLock(recipeName) {
     const locks = [...appState.locks];
     const index = locks.indexOf(recipeName);
-    
+
     if (index !== -1) {
         locks.splice(index, 1);
     } else {
@@ -594,7 +602,7 @@ function toggleLock(recipeName) {
         }
         locks.push(recipeName);
     }
-    
+
     appState.locks = locks;
     updateHashParams(appState);
     generatePlan();
@@ -680,9 +688,9 @@ async function init() {
     appState.locks = params.locks;
     appState.loading = true;
     appState.error = null;
-    
+
     renderUI();
-    
+
     try {
         appState.recipes = await fetchRecipes(appState.src);
         appState.loading = false;

@@ -607,8 +607,18 @@ input[type="range"]::-moz-range-thumb {
     .button-row {
         flex-direction: column;
     }
-    
+
     .btn {
         width: 100%;
     }
+}
+
+.modal-link {
+    margin: 0 0 14px;
+    text-align: center;
+}
+
+.modal-link .btn {
+    display: inline-block;
+    text-decoration: none;
 }
