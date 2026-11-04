@@ -128,7 +128,7 @@
       "pepper",
       "spaghetti"
     ],
-    "image": "https://images.unsplash.com/photo-1589227365533-cee630bd59bd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    "image": "https://images.unsplash.com/photo-1589227365533-cee630bd59bd?auto=format&fit=crop&w=1200&h=800&q=80",
     "sourceStars": {
       "pink": 1,
       "blue": 1
@@ -290,7 +290,7 @@
       "sugar",
       "vanilla extract"
     ],
-    "image": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    "image": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=1200&h=800&q=80",
     "sourceStars": {
       "pink": 1,
       "blue": 1
@@ -658,7 +658,7 @@
       "tomato paste",
       "zucchini"
     ],
-    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/66707be398f15bd5272cfb67-0b9ef7d4.jpeg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/66707be398f15bd5272cfb67-0b9ef7d4.jpeg",
     "sourceStars": {
       "pink": 3,
       "blue": 3
@@ -919,7 +919,7 @@
       "stock concentrate",
       "tortilla"
     ],
-    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/646466b806d34c35d66b85f7-39c786a8.jpeg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/646466b806d34c35d66b85f7-39c786a8.jpeg",
     "sourceStars": {
       "pink": 4,
       "blue": 5
@@ -1178,7 +1178,7 @@
       "stock concentrate",
       "tortilla"
     ],
-    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/624326ad6cfe6a76cd3ae4c6-b1c92148.jpg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/624326ad6cfe6a76cd3ae4c6-b1c92148.jpg",
     "sourceStars": {
       "pink": 4,
       "blue": 5
@@ -1402,7 +1402,7 @@
       "tomato paste",
       "veggie stock concentrate"
     ],
-    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/67325af6ba08659748634749-9f208505.jpeg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/67325af6ba08659748634749-9f208505.jpeg",
     "sourceStars": {
       "pink": 5,
       "blue": 3
@@ -1907,7 +1907,7 @@
       "thyme",
       "yellow onion"
     ],
-    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/61f982bf055a054a23694946-dcaae436.jpg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/61f982bf055a054a23694946-dcaae436.jpg",
     "sourceStars": {
       "pink": 4,
       "blue": 5
@@ -2185,7 +2185,7 @@
       "tomato paste",
       "zucchini"
     ],
-    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/64b6a1078c02aa0344141137-04980adc.jpeg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/64b6a1078c02aa0344141137-04980adc.jpeg",
     "sourceStars": {
       "pink": 5,
       "blue": 3
@@ -2435,7 +2435,7 @@
       "ragu",
       "salt"
     ],
-    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/61e6fd4580a3915e2e354527-8d4001c5.jpg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/61e6fd4580a3915e2e354527-8d4001c5.jpg",
     "sourceStars": {
       "pink": 4,
       "blue": 3
@@ -2659,7 +2659,7 @@
       "tex-mex paste",
       "yellow onion"
     ],
-    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/60929fe277cc7513912c1eb1-f386ce1b.jpg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/60929fe277cc7513912c1eb1-f386ce1b.jpg",
     "sourceStars": {
       "pink": 3,
       "blue": 5
@@ -2918,7 +2918,7 @@
       "tortelloni",
       "trattoria"
     ],
-    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/6203c47ca9edd825f02b3f54-66a31f0c.jpg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/6203c47ca9edd825f02b3f54-66a31f0c.jpg",
     "sourceStars": {
       "pink": 5,
       "blue": 5
@@ -3185,7 +3185,7 @@
       "with",
       "zucchini"
     ],
-    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/6553c87a86d0f72f966fe43b-b8bd2116.jpeg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/6553c87a86d0f72f966fe43b-b8bd2116.jpeg",
     "sourceStars": {
       "pink": 3,
       "blue": 2
@@ -3448,7 +3448,7 @@
       "sour cream",
       "sriracha"
     ],
-    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/5e9dcf26ae5fdf1c8e663326-819884a9.jpg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/5e9dcf26ae5fdf1c8e663326-819884a9.jpg",
     "sourceStars": {
       "pink": 4,
       "blue": 1
@@ -3742,7 +3742,7 @@
       "soy sauce",
       "sriracha"
     ],
-    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/5ea70fe14c4efb3fb12140f1-af8fa452.jpg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/5ea70fe14c4efb3fb12140f1-af8fa452.jpg",
     "sourceStars": {
       "pink": 3,
       "blue": 1
@@ -4013,7 +4013,7 @@
       "sweet soy glaze",
       "sweet thai chili sauce"
     ],
-    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/sweet-chili-beef-green-bean-bowls-03527292.jpg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/sweet-chili-beef-green-bean-bowls-03527292.jpg",
     "sourceStars": {
       "pink": 2,
       "blue": 1
@@ -4286,7 +4286,7 @@
       "sour cream",
       "stock concentrate"
     ],
-    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/61cb23cb04b953527f52bd5a-75d9f746.jpg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/61cb23cb04b953527f52bd5a-75d9f746.jpg",
     "sourceStars": {
       "pink": 2,
       "blue": 1
@@ -4534,7 +4534,7 @@
       "tuscan heat spice",
       "zucchini"
     ],
-    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/turkey-ragu-spaghetti-9e4a7e0b.jpg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/turkey-ragu-spaghetti-9e4a7e0b.jpg",
     "sourceStars": {
       "pink": 4,
       "blue": 2
@@ -4680,7 +4680,7 @@
       "sausage",
       "stock concentrate"
     ],
-    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/677d63b0a90519950138cdf5-1c1598c6.jpeg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/677d63b0a90519950138cdf5-1c1598c6.jpeg",
     "sourceStars": {
       "pink": 3,
       "blue": 3
@@ -4930,7 +4930,7 @@
       "tomato paste",
       "zucchini"
     ],
-    "image": "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_50,w_2600/hellofresh_s3/image/645a65528287f79d14049049-3adf3746.jpg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/hellofresh_s3/image/645a65528287f79d14049049-3adf3746.jpg",
     "sourceStars": {
       "pink": 3,
       "blue": 4
@@ -5179,7 +5179,7 @@
       "tomato",
       "turkey"
     ],
-    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/686405270203e9f8dbb4c73c-73411493-8290f7cc.jpeg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/recipes/image/686405270203e9f8dbb4c73c-73411493-8290f7cc.jpeg",
     "sourceStars": {
       "pink": 3,
       "blue": 4
@@ -5437,7 +5437,7 @@
       "spinach and ricotta ravioli",
       "stock concentrate"
     ],
-    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/5db88f3a508f707ab355cde4-5ce05c01.jpg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/recipes/image/5db88f3a508f707ab355cde4-5ce05c01.jpg",
     "sourceStars": {
       "pink": 4,
       "blue": 4
@@ -5693,7 +5693,7 @@
       "tomato",
       "tuscan heat spice"
     ],
-    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/675743c5daedc2bd1295827f-f9a73627.jpeg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/recipes/image/675743c5daedc2bd1295827f-f9a73627.jpeg",
     "sourceStars": {
       "pink": 3,
       "blue": 2
@@ -5949,7 +5949,7 @@
       "shrimp",
       "stock concentrate"
     ],
-    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/68b6ccba51932a34199cfdfb-e9b5ef03-12a017d3.jpeg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/recipes/image/68b6ccba51932a34199cfdfb-e9b5ef03-12a017d3.jpeg",
     "sourceStars": {
       "pink": 4,
       "blue": 3
@@ -6228,7 +6228,7 @@
       "shrimp",
       "veggie stock concentrate"
     ],
-    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/garlicky-shrimp-couscous-bowls-518874cd.jpg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/recipes/image/garlicky-shrimp-couscous-bowls-518874cd.jpg",
     "sourceStars": {
       "pink": 5,
       "blue": 2
@@ -6414,7 +6414,7 @@
       "spinach",
       "yogurt"
     ],
-    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/67619f9cbdfa7f79d1f16a13-d487407a-79ca89c1.jpeg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/recipes/image/67619f9cbdfa7f79d1f16a13-d487407a-79ca89c1.jpeg",
     "sourceStars": {
       "pink": 0,
       "blue": 1
@@ -6638,7 +6638,7 @@
       "stock concentrate",
       "tomato"
     ],
-    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/mushroom-ravioli-in-a-tomato-cream-sauce-22a0ad00.jpg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/recipes/image/mushroom-ravioli-in-a-tomato-cream-sauce-22a0ad00.jpg",
     "sourceStars": {
       "pink": 4,
       "blue": 4
@@ -6906,7 +6906,7 @@
       "tomato",
       "yellow onion"
     ],
-    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/648888970b7af205da01b370-c4eb04a5.jpeg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/recipes/image/648888970b7af205da01b370-c4eb04a5.jpeg",
     "sourceStars": {
       "pink": 4,
       "blue": 5
@@ -7132,7 +7132,7 @@
       "shrimp",
       "smoky red pepper crema"
     ],
-    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/61952aac1e429c3c246b4c40-b1558197.jpg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/recipes/image/61952aac1e429c3c246b4c40-b1558197.jpg",
     "sourceStars": {
       "pink": 4,
       "blue": 3
@@ -7406,7 +7406,7 @@
       "veggie stock concentrate",
       "zucchini"
     ],
-    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/61670c5727bc454a694fd451-28604574-7798068e.jpg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/recipes/image/61670c5727bc454a694fd451-28604574-7798068e.jpg",
     "sourceStars": {
       "pink": 3,
       "blue": 3
@@ -7618,7 +7618,7 @@
       "with",
       "zucchini"
     ],
-    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/6203c51288dbd95f422707d7-a539cdce.jpg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/recipes/image/6203c51288dbd95f422707d7-a539cdce.jpg",
     "sourceStars": {
       "pink": 4,
       "blue": 2
@@ -7846,7 +7846,7 @@
       "white",
       "yellow onion"
     ],
-    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/651c1e478c06cbcbd9cc3849-a426b838.jpeg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/recipes/image/651c1e478c06cbcbd9cc3849-a426b838.jpeg",
     "sourceStars": {
       "pink": 4,
       "blue": 4
@@ -8162,7 +8162,7 @@
       "with",
       "zucchini"
     ],
-    "image": "https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/rigatoni-with-beef-zucchini-ragu-ada87ecd-cd3ab8e5.jpg",
+    "image": "https://img.hellofresh.com/c_fill,w_1200,h_800,f_auto,q_auto/recipes/image/rigatoni-with-beef-zucchini-ragu-ada87ecd-cd3ab8e5.jpg",
     "sourceStars": {
       "pink": 4,
       "blue": 4

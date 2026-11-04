@@ -12,6 +12,7 @@ Live site: [sampanes.github.io/dinner-planner](https://sampanes.github.io/dinner
 - `data/source/recipes.json` the human-edited recipe data (ASCII only)
 - `data/runtime/` generated runtime data, committed
 - `data/reports/validation_report.md` generated build warnings, committed
+- `data/cache/` fetched HelloFresh pages and the last ranking, ignored by git
 - `recipes/` generated recipe pages, committed
 - `scripts/` build and normalization scripts
 - `tests/` pipeline tests
@@ -41,6 +42,37 @@ Instruction layouts the build understands:
 - HelloFresh cards: a number alone on a line starts a step, the short line
   above it is the section name, `- ` lines are the sub-steps, and a trailing
   paragraph is a recipe note
+
+## Finding more recipes like the ones you liked
+
+Thirty of the recipes are HelloFresh cards, and HelloFresh publishes every
+recipe it has ever shipped (about 17,000) with the same studio photo, the
+ingredients and the steps. `find_similar.py` ranks that pool against your
+star ratings:
+
+```bash
+python scripts/find_similar.py             # ~/Downloads/dinner-planner-similar-recipes.html
+python scripts/import_hellofresh.py 3 7 12 # the card numbers you want
+python scripts/build_runtime_data.py
+python -m unittest discover -s tests
+```
+
+Each vault recipe pulls toward itself in proportion to its stars (5/5 hard,
+2.5 neutral, 0/1 pushes away). A candidate is scored by the three liked vault
+recipes it most resembles (whole ingredient names, ingredient words and dish
+words, idf-weighted cosine) minus the two disliked ones it most resembles.
+HelloFresh's internal menu variants ("[SWAP ...]", "BYOP ...", "W36 R58 ..."),
+pages with no customer rating (`--include-unrated` keeps them), dishes you
+already have, and near-identical variants of a better candidate are folded
+away. The page shows the photo, a "why" line naming the vault recipes that
+drove the match and the ingredients they share, and the HelloFresh link; the
+importer adds a card unrated, scaled from 2 to 4 servings, in the bare-number
+bullet layout the build parses. Fetched pages are cached, so after rating the
+new recipes `python scripts/find_similar.py --offline` re-ranks in a second.
+
+Every photo url in the source is rewritten by `normalize_source.py` to one
+1200x800 crop (`hellofresh.uniform_image_url`), so the vault, the recipe
+pages and the Alexa card all show the same shape.
 
 ## Recipes on Alexa+
 

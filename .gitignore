@@ -27,4 +27,7 @@ coverage/
 PROMPT_STAGING.md
 trash*
 
+# Fetched HelloFresh pages and the last find_similar.py ranking (regenerable)
+data/cache/
+
 # Never ignore: data/source/, data/runtime/, data/reports/, recipes/ (all committed)
