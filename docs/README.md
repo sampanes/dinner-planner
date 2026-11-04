@@ -23,6 +23,7 @@ The project direction is intentionally narrow:
 9. `08_Backlog_and_Open_Questions.md` — open issues and later ideas
 10. `09_Alexa_Platform_Constraints_and_Product_Decisions.md` — Alexa-specific constraints and the product decisions they imply
 11. `10_Review_Findings_2026-11.md` - review of the current code and the failed Alexa hello-world attempt
+12. `11_Alexa_Platform_Recheck_2026-11.md` - 2026-11-04 recheck: Alexa+ recipe library vs custom skill vs MCP
 
 ## Design stance
 

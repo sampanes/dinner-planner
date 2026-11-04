@@ -27,8 +27,4 @@ coverage/
 PROMPT_STAGING.md
 trash*
 
-Do not ignore:
-
-- data/source/
-- data/runtime/
-- data/reports/
+# Never ignore: data/source/, data/runtime/, data/reports/, recipes/ (all committed)
