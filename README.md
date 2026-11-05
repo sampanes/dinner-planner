@@ -30,7 +30,9 @@ Live site: [sampanes.github.io/dinner-planner](https://sampanes.github.io/dinner
    ```
 
 3. Read `data/reports/validation_report.md`. A step over 200 characters is too
-   long for one spoken turn; split it in the source.
+   long for one spoken turn. `normalize_source.py` already splits a long `- `
+   bullet at sentence ends; what remains is a single long sentence, so
+   rephrase it in the source.
 4. Commit the source, the runtime data, the report and the pages together.
 
 `python scripts/build_runtime_data.py --check` exits non-zero when any

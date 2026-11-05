@@ -18,10 +18,40 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from hellofresh import uniform_image_url  # noqa: E402
-from recipe_text import non_ascii_count, normalize_text  # noqa: E402
+from recipe_text import MAX_SPOKEN_STEP_CHARS, non_ascii_count, normalize_text  # noqa: E402
 from reformat_json import write_recipes  # noqa: E402
 
 SOURCE_PATH = Path(__file__).resolve().parent.parent / "data" / "source" / "recipes.json"
+
+SENTENCE_BREAK = re.compile(r"(?<=[.!?])\s+(?=[A-Z(\"'])")
+
+
+def split_long_bullet(line: str, limit: int = MAX_SPOKEN_STEP_CHARS) -> list[str]:
+    """One "- " bullet over the spoken limit -> several, split at sentence ends.
+
+    Sentences are packed greedily so each bullet stays under the limit; a
+    single sentence longer than the limit is left whole.
+    """
+    body = line[2:].strip()
+    if len(line) <= limit:
+        return [line]
+    chunks: list[str] = []
+    for sentence in SENTENCE_BREAK.split(body):
+        if chunks and len(chunks[-1]) + 1 + len(sentence) + 2 <= limit:
+            chunks[-1] = f"{chunks[-1]} {sentence}"
+        else:
+            chunks.append(sentence)
+    return [f"- {chunk}" for chunk in chunks]
+
+
+def split_long_bullets(text: str) -> str:
+    lines: list[str] = []
+    for line in text.split("\n"):
+        if line.startswith("- "):
+            lines.extend(split_long_bullet(line))
+        else:
+            lines.append(line)
+    return "\n".join(lines)
 
 
 def normalize_instructions(text: str) -> str:
@@ -29,7 +59,7 @@ def normalize_instructions(text: str) -> str:
     # of a line becomes a plain "- " bullet.
     text = re.sub(r"[ \t]+\u2022[ \t]+", "\n- ", text)
     text = re.sub(r"(^|\n)[ \t]*\u2022[ \t]*", r"\1- ", text)
-    return normalize_text(text)
+    return split_long_bullets(normalize_text(text))
 
 
 def normalize_recipe(recipe: dict) -> dict:

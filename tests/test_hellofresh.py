@@ -308,6 +308,25 @@ class SimilarityTests(unittest.TestCase):
         self.assertIn("Cheesy Baked Pasta with Meat Sauce <span>5/5</span>", page)
 
 
+class SplitLongBulletTests(unittest.TestCase):
+    def test_long_bullet_splits_at_sentence_ends(self):
+        first = "In a small microwave-safe bowl, combine sour cream, cream cheese, 1 tsp water (2 tsp for 4 servings), and hot sauce to taste."
+        second = "(Start with half the hot sauce, then taste and add more from there if you like things spicy.)"
+        third = "Microwave until softened, 30 seconds."
+        fourth = "Stir to combine."
+        line = f"- {first} {second} {third} {fourth}"
+        self.assertGreater(len(line), 200)
+        parts = normalize_source.split_long_bullet(line)
+        self.assertEqual(parts, [f"- {first}", f"- {second} {third} {fourth}"])
+        self.assertTrue(all(len(part) <= 200 for part in parts))
+
+    def test_short_bullets_and_other_lines_untouched(self):
+        text = "Roast Zucchini\n2\n- Toss zucchini on a baking sheet with a drizzle of oil.\n- Roast on top rack until browned and tender, 14-16 minutes.\n\n1. A plain numbered paragraph stays as it is."
+        self.assertEqual(normalize_source.split_long_bullets(text), text)
+        single = "- " + "x" * 300
+        self.assertEqual(normalize_source.split_long_bullet(single), [single], "one sentence longer than the limit is left whole")
+
+
 class SourceInvariantTests(unittest.TestCase):
     def test_source_is_normalized(self):
         recipes = json.loads(normalize_source.SOURCE_PATH.read_text(encoding="utf-8"))
