@@ -7546,6 +7546,7 @@
         "speakShort": "Assemble burgers with patties, griddled onions, and crispy fried onions. Serve with roasted potato wedges.",
         "displayText": "Assemble burgers with patties, griddled onions, and crispy fried onions. Serve with roasted potato wedges.",
         "ingredientRefs": [
+          "potatoes",
           "crispy-fried-onions"
         ],
         "timerHints": []
@@ -12001,6 +12002,7 @@
           "tomato-paste",
           "zucchini",
           "italian-seasoning",
+          "grape-tomatoes",
           "salt",
           "sugar",
           "oil"
@@ -14886,6 +14888,7 @@
         "displayText": "Divide potato wedges between plates. Fill baguettes with roasted bell peppers and beef mixture.",
         "ingredientRefs": [
           "green-bell-pepper",
+          "potatoes",
           "pepper"
         ],
         "timerHints": []
@@ -22205,6 +22208,7 @@
         "displayText": "Add tomato paste, Mexican Spice Blend, and 1 tsp salt (2 tsp for 4). Season generously with pepper. Cook, stirring, until fragrant, 1-2 minutes.",
         "ingredientRefs": [
           "tomato-paste",
+          "crushed-tomatoes",
           "long-green-pepper",
           "mexican-spice-blend",
           "salt",

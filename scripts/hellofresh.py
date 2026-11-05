@@ -31,6 +31,7 @@ from reformat_json import apply_replacements, replace_tuples  # noqa: E402
 ROOT = Path(__file__).resolve().parent.parent
 CACHE_DIR = ROOT / "data" / "cache" / "hellofresh"
 PAGES_DIR = CACHE_DIR / "pages"
+HANDOFF_PATH = ROOT / "data" / "handoff" / "next-hellofresh-recipes.md"  # committed; the last ranking, read by nothing live
 SITEMAP_URL = "https://www.hellofresh.com/sitemap_recipe_pages.xml"
 SITEMAP_PATH = CACHE_DIR / "sitemap.xml"
 SITEMAP_MAX_AGE_DAYS = 7

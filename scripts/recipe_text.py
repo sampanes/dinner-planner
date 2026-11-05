@@ -232,6 +232,8 @@ def timer_hints(text: str) -> list[dict]:
 def _singular(word: str) -> str:
     if word.endswith("ies") and len(word) > 4:
         return word[:-3] + "y"
+    if word.endswith("oes") and len(word) > 4:  # potatoes, tomatoes
+        return word[:-2]
     if word.endswith("es") and len(word) > 4 and word[-3] in "sxz":
         return word[:-2]
     if word.endswith("s") and not word.endswith("ss") and len(word) > 3:

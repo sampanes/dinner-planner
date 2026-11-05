@@ -16,6 +16,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 import find_similar  # noqa: E402
 import hellofresh as hf  # noqa: E402
+import import_hellofresh  # noqa: E402
 import normalize_source  # noqa: E402
 from recipe_text import parse_instructions  # noqa: E402
 
@@ -225,6 +226,9 @@ class SimilarityTests(unittest.TestCase):
                 "recipeIngredient": [f"1 unit {i}" for i in ingredients],
                 "aggregateRating": {"ratingValue": "4.5", "ratingCount": "100"}}
 
+    def test_tokens_singularize_o_plurals(self):
+        self.assertEqual(find_similar.tokens("crushed tomatoes and potatoes"), ["crushed", "tomato", "potato"])
+
     def test_rating_weight(self):
         self.assertEqual(find_similar.rating_weight({"pinkStar": 5, "blueStar": 5}), 1.0)
         self.assertEqual(find_similar.rating_weight({"pinkStar": 0, "blueStar": 0}), 0.0, "freshly imported, not rated yet")
@@ -307,6 +311,23 @@ class SimilarityTests(unittest.TestCase):
         self.assertIn("import_hellofresh.py 1", page)
         self.assertIn("Cheesy Baked Pasta with Meat Sauce <span>5/5</span>", page)
 
+    def test_handoff_round_trips_through_the_importer(self):
+        url = "https://www.hellofresh.com/recipes/baked-penne-" + "1" * 24
+        fetched = [({"id": "1" * 24, "url": url, "lastmod": "2025"},
+                    self.hf_recipe("Baked Penne with Sausage & Mozzarella", ["penne pasta", "italian pork sausage", "marinara sauce", "mozzarella cheese"], "1" * 24))]
+        candidates, stats = find_similar.score_candidates(self.VAULT, fetched, top=5)
+        text = find_similar.render_handoff(self.VAULT, candidates, stats, "2026-11-04 12:00")
+        self.assertIn("import_hellofresh.py --from data/handoff/next-hellofresh-recipes.md 1", text)
+        self.assertIn("| 1 | Baked Penne with Sausage", text)
+        self.assertIn(f"[page]({url})", text)
+        self.assertIn("Cheesy Baked Pasta with Meat Sauce (5/5)", text, "the why column names the vault recipe that drove the match")
+        parsed = import_hellofresh.parse_handoff(text)
+        self.assertEqual([(c["n"], c["sitemapId"], c["url"]) for c in parsed], [(1, "1" * 24, url)])
+        entry = import_hellofresh.resolve("1", parsed, hf.HANDOFF_PATH)
+        self.assertEqual((entry["id"], entry["url"]), ("1" * 24, url))
+        with self.assertRaises(SystemExit):
+            import_hellofresh.resolve("9", parsed, hf.HANDOFF_PATH)
+
 
 class SplitLongBulletTests(unittest.TestCase):
     def test_long_bullet_splits_at_sentence_ends(self):
@@ -339,6 +360,15 @@ class SourceInvariantTests(unittest.TestCase):
         self.assertTrue(hellofresh)
         for url in hellofresh:
             self.assertTrue(url.startswith(f"https://img.hellofresh.com/{hf.IMAGE_TRANSFORM}/"), url)
+
+    def test_committed_handoff_is_importable(self):
+        if not hf.HANDOFF_PATH.exists():
+            self.skipTest("no handoff file committed")
+        parsed = import_hellofresh.parse_handoff(hf.HANDOFF_PATH.read_text(encoding="utf-8"))
+        self.assertTrue(parsed)
+        self.assertEqual([candidate["n"] for candidate in parsed], list(range(1, len(parsed) + 1)), "card numbers run 1..N")
+        for candidate in parsed:
+            self.assertRegex(candidate["url"], r"^https://www\.hellofresh\.com/recipes/.*" + candidate["sitemapId"] + "$")
 
 
 if __name__ == "__main__":

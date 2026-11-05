@@ -13,6 +13,7 @@ Live site: [sampanes.github.io/dinner-planner](https://sampanes.github.io/dinner
 - `data/runtime/` generated runtime data, committed
 - `data/reports/validation_report.md` generated build warnings, committed
 - `data/cache/` fetched HelloFresh pages and the last ranking, ignored by git
+- `data/handoff/next-hellofresh-recipes.md` the next candidates to import, committed, read by nothing live
 - `recipes/` generated recipe pages, committed
 - `scripts/` build and normalization scripts
 - `tests/` pipeline tests
@@ -47,7 +48,7 @@ Instruction layouts the build understands:
 
 ## Finding more recipes like the ones you liked
 
-Thirty of the recipes are HelloFresh cards, and HelloFresh publishes every
+Most of the recipes are HelloFresh cards, and HelloFresh publishes every
 recipe it has ever shipped (about 17,000) with the same studio photo, the
 ingredients and the steps. `find_similar.py` ranks that pool against your
 star ratings:
@@ -71,6 +72,17 @@ drove the match and the ingredients they share, and the HelloFresh link; the
 importer adds a card unrated, scaled from 2 to 4 servings, in the bare-number
 bullet layout the build parses. Fetched pages are cached, so after rating the
 new recipes `python scripts/find_similar.py --offline` re-ranks in a second.
+
+The same ranking is also written to `data/handoff/next-hellofresh-recipes.md`,
+a committed markdown table that nothing on the site reads. It is the handoff
+for the next batch: on any clone, with no cache at all,
+
+```bash
+python scripts/import_hellofresh.py --from data/handoff/next-hellofresh-recipes.md 3 7 12
+```
+
+fetches those pages and adds them. Without `--from`, card numbers resolve
+against this machine's last ranking when there is one, else the handoff.
 
 Every photo url in the source is rewritten by `normalize_source.py` to one
 1200x800 crop (`hellofresh.uniform_image_url`), so the vault, the recipe

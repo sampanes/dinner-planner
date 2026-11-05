@@ -19,7 +19,10 @@ How it works
      variants of a better candidate are folded away.
   4. The top --top candidates go to one local HTML page with the photo in
      the same 1200x800 crop the site uses, a "why" line, the ingredients and
-     the import command for scripts/import_hellofresh.py.
+     the import command for scripts/import_hellofresh.py. The same ranking
+     is written as a markdown table to data/handoff/next-hellofresh-recipes.md,
+     committed so the next import is turnkey on any clone; nothing reads it
+     live.
 
 Only the network fetch is non-deterministic; with a warm cache the output is
 a pure function of the vault and the cache.
@@ -345,7 +348,7 @@ def _duration(iso: str) -> str:
     if not match or not iso:
         return ""
     hours, minutes = int(match.group(1) or 0), int(match.group(2) or 0)
-    return f"{hours * 60 + minutes} min"
+    return f"{hours * 60 + minutes} min" if hours or minutes else ""  # HelloFresh writes PT0M when the card has no time
 
 
 def render_page(vault: list[dict], candidates: list[dict], stats: dict, built: str) -> str:
@@ -457,6 +460,59 @@ python -m unittest discover -s tests</pre>
 """
 
 
+def render_handoff(vault: list[dict], candidates: list[dict], stats: dict, built: str) -> str:
+    """The committed handoff: the page's ranking as one markdown table, one row per card."""
+
+    def cell(text: object) -> str:
+        return str(text).replace("|", "/").strip()
+
+    rated = sum(1 for recipe in vault if (recipe.get("pinkStar") or 0) + (recipe.get("blueStar") or 0) > 0)
+    top_score = max((candidate["score"] for candidate in candidates), default=1.0) or 1.0
+    relative = hf.HANDOFF_PATH.relative_to(hf.ROOT).as_posix()
+    numbers = " ".join(str(candidate["n"]) for candidate in candidates[:3])
+    rows = []
+    for candidate in candidates:
+        name = candidate["name"]
+        if candidate["variants"]:
+            name += f" (+{len(candidate['variants'])} variant{'s' if len(candidate['variants']) > 1 else ''})"
+        rating = ""
+        if candidate["hfRating"]:
+            rating = f"{candidate['hfRating']:.1f}"
+            if candidate["hfRatingCount"]:
+                rating += f" ({candidate['hfRatingCount']:,})"
+        why = ""
+        if candidate["drivers"]:
+            shared = ", ".join(candidate["shared"]) or "the overall ingredient mix"
+            why = f"shares {shared} with {' and '.join(candidate['drivers'])}"
+        cells = [
+            str(candidate["n"]),
+            cell(name),
+            f"{round(100 * candidate['score'] / top_score)}%",
+            cell(rating),
+            cell(_duration(candidate["totalTime"])),
+            cell(why),
+            f"[page]({candidate['url']})",
+        ]
+        rows.append("| " + " | ".join(cells) + " |")
+    lines = [
+        "# Next HelloFresh recipes",
+        "",
+        f"Ranked {built} by `scripts/find_similar.py` against the {len(vault)} recipes in the vault "
+        f"({rated} rated), from {stats['fetched']} fetched pages. Nothing on the site reads this file; "
+        "it is the handoff for the next import. From the repo:",
+        "",
+        f"    python scripts/import_hellofresh.py --from {relative} {numbers}",
+        "    python scripts/build_runtime_data.py",
+        "    python -m unittest discover -s tests",
+        "",
+        "Rate the new ones, then `python scripts/find_similar.py --offline` rewrites this list around what you thought of them.",
+        "",
+        "| # | Recipe | Match | HelloFresh rating | Time | Why | Link |",
+        "|--:|---|--:|---|---|---|---|",
+    ]
+    return "\n".join(lines + rows) + "\n"
+
+
 # ---------------------------------------------------------------------------
 # Main
 
@@ -515,11 +571,13 @@ def main(argv: list[str]) -> int:
     built = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
     hf.CACHE_DIR.mkdir(parents=True, exist_ok=True)
     CANDIDATES_PATH.write_text(json.dumps({"built": built, "candidates": candidates}, ensure_ascii=False, indent=1), encoding="utf-8")
+    hf.HANDOFF_PATH.parent.mkdir(parents=True, exist_ok=True)
+    hf.HANDOFF_PATH.write_text(render_handoff(vault, candidates, stats, built), encoding="utf-8")
 
     out = unique_path(args.out, args.force)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(render_page(vault, candidates, stats, built), encoding="utf-8")
-    print(f"{len(candidates)} candidates -> {out}")
+    print(f"{len(candidates)} candidates -> {out} and {hf.HANDOFF_PATH.relative_to(hf.ROOT).as_posix()}")
     for candidate in candidates[:10]:
         print(f"  #{candidate['n']:<3} {candidate['score']:.3f}  {candidate['name']}")
     return 0
