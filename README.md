@@ -4,6 +4,10 @@ Live site: [sampanes.github.io/dinner-planner](https://sampanes.github.io/dinner
 
 - `index.html` - the recipe vault (browse, search by ingredient, edit in the browser)
 - `groupings.html` - the meal shuffler (seeded weekly plan plus grocery list)
+- `kitchen.html` - kitchen mode for the Echo Show 10 (Silk browser): big photo picker, one step per
+  screen in large type, Back/Next or swipe, per-step timers with an alarm, resume where you left off.
+  Open it on the Show with "Alexa, open Silk" and bookmark
+  `https://sampanes.github.io/dinner-planner/kitchen.html`.
 - `recipes/` - one static page per recipe with schema.org Recipe data, generated
 
 ## Repo layout

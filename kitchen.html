@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#111418">
+    <title>Kitchen Mode</title>
+    <link rel="stylesheet" href="kitchen.css">
+</head>
+<body>
+    <!-- Kitchen mode: large-type, touch-first view sized for an Echo Show 10
+         (1280x800, Silk browser). Reads data/runtime/recipes.runtime.json. -->
+    <header class="topbar" id="topbar">
+        <button class="top-btn" id="backBtn" type="button" hidden>&lt; Back</button>
+        <div class="top-title" id="topTitle">Kitchen</div>
+        <div class="timer-tray" id="timerTray"></div>
+        <button class="top-btn small" id="sizeBtn" type="button" title="Text size">Aa</button>
+        <div class="clock" id="clock"></div>
+    </header>
+
+    <main id="app">
+        <p class="loading">Loading recipes...</p>
+    </main>
+
+    <nav class="cookbar" id="cookbar" hidden>
+        <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="cookbar-row">
+            <button class="big-btn secondary" id="prevBtn" type="button">&lt; Back</button>
+            <button class="big-btn secondary" id="ingBtn" type="button">Ingredients</button>
+            <button class="big-btn secondary" id="readBtn" type="button" hidden>Read aloud</button>
+            <button class="big-btn primary" id="nextBtn" type="button">Next &gt;</button>
+        </div>
+    </nav>
+
+    <div class="overlay" id="ingOverlay" hidden>
+        <div class="sheet">
+            <div class="sheet-head">
+                <h2>Ingredients</h2>
+                <button class="big-btn secondary" id="ingClose" type="button">Close</button>
+            </div>
+            <ul class="ing-list" id="ingOverlayList"></ul>
+        </div>
+    </div>
+
+    <div class="overlay" id="timerOverlay" hidden>
+        <div class="sheet">
+            <div class="sheet-head">
+                <h2>Timers</h2>
+                <button class="big-btn secondary" id="timerClose" type="button">Close</button>
+            </div>
+            <div id="timerSheetList"></div>
+        </div>
+    </div>
+
+    <div class="alarm" id="alarm" hidden>
+        <div class="alarm-label">Timer done</div>
+        <div class="alarm-name" id="alarmName"></div>
+        <button class="big-btn primary huge" id="alarmDismiss" type="button">OK</button>
+    </div>
+
+    <script src="kitchen.js"></script>
+</body>
+</html>
