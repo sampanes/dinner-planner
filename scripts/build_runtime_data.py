@@ -85,7 +85,7 @@ def build_runtime_recipe(recipe: dict) -> dict:
                     "speakShort": part,
                     "displayText": part,
                     "ingredientRefs": ingredient_refs(part, ingredients),
-                    "timerHints": timer_hints(part),
+                    "timerHints": timer_hints(part, ingredients),
                 }
             )
 

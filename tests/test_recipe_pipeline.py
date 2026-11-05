@@ -115,6 +115,35 @@ class AnnotationTests(unittest.TestCase):
         refs = ingredient_refs("Toss zucchini with half the Italian Seasoning and one egg.", ingredients)
         self.assertEqual(refs, ["zucchini", "italian-seasoning", "eggs"])
 
+    def test_ingredient_refs_use_the_word_recipes_actually_write(self):
+        ingredients = [
+            {"id": "penne-pasta", "canonicalName": "penne pasta"},
+            {"id": "mozzarella-cheese", "canonicalName": "mozzarella cheese"},
+            {"id": "cream-cheese", "canonicalName": "cream cheese"},
+            {"id": "ground-beef", "canonicalName": "ground beef"},
+            {"id": "pepper", "canonicalName": "pepper"},
+            {"id": "green-bell-pepper", "canonicalName": "green bell pepper"},
+            {"id": "hot-sauce", "canonicalName": "hot sauce"},
+        ]
+        refs = ingredient_refs("Add beef and penne, then the cream cheese. Dice bell pepper.", ingredients)
+        self.assertEqual(refs, ["ground-beef", "penne-pasta", "cream-cheese", "green-bell-pepper"])
+        refs = ingredient_refs("Tear mozzarella. Season with salt and pepper until the sauce thickens.", ingredients)
+        self.assertEqual(refs, ["mozzarella-cheese", "pepper"])
+
+    def test_timer_labels_name_what_is_cooking(self):
+        ingredients = [
+            {"id": "rigatoni-pasta", "canonicalName": "rigatoni pasta"},
+            {"id": "spinach", "canonicalName": "spinach"},
+            {"id": "salt", "canonicalName": "salt"},
+        ]
+        text = ("Season with salt. Cook until rigatoni is tender, 5-6 minutes. "
+                "Add spinach. Stir until wilted, 1-2 minutes.")
+        self.assertEqual([h["label"] for h in timer_hints(text, ingredients)], ["rigatoni pasta", "spinach"])
+        self.assertNotIn("label", timer_hints(text)[0])
+        self.assertEqual(timer_hints("Bake 10 minutes.", ingredients)[0]["label"], "bake")
+        self.assertEqual(timer_hints("Cover and bake 20 min.", ingredients)[0]["label"], "bake")
+        self.assertNotIn("label", timer_hints("Stir until thick, 5 minutes.", ingredients)[0])
+
 
 class BuildTests(unittest.TestCase):
     def test_runtime_recipe_shape(self):
@@ -136,7 +165,7 @@ class BuildTests(unittest.TestCase):
         self.assertEqual(recipe["slug"], "test-pasta")
         self.assertEqual(recipe["pageUrl"], build.SITE_BASE + "recipes/test-pasta.html")
         self.assertEqual([i["text"] for i in recipe["ingredients"]], ["8 ounce pasta", "parmesan cheese, to taste", "2 zucchini"])
-        self.assertEqual(recipe["steps"][0]["timerHints"], [{"text": "9-11 minutes", "seconds": 660}])
+        self.assertEqual(recipe["steps"][0]["timerHints"], [{"text": "9-11 minutes", "seconds": 660, "label": "pasta"}])
         self.assertEqual(recipe["steps"][0]["ingredientRefs"], ["pasta"])
         self.assertEqual(recipe["steps"][1]["ingredientRefs"], ["parmesan-cheese"])
 

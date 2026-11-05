@@ -218,15 +218,54 @@ TIME_PATTERN = re.compile(
 UNIT_SECONDS = {"min": 60, "sec": 1, "hour": 3600, "hr": 3600}
 
 
-def timer_hints(text: str) -> list[dict]:
-    """Durations mentioned in a step, longest bound in seconds."""
+# Pantry items that are almost never what a timer is for.
+STAPLES = {"salt", "pepper", "oil", "olive oil", "butter", "sugar", "flour", "water"}
+
+SENTENCE_END = re.compile(r"(?<=[.!?;])\s+")
+
+
+def timer_hints(text: str, ingredients: list[dict] | None = None) -> list[dict]:
+    """Durations mentioned in a step, longest bound in seconds.
+
+    With ingredients, each hint also gets a "label" naming what the timer is
+    for: the first non-staple ingredient in the same sentence, else the
+    sentence's opening verb ("bake"). A kitchen timer called "step 4" tells
+    nobody across the room which pot to check.
+    """
     hints = []
     for match in TIME_PATTERN.finditer(text):
         unit = match.group(3).lower()
         multiplier = UNIT_SECONDS["hour"] if unit.startswith("h") else UNIT_SECONDS["sec"] if unit.startswith("s") else UNIT_SECONDS["min"]
         high = int(match.group(2) or match.group(1))
-        hints.append({"text": match.group(0), "seconds": high * multiplier})
+        hint = {"text": match.group(0), "seconds": high * multiplier}
+        if ingredients is not None:
+            label = _timer_label(text, match.start(), ingredients)
+            if label:
+                hint["label"] = label
+        hints.append(hint)
     return hints
+
+
+# Opening verbs that say on their own what the timer is for.
+TELLING_VERBS = {"bake", "roast", "broil", "simmer", "boil", "toast", "rest", "marinate", "microwave", "steam", "cool", "chill"}
+
+
+def _timer_label(text: str, position: int, ingredients: list[dict]) -> str:
+    # The sentence holding the time, then the ones before it, nearest first:
+    # "Add tomatoes. Cook, stirring, 1-2 minutes." times the tomatoes.
+    end_match = SENTENCE_END.search(text, position)
+    head = text[:end_match.start() if end_match else len(text)]
+    sentences = [s for s in SENTENCE_END.split(head) if s.strip()]
+    by_id = {i["id"]: i for i in ingredients}
+    for sentence in reversed(sentences):
+        for ingredient_id in ingredient_refs(sentence, ingredients):
+            name = by_id[ingredient_id]["canonicalName"]
+            if name not in STAPLES:
+                return name
+    # No food named: the last telling verb before the time ("cover and bake 20 min").
+    before = sentences[-1][: max(0, position - (len(head) - len(sentences[-1])))] if sentences else ""
+    verbs = [w for w in re.findall(r"[a-z]+", before.lower()) if w in TELLING_VERBS]
+    return verbs[-1] if verbs else ""
 
 
 def _singular(word: str) -> str:
@@ -241,19 +280,61 @@ def _singular(word: str) -> str:
     return word
 
 
+# Last words that only say what kind of thing the ingredient is. Recipes call
+# "penne pasta" penne and "mozzarella cheese" mozzarella, so for these the word
+# before is the one to look for; on its own "cheese" would also hit "cream cheese".
+KIND_WORDS = {"pasta", "cheese", "pepper", "peppers"}
+# Last words too generic to stand for the ingredient alone ("hot sauce" must not
+# light up on "until the sauce thickens").
+GENERIC_WORDS = {
+    "sauce", "paste", "blend", "seasoning", "spice", "mix", "base", "concentrate",
+    "dressing", "glaze", "powder", "flakes", "crema", "block", "beans", "greens",
+}
+# Words before a KIND_WORD that do not name the ingredient by themselves.
+# Proteins recipes name by the animal alone ("add chicken" for "diced chicken thighs").
+PROTEIN_WORDS = {"chicken", "beef", "pork", "turkey", "sausage", "shrimp", "salmon", "steak", "bacon"}
+VAGUE_MODIFIERS = {"cream", "fresh", "green", "red", "bell", "long", "chili", "jack", "cheese"}
+
+
+def _candidates(name: str) -> set[str]:
+    words = name.split()
+    candidates = {name, _singular(name)}
+    if len(words) < 2:
+        return candidates
+    candidates.update(w for w in words if w in PROTEIN_WORDS)
+    last = words[-1]
+    if last in KIND_WORDS:
+        candidates.add(" ".join(words[-2:]))
+        if words[-2] not in VAGUE_MODIFIERS and len(words[-2]) >= 4:
+            candidates.add(words[-2])
+    elif last not in GENERIC_WORDS and len(last) >= 4:
+        candidates.add(last)
+        candidates.add(_singular(last))
+    return {c for c in candidates if c}
+
+
 def ingredient_refs(text: str, ingredients: list[dict]) -> list[str]:
-    """Ids of ingredients mentioned in the text. Heuristic, hints only."""
+    """Ids of ingredients mentioned in the text, in the order the text names
+    them. Heuristic, hints only. A mention inside a longer mention of another
+    ingredient does not count ("pepper" inside "bell pepper")."""
     lowered = text.lower()
-    refs = []
+    hits = []  # (start, end, id)
     for ingredient in ingredients:
         name = ingredient["canonicalName"]
         if not name:
             continue
-        words = name.split()
-        candidates = {name, _singular(name)}
-        if len(words) >= 2 and len(words[-1]) >= 6:
-            candidates.add(words[-1])
-            candidates.add(_singular(words[-1]))
-        if any(re.search(r"\b" + re.escape(c) + r"s?\b", lowered) for c in candidates if c):
-            refs.append(ingredient["id"])
-    return refs
+        spans = [
+            (m.start(), m.end())
+            for c in _candidates(name)
+            for m in re.finditer(r"\b" + re.escape(c) + r"(?:s|es)?\b", lowered)
+        ]
+        hits.extend((s, e, ingredient["id"]) for s, e in spans)
+    kept = {}
+    for start, end, ingredient_id in hits:
+        inside_longer = any(
+            other != ingredient_id and s <= start and end <= e and (e - s) > (end - start)
+            for s, e, other in hits
+        )
+        if not inside_longer and (ingredient_id not in kept or start < kept[ingredient_id]):
+            kept[ingredient_id] = start
+    return sorted(kept, key=lambda i: kept[i])

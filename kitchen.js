@@ -7,7 +7,7 @@
 'use strict';
 
 const DATA_URL = 'data/runtime/recipes.runtime.json';
-const KEYS = { resume: 'kitchen.resume', timers: 'kitchen.timers', filter: 'kitchen.filter', size: 'kitchen.size' };
+const KEYS = { resume: 'kitchen.resume', timers: 'kitchen.timers', filter: 'kitchen.filter', size: 'kitchen.size', got: 'kitchen.got' };
 
 // ---------- storage (never required: private windows and previews can block it) ----------
 const store = {
@@ -58,8 +58,14 @@ const state = {
     recipe: null,
     step: 0,
     filter: store.get(KEYS.filter, 'all'),
-    got: new Map()          // slug -> Set of ingredient ids ticked off
+    // slug -> Set of ingredient ids ticked off; kept so a reload (the Show's
+    // browser drops pages it is not showing) does not untick everything.
+    got: new Map(Object.entries(store.get(KEYS.got, {})).map(([slug, ids]) => [slug, new Set(ids)]))
 };
+
+function saveGot() {
+    store.set(KEYS.got, Object.fromEntries([...state.got].filter(([, ids]) => ids.size).map(([slug, ids]) => [slug, [...ids]])));
+}
 
 function stars(r) { return (r.sourceStars && (r.sourceStars.pink || 0) + (r.sourceStars.blue || 0)) || 0; }
 function isNew(r) { return stars(r) === 0; }
@@ -143,6 +149,7 @@ function ingredientButtons(r) {
             type: 'button', class: got.has(ing.id) ? 'got' : '',
             onclick: () => {
                 if (got.has(ing.id)) got.delete(ing.id); else got.add(ing.id);
+                saveGot();
                 btn.classList.toggle('got', got.has(ing.id));
             }
         }, ing.text || `${ing.amountText} ${ing.displayName}`.trim());
@@ -178,15 +185,23 @@ function renderRecipe(r) {
 let stepEls = [];
 let scrollTimer = null;
 
-function timerLabel(step, i) { return step.section || `step ${i + 1}`; }
+// The build names what each timer is for ("penne pasta", "bake"); a section
+// title or the step number is the fallback.
+function timerLabel(step, i, hint) { return (hint && hint.label) || step.section || `step ${i + 1}`; }
+
+// "5-6 minutes" -> "5-6 min", so the button reads "Start 5-6 min timer".
+function shortTime(text) {
+    return text.replace(/\b(minutes?|mins?)\b/i, 'min').replace(/\b(seconds?|secs?)\b/i, 'sec').replace(/\b(hours?|hrs?)\b/i, 'hr');
+}
 
 // Sub-minute hints ("until fragrant, 30 seconds") are not worth a timer button.
 function usefulTimers(step) { return (step.timerHints || []).filter(t => t.seconds >= 60); }
 
 function alexaPhrase(seconds, label) {
-    const mins = Math.round(seconds / 60);
-    const amount = seconds < 60 ? `${seconds} second` : `${mins} minute`;
-    return `or say "Alexa, set a ${amount} timer for ${label.toLowerCase()}"`;
+    const n = seconds < 60 ? seconds : Math.round(seconds / 60);
+    const amount = seconds < 60 ? `${n} second` : `${n} minute`;
+    const article = /^(8|11|18)$|^8\d$/.test(String(n)) ? 'an' : 'a';
+    return `or say "Alexa, set ${article} ${amount} timer for ${label.toLowerCase()}"`;
 }
 
 function renderCook(r, startStep) {
@@ -201,7 +216,6 @@ function renderCook(r, startStep) {
 
     stepEls = r.steps.map((step, i) => {
         const uses = (step.ingredientRefs || []).map(id => byId.get(id)).filter(Boolean);
-        const label = timerLabel(step, i);
         const hints = usefulTimers(step);
         return h('section', { class: 'step', 'data-i': i },
             h('div', { class: 'step-head' },
@@ -210,9 +224,10 @@ function renderCook(r, startStep) {
             h('p', { class: 'step-text' }, step.displayText),
             uses.length ? h('div', { class: 'step-uses' }, uses.map(u => h('span', {}, u.text || u.displayName))) : null,
             hints.length ? h('div', { class: 'step-timers' },
-                hints.map(t => h('button', { class: 'big-btn primary', type: 'button', onclick: () => startTimer(label, t.seconds) },
-                    `Start ${t.text} timer`)),
-                h('span', { class: 'say' }, alexaPhrase(hints[0].seconds, label))) : null);
+                hints.map(t => h('button', { class: 'big-btn primary timer-btn', type: 'button', onclick: () => startTimer(timerLabel(step, i, t), t.seconds) },
+                    h('span', { class: 'tb-time' }, `Start ${shortTime(t.text)} timer`),
+                    h('span', { class: 'tb-label' }, timerLabel(step, i, t)))),
+                h('span', { class: 'say' }, alexaPhrase(hints[0].seconds, timerLabel(step, i, hints[0])))) : null);
     });
 
     const done = h('section', { class: 'step done-step', 'data-i': total },
@@ -328,7 +343,7 @@ function prevStep() { stopSpeaking(); goToStep(state.step - 1, true); }
 
 function finishCooking() {
     store.del(KEYS.resume);
-    if (state.recipe) state.got.delete(state.recipe.slug);
+    if (state.recipe) { state.got.delete(state.recipe.slug); saveGot(); }
     go('#/');
 }
 

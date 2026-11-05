@@ -169,6 +169,8 @@ main { padding: 20px; }
 .step-timers { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin-top: auto; }
 .step-timers .big-btn { min-height: 88px; }
 .say { font-size: 22px; color: var(--muted); }
+.step-timers .timer-btn { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; line-height: 1.1; padding-top: 10px; padding-bottom: 12px; }
+.timer-btn .tb-label { font-size: 22px; font-weight: 600; opacity: 0.75; max-width: 420px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .step.done-step { justify-content: center; align-items: center; text-align: center; }
 .step.done-step .step-text { margin-bottom: 30px; }
 
@@ -256,6 +258,7 @@ main { padding: 20px; }
 .step.tight .step-uses { gap: 6px; margin-bottom: 10px; }
 .step.tight .step-uses span { font-size: 19px; padding: 4px 12px; }
 .step.tight .step-timers .big-btn { min-height: 64px; font-size: 24px; }
+.step.tight .timer-btn .tb-label { font-size: 18px; }
 .step.tight .say { display: none; }
 
 /* Let the bottom-bar buttons shrink on narrow screens instead of overflowing. */
