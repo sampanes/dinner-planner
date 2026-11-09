@@ -7,7 +7,9 @@
 'use strict';
 
 const DATA_URL = 'data/runtime/recipes.runtime.json';
-const KEYS = { resume: 'kitchen.resume', timers: 'kitchen.timers', filter: 'kitchen.filter', size: 'kitchen.size', got: 'kitchen.got' };
+const HAVES_URL = 'data/runtime/haves.json';
+const KEYS = { resume: 'kitchen.resume', timers: 'kitchen.timers', filter: 'kitchen.filter', size: 'kitchen.size', got: 'kitchen.got',
+    kind: 'kitchen.kind', have: 'kitchen.have', shop: 'kitchen.shop' };
 
 // ---------- storage (never required: private windows and previews can block it) ----------
 const store = {
@@ -58,6 +60,8 @@ const state = {
     recipe: null,
     step: 0,
     filter: store.get(KEYS.filter, 'all'),
+    kind: store.get(KEYS.kind, null),
+    have: new Set(store.get(KEYS.have, [])),
     // slug -> Set of ingredient ids ticked off; kept so a reload (the Show's
     // browser drops pages it is not showing) does not untick everything.
     got: new Map(Object.entries(store.get(KEYS.got, {})).map(([slug, ids]) => [slug, new Set(ids)]))
@@ -67,17 +71,31 @@ function saveGot() {
     store.set(KEYS.got, Object.fromEntries([...state.got].filter(([, ids]) => ids.size).map(([slug, ids]) => [slug, [...ids]])));
 }
 
-function stars(r) { return (r.sourceStars && (r.sourceStars.pink || 0) + (r.sourceStars.blue || 0)) || 0; }
+// Ratings: what the repo says, with this device's not-yet-committed ratings on top (sync.js).
+function rating(r) { return Sync.stars(r.slug, r.sourceStars); }
+function stars(r) { const s = rating(r); return s.pink + s.blue; }
 function isNew(r) { return stars(r) === 0; }
 function isFav(r) { return stars(r) >= 8; }
 function gotSet(slug) { if (!state.got.has(slug)) state.got.set(slug, new Set()); return state.got.get(slug); }
 
 function starBadge(r) {
     if (isNew(r)) return h('span', { class: 'stars' }, 'Not rated yet');
+    const s = rating(r);
     return h('span', { class: 'stars' },
-        h('span', { class: 'p' }, String(r.sourceStars.pink || 0)), ' / ',
-        h('span', { class: 'b' }, String(r.sourceStars.blue || 0)));
+        h('span', { class: 'p' }, String(s.pink)), ' / ',
+        h('span', { class: 'b' }, String(s.blue)));
 }
+
+// "today", "3 days ago", "2 wks ago", "5 mo ago".
+function ago(iso) {
+    const days = Math.floor((Date.now() - Date.parse(iso)) / 86400e3);
+    if (days < 1) return 'today';
+    if (days < 2) return 'yesterday';
+    if (days < 14) return `${days} days ago`;
+    if (days < 60) return `${Math.round(days / 7)} wks ago`;
+    return `${Math.round(days / 30)} mo ago`;
+}
+function lastMade(r) { const hist = Sync.history(r.slug); return hist.last ? `made ${ago(hist.last)}` : ''; }
 
 // ---------- routing ----------
 function parseRoute() {
@@ -87,6 +105,8 @@ function parseRoute() {
         const n = Math.max(1, parseInt(parts[2], 10) || 1);
         return { view: 'cook', slug: parts[1], step: n - 1 };
     }
+    if (parts[0] === 'rate' && bySlug.has(parts[1])) return { view: 'rate', slug: parts[1], afterCooking: parts[2] === 'done' };
+    if (parts[0] === 'shop') return { view: 'shop' };
     return { view: 'pick' };
 }
 
@@ -100,19 +120,77 @@ function render() {
     state.recipe = route.slug ? bySlug.get(route.slug) : null;
     if (route.view === 'recipe') renderRecipe(state.recipe);
     else if (route.view === 'cook') renderCook(state.recipe, route.step);
+    else if (route.view === 'rate') renderRate(state.recipe, route.afterCooking);
+    else if (route.view === 'shop') renderShop();
     else renderPick();
 }
 
 // ---------- pick view ----------
-function renderPick() {
-    setTop('Kitchen', null);
-    const filters = [
+// Three ways to narrow the list, all by tapping: who it is for (first chip row),
+// what kind of dinner (second row: moods, then proteins), and what is already
+// in the fridge (the "What do we have?" sheet). They combine.
+function whoFilters() {
+    const people = Sync.people();
+    const anyCooked = recipes.some(r => Sync.history(r.slug).count);
+    return [
         ['all', `All (${recipes.length})`, () => true],
         ['fav', 'Favorites', isFav],
-        ['new', 'Not tried yet', isNew]
-    ];
-    const active = filters.find(f => f[0] === state.filter) || filters[0];
-    const list = recipes.filter(active[2]);
+        ['pink', `${people.pink}'s picks`, r => rating(r).pink >= 4, 'p'],
+        ['blue', `${people.blue}'s picks`, r => rating(r).blue >= 4, 'b'],
+        ['both', 'Both love it', r => rating(r).pink >= 4 && rating(r).blue >= 4],
+        ['new', 'Not tried yet', isNew],
+        anyCooked && ['while', 'Been a while', r => Sync.history(r.slug).count > 0]
+    ].filter(Boolean);
+}
+
+function kindFilters() {
+    const count = (fn) => recipes.filter(fn).length;
+    const moods = [...new Set(recipes.flatMap(r => r.tags || []))];
+    const proteins = [...new Set(recipes.flatMap(r => r.categories || []))];
+    const order = (list, by) => list.sort((a, b) => by.indexOf(a) - by.indexOf(b));
+    return [
+        ...order(moods, MOOD_ORDER).map(m => [m, r => (r.tags || []).includes(m)]),
+        ...order(proteins, PROTEIN_ORDER).map(p => [p, r => (r.categories || []).includes(p)])
+    ].filter(([, fn]) => count(fn) >= 3);
+}
+const MOOD_ORDER = ['Tex-Mex', 'Pasta', 'Cheesy', 'Creamy', 'Spicy', 'Handhelds', 'Bowls & soups', 'Asian'];
+const PROTEIN_ORDER = ['Beef', 'Chicken', 'Pork & sausage', 'Turkey', 'Seafood', 'Veggie'];
+
+function haveCount(r) { return (r.haves || []).filter(x => state.have.has(x)).length; }
+
+// The list the grid shows, in order.
+function pickList() {
+    const who = whoFilters().find(f => f[0] === state.filter) || whoFilters()[0];
+    const kind = kindFilters().find(f => f[0] === state.kind);
+    let list = recipes.filter(r => who[2](r) && (!kind || kind[1](r)));
+    if (state.have.size) list = list.filter(r => haveCount(r) > 0);
+    const byStars = (a, b) => (stars(b) - stars(a)) || a.displayName.localeCompare(b.displayName);
+    if (who[0] === 'while') return list.sort((a, b) => Sync.history(a.slug).last.localeCompare(Sync.history(b.slug).last));
+    if (state.have.size) return list.sort((a, b) => (haveCount(b) - haveCount(a)) || byStars(a, b));
+    return list.sort(byStars);
+}
+
+function tile(r, small) {
+    const meta = [starBadge(r)];
+    if (state.have.size && !small) meta.push(` - has ${haveCount(r)} of ${state.have.size}`);
+    else if (lastMade(r)) meta.push(` - ${lastMade(r)}`);
+    else meta.push(` - ${r.steps.length} steps`);
+    return h('button', { class: 'tile' + (small ? ' small' : ''), type: 'button', onclick: () => go(`#/r/${r.slug}`) },
+        h('img', { src: imageAt(r.image, 400, 267), alt: '', loading: 'lazy', decoding: 'async' }),
+        h('div', { class: 't-name' }, r.displayName),
+        h('div', { class: 't-meta' }, meta));
+}
+
+function planRecipes() {
+    const plan = Sync.plan();
+    return plan ? plan.slugs.map(s => bySlug.get(s)).filter(Boolean) : [];
+}
+
+function renderPick() {
+    setTop('Kitchen', null);
+    const who = whoFilters();
+    const activeWho = (who.find(f => f[0] === state.filter) || who[0])[0];
+    const list = pickList();
 
     const resume = store.get(KEYS.resume, null);
     const resumeRecipe = resume && bySlug.get(resume.slug);
@@ -125,20 +203,185 @@ function renderPick() {
             h('div', { class: 'r-name' }, resumeRecipe.displayName)),
         h('div', { class: 'r-go' }, 'Resume >'));
 
-    const chips = h('div', { class: 'chips' }, filters.map(([key, label]) =>
+    const planned = planRecipes();
+    const week = planned.length ? h('section', { class: 'week' },
+        h('div', { class: 'week-head' },
+            h('h2', {}, 'This week'),
+            h('button', { class: 'big-btn secondary', type: 'button', onclick: () => go('#/shop') }, 'Grocery list')),
+        h('div', { class: 'week-row' }, planned.map(r => tile(r, true)))) : null;
+
+    const actions = h('div', { class: 'pick-actions' },
+        h('button', { class: 'big-btn primary', type: 'button', onclick: openDecide }, "Can't decide?"),
+        h('button', { class: 'big-btn secondary' + (state.have.size ? ' on' : ''), type: 'button', onclick: openHave },
+            state.have.size ? `We have: ${[...state.have].join(', ')}` : 'What do we have?'),
+        state.have.size ? h('button', { class: 'big-btn secondary clear', type: 'button', onclick: () => { state.have.clear(); saveHave(); renderPick(); } }, 'Clear') : null);
+
+    const whoChips = h('div', { class: 'chips scroll' }, who.map(([key, label, , cls]) =>
         h('button', {
-            class: 'chip' + (key === active[0] ? ' on' : ''), type: 'button',
+            class: 'chip' + (key === activeWho ? ' on' : '') + (cls ? ` ${cls}` : ''), type: 'button',
             onclick: () => { state.filter = key; store.set(KEYS.filter, key); renderPick(); }
         }, label)));
 
-    const grid = h('div', { class: 'grid' }, list.map(r =>
-        h('button', { class: 'tile', type: 'button', onclick: () => go(`#/r/${r.slug}`) },
-            h('img', { src: imageAt(r.image, 400, 267), alt: '', loading: 'lazy', decoding: 'async' }),
-            h('div', { class: 't-name' }, r.displayName),
-            h('div', { class: 't-meta' }, starBadge(r), ` - ${r.steps.length} steps`))));
+    const kindChips = h('div', { class: 'chips scroll kinds' }, kindFilters().map(([label]) =>
+        h('button', {
+            class: 'chip' + (label === state.kind ? ' on' : ''), type: 'button',
+            onclick: () => { state.kind = state.kind === label ? null : label; store.set(KEYS.kind, state.kind); renderPick(); }
+        }, label)));
 
-    app.replaceChildren(resumeBtn || '', chips,
-        list.length ? grid : h('p', { class: 'empty' }, 'Nothing here yet.'));
+    const grid = h('div', { class: 'grid' }, list.map(r => tile(r, false)));
+
+    app.replaceChildren(resumeBtn || '', week || '', actions, whoChips, kindChips,
+        list.length ? grid : h('p', { class: 'empty' }, activeWho === 'while' ? 'Nothing cooked yet.' : 'Nothing matches. Tap a chip again to turn it off.'));
+}
+
+// ---------- "What do we have?" sheet ----------
+let haveCatalog = [];
+function saveHave() { store.set(KEYS.have, [...state.have]); }
+
+function openHave() { renderHave(); $('haveOverlay').hidden = false; }
+function closeHave() { $('haveOverlay').hidden = true; if (state.view === 'pick') renderPick(); }
+$('haveClose').addEventListener('click', closeHave);
+
+function renderHave() {
+    const groups = [...new Set(haveCatalog.map(x => x.group))];
+    const matches = recipes.filter(r => haveCount(r) > 0).length;
+    $('haveTitle').textContent = state.have.size ? `${matches} recipes use ${state.have.size === 1 ? 'it' : 'some of these'}` : 'Tap what you have';
+    $('haveClose').textContent = state.have.size ? `Show ${matches}` : 'Close';
+    $('haveList').replaceChildren(...groups.map(g => h('div', { class: 'have-group' },
+        h('h3', {}, g),
+        h('div', { class: 'have-grid' }, haveCatalog.filter(x => x.group === g).map(x =>
+            h('button', {
+                class: 'have' + (state.have.has(x.label) ? ' on' : ''), type: 'button',
+                onclick: () => { if (state.have.has(x.label)) state.have.delete(x.label); else state.have.add(x.label); saveHave(); renderHave(); }
+            }, x.label, h('span', { class: 'n' }, String(x.count))))))));
+}
+
+// ---------- "Can't decide?" ----------
+// Three picks from whatever the chips currently show, weighted toward favorites
+// and toward unrated recipes (so they get tried and rated), skipping anything
+// cooked in the last week.
+function decide() {
+    let pool = pickList();
+    if (pool.length < 3) pool = recipes.slice();
+    const recent = r => { const last = Sync.history(r.slug).last; return last && Date.now() - Date.parse(last) < 7 * 86400e3; };
+    if (pool.filter(r => !recent(r)).length >= 3) pool = pool.filter(r => !recent(r));
+    const weight = r => isNew(r) ? 5 : 1 + stars(r);
+    const picks = [];
+    pool = pool.slice();
+    while (picks.length < 3 && pool.length) {
+        let roll = Math.random() * pool.reduce((sum, r) => sum + weight(r), 0);
+        const i = pool.findIndex(r => (roll -= weight(r)) <= 0);
+        picks.push(pool.splice(i < 0 ? 0 : i, 1)[0]);
+    }
+    return picks;
+}
+
+function openDecide() { renderDecide(); $('decideOverlay').hidden = false; }
+function renderDecide() {
+    $('decideList').replaceChildren(...decide().map(r => {
+        const t = tile(r, false);
+        t.addEventListener('click', () => { $('decideOverlay').hidden = true; });
+        return t;
+    }));
+}
+$('decideAgain').addEventListener('click', renderDecide);
+$('decideClose').addEventListener('click', () => { $('decideOverlay').hidden = true; });
+
+// ---------- rate view ----------
+function renderRate(r, afterCooking) {
+    setTop(r.displayName, afterCooking ? null : `#/r/${r.slug}`);
+    const people = Sync.people();
+    const chosen = { ...rating(r) };
+    const rows = ['pink', 'blue'].map(who => {
+        const btns = [1, 2, 3, 4, 5].map(n => h('button', {
+            class: 'star-btn', type: 'button', 'aria-label': `${n} stars`,
+            onclick: () => { chosen[who] = chosen[who] === n ? 0 : n; paint(); }
+        }, '★'));
+        const paint = () => btns.forEach((b, i) => b.classList.toggle('on', i < chosen[who]));
+        paint();
+        return h('div', { class: `rate-row ${who === 'pink' ? 'p' : 'b'}` }, h('div', { class: 'rate-who' }, people[who]), h('div', { class: 'rate-stars' }, btns));
+    });
+    const before = rating(r);
+    const save = () => {
+        for (const who of ['pink', 'blue']) {
+            if (chosen[who] !== before[who]) Sync.queue({ k: 'rate', slug: r.slug, who, stars: chosen[who] });
+        }
+        go(afterCooking ? '#/' : `#/r/${r.slug}`);
+    };
+    app.replaceChildren(h('div', { class: 'rate' },
+        h('img', { src: imageAt(r.image, 600, 400), alt: '' }),
+        h('div', { class: 'rate-main' },
+            h('h1', {}, afterCooking ? 'How was it?' : 'Rate it'),
+            h('p', { class: 'rate-hint' }, 'Tap a star. Tap it again to clear.'),
+            rows,
+            h('div', { class: 'rate-actions' },
+                h('button', { class: 'big-btn primary', type: 'button', onclick: save }, 'Save'),
+                h('button', { class: 'big-btn secondary', type: 'button', onclick: () => go(afterCooking ? '#/' : `#/r/${r.slug}`) }, afterCooking ? 'Skip' : 'Cancel')))));
+}
+
+// ---------- grocery list for this week's plan ----------
+const PANTRY = new Set(['salt', 'pepper', 'oil', 'olive oil', 'butter', 'sugar', 'flour', 'water']);
+
+// "20 ounce" + "10 ounce" + "1 1/2 cup" -> "30 ounce + 1 1/2 cup"; "2 unit" -> "2".
+function parseAmount(text) {
+    // "1 1/2 cup", "2/3 cup", "1.5 cup", "20 ounce"
+    const m = /^(?:(\d+)\/(\d+)|(\d+(?:\.\d+)?)(?:\s+(\d+)\/(\d+))?)\s*(.*)$/.exec(text.trim());
+    if (!m) return null;
+    const n = m[1] ? m[1] / m[2] : parseFloat(m[3]) + (m[4] ? m[4] / m[5] : 0);
+    return { n, unit: m[6].replace(/^units?$/i, '').trim() };
+}
+function fmtAmount(n) {
+    const whole = Math.floor(n + 1e-9);
+    const frac = n - whole;
+    const parts = [[0, ''], [1 / 4, '1/4'], [1 / 3, '1/3'], [1 / 2, '1/2'], [2 / 3, '2/3'], [3 / 4, '3/4'], [1, '']];
+    const [value, label] = parts.reduce((best, p) => Math.abs(p[0] - frac) < Math.abs(best[0] - frac) ? p : best);
+    const w = whole + (value === 1 ? 1 : 0);
+    return [w || (label ? '' : '0'), label].filter(Boolean).join(' ');
+}
+function totalAmounts(texts) {
+    const sums = new Map();
+    const loose = [];
+    for (const t of texts) {
+        const a = parseAmount(t);
+        if (!a) { loose.push(t); continue; }
+        sums.set(a.unit, (sums.get(a.unit) || 0) + a.n);
+    }
+    return [...[...sums].map(([unit, n]) => `${fmtAmount(n)} ${unit}`.trim()), ...loose].join(' + ');
+}
+
+function renderShop() {
+    setTop('Grocery list', '#/');
+    const plan = Sync.plan();
+    const planned = planRecipes();
+    if (!planned.length) { app.replaceChildren(h('p', { class: 'empty' }, 'No plan yet. Make one in the meal shuffler and tap "Send to kitchen".')); return; }
+    const items = new Map();
+    for (const r of planned) for (const ing of r.ingredients) {
+        const key = ing.canonicalName || ing.id;
+        if (!items.has(key)) items.set(key, { key, name: ing.displayName, amounts: [], meals: 0 });
+        const item = items.get(key);
+        if (ing.amountText && !/^to taste$/i.test(ing.amountText)) item.amounts.push(ing.amountText);
+        item.meals++;
+    }
+    const saved = store.get(KEYS.shop, {});
+    const checked = new Set(saved.plan === plan.id ? saved.checked : []);
+    const row = (item) => {
+        const btn = h('button', {
+            class: 'shop-item' + (checked.has(item.key) ? ' got' : ''), type: 'button',
+            onclick: () => {
+                if (checked.has(item.key)) checked.delete(item.key); else checked.add(item.key);
+                store.set(KEYS.shop, { plan: plan.id, checked: [...checked] });
+                btn.classList.toggle('got', checked.has(item.key));
+            }
+        }, h('span', { class: 's-name' }, item.name),
+            h('span', { class: 's-amt' }, [totalAmounts(item.amounts), item.meals > 1 ? ` (${item.meals} meals)` : ''].join('')));
+        return h('li', {}, btn);
+    };
+    const all = [...items.values()].sort((a, b) => a.name.localeCompare(b.name));
+    app.replaceChildren(h('div', { class: 'shop' },
+        h('p', { class: 'ing-hint' }, `${planned.length} meals: ${planned.map(r => r.displayName).join(', ')}. Tap each item as it goes in the cart.`),
+        h('ul', { class: 'ing-list shop-list' }, all.filter(i => !PANTRY.has(i.key)).map(row)),
+        h('h2', {}, 'Probably in the pantry'),
+        h('ul', { class: 'ing-list shop-list' }, all.filter(i => PANTRY.has(i.key)).map(row))));
 }
 
 // ---------- recipe view ----------
@@ -157,6 +400,11 @@ function ingredientButtons(r) {
     });
 }
 
+function madeLine(r) {
+    const hist = Sync.history(r.slug);
+    return hist.count ? h('div', { class: 'meta made' }, `Made ${hist.count === 1 ? 'once' : `${hist.count} times`}, last ${ago(hist.last)}`) : null;
+}
+
 function renderRecipe(r) {
     setTop(r.displayName, '#/');
     const resume = store.get(KEYS.resume, null);
@@ -166,13 +414,15 @@ function renderRecipe(r) {
         canResume && h('button', { class: 'big-btn primary', type: 'button', onclick: () => go(`#/cook/${r.slug}/${resume.step + 1}`) },
             `Resume at step ${resume.step + 1}`),
         h('button', { class: 'big-btn ' + (canResume ? 'secondary' : 'primary'), type: 'button', onclick: () => go(`#/cook/${r.slug}/1`) },
-            canResume ? 'Start over' : 'Start cooking'));
+            canResume ? 'Start over' : 'Start cooking'),
+        h('button', { class: 'big-btn secondary', type: 'button', onclick: () => go(`#/rate/${r.slug}`) }, isNew(r) ? 'Rate it' : 'Change rating'));
 
     app.replaceChildren(h('div', { class: 'recipe' },
         h('div', { class: 'recipe-hero' },
             h('img', { src: imageAt(r.image, 600, 400), alt: '' }),
             h('h1', {}, r.displayName),
             h('div', { class: 'meta' }, starBadge(r), ` - ${r.ingredients.length} ingredients, ${r.steps.length} steps`),
+            madeLine(r),
             actions),
         h('div', { class: 'recipe-side' },
             h('h2', {}, 'Ingredients'),
@@ -341,10 +591,14 @@ function nextStep() {
 }
 function prevStep() { stopSpeaking(); goToStep(state.step - 1, true); }
 
+// Finishing logs the dinner (for "made 2 wks ago" and "Been a while") and asks for a rating.
 function finishCooking() {
     store.del(KEYS.resume);
-    if (state.recipe) { state.got.delete(state.recipe.slug); saveGot(); }
-    go('#/');
+    const r = state.recipe;
+    if (!r) { go('#/'); return; }
+    state.got.delete(r.slug); saveGot();
+    Sync.queue({ k: 'cooked', slug: r.slug });
+    go(`#/rate/${r.slug}/done`);
 }
 
 $('nextBtn').addEventListener('click', nextStep);
@@ -517,9 +771,13 @@ async function init() {
         const res = await fetch(DATA_URL);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
-        recipes = data.filter(r => r.steps && r.steps.length)
-            .sort((a, b) => (stars(b) - stars(a)) || a.displayName.localeCompare(b.displayName));
+        recipes = data.filter(r => r.steps && r.steps.length);
         recipes.forEach(r => bySlug.set(r.slug, r));
+        const [catalog] = await Promise.all([
+            fetch(HAVES_URL).then(res => res.ok ? res.json() : []).catch(() => []),
+            Sync.load(Object.fromEntries(recipes.map(r => [r.slug, r.displayName])))
+        ]);
+        haveCatalog = catalog;
     } catch (e) {
         app.replaceChildren(h('p', { class: 'error' }, `Could not load recipes (${e.message}).`));
         return;

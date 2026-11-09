@@ -667,6 +667,17 @@ function updateOverlap(value) {
     renderGroceryList();
 }
 
+// Makes this plan the "This week" row and grocery list in kitchen mode on every
+// device (sync.js sends it; scripts/pull_changes.py commits it).
+let syncLoaded = null;
+async function sendPlanToKitchen() {
+    if (!appState.plan.length) return;
+    if (!syncLoaded) syncLoaded = Sync.load(Object.fromEntries(appState.recipes.map(r => [recipeSlug(r.name), r.name])));
+    await syncLoaded;
+    Sync.queue({ k: 'plan', slugs: appState.plan.map(r => recipeSlug(r.name)) });
+    showToast('Sent to kitchen mode');
+}
+
 async function copyLink() {
     try {
         await navigator.clipboard.writeText(window.location.href);
@@ -724,6 +735,7 @@ async function init() {
 elements.shuffleBtn.addEventListener('click', shuffleNewSeed);
 elements.resetBtn.addEventListener('click', resetAll);
 elements.copyLinkBtn.addEventListener('click', copyLink);
+document.getElementById('sendPlanBtn').addEventListener('click', sendPlanToKitchen);
 elements.retryBtn.addEventListener('click', init);
 elements.closeModalBtn.addEventListener('click', closeModal);
 elements.copyGroceryBtn.addEventListener('click', copyGroceryList);

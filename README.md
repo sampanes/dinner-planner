@@ -4,10 +4,12 @@ Live site: [sampanes.github.io/dinner-planner](https://sampanes.github.io/dinner
 
 - `index.html` - the recipe vault (browse, search by ingredient, edit in the browser)
 - `groupings.html` - the meal shuffler (seeded weekly plan plus grocery list)
-- `kitchen.html` - kitchen mode for the Echo Show 10 (Silk browser): big photo picker, one step per
-  screen in large type, Back/Next or swipe, per-step timers with an alarm, resume where you left off.
-  Open it on the Show with "Alexa, open Silk" and bookmark
-  `https://sampanes.github.io/dinner-planner/kitchen.html`.
+- `kitchen.html` - kitchen mode for the Echo Show 10 (Silk browser) and phones, all by tapping: big photo
+  picker with "Can't decide?", "What do we have?" (pick ingredients, recipes sort by how many they use),
+  who-likes-it and mood/protein chips; one step per screen in large type, Back/Next or swipe, per-step
+  timers with an alarm, resume where you left off; rate it when you finish; this week's plan and a
+  tap-off grocery list. Open it on the Show with "Alexa, open Silk" and bookmark
+  `https://sampanes.github.io/dinner-planner/kitchen.html`; on a phone, "Add to Home screen".
 - `recipes/` - one static page per recipe with schema.org Recipe data, generated
 
 ## Repo layout
@@ -22,6 +24,21 @@ Live site: [sampanes.github.io/dinner-planner](https://sampanes.github.io/dinner
 - `scripts/` build and normalization scripts
 - `tests/` pipeline tests
 - `clients/alexa/` reserved for a custom Alexa skill (shelved, see `docs/11_Alexa_Platform_Recheck_2026-11.md`)
+
+## Kitchen sync (ratings, "we cooked this", the week's plan)
+
+The site is static, so nothing a device does can write to the repo directly. Instead:
+
+1. A device queues the change in its own storage and shows it at once.
+2. It sends the change as a push message to the ntfy.sh topic in `data/source/kitchen.json`
+   (install the ntfy app and subscribe to that topic to get a notification for every rating).
+3. `.github/workflows/sync.yml` runs `scripts/pull_changes.py` every hour: it reads the topic, writes
+   ratings into `data/source/recipes.json` and cooked dinners and the plan into `data/source/log.json`,
+   rebuilds and commits. Pages redeploys and every device sees it.
+4. ntfy.sh keeps messages about 12 hours; a device re-sends anything not yet committed every few hours.
+
+Sync by hand: `python scripts/pull_changes.py` (or "Run workflow" on the Actions tab). The names on the
+pink and blue stars live in `data/source/kitchen.json` under `people`.
 
 ## Editing recipes
 

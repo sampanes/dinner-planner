@@ -267,3 +267,118 @@ main { padding: 20px; }
     .cookbar-row { gap: 8px; padding: 10px; }
     .cookbar-row .big-btn { font-size: 19px; padding: 0 6px; }
 }
+
+/* ---------- pick view: plan, actions, chip rows ---------- */
+.week { margin-bottom: 20px; }
+.week-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 12px; }
+.week-head h2 { font-size: 30px; margin: 0; }
+.week-head .big-btn { min-height: 64px; font-size: 24px; }
+.week-row { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 6px; scroll-snap-type: x proximity; }
+.tile.small { flex: 0 0 230px; scroll-snap-align: start; }
+.tile.small .t-name { font-size: 20px; min-height: 0; padding: 8px 12px 2px; }
+.tile.small .t-meta { font-size: 17px; padding: 0 12px 10px; }
+
+.pick-actions { display: flex; gap: 14px; margin-bottom: 16px; }
+.pick-actions .big-btn { min-height: 80px; font-size: 28px; }
+.pick-actions .big-btn.secondary { flex: 1; min-width: 0; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pick-actions .big-btn.secondary.on { background: var(--text); color: var(--bg); }
+.pick-actions .big-btn.clear { flex: 0 0 auto; text-align: center; }
+
+.chips.scroll { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 6px; margin-bottom: 12px; scrollbar-width: none; }
+.chips.scroll::-webkit-scrollbar { display: none; }
+.chips.scroll .chip { flex: 0 0 auto; white-space: nowrap; }
+.chips.kinds .chip { min-height: 60px; font-size: 23px; }
+.chip.p { border-color: var(--pink); }
+.chip.b { border-color: var(--blue); }
+.chip.p.on { background: var(--pink); border-color: var(--pink); color: #1a0710; }
+.chip.b.on { background: var(--blue); border-color: var(--blue); color: #06121f; }
+
+/* ---------- "What do we have?" and "Can't decide?" sheets ---------- */
+.sheet-btns { display: flex; gap: 12px; }
+.have-group h3 { font-size: 24px; color: var(--muted); margin: 16px 0 10px; text-transform: uppercase; letter-spacing: 1px; }
+.have-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.have {
+    min-height: 76px; padding: 8px 14px; text-align: left;
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    font-size: 24px; font-weight: 600; line-height: 1.15;
+    background: var(--surface); border: 3px solid var(--surface-2); border-radius: 14px;
+}
+.have .n { font-size: 18px; color: var(--muted); font-weight: 500; }
+.have.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.have.on .n { color: var(--accent-ink); }
+.decide-grid { grid-template-columns: repeat(3, 1fr); }
+
+/* ---------- rate view ---------- */
+.rate { display: grid; grid-template-columns: 440px 1fr; gap: 36px; align-items: start; }
+.rate img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: var(--radius); background: var(--surface-2); }
+.rate h1 { font-size: 48px; margin: 0 0 6px; }
+.rate-hint { font-size: 22px; color: var(--muted); margin: 0 0 18px; }
+.rate-row { display: flex; align-items: center; gap: 20px; margin-bottom: 14px; }
+.rate-who { font-size: 34px; font-weight: 800; min-width: 130px; }
+.rate-row.p .rate-who { color: var(--pink); }
+.rate-row.b .rate-who { color: var(--blue); }
+.rate-stars { display: flex; gap: 8px; }
+.star-btn {
+    width: 96px; height: 96px; font-size: 64px; line-height: 1;
+    background: var(--surface); border: none; border-radius: 16px; color: var(--surface-2);
+}
+.rate-row.p .star-btn.on { color: var(--pink); }
+.rate-row.b .star-btn.on { color: var(--blue); }
+.rate-actions { display: flex; gap: 14px; margin-top: 24px; }
+.rate-actions .big-btn { flex: 1; }
+.meta.made { margin-top: -10px; }
+
+/* ---------- grocery list ---------- */
+.shop h2 { font-size: 28px; color: var(--muted); margin: 28px 0 10px; }
+.shop-item { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.shop-item .s-name { font-weight: 700; }
+.shop-item .s-amt { font-size: 20px; color: var(--muted); }
+.ing-list button.got .s-amt { text-decoration: line-through; }
+
+.wide-only { display: inline; }
+
+@media (max-width: 1000px) {
+    .have-grid { grid-template-columns: repeat(3, 1fr); }
+    .rate { grid-template-columns: 1fr; }
+    .rate img { max-height: 220px; }
+}
+@media (max-width: 600px) {
+    .wide-only { display: none; }
+    .cookbar-row #prevBtn { flex: 0.6; }
+    .week-head h2 { font-size: 24px; }
+    .week-head .big-btn { min-height: 52px; font-size: 19px; padding: 0 16px; }
+    .tile.small { flex-basis: 170px; }
+    .tile.small .t-name { font-size: 16px; }
+    .tile.small .t-meta { font-size: 14px; }
+    .pick-actions { gap: 10px; flex-wrap: wrap; }
+    .pick-actions .big-btn { min-height: 64px; font-size: 20px; padding: 0 16px; }
+    .pick-actions .big-btn.primary { flex: 1; }
+    .chips.scroll { flex-wrap: nowrap; margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; }
+    .chips.kinds .chip { min-height: 50px; font-size: 18px; }
+    .overlay { padding: 10px; }
+    .sheet { padding: 16px; }
+    .sheet-head h2 { font-size: 24px; }
+    .sheet-head .big-btn { min-height: 60px; font-size: 20px; padding: 0 16px; }
+    .have-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .have { min-height: 60px; font-size: 19px; }
+    .have-group h3 { font-size: 17px; margin: 12px 0 8px; }
+    .decide-grid { grid-template-columns: 1fr; }
+    .decide-grid .tile img { aspect-ratio: 2 / 1; }
+    .rate h1 { font-size: 34px; }
+    .rate-row { flex-direction: column; align-items: flex-start; gap: 6px; }
+    .rate-who { font-size: 26px; }
+    .star-btn { width: 60px; height: 60px; font-size: 42px; border-radius: 12px; }
+    .shop-item .s-amt { font-size: 16px; }
+}
+
+/* A tile is a button, and buttons center their content vertically: pin it to the
+   top so photos line up across a row whatever the title length. */
+.tile { display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; }
+.sheet-head .big-btn { white-space: nowrap; }
+@media (max-width: 600px) {
+    .cookbar-row #ingBtn { flex: 1.5; font-size: 17px; }
+    .cookbar-row #readBtn { font-size: 17px; }
+    .cookbar-row #nextBtn { flex: 1.5; }
+    .pick-actions .big-btn.secondary { white-space: normal; line-height: 1.15; text-align: center; }
+    .decide-grid .tile img { aspect-ratio: 5 / 2; }
+}

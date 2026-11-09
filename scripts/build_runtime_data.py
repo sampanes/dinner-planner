@@ -28,6 +28,7 @@ from recipe_text import (  # noqa: E402
     slugify,
     timer_hints,
 )
+from recipe_tags import haves, haves_catalog, moods, proteins  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 SOURCE_PATH = ROOT / "data" / "source" / "recipes.json"
@@ -99,8 +100,9 @@ def build_runtime_recipe(recipe: dict) -> dict:
         "slug": slug,
         "pageUrl": f"{SITE_BASE}recipes/{slug}.html",
         "aliases": [recipe_name.lower()] if recipe_name else [],
-        "categories": [],
-        "tags": [],
+        "categories": proteins(recipe_name, ingredients),
+        "tags": moods(recipe_name, ingredients),
+        "haves": haves(ingredients),
         "ingredients": ingredients,
         "steps": runtime_steps,
         "notes": notes,
@@ -441,6 +443,7 @@ def build_outputs(source_recipes: list[dict]) -> dict[Path, str]:
         RUNTIME_DIR / "recipes.runtime.json": dump(runtime_recipes),
         RUNTIME_DIR / "aliases.index.json": dump(alias_index),
         RUNTIME_DIR / "ingredients.index.json": dump(ingredient_index),
+        RUNTIME_DIR / "haves.json": dump(haves_catalog(runtime_recipes)),
         REPORTS_DIR / "validation_report.md": build_validation_report(source_recipes, runtime_recipes, alias_index),
         PAGES_DIR / "recipe.css": RECIPE_CSS,
         PAGES_DIR / "index.html": render_index_page(runtime_recipes),

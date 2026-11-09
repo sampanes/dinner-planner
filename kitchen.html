@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#111418">
     <title>Kitchen Mode</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Kitchen">
+    <link rel="manifest" href="kitchen.webmanifest">
+    <link rel="icon" href="icons/kitchen-192.png">
+    <link rel="apple-touch-icon" href="icons/kitchen-180.png">
     <link rel="stylesheet" href="kitchen.css">
 </head>
 <body>
@@ -25,9 +31,9 @@
     <nav class="cookbar" id="cookbar" hidden>
         <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
         <div class="cookbar-row">
-            <button class="big-btn secondary" id="prevBtn" type="button">&lt; Back</button>
+            <button class="big-btn secondary" id="prevBtn" type="button">&lt;<span class="wide-only"> Back</span></button>
             <button class="big-btn secondary" id="ingBtn" type="button">Ingredients</button>
-            <button class="big-btn secondary" id="readBtn" type="button" hidden>Read aloud</button>
+            <button class="big-btn secondary" id="readBtn" type="button" hidden>Read<span class="wide-only"> aloud</span></button>
             <button class="big-btn primary" id="nextBtn" type="button">Next &gt;</button>
         </div>
     </nav>
@@ -52,12 +58,36 @@
         </div>
     </div>
 
+    <div class="overlay" id="haveOverlay" hidden>
+        <div class="sheet">
+            <div class="sheet-head">
+                <h2 id="haveTitle">Tap what you have</h2>
+                <button class="big-btn primary" id="haveClose" type="button">Close</button>
+            </div>
+            <div id="haveList"></div>
+        </div>
+    </div>
+
+    <div class="overlay" id="decideOverlay" hidden>
+        <div class="sheet">
+            <div class="sheet-head">
+                <h2>How about these?</h2>
+                <div class="sheet-btns">
+                    <button class="big-btn primary" id="decideAgain" type="button">Shuffle</button>
+                    <button class="big-btn secondary" id="decideClose" type="button">Close</button>
+                </div>
+            </div>
+            <div class="grid decide-grid" id="decideList"></div>
+        </div>
+    </div>
+
     <div class="alarm" id="alarm" hidden>
         <div class="alarm-label">Timer done</div>
         <div class="alarm-name" id="alarmName"></div>
         <button class="big-btn primary huge" id="alarmDismiss" type="button">OK</button>
     </div>
 
+    <script src="sync.js"></script>
     <script src="kitchen.js"></script>
 </body>
 </html>

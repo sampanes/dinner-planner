@@ -8,8 +8,20 @@
     "aliases": [
       "pork sausage cavatappi bolognese"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Pork & sausage"
+    ],
+    "tags": [
+      "Pasta"
+    ],
+    "haves": [
+      "sausage",
+      "zucchini",
+      "onion",
+      "sour cream",
+      "parmesan",
+      "pasta"
+    ],
     "ingredients": [
       {
         "id": "zucchini",
@@ -406,8 +418,24 @@
     "aliases": [
       "one-pan cheesy chicken tortilla melts"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Chicken"
+    ],
+    "tags": [
+      "Tex-Mex",
+      "Cheesy",
+      "Creamy",
+      "Spicy",
+      "Handhelds"
+    ],
+    "haves": [
+      "chicken",
+      "peppers",
+      "sour cream",
+      "cream cheese",
+      "cheddar",
+      "tortillas"
+    ],
     "ingredients": [
       {
         "id": "long-green-pepper",
@@ -671,8 +699,24 @@
     "aliases": [
       "one-pan cheesy beef tortilla melts"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Tex-Mex",
+      "Cheesy",
+      "Creamy",
+      "Spicy",
+      "Handhelds"
+    ],
+    "haves": [
+      "ground beef",
+      "peppers",
+      "sour cream",
+      "cream cheese",
+      "cheddar",
+      "tortillas"
+    ],
     "ingredients": [
       {
         "id": "ground-beef",
@@ -935,8 +979,20 @@
     "aliases": [
       "one pot spicy rigatoni alla rossa"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Veggie"
+    ],
+    "tags": [
+      "Pasta",
+      "Creamy",
+      "Spicy"
+    ],
+    "haves": [
+      "spinach",
+      "cream cheese",
+      "mozzarella",
+      "pasta"
+    ],
     "ingredients": [
       {
         "id": "tomato-paste",
@@ -1163,8 +1219,19 @@
     "aliases": [
       "cheesy baked pasta with meat sauce"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Pasta",
+      "Cheesy"
+    ],
+    "haves": [
+      "ground beef",
+      "mozzarella",
+      "pasta",
+      "marinara"
+    ],
     "ingredients": [
       {
         "id": "penne-pasta",
@@ -1355,8 +1422,18 @@
     "aliases": [
       "pub-style shepherd's pie"
     ],
-    "categories": [],
+    "categories": [
+      "Beef"
+    ],
     "tags": [],
+    "haves": [
+      "ground beef",
+      "onion",
+      "potatoes",
+      "carrots",
+      "sour cream",
+      "cheddar"
+    ],
     "ingredients": [
       {
         "id": "potatoes",
@@ -1688,8 +1765,20 @@
     "aliases": [
       "beef & zucchini baked penne"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Pasta"
+    ],
+    "haves": [
+      "ground beef",
+      "zucchini",
+      "mozzarella",
+      "ricotta",
+      "pasta",
+      "marinara"
+    ],
     "ingredients": [
       {
         "id": "zucchini",
@@ -1980,8 +2069,21 @@
     "aliases": [
       "cavatappi beef ragu"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Pasta",
+      "Creamy"
+    ],
+    "haves": [
+      "ground beef",
+      "carrots",
+      "cream cheese",
+      "parmesan",
+      "pasta",
+      "marinara"
+    ],
     "ingredients": [
       {
         "id": "carrot",
@@ -2235,8 +2337,22 @@
     "aliases": [
       "beef flautas supreme"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Tex-Mex",
+      "Handhelds"
+    ],
+    "haves": [
+      "ground beef",
+      "onion",
+      "tomatoes",
+      "lime",
+      "sour cream",
+      "mexican cheese",
+      "tortillas"
+    ],
     "ingredients": [
       {
         "id": "yellow-onion",
@@ -2467,8 +2583,21 @@
     "aliases": [
       "one-pan trattoria tortelloni bake"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Veggie"
+    ],
+    "tags": [
+      "Pasta",
+      "Cheesy",
+      "Creamy"
+    ],
+    "haves": [
+      "tomatoes",
+      "cream cheese",
+      "parmesan",
+      "pasta",
+      "panko"
+    ],
     "ingredients": [
       {
         "id": "garlic",
@@ -2731,8 +2860,21 @@
     "aliases": [
       "chicken thyme with zucchini couscous"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Chicken"
+    ],
+    "tags": [
+      "Creamy"
+    ],
+    "haves": [
+      "chicken",
+      "zucchini",
+      "tomatoes",
+      "lemon",
+      "scallions",
+      "cream cheese",
+      "couscous"
+    ],
     "ingredients": [
       {
         "id": "zucchini",
@@ -3000,8 +3142,21 @@
     "aliases": [
       "beef bulgogi meatballs"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Spicy",
+      "Asian"
+    ],
+    "haves": [
+      "ground beef",
+      "carrots",
+      "scallions",
+      "sour cream",
+      "rice",
+      "panko"
+    ],
     "ingredients": [
       {
         "id": "carrot",
@@ -3269,8 +3424,21 @@
     "aliases": [
       "firecracker meatballs"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Spicy",
+      "Asian"
+    ],
+    "haves": [
+      "ground beef",
+      "green beans",
+      "scallions",
+      "sour cream",
+      "rice",
+      "panko"
+    ],
     "ingredients": [
       {
         "id": "scallions",
@@ -3567,8 +3735,20 @@
     "aliases": [
       "sweet chili beef & green bean bowls"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Bowls & soups",
+      "Asian"
+    ],
+    "haves": [
+      "ground beef",
+      "green beans",
+      "lime",
+      "cilantro",
+      "rice"
+    ],
     "ingredients": [
       {
         "id": "jasmine-rice",
@@ -3848,8 +4028,21 @@
     "aliases": [
       "mozzarella & herb chicken"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Chicken"
+    ],
+    "tags": [
+      "Cheesy"
+    ],
+    "haves": [
+      "chicken",
+      "carrots",
+      "lemon",
+      "sour cream",
+      "mozzarella",
+      "couscous",
+      "panko"
+    ],
     "ingredients": [
       {
         "id": "lemon",
@@ -4128,8 +4321,22 @@
     "aliases": [
       "turkey ragu spaghetti"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Turkey"
+    ],
+    "tags": [
+      "Pasta",
+      "Creamy"
+    ],
+    "haves": [
+      "ground turkey",
+      "zucchini",
+      "sour cream",
+      "cream cheese",
+      "parmesan",
+      "pasta",
+      "marinara"
+    ],
     "ingredients": [
       {
         "id": "zucchini",
@@ -4380,8 +4587,17 @@
     "aliases": [
       "italian sausage rigatoni"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Pork & sausage"
+    ],
+    "tags": [
+      "Pasta"
+    ],
+    "haves": [
+      "sausage",
+      "parmesan",
+      "pasta"
+    ],
     "ingredients": [
       {
         "id": "romesco-sauce",
@@ -4531,8 +4747,20 @@
     "aliases": [
       "pork sausage rigatoni rosa"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Pork & sausage"
+    ],
+    "tags": [
+      "Pasta",
+      "Creamy"
+    ],
+    "haves": [
+      "sausage",
+      "zucchini",
+      "cream cheese",
+      "parmesan",
+      "pasta"
+    ],
     "ingredients": [
       {
         "id": "rigatoni-pasta",
@@ -4785,8 +5013,23 @@
     "aliases": [
       "turkey & queso nacho crunch burritos"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Turkey"
+    ],
+    "tags": [
+      "Tex-Mex",
+      "Cheesy",
+      "Handhelds"
+    ],
+    "haves": [
+      "ground turkey",
+      "tomatoes",
+      "lime",
+      "scallions",
+      "tortillas",
+      "rice",
+      "tortilla chips"
+    ],
     "ingredients": [
       {
         "id": "flour-tortillas",
@@ -5041,8 +5284,23 @@
     "aliases": [
       "chicken sausage and spinach ravioli"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Chicken",
+      "Pork & sausage"
+    ],
+    "tags": [
+      "Pasta"
+    ],
+    "haves": [
+      "sausage",
+      "tomatoes",
+      "spinach",
+      "lemon",
+      "scallions",
+      "sour cream",
+      "ricotta",
+      "pasta"
+    ],
     "ingredients": [
       {
         "id": "scallions",
@@ -5305,8 +5563,22 @@
     "aliases": [
       "creamy chicken & bacon spaghetti"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Chicken",
+      "Pork & sausage"
+    ],
+    "tags": [
+      "Pasta",
+      "Creamy"
+    ],
+    "haves": [
+      "chicken",
+      "bacon",
+      "tomatoes",
+      "cream cheese",
+      "parmesan",
+      "pasta"
+    ],
     "ingredients": [
       {
         "id": "tomato",
@@ -5570,8 +5842,20 @@
     "aliases": [
       "garlic butter shrimp scampi"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Seafood"
+    ],
+    "tags": [
+      "Pasta",
+      "Creamy"
+    ],
+    "haves": [
+      "shrimp",
+      "broccoli",
+      "lemon",
+      "parmesan",
+      "pasta"
+    ],
     "ingredients": [
       {
         "id": "stock-concentrate",
@@ -5833,8 +6117,18 @@
     "aliases": [
       "garlicky shrimp couscous bowls"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Seafood"
+    ],
+    "tags": [
+      "Bowls & soups"
+    ],
+    "haves": [
+      "shrimp",
+      "broccoli",
+      "lemon",
+      "couscous"
+    ],
     "ingredients": [
       {
         "id": "broccoli",
@@ -6114,8 +6408,16 @@
     "aliases": [
       "lemony chicken & grains spinach salad"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Chicken"
+    ],
+    "tags": [
+      "Bowls & soups"
+    ],
+    "haves": [
+      "chicken",
+      "spinach"
+    ],
     "ingredients": [
       {
         "id": "feta-cheese",
@@ -6306,8 +6608,21 @@
     "aliases": [
       "mushroom ravioli in a tomato cream sauce"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Veggie"
+    ],
+    "tags": [
+      "Pasta",
+      "Creamy"
+    ],
+    "haves": [
+      "tomatoes",
+      "mushrooms",
+      "cream cheese",
+      "ricotta",
+      "pasta",
+      "marinara"
+    ],
     "ingredients": [
       {
         "id": "grape-tomatoes",
@@ -6534,8 +6849,23 @@
     "aliases": [
       "one-pan baja chicken quesadillas"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Chicken"
+    ],
+    "tags": [
+      "Tex-Mex",
+      "Spicy",
+      "Handhelds"
+    ],
+    "haves": [
+      "chicken",
+      "onion",
+      "tomatoes",
+      "lime",
+      "sour cream",
+      "mexican cheese",
+      "tortillas"
+    ],
     "ingredients": [
       {
         "id": "yellow-onion",
@@ -6810,8 +7140,20 @@
     "aliases": [
       "one-pan cantina shrimp fajitas"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Seafood"
+    ],
+    "tags": [
+      "Tex-Mex",
+      "Spicy"
+    ],
+    "haves": [
+      "shrimp",
+      "onion",
+      "peppers",
+      "lime",
+      "tortillas"
+    ],
     "ingredients": [
       {
         "id": "poblano-pepper",
@@ -7043,8 +7385,19 @@
     "aliases": [
       "salmon in a creamy dijon chive sauce"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Seafood"
+    ],
+    "tags": [
+      "Creamy"
+    ],
+    "haves": [
+      "salmon",
+      "zucchini",
+      "potatoes",
+      "lemon",
+      "sour cream"
+    ],
     "ingredients": [
       {
         "id": "veggie-stock-concentrate",
@@ -7321,8 +7674,19 @@
     "aliases": [
       "shrimp spaghetti with a kick"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Seafood"
+    ],
+    "tags": [
+      "Pasta",
+      "Spicy"
+    ],
+    "haves": [
+      "shrimp",
+      "zucchini",
+      "parmesan",
+      "pasta"
+    ],
     "ingredients": [
       {
         "id": "spaghetti",
@@ -7538,8 +7902,20 @@
     "aliases": [
       "white cheddar crunch burgers"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Cheesy",
+      "Handhelds"
+    ],
+    "haves": [
+      "ground beef",
+      "onion",
+      "potatoes",
+      "cheddar",
+      "bread & buns"
+    ],
     "ingredients": [
       {
         "id": "potatoes",
@@ -7778,8 +8154,20 @@
     "aliases": [
       "rigatoni with beef & zucchini ragu"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Pasta",
+      "Creamy"
+    ],
+    "haves": [
+      "ground beef",
+      "zucchini",
+      "cream cheese",
+      "parmesan",
+      "pasta"
+    ],
     "ingredients": [
       {
         "id": "rigatoni-pasta",
@@ -8105,8 +8493,24 @@
     "aliases": [
       "one-pan cheesy turkey tortilla melts"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Turkey"
+    ],
+    "tags": [
+      "Tex-Mex",
+      "Cheesy",
+      "Creamy",
+      "Spicy",
+      "Handhelds"
+    ],
+    "haves": [
+      "ground turkey",
+      "peppers",
+      "sour cream",
+      "cream cheese",
+      "cheddar",
+      "tortillas"
+    ],
     "ingredients": [
       {
         "id": "flour-tortillas",
@@ -8468,8 +8872,20 @@
     "aliases": [
       "penne with beef & zucchini ragu"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Pasta",
+      "Creamy"
+    ],
+    "haves": [
+      "ground beef",
+      "zucchini",
+      "cream cheese",
+      "parmesan",
+      "pasta"
+    ],
     "ingredients": [
       {
         "id": "penne-pasta",
@@ -8883,8 +9299,24 @@
     "aliases": [
       "southwest beef nacho bar"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Tex-Mex",
+      "Creamy"
+    ],
+    "haves": [
+      "ground beef",
+      "onion",
+      "peppers",
+      "tomatoes",
+      "lime",
+      "sour cream",
+      "cream cheese",
+      "mexican cheese",
+      "tortillas"
+    ],
     "ingredients": [
       {
         "id": "flour-tortillas",
@@ -9388,8 +9820,20 @@
     "aliases": [
       "beef rigatoni rosa"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Pasta",
+      "Creamy"
+    ],
+    "haves": [
+      "ground beef",
+      "zucchini",
+      "cream cheese",
+      "parmesan",
+      "pasta"
+    ],
     "ingredients": [
       {
         "id": "rigatoni-pasta",
@@ -9752,8 +10196,19 @@
     "aliases": [
       "beef & mushroom shepherd's pie"
     ],
-    "categories": [],
+    "categories": [
+      "Beef"
+    ],
     "tags": [],
+    "haves": [
+      "ground beef",
+      "onion",
+      "mushrooms",
+      "potatoes",
+      "carrots",
+      "sour cream",
+      "cheddar"
+    ],
     "ingredients": [
       {
         "id": "potatoes",
@@ -10303,8 +10758,21 @@
     "aliases": [
       "one-pan beef tortelloni bake"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Pasta",
+      "Creamy"
+    ],
+    "haves": [
+      "ground beef",
+      "tomatoes",
+      "cream cheese",
+      "parmesan",
+      "pasta",
+      "panko"
+    ],
     "ingredients": [
       {
         "id": "tortelloni",
@@ -10701,8 +11169,22 @@
     "aliases": [
       "southwest beef cavatappi"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Tex-Mex",
+      "Pasta",
+      "Spicy"
+    ],
+    "haves": [
+      "ground beef",
+      "peppers",
+      "scallions",
+      "sour cream",
+      "mexican cheese",
+      "pasta"
+    ],
     "ingredients": [
       {
         "id": "long-green-pepper",
@@ -11127,8 +11609,23 @@
     "aliases": [
       "lone star poblano mac & cheese"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Veggie"
+    ],
+    "tags": [
+      "Tex-Mex",
+      "Pasta",
+      "Cheesy",
+      "Creamy"
+    ],
+    "haves": [
+      "peppers",
+      "tomatoes",
+      "cream cheese",
+      "mexican cheese",
+      "pasta",
+      "panko"
+    ],
     "ingredients": [
       {
         "id": "poblano-pepper",
@@ -11545,8 +12042,23 @@
     "aliases": [
       "zucchini cheddar tortilla melts"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Veggie"
+    ],
+    "tags": [
+      "Tex-Mex",
+      "Cheesy",
+      "Handhelds"
+    ],
+    "haves": [
+      "zucchini",
+      "onion",
+      "lemon",
+      "sour cream",
+      "cheddar",
+      "mexican cheese",
+      "tortillas"
+    ],
     "ingredients": [
       {
         "id": "flour-tortillas",
@@ -11988,8 +12500,22 @@
     "aliases": [
       "zucchini pomodoro & beef penne bake"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Pasta"
+    ],
+    "haves": [
+      "ground beef",
+      "zucchini",
+      "onion",
+      "tomatoes",
+      "mozzarella",
+      "ricotta",
+      "pasta",
+      "marinara"
+    ],
     "ingredients": [
       {
         "id": "veggie-stock-concentrate",
@@ -12423,8 +12949,23 @@
     "aliases": [
       "one-pan baja organic beef quesadillas"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Tex-Mex",
+      "Spicy",
+      "Handhelds"
+    ],
+    "haves": [
+      "ground beef",
+      "onion",
+      "tomatoes",
+      "lime",
+      "sour cream",
+      "mexican cheese",
+      "tortillas"
+    ],
     "ingredients": [
       {
         "id": "flour-tortillas",
@@ -12804,8 +13345,22 @@
     "aliases": [
       "one-pan ground beef skillet fajitas"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Tex-Mex",
+      "Spicy"
+    ],
+    "haves": [
+      "ground beef",
+      "onion",
+      "peppers",
+      "lime",
+      "sour cream",
+      "mexican cheese",
+      "tortillas"
+    ],
     "ingredients": [
       {
         "id": "green-bell-pepper",
@@ -13112,8 +13667,26 @@
     "aliases": [
       "beef & cheese tostadas"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Tex-Mex",
+      "Cheesy",
+      "Spicy",
+      "Handhelds"
+    ],
+    "haves": [
+      "ground beef",
+      "onion",
+      "peppers",
+      "tomatoes",
+      "lime",
+      "cilantro",
+      "sour cream",
+      "mexican cheese",
+      "tortillas"
+    ],
     "ingredients": [
       {
         "id": "green-bell-pepper",
@@ -13516,8 +14089,23 @@
     "aliases": [
       "beef ragu pasta bar"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Pasta",
+      "Creamy"
+    ],
+    "haves": [
+      "ground beef",
+      "zucchini",
+      "carrots",
+      "broccoli",
+      "lemon",
+      "parmesan",
+      "pasta",
+      "marinara"
+    ],
     "ingredients": [
       {
         "id": "carrot",
@@ -13996,8 +14584,23 @@
     "aliases": [
       "melty mozzarella, beef & zucchini penne bake"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Pasta",
+      "Cheesy",
+      "Handhelds"
+    ],
+    "haves": [
+      "ground beef",
+      "zucchini",
+      "mozzarella",
+      "parmesan",
+      "ricotta",
+      "pasta",
+      "marinara"
+    ],
     "ingredients": [
       {
         "id": "marinara-sauce",
@@ -14522,8 +15125,20 @@
     "aliases": [
       "creamy tomato penne & beef meatballs"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Pasta",
+      "Creamy"
+    ],
+    "haves": [
+      "ground beef",
+      "tomatoes",
+      "parmesan",
+      "pasta",
+      "panko"
+    ],
     "ingredients": [
       {
         "id": "sun-dried-tomato-paste",
@@ -14851,8 +15466,23 @@
     "aliases": [
       "philly-style beef melts"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Cheesy",
+      "Spicy",
+      "Handhelds"
+    ],
+    "haves": [
+      "ground beef",
+      "onion",
+      "peppers",
+      "potatoes",
+      "sour cream",
+      "cheddar",
+      "mexican cheese"
+    ],
     "ingredients": [
       {
         "id": "green-bell-pepper",
@@ -15252,8 +15882,19 @@
     "aliases": [
       "beef ragu zucchini \"lasagna\""
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Cheesy"
+    ],
+    "haves": [
+      "ground beef",
+      "zucchini",
+      "onion",
+      "parmesan",
+      "ricotta"
+    ],
     "ingredients": [
       {
         "id": "yellow-onion",
@@ -15670,8 +16311,22 @@
     "aliases": [
       "creamy tomato sirloin steak & mushroom ravioli"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Pasta",
+      "Creamy"
+    ],
+    "haves": [
+      "steak",
+      "tomatoes",
+      "mushrooms",
+      "cream cheese",
+      "ricotta",
+      "pasta",
+      "marinara"
+    ],
     "ingredients": [
       {
         "id": "marinara-sauce",
@@ -16025,8 +16680,21 @@
     "aliases": [
       "italian beef melts"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Cheesy",
+      "Spicy",
+      "Handhelds"
+    ],
+    "haves": [
+      "ground beef",
+      "onion",
+      "peppers",
+      "potatoes",
+      "mozzarella"
+    ],
     "ingredients": [
       {
         "id": "potatoes",
@@ -16477,8 +17145,23 @@
     "aliases": [
       "tex-mex beef enchilada bowls"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Tex-Mex",
+      "Bowls & soups"
+    ],
+    "haves": [
+      "ground beef",
+      "onion",
+      "peppers",
+      "tomatoes",
+      "lime",
+      "sour cream",
+      "mexican cheese",
+      "rice"
+    ],
     "ingredients": [
       {
         "id": "yellow-onion",
@@ -16934,8 +17617,22 @@
     "aliases": [
       "cheesy beef & mushroom stromboli"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Cheesy",
+      "Handhelds"
+    ],
+    "haves": [
+      "ground beef",
+      "mushrooms",
+      "spinach",
+      "mozzarella",
+      "parmesan",
+      "bread & buns",
+      "marinara"
+    ],
     "ingredients": [
       {
         "id": "spinach",
@@ -17353,8 +18050,22 @@
     "aliases": [
       "galactic beef melts"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Tex-Mex",
+      "Cheesy",
+      "Spicy",
+      "Handhelds"
+    ],
+    "haves": [
+      "ground beef",
+      "onion",
+      "peppers",
+      "mexican cheese",
+      "tortilla chips"
+    ],
     "ingredients": [
       {
         "id": "fry-seasoning",
@@ -17701,8 +18412,22 @@
     "aliases": [
       "cheesy black bean tortilla crunch skillet"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Veggie"
+    ],
+    "tags": [
+      "Tex-Mex",
+      "Cheesy",
+      "Spicy"
+    ],
+    "haves": [
+      "peppers",
+      "lime",
+      "sour cream",
+      "mexican cheese",
+      "black beans",
+      "tortilla chips"
+    ],
     "ingredients": [
       {
         "id": "sour-cream",
@@ -18051,8 +18776,23 @@
     "aliases": [
       "pork chili 'n' cheese stuffed poblanos"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Pork & sausage"
+    ],
+    "tags": [
+      "Tex-Mex",
+      "Cheesy",
+      "Spicy",
+      "Bowls & soups"
+    ],
+    "haves": [
+      "onion",
+      "peppers",
+      "tomatoes",
+      "lime",
+      "cheddar",
+      "black beans"
+    ],
     "ingredients": [
       {
         "id": "poblano-pepper",
@@ -18454,8 +19194,21 @@
     "aliases": [
       "italian chicken sausage gluten-free fusilli rosa"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Chicken",
+      "Pork & sausage"
+    ],
+    "tags": [
+      "Pasta",
+      "Creamy"
+    ],
+    "haves": [
+      "sausage",
+      "zucchini",
+      "cream cheese",
+      "parmesan",
+      "pasta"
+    ],
     "ingredients": [
       {
         "id": "italian-chicken-sausage-mix",
@@ -18824,8 +19577,21 @@
     "aliases": [
       "creamy lemon-basil beef rigatoni"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Pasta",
+      "Creamy"
+    ],
+    "haves": [
+      "ground beef",
+      "zucchini",
+      "lemon",
+      "scallions",
+      "cream cheese",
+      "pasta"
+    ],
     "ingredients": [
       {
         "id": "rigatoni-pasta",
@@ -19144,8 +19910,24 @@
     "aliases": [
       "creamy dreamy cheese tortelloni bake"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Veggie"
+    ],
+    "tags": [
+      "Pasta",
+      "Cheesy",
+      "Creamy",
+      "Spicy"
+    ],
+    "haves": [
+      "zucchini",
+      "lemon",
+      "scallions",
+      "cream cheese",
+      "parmesan",
+      "pasta",
+      "panko"
+    ],
     "ingredients": [
       {
         "id": "tortelloni",
@@ -19573,8 +20355,23 @@
     "aliases": [
       "shrimp wrap with cucumber tomato salad"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Seafood"
+    ],
+    "tags": [
+      "Tex-Mex",
+      "Spicy",
+      "Handhelds",
+      "Bowls & soups"
+    ],
+    "haves": [
+      "shrimp",
+      "tomatoes",
+      "potatoes",
+      "cucumber",
+      "sour cream",
+      "tortillas"
+    ],
     "ingredients": [
       {
         "id": "tomato",
@@ -19944,8 +20741,21 @@
     "aliases": [
       "family-style creamy chicken pasta bake"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Chicken"
+    ],
+    "tags": [
+      "Pasta",
+      "Creamy"
+    ],
+    "haves": [
+      "chicken",
+      "onion",
+      "broccoli",
+      "cream cheese",
+      "cheddar",
+      "pasta"
+    ],
     "ingredients": [
       {
         "id": "chopped-chicken-breast",
@@ -20350,8 +21160,25 @@
     "aliases": [
       "spicy beef taco rigatoni"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Tex-Mex",
+      "Pasta",
+      "Creamy",
+      "Spicy"
+    ],
+    "haves": [
+      "ground beef",
+      "tomatoes",
+      "lime",
+      "cilantro",
+      "sour cream",
+      "cream cheese",
+      "mexican cheese",
+      "pasta"
+    ],
     "ingredients": [
       {
         "id": "rigatoni-pasta",
@@ -20679,8 +21506,27 @@
     "aliases": [
       "chili-lime turkey & cheesy rice burritos"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Turkey"
+    ],
+    "tags": [
+      "Tex-Mex",
+      "Cheesy",
+      "Creamy",
+      "Handhelds",
+      "Bowls & soups"
+    ],
+    "haves": [
+      "ground turkey",
+      "peppers",
+      "tomatoes",
+      "lime",
+      "scallions",
+      "cream cheese",
+      "mexican cheese",
+      "tortillas",
+      "rice"
+    ],
     "ingredients": [
       {
         "id": "flour-tortillas",
@@ -21132,8 +21978,19 @@
     "aliases": [
       "chicken penne in a parmesan cream sauce"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Chicken"
+    ],
+    "tags": [
+      "Pasta",
+      "Cheesy",
+      "Creamy"
+    ],
+    "haves": [
+      "chicken",
+      "parmesan",
+      "pasta"
+    ],
     "ingredients": [
       {
         "id": "parmesan-cheese",
@@ -21497,8 +22354,20 @@
     "aliases": [
       "zucchini & tomato calzones"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Veggie"
+    ],
+    "tags": [
+      "Handhelds"
+    ],
+    "haves": [
+      "zucchini",
+      "tomatoes",
+      "lemon",
+      "ricotta",
+      "bread & buns",
+      "marinara"
+    ],
     "ingredients": [
       {
         "id": "zucchini",
@@ -21924,8 +22793,22 @@
     "aliases": [
       "ricotta tomato ravioli"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Veggie"
+    ],
+    "tags": [
+      "Pasta",
+      "Creamy"
+    ],
+    "haves": [
+      "zucchini",
+      "lemon",
+      "cream cheese",
+      "ricotta",
+      "pasta",
+      "marinara",
+      "panko"
+    ],
     "ingredients": [
       {
         "id": "zucchini",
@@ -22360,8 +23243,23 @@
     "aliases": [
       "beef chili bar"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Tex-Mex",
+      "Bowls & soups"
+    ],
+    "haves": [
+      "ground beef",
+      "onion",
+      "peppers",
+      "scallions",
+      "sour cream",
+      "cheddar",
+      "rice",
+      "tortilla chips"
+    ],
     "ingredients": [
       {
         "id": "sour-cream",
@@ -22756,8 +23654,23 @@
     "aliases": [
       "beef & black bean chili"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Tex-Mex",
+      "Spicy",
+      "Bowls & soups"
+    ],
+    "haves": [
+      "ground beef",
+      "onion",
+      "potatoes",
+      "scallions",
+      "sour cream",
+      "cheddar",
+      "black beans"
+    ],
     "ingredients": [
       {
         "id": "onion",
@@ -23167,8 +24080,17 @@
     "aliases": [
       "italian beef stuffed peppers"
     ],
-    "categories": [],
+    "categories": [
+      "Beef"
+    ],
     "tags": [],
+    "haves": [
+      "ground beef",
+      "onion",
+      "peppers",
+      "mozzarella",
+      "couscous"
+    ],
     "ingredients": [
       {
         "id": "bell-pepper",
@@ -23654,8 +24576,19 @@
     "aliases": [
       "one-pot italian beef & tomato soup"
     ],
-    "categories": [],
-    "tags": [],
+    "categories": [
+      "Beef"
+    ],
+    "tags": [
+      "Bowls & soups"
+    ],
+    "haves": [
+      "ground beef",
+      "onion",
+      "carrots",
+      "parmesan",
+      "couscous"
+    ],
     "ingredients": [
       {
         "id": "yellow-onion",

@@ -1,0 +1,177 @@
+[
+  {
+    "label": "ground beef",
+    "group": "Protein",
+    "count": 36
+  },
+  {
+    "label": "chicken",
+    "group": "Protein",
+    "count": 8
+  },
+  {
+    "label": "ground turkey",
+    "group": "Protein",
+    "count": 4
+  },
+  {
+    "label": "sausage",
+    "group": "Protein",
+    "count": 5
+  },
+  {
+    "label": "shrimp",
+    "group": "Protein",
+    "count": 5
+  },
+  {
+    "label": "zucchini",
+    "group": "Produce",
+    "count": 20
+  },
+  {
+    "label": "onion",
+    "group": "Produce",
+    "count": 24
+  },
+  {
+    "label": "peppers",
+    "group": "Produce",
+    "count": 18
+  },
+  {
+    "label": "tomatoes",
+    "group": "Produce",
+    "count": 22
+  },
+  {
+    "label": "mushrooms",
+    "group": "Produce",
+    "count": 4
+  },
+  {
+    "label": "spinach",
+    "group": "Produce",
+    "count": 4
+  },
+  {
+    "label": "potatoes",
+    "group": "Produce",
+    "count": 8
+  },
+  {
+    "label": "carrots",
+    "group": "Produce",
+    "count": 7
+  },
+  {
+    "label": "broccoli",
+    "group": "Produce",
+    "count": 4
+  },
+  {
+    "label": "green beans",
+    "group": "Produce",
+    "count": 2
+  },
+  {
+    "label": "lime",
+    "group": "Produce",
+    "count": 14
+  },
+  {
+    "label": "lemon",
+    "group": "Produce",
+    "count": 12
+  },
+  {
+    "label": "scallions",
+    "group": "Produce",
+    "count": 11
+  },
+  {
+    "label": "cilantro",
+    "group": "Produce",
+    "count": 3
+  },
+  {
+    "label": "sour cream",
+    "group": "Dairy",
+    "count": 27
+  },
+  {
+    "label": "cream cheese",
+    "group": "Dairy",
+    "count": 25
+  },
+  {
+    "label": "mozzarella",
+    "group": "Dairy",
+    "count": 9
+  },
+  {
+    "label": "cheddar",
+    "group": "Dairy",
+    "count": 12
+  },
+  {
+    "label": "parmesan",
+    "group": "Dairy",
+    "count": 22
+  },
+  {
+    "label": "mexican cheese",
+    "group": "Dairy",
+    "count": 15
+  },
+  {
+    "label": "ricotta",
+    "group": "Dairy",
+    "count": 9
+  },
+  {
+    "label": "tortillas",
+    "group": "Pantry",
+    "count": 14
+  },
+  {
+    "label": "pasta",
+    "group": "Pantry",
+    "count": 32
+  },
+  {
+    "label": "rice",
+    "group": "Pantry",
+    "count": 7
+  },
+  {
+    "label": "couscous",
+    "group": "Pantry",
+    "count": 5
+  },
+  {
+    "label": "bread & buns",
+    "group": "Pantry",
+    "count": 3
+  },
+  {
+    "label": "marinara",
+    "group": "Pantry",
+    "count": 12
+  },
+  {
+    "label": "black beans",
+    "group": "Pantry",
+    "count": 3
+  },
+  {
+    "label": "tortilla chips",
+    "group": "Pantry",
+    "count": 4
+  },
+  {
+    "label": "panko",
+    "group": "Pantry",
+    "count": 9
+  }
+]

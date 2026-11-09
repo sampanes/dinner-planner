@@ -1,0 +1,41 @@
+# Folds changes made in kitchen mode (ratings, "we cooked this", the week's plan)
+# into data/source/*.json and rebuilds, so every device sees them after the
+# Pages deploy. Devices send changes to ntfy.sh (sync.js); ntfy.sh keeps them
+# about 12 hours and devices re-send anything not yet committed, so hourly is
+# plenty. Run it by hand from the Actions tab ("Run workflow") to sync now.
+name: Sync kitchen changes
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Pull changes from ntfy.sh
+        run: python scripts/pull_changes.py
+      - name: Check the build
+        run: |
+          python scripts/build_runtime_data.py --check
+          python -m unittest discover -s tests
+      - name: Commit if anything changed
+        run: |
+          if git diff --quiet; then echo "No changes."; exit 0; fi
+          git config user.name "dinner-sync"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data recipes
+          git commit -m "Sync kitchen changes (ratings, cooked, plan)"
+          git push
