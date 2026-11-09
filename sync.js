@@ -10,6 +10,9 @@
 const Sync = (() => {
     const KEY = 'dp.pending';
     const RESEND_MS = 4 * 3600e3;
+    // A change the repo never shows (the sync script refused it, say for a wrong
+    // clock) stops being re-sent after this many deliveries, about three days.
+    const MAX_SENDS = 18;
     let config = { ntfyTopic: '', people: { pink: 'Pink', blue: 'Blue' } };
     let log = { plan: null, cooked: [], rated: {} };
     let names = {};
@@ -60,19 +63,22 @@ const Sync = (() => {
     async function send(ev) {
         if (!config.ntfyTopic) return;
         const [title, body] = headline(ev);
-        const { sentAt, ...payload } = ev;
+        const { sentAt, sends, ...payload } = ev;
         // A plain-text POST with the title as a query parameter is a "simple"
         // request: no CORS preflight, which keeps old browsers (the Show's Silk) happy.
         const url = `https://ntfy.sh/${encodeURIComponent(config.ntfyTopic)}?title=${encodeURIComponent(title)}&tags=plate_with_cutlery`;
         try {
             const res = await fetch(url, { method: 'POST', body: `${body}\n\ndp1 ${JSON.stringify(payload)}` });
             if (!res.ok) return;
-            write(read().map(x => x.id === ev.id ? { ...x, sentAt: Date.now() } : x));
+            write(read().map(x => x.id === ev.id ? { ...x, sentAt: Date.now(), sends: (x.sends || 0) + 1 } : x));
         } catch (e) { /* offline: flush() tries again later */ }
     }
 
     function flush() {
-        for (const ev of read()) if (!ev.sentAt || Date.now() - ev.sentAt > RESEND_MS) send(ev);
+        const list = read();
+        const live = list.filter(ev => (ev.sends || 0) < MAX_SENDS || Date.now() - ev.sentAt < RESEND_MS);
+        if (live.length !== list.length) write(live);
+        for (const ev of live) if (!ev.sentAt || Date.now() - ev.sentAt > RESEND_MS) send(ev);
     }
     setInterval(flush, 10 * 60e3);
     window.addEventListener('online', flush);

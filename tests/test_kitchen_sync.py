@@ -3,6 +3,7 @@
     python -m unittest discover -s tests -v
 """
 
+import datetime
 import json
 import sys
 import unittest
@@ -52,8 +53,10 @@ class PullTests(unittest.TestCase):
                         {"id": 2, "name": "Italian Beef Melts", "pinkStar": 2, "blueStar": 2}]
         self.log = {"plan": None, "cooked": [], "rated": {}}
 
+    NOW = datetime.datetime(2026, 11, 10, tzinfo=datetime.timezone.utc)
+
     def run_lines(self, lines):
-        return pull.apply_events(pull.parse_events(lines), self.recipes, self.log)
+        return pull.apply_events(pull.parse_events(lines), self.recipes, self.log, now=self.NOW)
 
     def test_rating_lands_once_and_newest_wins(self):
         new = {"k": "rate", "id": "a", "at": "2026-11-09T18:00:00Z", "slug": "beef-chili-bar", "who": "pink", "stars": 5}
@@ -83,6 +86,26 @@ class PullTests(unittest.TestCase):
         self.assertEqual(len(changes), 3)
         self.assertTrue(all(c.startswith("skipped") for c in changes))
         self.assertEqual(self.recipes[0]["pinkStar"], 0)
+
+    def test_future_dated_message_cannot_lock_a_rating(self):
+        forged = {"k": "rate", "id": "f", "at": "2099-01-01T00:00:00Z", "slug": "beef-chili-bar", "who": "pink", "stars": 1}
+        real = {"k": "rate", "id": "r", "at": "2026-11-09T20:00:00Z", "slug": "beef-chili-bar", "who": "pink", "stars": 4}
+        changes = self.run_lines([message(forged), message(real)])
+        self.assertIn("skipped 1: dated in the future", changes)
+        self.assertEqual(self.recipes[0]["pinkStar"], 4)
+        slack = {"k": "rate", "id": "s", "at": "2026-11-10T00:05:00Z", "slug": "beef-chili-bar", "who": "blue", "stars": 5}
+        self.run_lines([message(slack)])
+        self.assertEqual(self.recipes[0]["blueStar"], 5)
+
+    def test_flood_is_capped_and_one_dinner_per_recipe_per_day(self):
+        same_day = [message({"k": "cooked", "id": f"d{i}", "at": f"2026-11-09T1{i}:00:00Z", "slug": "beef-chili-bar"}) for i in range(5)]
+        self.run_lines(same_day)
+        self.assertEqual(len(self.log["cooked"]), 1)
+        flood = [message({"k": "cooked", "id": f"x{i}", "at": (datetime.datetime(2026, 1, 1) + datetime.timedelta(days=i)).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                          "slug": "italian-beef-melts"}) for i in range(300)]
+        changes = self.run_lines(flood)
+        self.assertEqual(len(self.log["cooked"]), 1 + pull.MAX_CHANGES)
+        self.assertEqual(changes[-1], f"skipped {300 - pull.MAX_CHANGES}: over the {pull.MAX_CHANGES}-per-run limit (next run)")
 
 
 class CommittedFilesTests(unittest.TestCase):

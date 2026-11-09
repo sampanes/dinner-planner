@@ -19,10 +19,12 @@ overrides a newer one, so it is safe to run as often as you like
 """
 
 import argparse
+import datetime
 import json
 import re
 import sys
 import urllib.request
+from collections import Counter
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -38,6 +40,12 @@ NTFY = "https://ntfy.sh"
 MARK = "dp1 "
 ISO = re.compile(r"^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?Z$")
 STAR_KEY = {"pink": "pinkStar", "blue": "blueStar"}
+# A message dated past now + CLOCK_SLACK is refused: newest-wins would let it
+# block every real rating after it (a forged date, or a device with a wrong clock).
+CLOCK_SLACK = datetime.timedelta(minutes=10)
+# Changes applied per run; the rest wait for the next run. Stops a flood of
+# messages from turning into one enormous commit.
+MAX_CHANGES = 50
 
 
 def fetch_lines(topic: str) -> list[str]:
@@ -67,12 +75,14 @@ def parse_events(lines: list[str]) -> list[dict]:
     return sorted(events, key=lambda e: str(e.get("at", "")))
 
 
-def problem(event: dict, slugs: set[str]) -> str:
-    """Why an event cannot be applied, or "" when it is fine."""
+def problem(event: dict, slugs: set[str], latest: str) -> str:
+    """Why an event cannot be applied, or "" when it is fine. `latest` is the newest allowed "at"."""
     if not isinstance(event.get("id"), str) or not event["id"]:
         return "no id"
     if not isinstance(event.get("at"), str) or not ISO.match(event["at"]):
         return "bad time"
+    if event["at"] > latest:
+        return "dated in the future"
     kind = event.get("k")
     if kind == "rate":
         if event.get("slug") not in slugs:
@@ -92,15 +102,21 @@ def problem(event: dict, slugs: set[str]) -> str:
     return "unknown kind"
 
 
-def apply_events(events: list[dict], recipes: list[dict], log: dict) -> list[str]:
-    """Apply events in place; return one line per real change."""
+def apply_events(events: list[dict], recipes: list[dict], log: dict, now: datetime.datetime | None = None) -> list[str]:
+    """Apply events in place; return one line per real change, then one per kind of skip."""
     by_slug = {slugify(normalize_text(r.get("name", ""))): r for r in recipes}
     names = {slug: normalize_text(r.get("name", "")) for slug, r in by_slug.items()}
+    now = now or datetime.datetime.now(datetime.timezone.utc)
+    latest = (now + CLOCK_SLACK).strftime("%Y-%m-%dT%H:%M:%SZ")
     changes = []
+    skipped = Counter()
+    applied = 0
     for event in events:
-        why = problem(event, set(by_slug))
+        why = problem(event, set(by_slug), latest)
+        if not why and applied >= MAX_CHANGES:
+            why = f"over the {MAX_CHANGES}-per-run limit (next run)"
         if why:
-            changes.append(f"skipped {event.get('k')} {event.get('id')}: {why}")
+            skipped[why] += 1
             continue
         kind = event["k"]
         if kind == "rate":
@@ -108,14 +124,17 @@ def apply_events(events: list[dict], recipes: list[dict], log: dict) -> list[str
             if rated.get(event["who"], "") >= event["at"]:
                 continue
             rated[event["who"]] = event["at"]
+            applied += 1
             recipe = by_slug[event["slug"]]
             key = STAR_KEY[event["who"]]
             if recipe.get(key) != event["stars"]:
                 changes.append(f"{event['who']} rated {names[event['slug']]}: {recipe.get(key)} -> {event['stars']}")
                 recipe[key] = event["stars"]
         elif kind == "cooked":
-            if any(c["id"] == event["id"] for c in log["cooked"]):
+            # One dinner per recipe per day: also what stops a flood of fresh ids.
+            if any(c["id"] == event["id"] or (c["slug"] == event["slug"] and c["at"][:10] == event["at"][:10]) for c in log["cooked"]):
                 continue
+            applied += 1
             log["cooked"].append({"id": event["id"], "slug": event["slug"], "at": event["at"]})
             log["cooked"].sort(key=lambda c: c["at"])
             changes.append(f"cooked {names[event['slug']]} ({event['at'][:10]})")
@@ -124,7 +143,9 @@ def apply_events(events: list[dict], recipes: list[dict], log: dict) -> list[str
             if current and current.get("at", "") >= event["at"]:
                 continue
             log["plan"] = {"id": event["id"], "slugs": event["slugs"], "at": event["at"]}
+            applied += 1
             changes.append(f"plan: {', '.join(names[s] for s in event['slugs'])}")
+    changes.extend(f"skipped {n}: {why}" for why, n in skipped.items())
     return changes
 
 
