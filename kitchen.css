@@ -382,3 +382,52 @@ main { padding: 20px; }
     .pick-actions .big-btn.secondary { white-space: normal; line-height: 1.15; text-align: center; }
     .decide-grid .tile img { aspect-ratio: 5 / 2; }
 }
+
+/* ---------- tune-up: nothing overlaps, and a tap always shows its result ---------- */
+html.sheet-open, html.sheet-open body { overflow: hidden; }
+.sheet { overscroll-behavior: contain; padding-top: 0; }
+/* The sheet's title and its Close / Show button stay put while the list scrolls. */
+.sheet-head { position: sticky; top: 0; z-index: 2; margin: 0 0 8px; padding: 20px 0 12px; background: var(--bg); }
+.narrow-only { display: none; }
+
+/* Top bar: buttons keep their size and their one line; the title gives way. */
+.top-btn, .timer-chip, .clock { flex: 0 0 auto; white-space: nowrap; }
+.timer-tray { flex: 0 0 auto; }
+
+/* This week: short cards (photo on the left) so the recipe grid starts on the first screen. */
+.tile.small { flex: 0 0 340px; flex-direction: row; align-items: stretch; min-height: 104px; }
+.tile.small img { width: 104px; height: auto; min-height: 104px; aspect-ratio: auto; flex: 0 0 104px; }
+.tile.small .t-text { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; padding: 8px 14px; }
+.tile.small .t-name { font-size: 21px; padding: 0; min-height: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.tile.small .t-meta { font-size: 17px; padding: 4px 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.week { margin-bottom: 16px; }
+.week-head { margin-bottom: 10px; }
+
+/* What the chips added up to, right above the grid. */
+.pick-count { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 2px 0 12px; font-size: 22px; color: var(--muted); }
+.pick-count .chip.reset { min-height: 48px; font-size: 20px; padding: 0 20px; flex: 0 0 auto; }
+
+.timer-row .tr-btns { display: flex; gap: 12px; }
+
+@media (max-width: 600px) {
+    .narrow-only { display: inline; }
+    .topbar { gap: 8px; padding: 0 12px; }
+    .tile.small { flex-basis: 250px; min-height: 84px; }
+    .tile.small img { width: 84px; min-height: 84px; flex-basis: 84px; }
+    .tile.small .t-text { padding: 6px 10px; }
+    .tile.small .t-name { font-size: 16px; }
+    .tile.small .t-meta { font-size: 14px; }
+    .pick-actions { flex-wrap: nowrap; }
+    .pick-actions .big-btn { padding: 0 12px; line-height: 1.15; }
+    .pick-actions .big-btn.primary { flex: 1 1 0; }
+    .pick-actions .big-btn.secondary { flex: 1 1 0; }
+    .pick-actions .big-btn.clear { flex: 0 0 auto; }
+    .pick-count { font-size: 17px; }
+    .sheet-head { padding: 14px 0 10px; }
+    .pick-count .chip.reset { min-height: 44px; font-size: 17px; padding: 0 14px; }
+    /* Timers sheet: the name gets its own line so +1 min and Cancel stay on screen. */
+    .timer-row { flex-wrap: wrap; gap: 8px 12px; }
+    .timer-row .tr-name { flex: 1 0 100%; font-size: 22px; }
+    .timer-row .tr-time { min-width: 0; flex: 1; text-align: left; font-size: 38px; }
+    .timer-row .big-btn { min-height: 60px; font-size: 20px; padding: 0 16px; }
+}

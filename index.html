@@ -29,31 +29,33 @@
         <div class="flex flex-col lg:flex-row gap-8">
             <!-- Recipe List -->
             <div class="lg:w-1/3">
-                <div class="bg-white rounded-xl shadow-md p-6 sticky top-4">
-                    <div class="flex justify-between items-center mb-6">
-
+                <div id="recipeListCard" class="bg-white rounded-xl shadow-md p-4 sm:p-6 lg:sticky lg:top-4">
+                    <!-- Title with the two rarely used file buttons, then one row of three labeled buttons -->
+                    <div class="flex justify-between items-center gap-3 mb-3">
                         <h2 class="text-2xl font-semibold text-gray-800">My Recipes</h2>
-                        <div class="flex gap-2">
-                            <button id="newRecipeBtn" class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
-                                <i class="fas fa-plus"></i> New Recipe
-                            </button>
-                            <button id="downloadRecipesBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-lg flex items-center gap-2 transition-colors" title="Download all recipes">
+                        <div class="flex gap-2 flex-none">
+                            <button id="downloadRecipesBtn" class="w-11 h-11 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg flex items-center justify-center transition-colors" title="Download all recipes" aria-label="Download all recipes">
                                 <i class="fas fa-download"></i>
                             </button>
-                            <button id="reloadRecipesBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-lg flex items-center gap-2 transition-colors" title="Reload recipes from the repo">
+                            <button id="reloadRecipesBtn" class="w-11 h-11 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg flex items-center justify-center transition-colors" title="Reload recipes from the repo" aria-label="Reload recipes from the repo">
                                 <i class="fas fa-rotate-right"></i>
                             </button>
-                            <a href="kitchen.html"
-                               class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-2 rounded-lg flex items-center gap-2 transition-colors"
-                               title="Kitchen mode (big screen, for the Echo Show)">
-                                <i class="fas fa-utensils"></i>
-                            </a>
-                            <a href="groupings.html"
-                               class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg flex items-center gap-2 transition-colors"
-                               title="Meal Groupings">
-                                <i class="fas fa-shuffle"></i>
-                            </a>
                         </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 mb-4">
+                        <a href="kitchen.html"
+                           class="bg-amber-500 hover:bg-amber-600 text-white rounded-lg min-h-[56px] px-1 flex flex-col items-center justify-center gap-0.5 text-sm font-medium transition-colors"
+                           title="Kitchen mode (big type, for the Echo Show or a phone)">
+                            <i class="fas fa-utensils"></i> Kitchen
+                        </a>
+                        <a href="groupings.html"
+                           class="bg-purple-600 hover:bg-purple-700 text-white rounded-lg min-h-[56px] px-1 flex flex-col items-center justify-center gap-0.5 text-sm font-medium transition-colors"
+                           title="Meal shuffler: plan the week">
+                            <i class="fas fa-shuffle"></i> Shuffler
+                        </a>
+                        <button id="newRecipeBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg min-h-[56px] px-1 flex flex-col items-center justify-center gap-0.5 text-sm font-medium transition-colors">
+                            <i class="fas fa-plus"></i> New recipe
+                        </button>
                     </div>
 
                     <div class="relative mb-4">
@@ -61,7 +63,7 @@
                         <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
                         <div id="recipeFiltersBar" class="flex items-center justify-between mt-2 hidden">
                             <p id="activeFiltersText" class="text-xs text-gray-600"></p>
-                            <button id="clearIngredientFiltersBtn" class="text-xs text-amber-600 hover:text-amber-800 font-medium">
+                            <button id="clearIngredientFiltersBtn" class="flex-none text-sm text-amber-600 hover:text-amber-800 font-medium px-2 min-h-[44px]">
                                 &#x2728; Show all
                             </button>
                         </div>
@@ -73,8 +75,8 @@
                 </div>
             </div>
 
-            <!-- Recipe Details -->
-            <div class="lg:w-2/3">
+            <!-- Recipe Details (on a phone this opens full screen over the list) -->
+            <div class="lg:w-2/3" id="detailsPane">
                 <div id="recipeDetails" class="bg-white rounded-xl shadow-md p-6 min-h-[500px]">
                     <div class="text-center py-20 text-gray-400">
                         <i class="fas fa-utensils text-5xl mb-4"></i>
@@ -91,8 +93,9 @@
                 <input type="text" id="ingredientStatsSearch" placeholder="Search ingredients..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
                 <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
             </div>
-            <div class="flex justify-end mb-2">
-            <button id="toggleSaltBtn" class="text-sm text-amber-600 hover:text-amber-800 font-medium">
+            <div class="flex items-center justify-between gap-3 mb-2">
+            <p class="text-sm text-gray-500">Tick ingredients to list only the recipes that use all of them.</p>
+            <button id="toggleSaltBtn" class="flex-none text-sm text-amber-600 hover:text-amber-800 font-medium px-3 min-h-[44px]">
                 -common
             </button>
             </div>
@@ -102,13 +105,22 @@
         </div>
     </div>
 
+    <!-- Stays on screen while ingredient boxes are ticked: the recipe list they filter is far above -->
+    <div id="filterBar" class="hidden fixed bottom-0 inset-x-0 z-30 bg-amber-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex items-center gap-3">
+            <p id="filterBarText" class="flex-grow min-w-0 text-sm font-medium"></p>
+            <button id="filterBarShow" class="flex-none bg-white text-amber-700 font-semibold px-4 min-h-[44px] rounded-lg">Show</button>
+            <button id="filterBarClear" class="flex-none border border-white px-3 min-h-[44px] rounded-lg">Clear</button>
+        </div>
+    </div>
+
     <!-- New Recipe Modal -->
     <div id="newRecipeModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto slide-in">
             <div class="p-6">
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="text-2xl font-semibold text-gray-800">New Recipe</h3>
-                    <button id="closeModalBtn" class="text-gray-500 hover:text-gray-700">
+                    <button id="closeModalBtn" class="w-11 h-11 -mr-2 flex-none flex items-center justify-center text-gray-500 hover:text-gray-700" aria-label="Close">
                         <i class="fas fa-times text-xl"></i>
                     </button>
                 </div>
@@ -147,11 +159,11 @@
                         </div>
 
                         <div class="mt-2 flex justify-between">
-                            <button type="button" id="addIngredientBtn" class="text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded text-gray-700">
+                            <button type="button" id="addIngredientBtn" class="text-sm bg-gray-100 hover:bg-gray-200 px-3 min-h-[44px] rounded-lg text-gray-700">
                                 &#x2795; Ingredient
                             </button>
 
-                            <button type="button" id="addIngredientPresetBtn" class="text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded text-gray-700">
+                            <button type="button" id="addIngredientPresetBtn" class="text-sm bg-gray-100 hover:bg-gray-200 px-3 min-h-[44px] rounded-lg text-gray-700">
                                 salt, pepper, oil
                             </button>
                         </div>
@@ -163,8 +175,8 @@
                     </div>
 
                     <div class="flex justify-end gap-3">
-                        <button type="button" id="cancelRecipeBtn" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Cancel</button>
-                        <button type="submit" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition-colors">Save Recipe</button>
+                        <button type="button" id="cancelRecipeBtn" class="px-4 min-h-[44px] border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Cancel</button>
+                        <button type="submit" class="px-4 min-h-[44px] bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition-colors">Save Recipe</button>
                     </div>
                 </form>
             </div>

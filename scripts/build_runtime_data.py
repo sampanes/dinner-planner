@@ -236,8 +236,9 @@ body {
   line-height: 1.55;
 }
 main { max-width: 760px; margin: 0 auto; padding: 20px 20px 60px; }
-nav.top { display: flex; flex-wrap: wrap; gap: 16px; font-size: 15px; margin-bottom: 18px; }
-nav.top a { color: var(--accent); text-decoration: none; }
+nav.top { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 18px; font-size: 15px; margin-bottom: 14px; }
+nav.top a { color: var(--accent); text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; }
+nav.top a.cook { background: var(--accent); color: #fff; font-weight: 600; padding: 0 16px; border-radius: 10px; }
 nav.top a:hover { text-decoration: underline; }
 h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 6px; }
 h2 { font-size: 1.3rem; margin: 32px 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--line); }
@@ -362,6 +363,7 @@ def render_recipe_page(recipe: dict) -> str:
 <body>
   <main class="recipe">
     <nav class="top">
+      <a class="cook" href="../kitchen.html#/r/{esc(recipe["slug"])}">Cook this</a>
       <a href="index.html">All recipe pages</a>
       <a href="../index.html">Recipe vault</a>
       <a href="../groupings.html">Meal shuffler</a>

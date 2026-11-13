@@ -84,7 +84,7 @@ function updateHashParams(state) {
     if (state.locks.length > 0) {
         params.set('lock', state.locks.join('|'));
     }
-    window.location.hash = `/app?${params.toString()}`;
+    history.replaceState(null, '', `#/app?${params.toString()}`);
 }
 
 function generateRandomSeed() {
@@ -195,13 +195,26 @@ function generatePlan() {
         }
     }
 
-    // 4. Create candidate pool (exclude already-locked recipes)
-    const lockedNames = new Set(locks);
-    const candidates = recipes.filter(r => !lockedNames.has(r.name));
-
-    // 5. Deterministically shuffle candidates using seeded PRNG
+    // 4. One seeded order over every recipe. It does not depend on what is
+    // locked, so locking a meal never reshuffles the others.
+    const lockedNames = new Set(lockedRecipes.map(r => r.name));
     const rng = createPRNG(seed);
-    const shuffledCandidates = fisherYatesShuffle(candidates, rng);
+    const order = fisherYatesShuffle(recipes, rng);
+
+    if (overlapThreshold === 0) {
+        // The unlocked meals are the first ones in that order. A locked meal
+        // that is already among them stays in its slot; one carried over from
+        // an earlier shuffle goes on top.
+        const open = order.filter(r => !lockedNames.has(r.name)).slice(0, Math.max(0, meals - lockedRecipes.length));
+        const keep = new Set([...lockedRecipes, ...open]);
+        const natural = new Set(order.slice(0, meals));
+        const carried = lockedRecipes.filter(r => !natural.has(r));
+        appState.plan = [...carried, ...order.filter(r => keep.has(r) && !carried.includes(r))];
+        return appState.plan;
+    }
+
+    // 5. With an overlap setting, the locked meals seed the ingredient pool
+    const shuffledCandidates = order.filter(r => !lockedNames.has(r.name));
 
     // 6. Fill plan greedily, checking overlap threshold for each candidate
     for (const candidate of shuffledCandidates) {
@@ -576,6 +589,7 @@ function openModal(recipe) {
 
     elements.modalStars.innerHTML = renderStars(recipe.pinkStar, recipe.blueStar);
     elements.modalPageLink.href = 'recipes/' + recipeSlug(recipe.name) + '.html';
+    document.getElementById('modalCookLink').href = 'kitchen.html#/r/' + recipeSlug(recipe.name);
 
     elements.modalIngredients.innerHTML = recipe.ingredients.map(ing =>
         `<li><span class="amount">${ing.amount}</span> ${ing.name}</li>`
@@ -623,6 +637,14 @@ function toggleLock(recipeName) {
     generatePlan();
     renderPlan();
     renderGroceryList();
+    showToast(index !== -1 ? 'Unlocked' : 'Locked: it stays when you shuffle');
+
+    // If the card moved (it can with an overlap setting), follow it.
+    const card = [...elements.planList.querySelectorAll('.recipe-card')].find(c => appState.plan[parseInt(c.dataset.index)].name === recipeName);
+    if (card) {
+        const box = card.getBoundingClientRect();
+        if (box.top < 0 || box.bottom > window.innerHeight) card.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }
 }
 
 function shuffleNewSeed() {
@@ -676,6 +698,7 @@ async function sendPlanToKitchen() {
     await syncLoaded;
     Sync.queue({ k: 'plan', slugs: appState.plan.map(r => recipeSlug(r.name)) });
     showToast('Sent to kitchen mode');
+    document.getElementById('openKitchenLink').classList.remove('hidden');
 }
 
 async function copyLink() {

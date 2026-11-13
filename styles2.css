@@ -627,3 +627,70 @@ input[type="range"]::-moz-range-thumb {
     margin-top: 12px;
     margin-bottom: 0;
 }
+
+/* ---------- tune-up: tap targets and narrow phones ---------- */
+.nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.nav-links .back-link,
+.sent-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    margin-top: 0;
+    padding: 0 18px;
+    border: 1px solid var(--accent-purple);
+    border-radius: var(--radius);
+    font-size: 15px;
+}
+
+.nav-links .back-link:hover,
+.sent-link:hover {
+    text-decoration: none;
+}
+
+.sent-link {
+    display: flex;
+    margin-top: 12px;
+}
+
+.toast {
+    width: max-content;
+    max-width: calc(100vw - 32px);
+    text-align: center;
+}
+
+/* The seed box gives way so the dice button stays on screen. */
+.seed-control input {
+    min-width: 0;
+}
+
+.seed-control .btn {
+    flex: none;
+    width: auto;
+}
+
+@media (max-width: 380px) {
+    .btn.btn-small {
+        width: auto;
+    }
+}
+
+.modal-link {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.modal-link .btn {
+    display: inline-flex;
+    align-items: center;
+    flex: none;
+}

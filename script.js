@@ -94,6 +94,8 @@ function hideLocalEditsBanner() {
 }
 
 function clearRecipeDetails() {
+    selectedRecipeId = null;
+    closeRecipeDetails();
     recipeDetails.innerHTML = `
         <div class="text-center py-20 text-gray-400">
             <i class="fas fa-utensils text-5xl mb-4"></i>
@@ -115,11 +117,63 @@ const ingredientsContainer = document.getElementById('ingredientsContainer');
 const addIngredientBtn = document.getElementById('addIngredientBtn');
 const addIngredientPresetBtn = document.getElementById('addIngredientPresetBtn');
 
-clearIngredientFiltersBtn.addEventListener('click', () => {
+function clearIngredientFilters() {
     activeIngredientFilters.clear();
-    updateIngredientStats();  // Refresh ingredient checkboxes
+    updateIngredientStats(document.getElementById('ingredientStatsSearch').value);  // Refresh ingredient checkboxes
     renderRecipeList(document.getElementById('recipeSearch').value);
+}
+clearIngredientFiltersBtn.addEventListener('click', clearIngredientFilters);
+document.getElementById('filterBarClear').addEventListener('click', clearIngredientFilters);
+document.getElementById('filterBarShow').addEventListener('click', () => {
+    recipeList.scrollTop = 0;
+    document.getElementById('recipeListCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
+
+// Both filter notes: the line above the recipe list, and the bar pinned to the
+// bottom of the screen (the checkboxes sit far below the list they filter).
+function updateFilterBars(count) {
+    const names = Array.from(activeIngredientFilters);
+    const on = names.length > 0;
+    recipeFiltersBar.classList.toggle('hidden', !on);
+    activeFiltersText.textContent = on ? `Filtering by: ${names.join(', ')}` : '';
+    document.getElementById('filterBar').classList.toggle('hidden', !on);
+    document.body.classList.toggle('filter-bar-open', on);
+    document.getElementById('filterBarText').textContent =
+        on ? `${count} recipe${count === 1 ? '' : 's'} with ${names.join(' + ')}` : '';
+}
+
+// ---- recipe details: beside the list on a wide screen, over it on a phone ----
+let selectedRecipeId = null;
+const narrowScreen = window.matchMedia('(max-width: 1023px)');
+
+function openDetailPanel() {
+    if (!narrowScreen.matches) return;
+    if (!document.body.classList.contains('detail-open')) {
+        document.body.classList.add('detail-open');
+        // So the phone's own Back closes the recipe instead of leaving the site.
+        history.pushState({ detail: true }, '');
+    }
+    document.getElementById('detailsPane').scrollTop = 0;
+}
+
+function closeRecipeDetails() {
+    if (!document.body.classList.contains('detail-open')) return;
+    if (history.state && history.state.detail) history.back();
+    else document.body.classList.remove('detail-open');
+}
+
+window.addEventListener('popstate', () => {
+    document.body.classList.toggle('detail-open', !!(history.state && history.state.detail && selectedRecipeId !== null));
+});
+
+function markSelectedCard() {
+    recipeList.querySelectorAll('.recipe-card').forEach(card => {
+        const on = Number(card.dataset.id) === selectedRecipeId;
+        card.classList.toggle('ring-2', on);
+        card.classList.toggle('ring-inset', on);
+        card.classList.toggle('ring-amber-400', on);
+    });
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
     // The repo copy is the source of truth. Edits made with the form in this
@@ -216,24 +270,18 @@ function renderRecipeList(filter = '') {
         return a.name.localeCompare(b.name);
     });
 
+    updateFilterBars(filteredRecipes.length);
+
     if (filteredRecipes.length === 0) {
         recipeList.innerHTML = '<p class="text-gray-500 text-center py-4">No recipes found</p>';
         return;
-    } else {
-        // Update filter bar
-        if (activeIngredientFilters.size > 0) {
-            recipeFiltersBar.classList.remove('hidden');
-            activeFiltersText.textContent = `Filtering by: ${Array.from(activeIngredientFilters).join(', ')}`;
-        } else {
-            recipeFiltersBar.classList.add('hidden');
-            activeFiltersText.textContent = '';
-        }
     }
 
     // Normal rendering logic
     filteredRecipes.forEach(recipe => {
         const recipeCard = document.createElement('div');
         recipeCard.className = 'recipe-card bg-white p-4 rounded-lg mb-3 cursor-pointer hover:bg-gray-50 border border-gray-200';
+        recipeCard.dataset.id = recipe.id;
         recipeCard.innerHTML = `
             <div class="flex items-start gap-3 w-full">
                 ${recipe.image ?
@@ -243,7 +291,7 @@ function renderRecipeList(filter = '') {
                     </div>`
                 }
 
-                <div class="flex flex-col flex-grow">
+                <div class="flex flex-col flex-grow min-w-0">
                     <h3 class="font-medium text-gray-800">${recipe.name}</h3>
                     <div class="flex items-center justify-between">
                     <p class="text-xs text-gray-500">${recipe.ingredients.length} ingredients</p>
@@ -264,6 +312,7 @@ function renderRecipeList(filter = '') {
         recipeCard.addEventListener('click', () => showRecipeDetails(recipe.id));
         recipeList.appendChild(recipeCard);
     });
+    markSelectedCard();
 }
 
 // Show recipe details
@@ -281,27 +330,22 @@ function showRecipeDetails(id) {
         `;
     });
 
+    selectedRecipeId = id;
+    markSelectedCard();
+    const actionClass = 'inline-flex items-center gap-2 px-4 min-h-[44px] rounded-lg font-medium transition-colors';
+
     recipeDetails.innerHTML = `
         <div>
-            <div class="flex justify-between items-start mb-6">
-                <div>
-                    <h2 class="text-3xl font-bold text-gray-800 mb-2">${recipe.name}</h2>
-                    <div class="flex items-center gap-2 text-sm text-gray-500">
+            <div class="detail-back">
+                <button type="button" onclick="closeRecipeDetails()" class="inline-flex items-center gap-2 px-3 min-h-[44px] rounded-lg text-amber-700 font-semibold">
+                    <i class="fas fa-arrow-left"></i> All recipes
+                </button>
+            </div>
+            <div class="flex justify-between items-start gap-4 mb-4">
+                <div class="min-w-0">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">${recipe.name}</h2>
+                    <div class="flex items-center gap-4 text-sm text-gray-500">
                         <span>${recipe.ingredients.length} ingredients</span>
-                        <span>\u2022</span>
-                        <button class="text-amber-600 hover:text-amber-700" onclick="editRecipe(${recipe.id})">
-                            <i class="fas fa-edit mr-1"></i> Edit
-                        </button>
-                        <span>\u2022</span>
-                        <button class="text-red-500 hover:text-red-600" onclick="deleteRecipe(${recipe.id})">
-                            <i class="fas fa-trash-alt mr-1"></i> Delete
-                        </button>
-                        <span>\u2022</span>
-                        <a class="text-amber-600 hover:text-amber-700" href="recipes/${recipeSlug(recipe.name)}.html" target="_blank" rel="noopener" title="Standalone page (share this link with Alexa+)">
-                            <i class="fas fa-up-right-from-square mr-1"></i> Page
-                        </a>
-                    </div>
-                    <div class="flex gap-4 mt-2">
                         <div class="flex items-center">
                             <span class="text-pink-500 mr-1">${recipe.pinkStar || 0}</span>
                             <i class="fas fa-star text-pink-400"></i>
@@ -313,11 +357,26 @@ function showRecipeDetails(id) {
                     </div>
                 </div>
                 ${recipe.image ?
-                    `<img src="${imageAt(recipe.image, 192, 192)}" alt="${recipe.name}" class="w-24 h-24 object-cover rounded-lg shadow" decoding="async">` :
-                    `<div class="w-24 h-24 bg-gray-200 rounded-lg shadow flex items-center justify-center">
+                    `<img src="${imageAt(recipe.image, 192, 192)}" alt="${recipe.name}" class="flex-none w-24 h-24 object-cover rounded-lg shadow" decoding="async">` :
+                    `<div class="flex-none w-24 h-24 bg-gray-200 rounded-lg shadow flex items-center justify-center">
                         <i class="fas fa-utensils text-3xl text-gray-400"></i>
                     </div>`
                 }
+            </div>
+
+            <div class="flex flex-wrap gap-2 mb-6">
+                <a class="${actionClass} bg-amber-500 hover:bg-amber-600 text-white" href="kitchen.html#/r/${recipeSlug(recipe.name)}" title="Step by step, big type, timers">
+                    <i class="fas fa-utensils"></i> Cook this
+                </a>
+                <button class="${actionClass} border border-gray-300 text-gray-700 hover:bg-gray-50" onclick="editRecipe(${recipe.id})">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+                <a class="${actionClass} border border-gray-300 text-gray-700 hover:bg-gray-50" href="recipes/${recipeSlug(recipe.name)}.html" target="_blank" rel="noopener" title="Standalone page (share this link with Alexa+)">
+                    <i class="fas fa-up-right-from-square"></i> Page
+                </a>
+                <button class="${actionClass} border border-red-200 text-red-600 hover:bg-red-50" onclick="deleteRecipe(${recipe.id})">
+                    <i class="fas fa-trash-alt"></i> Delete
+                </button>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
@@ -333,13 +392,9 @@ function showRecipeDetails(id) {
                 </div>
             </div>
 
-            <div class="flex justify-end">
-                <button onclick="editRecipe(${recipe.id})" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition-colors">
-                    <i class="fas fa-edit mr-2"></i> Edit Recipe
-                </button>
-            </div>
         </div>
     `;
+    openDetailPanel();
 }
 
 // Edit recipe
@@ -395,10 +450,10 @@ function addIngredientField(name = '', amount = '') {
                     data-id="${ingredientId}">
         </div>
         <input type="text"
-                class="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                class="w-24 min-w-0 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                 placeholder="Amount"
                 value="${amount}">
-        <button type="button" class="remove-ingredient text-red-500 hover:text-red-700">
+        <button type="button" class="remove-ingredient flex-none w-10 h-10 flex items-center justify-center text-red-500 hover:text-red-700" aria-label="Remove ingredient">
             <i class="fas fa-times"></i>
         </button>
     `;
@@ -554,8 +609,11 @@ function updateIngredientStats(filter = '') {
     const stats = calculateIngredientStats();
     const container = document.getElementById('ingredientStatsList');
 
-    // Sort by most used first
-    const sortedIngredients = Object.entries(stats).sort((a, b) => b[1] - a[1]);
+    // Sort by most used first; the search box narrows the cards, and ticked ones always stay
+    const wanted = filter.trim().toLowerCase();
+    const sortedIngredients = Object.entries(stats)
+        .filter(([name]) => !wanted || name.includes(wanted) || activeIngredientFilters.has(name))
+        .sort((a, b) => b[1] - a[1]);
 
     container.innerHTML = '';
 
@@ -565,17 +623,18 @@ function updateIngredientStats(filter = '') {
     }
 
     sortedIngredients.forEach(([name, count]) => {
-        const card = document.createElement('div');
-        card.className = 'bg-gray-50 p-3 rounded-lg border border-gray-200 flex justify-between items-center hover:shadow-sm transition';
+        // A label, so a tap anywhere on the card ticks its box.
+        const card = document.createElement('label');
+        card.className = 'bg-gray-50 px-3 min-h-[52px] rounded-lg border border-gray-200 flex justify-between items-center gap-2 cursor-pointer hover:shadow-sm transition';
 
         const left = document.createElement('div');
-        left.className = 'flex items-center gap-2';
+        left.className = 'flex items-center gap-3 min-w-0';
 
         // Checkbox
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.checked = activeIngredientFilters.has(name);
-        checkbox.className = 'form-checkbox accent-orange-500';
+        checkbox.className = 'form-checkbox accent-orange-500 w-5 h-5 flex-none';
         checkbox.addEventListener('change', () => {
             if (checkbox.checked) {
                 activeIngredientFilters.add(name);
@@ -596,7 +655,7 @@ function updateIngredientStats(filter = '') {
 
         // Count badge
         const countEl = document.createElement('span');
-        countEl.className = 'bg-amber-100 text-amber-800 text-xs font-medium px-2.5 py-0.5 rounded-full';
+        countEl.className = 'flex-none bg-amber-100 text-amber-800 text-xs font-medium px-2.5 py-0.5 rounded-full';
         countEl.textContent = `${count} recipe${count !== 1 ? 's' : ''}`;
 
         // Assemble full card
@@ -804,3 +863,4 @@ ingredientsContainer.addEventListener('click', function(e) {
 // Make functions available globally for inline handlers
 window.editRecipe = editRecipe;
 window.deleteRecipe = deleteRecipe;
+window.closeRecipeDetails = closeRecipeDetails;

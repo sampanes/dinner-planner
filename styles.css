@@ -18,9 +18,13 @@
     }
 }
 
-.recipe-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+/* Only where there is a real pointer: on a touch screen "hover" sticks to the
+   last card tapped and leaves it floating. */
+@media (hover: hover) {
+    .recipe-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
 }
 
 .recipe-card {
@@ -48,4 +52,61 @@
 
 .recipe-card .text-xs {
     line-height: 1rem;
+}
+
+/* Room for the pinned filter bar so it never covers the last row. */
+body.filter-bar-open {
+    padding-bottom: 76px;
+}
+
+/* The list card is pinned beside the recipe: keep it inside a short screen
+   (the Echo Show's browser leaves about 720px). */
+@media (min-width: 1024px) {
+    #recipeList {
+        max-height: min(500px, calc(100vh - 290px));
+    }
+}
+
+/* Phones and small tablets: a tapped recipe opens over the list, full screen,
+   with a way back, instead of appearing below the list off screen. */
+.detail-back {
+    display: none;
+}
+
+@media (max-width: 1023px) {
+    #detailsPane {
+        display: none;
+    }
+
+    body.detail-open {
+        overflow: hidden;
+    }
+
+    body.detail-open #detailsPane {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        background: #fff;
+    }
+
+    body.detail-open #recipeDetails {
+        min-height: 100%;
+        border-radius: 0;
+        box-shadow: none;
+        padding-top: 0;
+    }
+
+    .detail-back {
+        display: flex;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        margin: 0 -1.5rem 1rem;
+        padding: 0.5rem 0.75rem;
+        background: #fff;
+        border-bottom: 1px solid #e5e7eb;
+    }
 }

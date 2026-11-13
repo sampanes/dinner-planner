@@ -16,7 +16,10 @@
                 <span class="skull">&#x1F480;</span>
             </h1>
             <p class="subtitle">Meal Shuffler</p>
-            <a href="index.html" class="back-link">&#x2190; Back to Recipes</a> <a href="kitchen.html" class="back-link">Kitchen mode</a>
+            <div class="nav-links">
+                <a href="index.html" class="back-link">&#x2190; Recipes</a>
+                <a href="kitchen.html" class="back-link">Kitchen mode</a>
+            </div>
         </header>
 
         <!-- Controls Card -->
@@ -47,6 +50,7 @@
                 <button id="resetBtn" class="btn btn-purple">&#x1F504; Reset</button>
             </div>
             <button id="sendPlanBtn" class="btn btn-lavender btn-full send-plan">&#x1F37D; Send to kitchen</button>
+            <a id="openKitchenLink" class="back-link sent-link hidden" href="kitchen.html">Sent. Open kitchen mode &#x2192;</a>
         </div>
 
         <!-- Error Card -->
@@ -93,7 +97,10 @@
                 </div>
                 <div id="modalImage" class="modal-image"></div>
                 <div class="modal-stars" id="modalStars"></div>
-                <p class="modal-link"><a id="modalPageLink" class="btn btn-small btn-lavender" href="#" target="_blank" rel="noopener">Full recipe page</a></p>
+                <p class="modal-link">
+                    <a id="modalCookLink" class="btn btn-small btn-pink" href="kitchen.html">Cook this</a>
+                    <a id="modalPageLink" class="btn btn-small btn-lavender" href="#" target="_blank" rel="noopener">Recipe page</a>
+                </p>
                 <h4>Ingredients</h4>
                 <ul id="modalIngredients" class="ingredient-list"></ul>
             </div>

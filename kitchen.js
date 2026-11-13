@@ -112,9 +112,19 @@ function parseRoute() {
 
 function go(hash) { if (location.hash === hash) render(); else location.hash = hash; }
 
+// Where the picker was scrolled to when a recipe was opened, so Back returns
+// to the same tile instead of the top of 70 recipes.
+let pickScroll = 0;
+try { history.scrollRestoration = 'manual'; } catch (e) { /* older browsers */ }
+
 function render() {
     const route = parseRoute();
+    // Back from a recipe or the grocery list returns to the same spot; after
+    // finishing a dinner the picker starts from the top again.
+    const returning = route.view === 'pick' && (state.view === 'recipe' || state.view === 'shop');
+    if (state.view === 'pick' && route.view !== 'pick') pickScroll = window.scrollY;
     leaveCook();
+    closeSheets();
     window.scrollTo(0, 0);
     state.view = route.view;
     state.recipe = route.slug ? bySlug.get(route.slug) : null;
@@ -123,7 +133,18 @@ function render() {
     else if (route.view === 'rate') renderRate(state.recipe, route.afterCooking);
     else if (route.view === 'shop') renderShop();
     else renderPick();
+    if (returning && pickScroll) window.scrollTo(0, pickScroll);
 }
+
+// ---------- sheets ----------
+// While a sheet is open the page behind it must not scroll under the finger.
+const SHEETS = ['ingOverlay', 'timerOverlay', 'haveOverlay', 'decideOverlay'];
+function openSheet(id) { $(id).hidden = false; document.documentElement.classList.add('sheet-open'); }
+function closeSheet(id) {
+    $(id).hidden = true;
+    if (SHEETS.every(s => $(s).hidden)) document.documentElement.classList.remove('sheet-open');
+}
+function closeSheets() { SHEETS.forEach(closeSheet); }
 
 // ---------- pick view ----------
 // Three ways to narrow the list, all by tapping: who it is for (first chip row),
@@ -174,11 +195,28 @@ function tile(r, small) {
     const meta = [starBadge(r)];
     if (state.have.size && !small) meta.push(` - has ${haveCount(r)} of ${state.have.size}`);
     else if (lastMade(r)) meta.push(` - ${lastMade(r)}`);
-    else meta.push(` - ${r.steps.length} steps`);
+    else if (!small) meta.push(` - ${r.steps.length} steps`);
     return h('button', { class: 'tile' + (small ? ' small' : ''), type: 'button', onclick: () => go(`#/r/${r.slug}`) },
-        h('img', { src: imageAt(r.image, 400, 267), alt: '', loading: 'lazy', decoding: 'async' }),
-        h('div', { class: 't-name' }, r.displayName),
-        h('div', { class: 't-meta' }, meta));
+        h('img', { src: small ? imageAt(r.image, 240, 240) : imageAt(r.image, 400, 267), alt: '', loading: 'lazy', decoding: 'async' }),
+        h('div', { class: 't-text' },
+            h('div', { class: 't-name' }, r.displayName),
+            h('div', { class: 't-meta' }, meta)));
+}
+
+// "ground beef, zucchini +2"
+function haveSummary(max) {
+    const all = [...state.have];
+    return all.slice(0, max).join(', ') + (all.length > max ? ` +${all.length - max}` : '');
+}
+
+// One line above the grid that says what the taps added up to.
+function pickSummary(count, whoLabel) {
+    const parts = [];
+    if (whoLabel) parts.push(whoLabel);
+    if (state.kind) parts.push(state.kind);
+    if (state.have.size) parts.push(`with ${haveSummary(3)}`);
+    const n = `${count} recipe${count === 1 ? '' : 's'}`;
+    return parts.length ? `${n}: ${parts.join(', ')}` : `${n}, best rated first`;
 }
 
 function planRecipes() {
@@ -186,8 +224,25 @@ function planRecipes() {
     return plan ? plan.slugs.map(s => bySlug.get(s)).filter(Boolean) : [];
 }
 
+// A chip or the "what do we have" sheet changed the list. On the Show the grid
+// can start below the bottom edge (plan row + buttons + chips), so a tap would
+// change nothing on screen: bring the buttons to the top with the results under them.
+function showResults() {
+    renderPick();
+    const anchor = app.querySelector('.pick-actions');
+    const count = app.querySelector('.pick-count');
+    if (!anchor || !count) return;
+    const room = window.innerHeight - count.getBoundingClientRect().top;
+    if (room < window.innerHeight * 0.45) {
+        window.scrollTo({ top: anchor.getBoundingClientRect().top + window.scrollY - topOffset() - 12, behavior: 'smooth' });
+    }
+}
+
 function renderPick() {
     setTop('Kitchen', null);
+    // Rebuilding the view must not snap the sideways-scrolled rows back to the start.
+    const SIDE = ['.week-row', '.chips.who', '.chips.kinds'];
+    const sideScroll = SIDE.map(sel => { const el = app.querySelector(sel); return el ? el.scrollLeft : 0; });
     const who = whoFilters();
     const activeWho = (who.find(f => f[0] === state.filter) || who[0])[0];
     const list = pickList();
@@ -213,33 +268,43 @@ function renderPick() {
     const actions = h('div', { class: 'pick-actions' },
         h('button', { class: 'big-btn primary', type: 'button', onclick: openDecide }, "Can't decide?"),
         h('button', { class: 'big-btn secondary' + (state.have.size ? ' on' : ''), type: 'button', onclick: openHave },
-            state.have.size ? `We have: ${[...state.have].join(', ')}` : 'What do we have?'),
-        state.have.size ? h('button', { class: 'big-btn secondary clear', type: 'button', onclick: () => { state.have.clear(); saveHave(); renderPick(); } }, 'Clear') : null);
+            state.have.size
+                ? [h('span', { class: 'wide-only' }, `We have: ${haveSummary(5)}`), h('span', { class: 'narrow-only' }, `We have ${state.have.size}`)]
+                : 'What do we have?'),
+        state.have.size ? h('button', { class: 'big-btn secondary clear', type: 'button', onclick: () => { state.have.clear(); saveHave(); showResults(); } }, 'Clear') : null);
 
-    const whoChips = h('div', { class: 'chips scroll' }, who.map(([key, label, , cls]) =>
+    const whoChips = h('div', { class: 'chips scroll who' }, who.map(([key, label, , cls]) =>
         h('button', {
             class: 'chip' + (key === activeWho ? ' on' : '') + (cls ? ` ${cls}` : ''), type: 'button',
-            onclick: () => { state.filter = key; store.set(KEYS.filter, key); renderPick(); }
+            onclick: () => { state.filter = key; store.set(KEYS.filter, key); showResults(); }
         }, label)));
 
     const kindChips = h('div', { class: 'chips scroll kinds' }, kindFilters().map(([label]) =>
         h('button', {
             class: 'chip' + (label === state.kind ? ' on' : ''), type: 'button',
-            onclick: () => { state.kind = state.kind === label ? null : label; store.set(KEYS.kind, state.kind); renderPick(); }
+            onclick: () => { state.kind = state.kind === label ? null : label; store.set(KEYS.kind, state.kind); showResults(); }
         }, label)));
 
     const grid = h('div', { class: 'grid' }, list.map(r => tile(r, false)));
+    const narrowed = activeWho !== 'all' || state.kind || state.have.size;
+    const count = h('div', { class: 'pick-count' },
+        h('span', {}, pickSummary(list.length, activeWho === 'all' ? '' : (who.find(f => f[0] === activeWho) || [])[1])),
+        narrowed ? h('button', {
+            class: 'chip reset', type: 'button',
+            onclick: () => { state.filter = 'all'; state.kind = null; state.have.clear(); store.set(KEYS.filter, 'all'); store.set(KEYS.kind, null); saveHave(); showResults(); }
+        }, 'Show all') : null);
 
-    app.replaceChildren(resumeBtn || '', week || '', actions, whoChips, kindChips,
+    app.replaceChildren(resumeBtn || '', week || '', actions, whoChips, kindChips, count,
         list.length ? grid : h('p', { class: 'empty' }, activeWho === 'while' ? 'Nothing cooked yet.' : 'Nothing matches. Tap a chip again to turn it off.'));
+    SIDE.forEach((sel, i) => { const el = app.querySelector(sel); if (el) el.scrollLeft = sideScroll[i]; });
 }
 
 // ---------- "What do we have?" sheet ----------
 let haveCatalog = [];
 function saveHave() { store.set(KEYS.have, [...state.have]); }
 
-function openHave() { renderHave(); $('haveOverlay').hidden = false; }
-function closeHave() { $('haveOverlay').hidden = true; if (state.view === 'pick') renderPick(); }
+function openHave() { renderHave(); openSheet('haveOverlay'); }
+function closeHave() { closeSheet('haveOverlay'); if (state.view === 'pick') showResults(); }
 $('haveClose').addEventListener('click', closeHave);
 
 function renderHave() {
@@ -276,16 +341,10 @@ function decide() {
     return picks;
 }
 
-function openDecide() { renderDecide(); $('decideOverlay').hidden = false; }
-function renderDecide() {
-    $('decideList').replaceChildren(...decide().map(r => {
-        const t = tile(r, false);
-        t.addEventListener('click', () => { $('decideOverlay').hidden = true; });
-        return t;
-    }));
-}
+function openDecide() { renderDecide(); openSheet('decideOverlay'); }
+function renderDecide() { $('decideList').replaceChildren(...decide().map(r => tile(r, false))); }
 $('decideAgain').addEventListener('click', renderDecide);
-$('decideClose').addEventListener('click', () => { $('decideOverlay').hidden = true; });
+$('decideClose').addEventListener('click', () => closeSheet('decideOverlay'));
 
 // ---------- rate view ----------
 function renderRate(r, afterCooking) {
@@ -506,7 +565,8 @@ function topOffset() { return $('topbar').offsetHeight; }
 
 // Shrink the text of any step that would not fit on one screen, so every step
 // is readable without scrolling inside it: first shrink the text to 34px, then
-// compact the chips and drop the Alexa hint, then shrink to the 28px floor.
+// compact the chips and drop the Alexa hint, then shrink to the 28px floor
+// (26px and 20px on a phone, which is held close).
 function fitSteps() {
     const avail = window.innerHeight - topOffset() - $('cookbar').offsetHeight;
     for (const el of stepEls) {
@@ -518,9 +578,10 @@ function fitSteps() {
         const shrinkTo = (floor) => {
             while (el.offsetHeight > avail && px > floor) { px -= 2; text.style.fontSize = `${px}px`; }
         };
-        shrinkTo(34);
+        const phone = window.innerWidth <= 600;
+        shrinkTo(phone ? 26 : 34);
         if (el.offsetHeight > avail) el.classList.add('tight');
-        shrinkTo(28);
+        shrinkTo(phone ? 20 : 28);
     }
 }
 
@@ -614,9 +675,16 @@ document.addEventListener('keydown', (e) => {
 $('ingBtn').addEventListener('click', () => {
     if (!state.recipe) return;
     $('ingOverlayList').replaceChildren(...ingredientButtons(state.recipe));
-    $('ingOverlay').hidden = false;
+    openSheet('ingOverlay');
 });
-$('ingClose').addEventListener('click', () => { $('ingOverlay').hidden = true; });
+$('ingClose').addEventListener('click', () => closeSheet('ingOverlay'));
+// A tap on the dimmed edge around a sheet closes it, like its Close button.
+for (const id of SHEETS) {
+    $(id).addEventListener('click', (e) => {
+        if (e.target !== $(id)) return;
+        if (id === 'haveOverlay') closeHave(); else closeSheet(id);
+    });
+}
 
 // ---------- read aloud (only shown if the browser has speech synthesis) ----------
 const canSpeak = 'speechSynthesis' in window && typeof window.SpeechSynthesisUtterance === 'function';
@@ -696,13 +764,14 @@ function tickTimers() {
     }
     if (newlyDone) { saveTimers(); showAlarm(); }
 
-    // Top tray: soonest two, then a "+N" chip.
+    // Top tray: soonest two (one on a phone), then a "+N" chip.
     const sorted = [...timers].sort((a, b) => (b.fired - a.fired) || (a.end - b.end));
-    const chips = sorted.slice(0, 2).map(t =>
+    const room = window.innerWidth <= 600 ? 1 : 2;
+    const chips = sorted.slice(0, room).map(t =>
         h('button', { class: 'timer-chip' + (t.fired ? ' done' : ''), type: 'button', onclick: openTimerSheet },
             h('span', { class: 't-time' }, t.fired ? 'DONE' : fmt(remaining(t))),
             h('span', { class: 't-label' }, t.label)));
-    if (sorted.length > 2) chips.push(h('button', { class: 'timer-chip more', type: 'button', onclick: openTimerSheet }, `+${sorted.length - 2}`));
+    if (sorted.length > room) chips.push(h('button', { class: 'timer-chip more', type: 'button', onclick: openTimerSheet }, `+${sorted.length - room}`));
     $('timerTray').replaceChildren(...chips);
 
     if (!$('timerOverlay').hidden) renderTimerSheet();
@@ -730,19 +799,20 @@ $('alarmDismiss').addEventListener('click', () => {
     tickTimers();
 });
 
-function openTimerSheet() { renderTimerSheet(); $('timerOverlay').hidden = false; }
-$('timerClose').addEventListener('click', () => { $('timerOverlay').hidden = true; });
+function openTimerSheet() { renderTimerSheet(); openSheet('timerOverlay'); }
+$('timerClose').addEventListener('click', () => closeSheet('timerOverlay'));
 
 function renderTimerSheet() {
     const rows = timers.map(t => h('div', { class: 'timer-row' },
         h('div', { class: 'tr-name' }, t.label),
         h('div', { class: 'tr-time' }, t.fired ? 'DONE' : fmt(remaining(t))),
-        !t.fired && h('button', { class: 'big-btn secondary', type: 'button', onclick: () => { t.end += 60000; saveTimers(); tickTimers(); } }, '+1 min'),
-        h('button', { class: 'big-btn danger', type: 'button', onclick: () => {
-            timers = timers.filter(x => x !== t); saveTimers();
-            if (!timers.some(x => x.fired)) { stopBeeping(); $('alarm').hidden = true; }
-            tickTimers();
-        } }, t.fired ? 'Clear' : 'Cancel')));
+        h('div', { class: 'tr-btns' },
+            !t.fired && h('button', { class: 'big-btn secondary', type: 'button', onclick: () => { t.end += 60000; saveTimers(); tickTimers(); } }, '+1 min'),
+            h('button', { class: 'big-btn danger', type: 'button', onclick: () => {
+                timers = timers.filter(x => x !== t); saveTimers();
+                if (!timers.some(x => x.fired)) { stopBeeping(); $('alarm').hidden = true; }
+                tickTimers();
+            } }, t.fired ? 'Clear' : 'Cancel'))));
     $('timerSheetList').replaceChildren(...(rows.length ? rows : [h('p', { class: 'empty' }, 'No timers running.')]));
 }
 

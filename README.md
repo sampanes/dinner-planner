@@ -2,11 +2,13 @@
 
 Live site: [sampanes.github.io/dinner-planner](https://sampanes.github.io/dinner-planner/index.html)
 
-- `index.html` - the recipe vault (browse, search by ingredient, edit in the browser)
-- `groupings.html` - the meal shuffler (seeded weekly plan plus grocery list)
+- `index.html` - the recipe vault (browse, search by ingredient, edit in the browser). On a phone a
+  tapped recipe opens full screen with a way back; "Cook this" opens it in kitchen mode.
+- `groupings.html` - the meal shuffler (seeded weekly plan plus grocery list). Locking a meal keeps it
+  in its slot and through every reshuffle; "Send to kitchen" makes the plan this week's row.
 - `kitchen.html` - kitchen mode for the Echo Show 10 (Silk browser) and phones, all by tapping: big photo
   picker with "Can't decide?", "What do we have?" (pick ingredients, recipes sort by how many they use),
-  who-likes-it and mood/protein chips; one step per screen in large type, Back/Next or swipe, per-step
+  who-likes-it and mood/protein chips; one step per screen in large type, Previous/Next or swipe, per-step
   timers with an alarm, resume where you left off; rate it when you finish; this week's plan and a
   tap-off grocery list. Open it on the Show with "Alexa, open Silk" and bookmark
   `https://sampanes.github.io/dinner-planner/kitchen.html`; on a phone, "Add to Home screen".
