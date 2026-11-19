@@ -1,8 +1,12 @@
 // Reminders and notices as Android notifications.
 //
-// Reminders are scheduled inexactly: Android may deliver one a few minutes
-// late, which is fine for "start dinner", and in return the app needs no
-// exact-alarm permission (off by default since Android 14).
+// Reminders are set as exact alarms. Android holds an inexact one back for
+// up to an hour when it was set hours ahead, as every reminder here is, and
+// "start dinner" an hour late is no reminder. The manifest asks for
+// USE_EXACT_ALARM, which needs no tap from the owner; where Android still
+// says no, the reminders fall back to inexact.
+
+import 'dart:ui' show Color;
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
@@ -45,6 +49,9 @@ class LocalNotifier implements Notifier {
   final FlutterLocalNotificationsPlugin _plugin = FlutterLocalNotificationsPlugin();
   bool _ready = false;
 
+  /// The bowl's orange, behind the small icon in the notification shade.
+  static const Color _accent = Color(0xFFEF5620);
+
   static const NotificationDetails _reminder = NotificationDetails(
     android: AndroidNotificationDetails(
       'reminders',
@@ -53,6 +60,7 @@ class LocalNotifier implements Notifier {
       importance: Importance.high,
       priority: Priority.high,
       category: AndroidNotificationCategory.reminder,
+      color: _accent,
     ),
   );
 
@@ -63,6 +71,7 @@ class LocalNotifier implements Notifier {
       channelDescription: 'When the other phone changes a night that concerns you.',
       importance: Importance.defaultImportance,
       priority: Priority.defaultPriority,
+      color: _accent,
     ),
   );
 
@@ -76,7 +85,7 @@ class LocalNotifier implements Notifier {
       // Left on UTC: reminders are scheduled from absolute instants, so they
       // still fire at the right moment.
     }
-    await _plugin.initialize(settings: const InitializationSettings(android: AndroidInitializationSettings('@mipmap/ic_launcher')));
+    await _plugin.initialize(settings: const InitializationSettings(android: AndroidInitializationSettings('ic_stat_dinner')));
     _ready = true;
   }
 
@@ -93,6 +102,7 @@ class LocalNotifier implements Notifier {
   Future<void> schedule(List<Nudge> nudges) async {
     await init();
     await _plugin.cancelAllPendingNotifications();
+    final exact = await _android?.canScheduleExactNotifications() ?? false;
     for (final n in nudges) {
       await _plugin.zonedSchedule(
         id: n.id,
@@ -100,7 +110,7 @@ class LocalNotifier implements Notifier {
         body: n.body,
         scheduledDate: tz.TZDateTime.from(n.when, tz.local),
         notificationDetails: _reminder,
-        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        androidScheduleMode: exact ? AndroidScheduleMode.exactAllowWhileIdle : AndroidScheduleMode.inexactAllowWhileIdle,
       );
     }
   }

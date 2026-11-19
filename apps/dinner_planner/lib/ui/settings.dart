@@ -182,7 +182,7 @@ class _TimeRow extends StatelessWidget {
           final picked = await showTimePicker(context: context, initialTime: time);
           if (picked != null) onPicked(picked.hour * 60 + picked.minute);
         },
-        child: Text(MaterialLocalizations.of(context).formatTimeOfDay(time)),
+        child: Text(MaterialLocalizations.of(context).formatTimeOfDay(time, alwaysUse24HourFormat: MediaQuery.alwaysUse24HourFormatOf(context))),
       ),
     );
   }

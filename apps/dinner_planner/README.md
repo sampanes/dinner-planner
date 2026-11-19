@@ -11,6 +11,10 @@ all of that, and none of it is written to the repository.
 - **Reminders** on your nights: the evening before (check the fridge, start thawing), that morning,
   and when to start cooking. Times are in Settings. A night the other phone hands you gets its
   reminders without you opening the app.
+  They are set as exact alarms (`USE_EXACT_ALARM`, granted at install with no prompt): Android
+  delivers any other kind up to an hour late when it was set hours ahead. Google Play allows that
+  permission only for alarm and calendar apps, so a Play listing would have to argue the case or
+  switch to asking the owner.
 - **Sharing**: one phone taps "Start sharing" and shows a code, the other taps "Join with a code".
 
 ## What is stored where
@@ -67,6 +71,10 @@ Screens as PNG files, for looking over a change without a phone:
 ```bash
 SHOTS_DIR=/some/folder SHOTS_PHOTOS=1 flutter test test/shots_test.dart
 ```
+
+The icons (launcher, and the white shape Android shows in the status bar) are generated from
+`art/icon.png`; after changing the art run `python tool/make_icons.py` (Pillow and numpy), and
+`--check` says whether the committed files are current.
 
 A release build is signed with the key named in `android/key.properties` (never committed) and
 falls back to the debug key without it. Android only installs an update signed with the same key

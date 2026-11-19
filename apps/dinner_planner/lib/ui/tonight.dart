@@ -222,7 +222,8 @@ Future<void> showNeeds(BuildContext context, AppModel model, Recipe recipe, Stri
       maxChildSize: 0.95,
       builder: (context, scroll) => ListView(
         controller: scroll,
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+        // Clear of the system's buttons, which are drawn over the sheet.
+        padding: EdgeInsets.fromLTRB(20, 0, 20, 24 + MediaQuery.paddingOf(context).bottom),
         children: [
           Text(when, style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
           Text(recipe.name, style: theme.textTheme.headlineSmall),
