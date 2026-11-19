@@ -8,6 +8,11 @@ all of that, and none of it is written to the repository.
   kitchen page, and "What it needs" to check the fridge.
 - **Week**: the next fourteen days. Tap a day to pick dinner, tap a name to say who cooks. The
   playlist button adds the dinners from the site's weekly plan to the empty days.
+- **Picking a dinner**: the list opens with three suggestions for the week as it stands, each
+  with its reason: how the two of you rated it on the recipe site, what it shares with dinners
+  already planned (so the other half of the sour cream gets used), and whether the week is short
+  of that kind of dinner. One row of chips narrows by kind; the search looks at names and
+  ingredients and forgives a typo (`lib/data/suggest.dart`).
 - **Reminders** on your nights: the evening before (check the fridge, start thawing), that morning,
   and when to start cooking. Times are in Settings. A night the other phone hands you gets its
   reminders without you opening the app.

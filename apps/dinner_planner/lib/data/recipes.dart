@@ -8,18 +8,27 @@ import 'package:http/http.dart' as http;
 import '../core/shopping.dart';
 
 class Recipe {
-  const Recipe({required this.slug, required this.name, this.image, this.categories = const [], this.ingredients = const []});
+  const Recipe({required this.slug, required this.name, this.image, this.categories = const [], this.tags = const [], this.pink = 0, this.blue = 0, this.ingredients = const []});
 
   final String slug;
   final String name;
   final String? image;
+
+  /// The main thing in it ("Beef", "Veggie").
   final List<String> categories;
+
+  /// The kind of dinner it is ("Tex-Mex", "Creamy").
+  final List<String> tags;
+
+  /// How each of the two rated it on the recipe site, 0 (not yet) to 5.
+  final int pink;
+  final int blue;
   final List<Ingredient> ingredients;
 
   /// The photo at list size. HelloFresh image urls carry their crop size.
   String? get thumb => image?.replaceFirst(RegExp(r'w_\d+,h_\d+'), 'w_300,h_200');
 
-  Map<String, Object?> toJson() => {'slug': slug, 'name': name, 'image': image, 'categories': categories, 'ingredients': [for (final i in ingredients) i.toJson()]};
+  Map<String, Object?> toJson() => {'slug': slug, 'name': name, 'image': image, 'categories': categories, 'tags': tags, 'sourceStars': {'pink': pink, 'blue': blue}, 'ingredients': [for (final i in ingredients) i.toJson()]};
 
   static Recipe? fromJson(Object? raw) {
     if (raw is! Map) return null;
@@ -30,11 +39,16 @@ class Recipe {
             for (final item in list)
               if (item is String) item else if (item is Map && item['text'] is String) item['text'] as String
         ];
+    final stars = raw['sourceStars'];
+    int star(String who) => stars is Map && stars[who] is num ? (stars[who] as num).round().clamp(0, 5) : 0;
     return Recipe(
       slug: slug,
       name: name,
       image: raw['image'] is String ? raw['image'] as String : null,
       categories: texts(raw['categories']),
+      tags: texts(raw['tags']),
+      pink: star('pink'),
+      blue: star('blue'),
       ingredients: [
         if (raw['ingredients'] is List)
           for (final item in raw['ingredients'] as List) ?Ingredient.fromJson(item)

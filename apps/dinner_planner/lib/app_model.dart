@@ -14,6 +14,7 @@ import 'data/products.dart';
 import 'data/recipes.dart';
 import 'data/relay.dart';
 import 'data/session.dart';
+import 'data/suggest.dart';
 
 class AppModel extends ChangeNotifier {
   AppModel(this.session, {DateTime Function()? clock}) : _clock = clock ?? DateTime.now;
@@ -197,6 +198,19 @@ class AppModel extends ChangeNotifier {
     }
     await _wrote(changed);
     return filled;
+  }
+
+  /// [pool] ranked as dinners for [day], given what the other days of the
+  /// fortnight already hold.
+  List<Suggestion> suggestFor(String? day, Iterable<Recipe> pool) {
+    final others = <Recipe>[];
+    for (var i = 0; i < 14; i++) {
+      final d = dayText(dayAfter(now, i));
+      if (d != day) {
+        if (session.recipe(plan.meal(d)) case final r?) others.add(r);
+      }
+    }
+    return suggest(pool, planned: others, names: {for (final who in people) who: plan.name(who)});
   }
 
   List<ShopDinner> get _dinners => [

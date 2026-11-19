@@ -27,7 +27,7 @@ class FakeNtfy {
 
   /// What the recipe site serves.
   String recipesJson = jsonEncode([
-    {'slug': 'beef-chili', 'displayName': 'Beef Chili', 'image': 'https://img.example/c_fill,w_1200,h_800/chili.jpg', 'categories': ['Beef'], 'ingredients': [
+    {'slug': 'beef-chili', 'displayName': 'Beef Chili', 'image': 'https://img.example/c_fill,w_1200,h_800/chili.jpg', 'categories': ['Beef'], 'tags': ['Spicy'], 'sourceStars': {'pink': 4, 'blue': 5}, 'ingredients': [
       {'id': 'ground-beef', 'displayName': 'ground beef', 'amountText': '1 lb', 'text': '1 lb ground beef'},
       {'id': 'onion', 'displayName': 'onion', 'amountText': '2', 'text': '2 onion'},
       {'id': 'salt', 'displayName': 'salt', 'amountText': 'to taste', 'text': 'salt, to taste'},

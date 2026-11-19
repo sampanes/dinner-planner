@@ -24,6 +24,10 @@ const String _recipesKey = 'dp.recipes';
 const String _beatKey = 'dp.openBeat';
 const String _tripKey = 'dp.trip';
 
+/// Goes up when the phone starts keeping more of each recipe, so a list saved
+/// by an older version is fetched again instead of waiting to go stale.
+const int _recipeFields = 2;
+
 class SyncReport {
   const SyncReport({this.changes = const [], this.error});
 
@@ -106,7 +110,7 @@ class Session {
           for (final item in cached['list'] as List) ?Recipe.fromJson(item)
       ];
       final at = cached['at'];
-      recipesAt = at is int ? DateTime.fromMillisecondsSinceEpoch(at) : null;
+      recipesAt = at is int && cached['v'] == _recipeFields ? DateTime.fromMillisecondsSinceEpoch(at) : null;
     }
   }
 
@@ -123,7 +127,7 @@ class Session {
   Future<void> refreshRecipes(DateTime now) async {
     recipes = await fetchRecipes(client, site);
     recipesAt = now;
-    await store.writeJson(_recipesKey, {'at': now.millisecondsSinceEpoch, 'list': [for (final r in recipes) r.toJson()]});
+    await store.writeJson(_recipesKey, {'at': now.millisecondsSinceEpoch, 'v': _recipeFields, 'list': [for (final r in recipes) r.toJson()]});
   }
 
   /// Reads what the other phones said, then says what this one owes. The
