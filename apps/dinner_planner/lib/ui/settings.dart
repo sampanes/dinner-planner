@@ -70,6 +70,10 @@ class SettingsScreen extends StatelessWidget {
                 : TextButton(onPressed: model.refreshRecipes, child: const Text('Refresh')),
           ],
         ),
+        heading('Scanning packets'),
+        const Text('A scanned barcode is looked up in Open Food Facts and in the USDA\'s list of branded foods; only the barcode is sent. The USDA answers ten lookups an hour without a key. A free key from api.data.gov lifts that, and stays on this phone.'),
+        const SizedBox(height: 12),
+        _CommitField(key: const ValueKey('usda-key'), value: model.usdaKey, label: 'USDA key (optional)', onCommit: model.setUsdaKey),
       ],
     );
   }

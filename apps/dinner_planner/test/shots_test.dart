@@ -14,6 +14,7 @@ import 'package:dinner_planner/data/session.dart';
 import 'package:dinner_planner/data/store.dart';
 import 'package:dinner_planner/main.dart';
 import 'package:dinner_planner/notify/notifier.dart';
+import 'package:dinner_planner/ui/scan.dart';
 import 'package:dinner_planner/ui/shop.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -253,6 +254,28 @@ void main() {
     await tester.scrollUntilVisible(find.byKey(const ValueKey('got-celery')), 400, scrollable: list);
     await tester.drag(list, const Offset(0, -400));
     await shoot(tester, '16-shop-check-and-got');
+    await finish(tester);
+  }, skip: shotsDir == null);
+
+  testWidgets('shots: scanning a packet', (tester) async {
+    final model = await start(tester);
+    await fillWeek(model, me: 'blue');
+    // The camera cannot be drawn here; this is the barcode it would hand back.
+    final camera = scanCode;
+    scanCode = (_) async => '012345000019';
+    addTearDown(() => scanCode = camera);
+    ntfy.openFoodFacts['012345000019'] = {'product_name': 'Sour Cream', 'brands': 'Meadow Farm', 'quantity': '16 oz'};
+    await tester.tap(find.text('Shop'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('shop-scan')));
+    await shoot(tester, '17-scan-which-ingredient');
+    await tester.tap(find.byKey(const ValueKey('match-sour-cream')));
+    await shoot(tester, '18-scan-filled-in');
+    await tester.tap(find.byKey(const ValueKey('shop-buy-save')));
+    await tester.pumpAndSettle();
+    final list = find.descendant(of: find.byType(ShopScreen), matching: find.byType(Scrollable)).first;
+    await tester.scrollUntilVisible(find.byKey(const ValueKey('got-sour-cream')), 400, scrollable: list);
+    await shoot(tester, '19-scan-ticked');
     await finish(tester);
   }, skip: shotsDir == null);
 

@@ -1,5 +1,6 @@
-// An in-memory stand-in for an ntfy server and the recipe site, speaking the
-// same HTTP the app uses.
+// An in-memory stand-in for an ntfy server, the recipe site and the two
+// product lists a barcode is looked up in, speaking the same HTTP the app
+// uses.
 
 import 'dart:convert';
 
@@ -15,6 +16,14 @@ class FakeNtfy {
   bool down = false;
   String? requireToken;
   int _next = 1;
+
+  /// Stand-ins for Open Food Facts and the USDA's list: barcode -> what each
+  /// says about it, in the shape the real service answers with. Every lookup
+  /// is noted in [lookups].
+  final Map<String, Map<String, Object?>> openFoodFacts = {};
+  final Map<String, Map<String, Object?>> usda = {};
+  int usdaStatus = 200;
+  final List<String> lookups = [];
 
   /// What the recipe site serves.
   String recipesJson = jsonEncode([
@@ -35,6 +44,21 @@ class FakeNtfy {
   http.Client client() => MockClient((request) async {
         if (down) throw http.ClientException('offline');
         final path = request.url.path;
+        const json = {'content-type': 'application/json; charset=utf-8'};
+        if (request.url.host == 'world.openfoodfacts.org') {
+          final code = path.split('/').last.replaceAll('.json', '');
+          lookups.add('off $code');
+          final p = openFoodFacts[code];
+          if (p == null) return http.Response(jsonEncode({'code': code, 'status': 0, 'status_verbose': 'product not found'}), 404, headers: json);
+          return http.Response(jsonEncode({'code': code, 'status': 1, 'product': p}), 200, headers: json);
+        }
+        if (request.url.host == 'api.nal.usda.gov') {
+          final code = request.url.queryParameters['query'];
+          lookups.add('usda $code ${request.url.queryParameters['api_key']}');
+          if (usdaStatus != 200) return http.Response('{}', usdaStatus);
+          final f = usda[code];
+          return http.Response(jsonEncode({'totalHits': f == null ? 0 : 1, 'foods': [?f]}), 200, headers: json);
+        }
         if (path.endsWith('/data/runtime/recipes.runtime.json')) return http.Response(recipesJson, 200, headers: {'content-type': 'application/json; charset=utf-8'});
         if (path.endsWith('/data/source/log.json')) return http.Response(logJson, 200);
         if (requireToken != null && request.headers['Authorization'] != 'Bearer $requireToken') return http.Response('forbidden', 403);

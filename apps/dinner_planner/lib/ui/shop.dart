@@ -6,6 +6,9 @@ import '../core/plan.dart';
 import '../core/shopping.dart';
 import '../core/store_order.dart';
 import '../core/sync_core.dart';
+import '../data/products.dart';
+import 'match.dart';
+import 'scan.dart';
 
 /// Offered when adding a store, so the usual ones are a tap rather than typing.
 const List<String> storeIdeas = ['Albertsons', 'Aldi', 'Costco', "Fry's", 'Kroger', 'Safeway', 'Sprouts', 'Target', "Trader Joe's", 'Walmart', 'Whole Foods'];
@@ -20,6 +23,35 @@ class ShopScreen extends StatelessWidget {
     final messenger = ScaffoldMessenger.of(context);
     await Clipboard.setData(ClipboardData(text: model.shoppingText()));
     messenger.showSnackBar(const SnackBar(content: Text('List copied.')));
+  }
+
+  /// Scan a packet anywhere: in the store it ticks the line, at the pantry
+  /// shelf it teaches the app what the household buys.
+  Future<void> _scan(BuildContext context) async {
+    final messenger = ScaffoldMessenger.of(context);
+    void say(String text, {SnackBarAction? action}) => messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(text), action: action));
+    final code = await scanCode(context);
+    if (code == null || !context.mounted) return;
+    final names = model.ingredientNames;
+    var id = model.ingredientForCode(code);
+    if (id == null || !names.containsKey(id)) {
+      // A packet the household has not scanned before: say what it is for,
+      // then look over what was found.
+      final picked = await Navigator.of(context).push<({String id, Product? found})>(MaterialPageRoute(fullscreenDialog: true, builder: (_) => MatchPage(model: model, code: code)));
+      if (picked == null || !context.mounted) return;
+      id = picked.id;
+      if (!await editProduct(context, model, id: id, name: names[id] ?? id, found: picked.found, code: code)) return;
+    }
+    final name = model.buy(id) ?? names[id] ?? id;
+    final line = [for (final l in model.shopping) if (l.id == id) l].firstOrNull;
+    if (line == null) {
+      say('$name: not on the list right now.');
+      return;
+    }
+    await model.setGot(line, true);
+    say('Got: $name', action: SnackBarAction(label: 'Undo', onPressed: () => model.setGot(line, false)));
   }
 
   @override
@@ -56,6 +88,8 @@ class ShopScreen extends StatelessWidget {
         Row(
           children: [
             Expanded(child: Text('Shopping list', style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700))),
+            if (model.recipes.isNotEmpty)
+              IconButton(key: const ValueKey('shop-scan'), tooltip: 'Scan a packet', icon: const Icon(Icons.qr_code_scanner), onPressed: () => _scan(context)),
             if (groups.isNotEmpty || check.isNotEmpty)
               IconButton(key: const ValueKey('shop-copy'), tooltip: 'Copy the list', icon: const Icon(Icons.copy), onPressed: () => _copy(context)),
           ],
@@ -214,17 +248,6 @@ class _ShopTile extends StatelessWidget {
   final ShopLine line;
   final bool got;
 
-  Future<void> _edit(BuildContext context) async {
-    final edit = await showModalBottomSheet<ProductEdit>(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      showDragHandle: true,
-      builder: (_) => ProductSheet(model: model, id: line.id, name: line.name),
-    );
-    if (edit != null) await model.saveProduct(line.id, buy: edit.buy, size: edit.size, section: edit.section, at: edit.at);
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -272,7 +295,7 @@ class _ShopTile extends StatelessWidget {
               key: ValueKey('${got ? 'got' : 'shop'}-edit-${line.id}'),
               tooltip: 'What you actually buy',
               icon: Icon(known ? Icons.sell : Icons.sell_outlined, color: known ? theme.colorScheme.primary : faded),
-              onPressed: () => _edit(context),
+              onPressed: () => editProduct(context, model, id: line.id, name: line.name),
             ),
           ],
         ),
@@ -281,20 +304,42 @@ class _ShopTile extends StatelessWidget {
   }
 }
 
+/// Opens the sheet for one ingredient and saves what comes back. [found] and
+/// [code] are a packet that was just scanned for it. False when the person
+/// backed out.
+Future<bool> editProduct(BuildContext context, AppModel model, {required String id, required String name, Product? found, String? code}) async {
+  final edit = await showModalBottomSheet<ProductEdit>(
+    context: context,
+    isScrollControlled: true,
+    useSafeArea: true,
+    showDragHandle: true,
+    builder: (_) => ProductSheet(model: model, id: id, name: name, found: found, code: code),
+  );
+  if (edit == null) return false;
+  await model.saveProduct(id, buy: edit.buy, size: edit.size, section: edit.section, at: edit.at, code: edit.code);
+  return true;
+}
+
 String _cap(String s) => s.isEmpty ? s : '${s[0].toUpperCase()}${s.substring(1)}';
 
 /// What the sheet below hands back when it is saved.
-typedef ProductEdit = ({String buy, String size, String section, Map<String, String> at});
+typedef ProductEdit = ({String buy, String size, String section, Map<String, String> at, String? code});
 
 /// Everything the household records about what it buys for one ingredient:
 /// the name on the shelf, the packet size, its section, and a note per store
 /// on where it is.
 class ProductSheet extends StatefulWidget {
-  const ProductSheet({super.key, required this.model, required this.id, required this.name});
+  const ProductSheet({super.key, required this.model, required this.id, required this.name, this.found, this.code});
 
   final AppModel model;
   final String id;
   final String name;
+
+  /// A packet scanned for this ingredient before the sheet opened: its
+  /// barcode, and what the public lists said it is (null when they did not
+  /// know it).
+  final Product? found;
+  final String? code;
 
   @override
   State<ProductSheet> createState() => _ProductSheetState();
@@ -307,6 +352,39 @@ class _ProductSheetState extends State<ProductSheet> {
     for (final s in widget.model.stores) s.id: TextEditingController(text: widget.model.at(s.id, widget.id) ?? ''),
   };
   late String _section = widget.model.section(widget.id);
+  late String? _code = widget.code;
+  String? _note;
+  bool _looking = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.code != null) _fill(widget.found);
+  }
+
+  /// Puts what a scan found into the fields, keeping what is there where the
+  /// scan has nothing better.
+  void _fill(Product? p) {
+    final name = p?.shelfName ?? '', size = p?.size ?? '';
+    if (name.isNotEmpty) _buy.text = name;
+    if (size.isNotEmpty) _size.text = size;
+    _note = name.isEmpty && size.isEmpty
+        ? 'Neither list knows that barcode. Type the name once; the app will know the packet from now on.'
+        : 'From the barcode. Change anything that is off.';
+  }
+
+  Future<void> _scan() async {
+    final code = await scanCode(context);
+    if (code == null || !mounted) return;
+    setState(() => _looking = true);
+    final found = await widget.model.lookUp(code);
+    if (!mounted) return;
+    setState(() {
+      _looking = false;
+      _code = code;
+      _fill(found);
+    });
+  }
 
   @override
   void dispose() {
@@ -318,7 +396,7 @@ class _ProductSheetState extends State<ProductSheet> {
     super.dispose();
   }
 
-  void _save() => Navigator.of(context).pop((buy: _buy.text, size: _size.text, section: _section, at: {for (final e in _at.entries) e.key: e.value.text}));
+  void _save() => Navigator.of(context).pop((buy: _buy.text, size: _size.text, section: _section, at: {for (final e in _at.entries) e.key: e.value.text}, code: _code));
 
   @override
   Widget build(BuildContext context) {
@@ -334,6 +412,17 @@ class _ProductSheetState extends State<ProductSheet> {
             Text('What do you buy for ${widget.name}?', style: theme.textTheme.titleLarge),
             const SizedBox(height: 4),
             Text('Both phones see it. Every part is optional.', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+            const SizedBox(height: 12),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: FilledButton.tonalIcon(
+                key: const ValueKey('shop-scan-packet'),
+                onPressed: _looking ? null : _scan,
+                icon: _looking ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2)) : const Icon(Icons.qr_code_scanner),
+                label: Text(_looking ? 'Looking it up' : (_code == null ? 'Scan the packet' : 'Scan another')),
+              ),
+            ),
+            if (_note != null) Padding(padding: const EdgeInsets.only(top: 8), child: Text(_note!, key: const ValueKey('shop-scan-note'), style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.primary))),
             const SizedBox(height: 16),
             TextField(
               key: const ValueKey('shop-buy-text'),

@@ -10,6 +10,7 @@ import 'core/plan.dart';
 import 'core/shopping.dart';
 import 'core/store_order.dart';
 import 'core/sync_core.dart';
+import 'data/products.dart';
 import 'data/recipes.dart';
 import 'data/relay.dart';
 import 'data/session.dart';
@@ -326,7 +327,7 @@ class AppModel extends ChangeNotifier {
 
   /// Everything the household records about what it buys for an ingredient,
   /// saved in one go. A null leaves that part as it is; '' clears it.
-  Future<void> saveProduct(String id, {String? buy, String? size, String? section, Map<String, String> at = const {}}) {
+  Future<void> saveProduct(String id, {String? buy, String? size, String? section, Map<String, String> at = const {}, String? code}) {
     var changed = false;
     void put(String key, String? text, {int max = 120}) {
       if (text == null) return;
@@ -341,7 +342,29 @@ class AppModel extends ChangeNotifier {
       changed = session.core.set(sectionKey(id), section.isEmpty || section == guessSection(id) ? null : section, now) || changed;
     }
     at.forEach((store, text) => put(atKey(store, id), text, max: 60));
+    // The packet's barcode now means this ingredient, on both phones.
+    if (code != null) changed = session.core.set(codeKey(code), id, now) || changed;
     return _wrote(changed, replan: false);
+  }
+
+  /// The ingredient a barcode was saved for, or null.
+  String? ingredientForCode(String code) => _text(codeKey(code));
+
+  /// Every ingredient any recipe uses, id -> name.
+  Map<String, String> get ingredientNames => {
+        for (final r in recipes)
+          for (final i in r.ingredients) i.id: i.name,
+      };
+
+  /// What the public lists say a barcode is, or null.
+  Future<Product?> lookUp(String code) => lookUpProduct(session.client, code, usdaKey: session.usdaKey);
+
+  String get usdaKey => session.usdaKey;
+
+  Future<void> setUsdaKey(String key) async {
+    session.usdaKey = key.trim();
+    await session.saveSettings();
+    notifyListeners();
   }
 
   /// The list as plain text, for pasting anywhere.

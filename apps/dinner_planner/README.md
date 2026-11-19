@@ -20,6 +20,9 @@ all of that, and none of it is written to the repository.
   the name on the shelf, the packet size (the list then says how many packets), its section, and a
   note on where it is in each store. All of it is shared, so one of you can tick things off in the
   store while the other watches. The list copies as plain text.
+- **Scan**: point the camera at a packet's barcode and the name, brand and size fill themselves in
+  ("Scanning a packet" below). Say once which ingredient a packet is; after that scanning it
+  ticks the line.
 - **Stores**: add the stores you use, and tap one when you walk in. The list switches to the order
   you walk that store, which it learns from the order you tick things in ("The order of a store"
   below).
@@ -32,7 +35,8 @@ all of that, and none of it is written to the repository.
 | Recipes, photos, the kitchen page | the recipe site (public; set its address in Settings) |
 | Dinners by day, who cooks, the two names | each phone, and the relay messages between them |
 | What is in the house for which dinner; what you buy for each ingredient, its packet size and section; the stores, and where things are in each | each phone, and the relay messages between them |
-| Which person this phone belongs to, reminder times, which store it is in right now | this phone only |
+| Which barcode is which ingredient | each phone, and the relay messages between them |
+| Which person this phone belongs to, reminder times, which store it is in right now, a USDA key | this phone only |
 
 ## How two phones stay the same
 
@@ -74,6 +78,26 @@ after the one before it, so where two trips disagree the latest wins. Sections a
 order the walk has met them, the rest after in a usual supermarket order. A phone stops counting
 as in the store two hours after its last tick, so ticks made at home teach nothing.
 
+## Scanning a packet
+
+The camera reads the barcode on the phone (`mobile_scanner`, with Google's ML Kit model inside
+the app, so it works with no signal). The number is then looked up in two free lists
+(`lib/data/products.dart`), and only the number is sent:
+
+- [Open Food Facts](https://world.openfoodfacts.org), no key. Names are good; sizes are sometimes
+  a serving rather than the packet.
+- The USDA's [FoodData Central](https://fdc.nal.usda.gov) branded foods, which US makers file
+  themselves, so brand and packet size are reliable. Without a key the app uses the public
+  `DEMO_KEY`, good for ten lookups an hour; a free key from api.data.gov goes in Settings.
+
+Where both answer, the name comes from the first and the brand and size from the second. A packet
+neither knows is still remembered once you name it: the household keeps its own
+`code/<barcode>` -> ingredient map, so the second scan of anything needs no network. A barcode a
+store printed on something it weighed (meat, deli) starts with 2 and ends in the price; the price
+part is dropped so the next pack of the same thing is recognized.
+
+The lookups are checked against stand-ins in the tests; the camera can only be tried on a phone.
+
 ## Build and test
 
 The Flutter version is pinned in `.fvmrc`.
@@ -104,3 +128,5 @@ as the copy already on the phone, so use one key for every release.
 - Timers that keep running with the screen off (the kitchen page's timers stop when the phone sleeps).
 - Showing tonight's dinner on the Echo Show when a phone starts cooking.
 - A scan-able code for joining, a home-screen widget, sharing a recipe link into the app.
+- Reading the words on a label or shelf tag when a barcode is on no list; turning cups and
+  spoonfuls into packets sold by weight; choosing the store by where the phone is.
