@@ -1,6 +1,5 @@
 import 'package:dinner_planner/app_model.dart';
 import 'package:dinner_planner/core/shopping.dart';
-import 'package:dinner_planner/data/instacart.dart';
 import 'package:dinner_planner/data/recipes.dart';
 import 'package:dinner_planner/data/session.dart';
 import 'package:dinner_planner/data/store.dart';
@@ -114,66 +113,6 @@ void main() {
     expect([for (final m in ntfy.messages) m.title], contains('Shopping list updated'));
   });
 
-  group('Instacart', () {
-    Future<AppModel> planned(FakeNtfy ntfy) async {
-      final m = await phone(ntfy);
-      await m.setMeal('2026-11-19', 'beef-chili');
-      await m.setMeal('2026-11-20', 'baked-penne');
-      return m;
-    }
-
-    test('gets what is still to buy, by the names the household uses', () async {
-      final ntfy = FakeNtfy()..instacartKey = 'key-1';
-      final m = await planned(ntfy);
-      await m.setInstacartKey(' key-1 ');
-      await m.setBuy('penne', 'Whole wheat penne');
-      await m.setGot(m.shopping.firstWhere((l) => l.id == 'onion'), true);
-      expect('${await m.instacartLink()}', 'https://www.instacart.com/store/shopping_lists/1');
-      final sent = ntfy.instacartLists.single;
-      expect(sent['link_type'], 'shopping_list');
-      expect(sent['line_items'], [
-        {
-          'name': 'ground beef',
-          'display_text': '1 lb + 10 oz ground beef',
-          'line_item_measurements': [
-            {'quantity': 1.0, 'unit': 'pound'},
-            {'quantity': 10.0, 'unit': 'ounce'},
-          ],
-        },
-        {
-          'name': 'Whole wheat penne',
-          'display_text': '6 oz penne',
-          'line_item_measurements': [
-            {'quantity': 6.0, 'unit': 'ounce'},
-          ],
-        },
-      ]);
-    });
-
-    test('a test key is tried on the test address', () async {
-      final ntfy = FakeNtfy()
-        ..instacartKey = 'dev-key'
-        ..instacartHost = 'connect.dev.instacart.tools';
-      final m = await planned(ntfy);
-      await m.setInstacartKey('dev-key');
-      await m.instacartLink();
-      expect(ntfy.instacartLists, hasLength(1));
-    });
-
-    test('a refused key, no key and an empty list each say so', () async {
-      final ntfy = FakeNtfy()..instacartKey = 'right';
-      final m = await planned(ntfy);
-      await expectLater(m.instacartLink(), throwsA(isA<InstacartError>().having((e) => e.message, 'message', contains('Settings'))));
-      await m.setInstacartKey('wrong');
-      await expectLater(m.instacartLink(), throwsA(isA<InstacartError>().having((e) => e.message, 'message', 'Instacart did not accept the key.')));
-      await m.setInstacartKey('right');
-      for (final l in m.shopping) {
-        await m.setGot(l, true);
-      }
-      await expectLater(m.instacartLink(), throwsA(isA<InstacartError>().having((e) => e.message, 'message', 'Nothing is left to get.')));
-    });
-  });
-
   testWidgets('shop tab: tick a line, name what you buy, copy the list', (tester) async {
     tester.view.physicalSize = const Size(1080, 2400);
     tester.view.devicePixelRatio = 2.625;
@@ -198,7 +137,6 @@ void main() {
     await tester.tap(find.text('Shop'));
     await tester.pumpAndSettle();
     expect(find.textContaining('Pick dinners for the week'), findsOneWidget);
-    expect(find.byKey(const ValueKey('shop-instacart')), findsNothing);
 
     await model.setMeal('2026-11-19', 'beef-chili');
     await model.setMeal('2026-11-20', 'baked-penne');

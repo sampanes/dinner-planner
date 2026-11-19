@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../app_model.dart';
 import '../core/plan.dart';
 import '../core/shopping.dart';
 import '../core/sync_core.dart';
-import '../data/instacart.dart';
 
 class ShopScreen extends StatelessWidget {
   const ShopScreen({super.key, required this.model, required this.onOpenWeek});
@@ -18,17 +16,6 @@ class ShopScreen extends StatelessWidget {
     final messenger = ScaffoldMessenger.of(context);
     await Clipboard.setData(ClipboardData(text: model.shoppingText()));
     messenger.showSnackBar(const SnackBar(content: Text('List copied.')));
-  }
-
-  Future<void> _instacart(BuildContext context) async {
-    final messenger = ScaffoldMessenger.of(context);
-    try {
-      await launchUrl(await model.instacartLink(), mode: LaunchMode.externalApplication);
-    } on InstacartError catch (e) {
-      messenger.showSnackBar(SnackBar(content: Text(e.message)));
-    } on Exception {
-      messenger.showSnackBar(const SnackBar(content: Text('Could not reach Instacart.')));
-    }
   }
 
   @override
@@ -73,16 +60,6 @@ class ShopScreen extends StatelessWidget {
         if (planned.isEmpty) ...[
           const SizedBox(height: 12),
           Align(alignment: Alignment.centerLeft, child: FilledButton.tonal(onPressed: onOpenWeek, child: const Text('Plan the week'))),
-        ],
-        if (model.instacartKey.isNotEmpty && todo.isNotEmpty) ...[
-          const SizedBox(height: 12),
-          FilledButton.tonalIcon(
-            key: const ValueKey('shop-instacart'),
-            style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(48)),
-            icon: const Icon(Icons.open_in_new),
-            label: const Text('Open the list in Instacart'),
-            onPressed: () => _instacart(context),
-          ),
         ],
         const SizedBox(height: 8),
         for (final l in todo) _ShopTile(model: model, line: l, got: false),

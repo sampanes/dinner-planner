@@ -9,7 +9,6 @@ import 'core/nudges.dart';
 import 'core/plan.dart';
 import 'core/shopping.dart';
 import 'core/sync_core.dart';
-import 'data/instacart.dart';
 import 'data/recipes.dart';
 import 'data/relay.dart';
 import 'data/session.dart';
@@ -242,26 +241,6 @@ class AppModel extends ChangeNotifier {
       if (loose.isNotEmpty) 'Check you have: ${loose.join(', ')}',
     ].join('\n');
   }
-
-  String get instacartKey => session.instacartKey;
-
-  Future<void> setInstacartKey(String key) async {
-    session.instacartKey = key.trim();
-    await session.saveSettings();
-    notifyListeners();
-  }
-
-  /// Makes an Instacart page holding what is still to get and returns its
-  /// address.
-  Future<Uri> instacartLink() => createInstacartList(
-        session.client,
-        key: session.instacartKey,
-        title: 'Dinner planner',
-        items: [
-          for (final l in shopping)
-            if (!l.loose) InstacartItem(search: buy(l.id) ?? l.name, shown: '${l.amountText} ${l.name}', totals: l.totals),
-        ],
-      );
 
   Future<bool> allowNotifications() => session.notifier.askPermission();
 

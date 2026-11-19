@@ -16,12 +16,6 @@ class FakeNtfy {
   String? requireToken;
   int _next = 1;
 
-  /// Stands in for Instacart: the key it accepts, on which address, and
-  /// every list it was sent.
-  String? instacartKey;
-  String instacartHost = 'connect.instacart.com';
-  final List<Map<String, Object?>> instacartLists = [];
-
   /// What the recipe site serves.
   String recipesJson = jsonEncode([
     {'slug': 'beef-chili', 'displayName': 'Beef Chili', 'image': 'https://img.example/c_fill,w_1200,h_800/chili.jpg', 'categories': ['Beef'], 'ingredients': [
@@ -41,11 +35,6 @@ class FakeNtfy {
   http.Client client() => MockClient((request) async {
         if (down) throw http.ClientException('offline');
         final path = request.url.path;
-        if (path == '/idp/v1/products/products_link') {
-          if (request.url.host != instacartHost || request.headers['Authorization'] != 'Bearer $instacartKey') return http.Response('{}', 401);
-          instacartLists.add((jsonDecode(request.body) as Map).cast<String, Object?>());
-          return http.Response(jsonEncode({'products_link_url': 'https://www.instacart.com/store/shopping_lists/${instacartLists.length}'}), 200);
-        }
         if (path.endsWith('/data/runtime/recipes.runtime.json')) return http.Response(recipesJson, 200, headers: {'content-type': 'application/json; charset=utf-8'});
         if (path.endsWith('/data/source/log.json')) return http.Response(logJson, 200);
         if (requireToken != null && request.headers['Authorization'] != 'Bearer $requireToken') return http.Response('forbidden', 403);

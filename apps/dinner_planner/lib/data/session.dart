@@ -46,9 +46,6 @@ class Session {
   String site = defaultSite;
   NudgeTimes times = const NudgeTimes();
 
-  /// The Instacart Developer Platform key, when the owner has typed one in.
-  /// Kept on this phone only.
-  String instacartKey = '';
   List<Recipe> recipes = const [];
   DateTime? recipesAt;
 
@@ -83,8 +80,6 @@ class Session {
       final s = settings['site'];
       if (s is String && s.isNotEmpty) site = s;
       times = NudgeTimes.fromJson(settings['times']);
-      final k = settings['instacartKey'];
-      instacartKey = k is String ? k : '';
     }
     final cached = await store.readJson(_recipesKey);
     if (cached is Map) {
@@ -103,7 +98,7 @@ class Session {
 
   Future<void> saveProfile() => store.writeJson(_profileKey, {'me': me});
 
-  Future<void> saveSettings() => store.writeJson(_settingsKey, {'site': site, 'times': times.toJson(), 'instacartKey': instacartKey});
+  Future<void> saveSettings() => store.writeJson(_settingsKey, {'site': site, 'times': times.toJson()});
 
   Future<void> refreshRecipes(DateTime now) async {
     recipes = await fetchRecipes(client, site);
