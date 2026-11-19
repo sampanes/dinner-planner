@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../app_model.dart';
 import 'settings.dart';
+import 'shop.dart';
 import 'tonight.dart';
 import 'week.dart';
 
@@ -52,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             children: [
               TonightScreen(model: model, onOpenWeek: () => setState(() => _tab = 1)),
               WeekScreen(model: model),
+              ShopScreen(model: model, onOpenWeek: () => setState(() => _tab = 1)),
               SettingsScreen(model: model),
             ],
           ),
@@ -62,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           destinations: const [
             NavigationDestination(icon: Icon(Icons.restaurant_outlined), selectedIcon: Icon(Icons.restaurant), label: 'Tonight'),
             NavigationDestination(icon: Icon(Icons.calendar_view_week_outlined), selectedIcon: Icon(Icons.calendar_view_week), label: 'Week'),
+            NavigationDestination(icon: Icon(Icons.shopping_basket_outlined), selectedIcon: Icon(Icons.shopping_basket), label: 'Shop'),
             NavigationDestination(icon: Icon(Icons.settings_outlined), selectedIcon: Icon(Icons.settings), label: 'Settings'),
           ],
         ),

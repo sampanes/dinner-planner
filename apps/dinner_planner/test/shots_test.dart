@@ -14,6 +14,7 @@ import 'package:dinner_planner/data/session.dart';
 import 'package:dinner_planner/data/store.dart';
 import 'package:dinner_planner/main.dart';
 import 'package:dinner_planner/notify/notifier.dart';
+import 'package:dinner_planner/ui/shop.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -208,6 +209,31 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('needs-tonight')));
     await shoot(tester, '08-what-it-needs');
+    await finish(tester);
+  }, skip: shotsDir == null);
+
+  testWidgets('shots: shopping', (tester) async {
+    final model = await start(tester);
+    await fillWeek(model, me: 'blue');
+    await tester.tap(find.text('Shop'));
+    await shoot(tester, '11-shop');
+
+    await model.setBuy('butter', 'Salted, the four-stick box');
+    await model.setBuy('cheddar-cheese', 'Sharp, the shredded two-pound bag');
+    for (final id in ['black-beans', 'broccoli', 'celery']) {
+      await model.setGot(model.shopping.firstWhere((l) => l.id == id), true);
+    }
+    await shoot(tester, '12-shop-real-names');
+
+    await tester.tap(find.byKey(const ValueKey('shop-edit-carrot')));
+    await shoot(tester, '13-shop-what-you-buy');
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+
+    final list = find.descendant(of: find.byType(ShopScreen), matching: find.byType(Scrollable)).first;
+    await tester.scrollUntilVisible(find.byKey(const ValueKey('got-celery')), 400, scrollable: list);
+    await tester.drag(list, const Offset(0, -400));
+    await shoot(tester, '14-shop-check-and-got');
     await finish(tester);
   }, skip: shotsDir == null);
 

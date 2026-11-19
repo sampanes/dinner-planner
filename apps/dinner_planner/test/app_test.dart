@@ -132,7 +132,8 @@ void main() {
     await model.setMeal('2026-11-19', 'beef-chili');
     await model.setCook('2026-11-19', 'blue');
     await model.startHousehold();
-    for (final tab in ['Tonight', 'Week', 'Settings']) {
+    await model.setBuy('ground-beef', 'The big tray of 88/12 from the warehouse store');
+    for (final tab in ['Tonight', 'Week', 'Shop', 'Settings']) {
       await tester.tap(find.text(tab));
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull, reason: '$tab overflows');

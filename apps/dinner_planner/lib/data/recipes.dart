@@ -5,6 +5,8 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import '../core/shopping.dart';
+
 class Recipe {
   const Recipe({required this.slug, required this.name, this.image, this.categories = const [], this.ingredients = const []});
 
@@ -12,12 +14,12 @@ class Recipe {
   final String name;
   final String? image;
   final List<String> categories;
-  final List<String> ingredients;
+  final List<Ingredient> ingredients;
 
   /// The photo at list size. HelloFresh image urls carry their crop size.
   String? get thumb => image?.replaceFirst(RegExp(r'w_\d+,h_\d+'), 'w_300,h_200');
 
-  Map<String, Object?> toJson() => {'slug': slug, 'name': name, 'image': image, 'categories': categories, 'ingredients': ingredients};
+  Map<String, Object?> toJson() => {'slug': slug, 'name': name, 'image': image, 'categories': categories, 'ingredients': [for (final i in ingredients) i.toJson()]};
 
   static Recipe? fromJson(Object? raw) {
     if (raw is! Map) return null;
@@ -33,7 +35,10 @@ class Recipe {
       name: name,
       image: raw['image'] is String ? raw['image'] as String : null,
       categories: texts(raw['categories']),
-      ingredients: texts(raw['ingredients']),
+      ingredients: [
+        if (raw['ingredients'] is List)
+          for (final item in raw['ingredients'] as List) ?Ingredient.fromJson(item)
+      ],
     );
   }
 }

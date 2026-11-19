@@ -152,6 +152,9 @@ List<Notice> noticesFor(
 /// person may see as a notification.
 ({String title, String body}) headline(List<Entry> entries, Plan plan, String Function(String slug) recipeName, DateTime now) {
   if (entries.isEmpty) return (title: 'Dinner planner', body: 'In step.');
+  if (entries.every((e) => e.key.startsWith('got/') || e.key.startsWith('buy/'))) {
+    return (title: 'Shopping list updated', body: entries.length == 1 ? '' : '${entries.length} changes');
+  }
   if (entries.length > 2) return (title: 'Dinner plan updated', body: '${entries.length} changes');
   final lines = <String>[];
   for (final e in entries) {

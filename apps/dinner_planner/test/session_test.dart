@@ -160,7 +160,8 @@ void main() {
       expect([for (final r in list) r.name], ['Baked Penne', 'Beef Chili', 'Shrimp Tacos']);
       final chili = list[1];
       expect(chili.thumb, 'https://img.example/c_fill,w_300,h_200/chili.jpg');
-      expect(chili.ingredients, ['1 lb ground beef']);
+      expect(chili.ingredients.map((i) => i.text), ['1 lb ground beef', '2 onion', 'salt, to taste']);
+      expect(Recipe.fromJson(chili.toJson())!.ingredients.first.id, 'ground-beef', reason: 'the copy kept on the phone reads back the same');
       expect(Recipe.fromJson(chili.toJson())!.name, 'Beef Chili');
     });
 

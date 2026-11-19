@@ -16,17 +16,36 @@ class FakeNtfy {
   String? requireToken;
   int _next = 1;
 
+  /// Stands in for Instacart: the key it accepts, on which address, and
+  /// every list it was sent.
+  String? instacartKey;
+  String instacartHost = 'connect.instacart.com';
+  final List<Map<String, Object?>> instacartLists = [];
+
   /// What the recipe site serves.
   String recipesJson = jsonEncode([
-    {'slug': 'beef-chili', 'displayName': 'Beef Chili', 'image': 'https://img.example/c_fill,w_1200,h_800/chili.jpg', 'categories': ['Beef'], 'ingredients': [{'text': '1 lb ground beef'}]},
+    {'slug': 'beef-chili', 'displayName': 'Beef Chili', 'image': 'https://img.example/c_fill,w_1200,h_800/chili.jpg', 'categories': ['Beef'], 'ingredients': [
+      {'id': 'ground-beef', 'displayName': 'ground beef', 'amountText': '1 lb', 'text': '1 lb ground beef'},
+      {'id': 'onion', 'displayName': 'onion', 'amountText': '2', 'text': '2 onion'},
+      {'id': 'salt', 'displayName': 'salt', 'amountText': 'to taste', 'text': 'salt, to taste'},
+    ]},
     {'slug': 'shrimp-tacos', 'displayName': 'Shrimp Tacos', 'categories': ['Seafood'], 'ingredients': [{'text': '10 oz shrimp'}]},
-    {'slug': 'baked-penne', 'displayName': 'Baked Penne', 'categories': ['Pasta'], 'ingredients': [{'text': '6 oz penne'}]},
+    {'slug': 'baked-penne', 'displayName': 'Baked Penne', 'categories': ['Pasta'], 'ingredients': [
+      {'id': 'penne', 'displayName': 'penne', 'amountText': '6 oz', 'text': '6 oz penne'},
+      {'id': 'onion', 'displayName': 'onion', 'amountText': '1 unit', 'text': '1 onion'},
+      {'id': 'ground-beef', 'displayName': 'ground beef', 'amountText': '10 ounce', 'text': '10 ounce ground beef'},
+    ]},
   ]);
   String logJson = jsonEncode({'plan': {'id': 'p1', 'slugs': ['beef-chili', 'baked-penne'], 'at': '2026-11-18T00:00:00Z'}, 'cooked': [], 'rated': {}});
 
   http.Client client() => MockClient((request) async {
         if (down) throw http.ClientException('offline');
         final path = request.url.path;
+        if (path == '/idp/v1/products/products_link') {
+          if (request.url.host != instacartHost || request.headers['Authorization'] != 'Bearer $instacartKey') return http.Response('{}', 401);
+          instacartLists.add((jsonDecode(request.body) as Map).cast<String, Object?>());
+          return http.Response(jsonEncode({'products_link_url': 'https://www.instacart.com/store/shopping_lists/${instacartLists.length}'}), 200);
+        }
         if (path.endsWith('/data/runtime/recipes.runtime.json')) return http.Response(recipesJson, 200, headers: {'content-type': 'application/json; charset=utf-8'});
         if (path.endsWith('/data/source/log.json')) return http.Response(logJson, 200);
         if (requireToken != null && request.headers['Authorization'] != 'Bearer $requireToken') return http.Response('forbidden', 403);

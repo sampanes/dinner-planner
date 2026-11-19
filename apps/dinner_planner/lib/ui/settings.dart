@@ -70,6 +70,10 @@ class SettingsScreen extends StatelessWidget {
                 : TextButton(onPressed: model.refreshRecipes, child: const Text('Refresh')),
           ],
         ),
+        heading('Instacart'),
+        const Text('With a key from the Instacart Developer Platform, the Shop tab can open your list in Instacart. The key stays on this phone.'),
+        const SizedBox(height: 12),
+        _CommitField(key: const ValueKey('instacart-key'), value: model.instacartKey, label: 'Instacart key', onCommit: model.setInstacartKey),
       ],
     );
   }

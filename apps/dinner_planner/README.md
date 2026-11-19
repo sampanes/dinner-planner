@@ -15,6 +15,10 @@ all of that, and none of it is written to the repository.
   delivers any other kind up to an hour late when it was set hours ahead. Google Play allows that
   permission only for alarm and calendar apps, so a Play listing would have to argue the case or
   switch to asking the owner.
+- **Shop**: what the planned dinners need, added up into one list. Tap a line when it is in the
+  house; tap the tag to record what you actually buy for that ingredient (a brand, the name on the
+  shelf). Both are shared, so one of you can tick things off in the store while the other watches.
+  The list copies as plain text, and with an Instacart key it opens as a list in Instacart.
 - **Sharing**: one phone taps "Start sharing" and shows a code, the other taps "Join with a code".
 
 ## What is stored where
@@ -23,7 +27,8 @@ all of that, and none of it is written to the repository.
 |---|---|
 | Recipes, photos, the kitchen page | the recipe site (public; set its address in Settings) |
 | Dinners by day, who cooks, the two names | each phone, and the relay messages between them |
-| Which person this phone belongs to, reminder times | this phone only |
+| What is in the house for which dinner, what you buy for each ingredient | each phone, and the relay messages between them |
+| Which person this phone belongs to, reminder times, the Instacart key | this phone only |
 
 ## How two phones stay the same
 
@@ -79,6 +84,15 @@ The icons (launcher, and the white shape Android shows in the status bar) are ge
 A release build is signed with the key named in `android/key.properties` (never committed) and
 falls back to the debug key without it. Android only installs an update signed with the same key
 as the copy already on the phone, so use one key for every release.
+
+## Instacart
+
+`lib/data/instacart.dart` sends what is still to get to the Instacart Developer Platform's "create
+shopping list page" call and opens the link it answers with; on a phone that lands in the Instacart
+app, where a person picks the products. It is one-way: the API cannot read anyone's cart or lists.
+The key comes from Instacart's developer dashboard and is typed into Settings on each phone. This
+code has only been run against a stand-in written from Instacart's documentation, never against
+Instacart itself.
 
 ## Not built yet
 

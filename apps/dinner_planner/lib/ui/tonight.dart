@@ -228,7 +228,7 @@ Future<void> showNeeds(BuildContext context, AppModel model, Recipe recipe, Stri
           Text(when, style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
           Text(recipe.name, style: theme.textTheme.headlineSmall),
           const SizedBox(height: 12),
-          for (final line in recipe.ingredients)
+          for (final line in recipe.ingredients.map((i) => i.text))
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: Text(line, style: theme.textTheme.titleMedium),

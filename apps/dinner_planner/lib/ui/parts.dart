@@ -89,7 +89,7 @@ class _RecipePickerState extends State<RecipePicker> {
 
   bool _matches(Recipe r) {
     final words = _query.toLowerCase().split(RegExp(r'\s+')).where((w) => w.isNotEmpty);
-    final hay = '${r.name} ${r.categories.join(' ')} ${r.ingredients.join(' ')}'.toLowerCase();
+    final hay = '${r.name} ${r.categories.join(' ')} ${r.ingredients.map((i) => i.text).join(' ')}'.toLowerCase();
     return words.every(hay.contains);
   }
 
