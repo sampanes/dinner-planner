@@ -136,6 +136,7 @@ void main() {
     expect(order(his), 'dry: penne | meat: ground-beef | produce: onion');
 
     await exchange(his, hers);
+    expect(his.inStep && hers.inStep, isTrue, reason: 'the places are numbers; both phones must write them the same way');
     expect(order(hers), 'produce: onion | meat: ground-beef | dry: penne', reason: 'she is not in a store');
     await hers.shopAt('trader-joe-s');
     expect(order(hers), 'dry: penne | meat: ground-beef | produce: onion');
