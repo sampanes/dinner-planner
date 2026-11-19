@@ -112,6 +112,8 @@ void main() {
   final ntfy = FakeNtfy()..recipesJson = File('../../data/runtime/recipes.runtime.json').readAsStringSync();
 
   setUpAll(() async {
+    // This runs even when every test below is skipped.
+    if (shotsDir == null) return;
     autoUpdateGoldenFiles = true;
     await loadFonts();
     if (!withPhotos) return;
