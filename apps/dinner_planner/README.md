@@ -15,10 +15,14 @@ all of that, and none of it is written to the repository.
   delivers any other kind up to an hour late when it was set hours ahead. Google Play allows that
   permission only for alarm and calendar apps, so a Play listing would have to argue the case or
   switch to asking the owner.
-- **Shop**: what the planned dinners need, added up into one list. Tap a line when it is in the
-  house; tap the tag to record what you actually buy for that ingredient (a brand, the name on the
-  shelf). Both are shared, so one of you can tick things off in the store while the other watches.
-  The list copies as plain text.
+- **Shop**: what the planned dinners need, added up into one list, by section. Tap a line when it
+  is in the house; tap the tag to record what you actually buy for that ingredient: the brand or
+  the name on the shelf, the packet size (the list then says how many packets), its section, and a
+  note on where it is in each store. All of it is shared, so one of you can tick things off in the
+  store while the other watches. The list copies as plain text.
+- **Stores**: add the stores you use, and tap one when you walk in. The list switches to the order
+  you walk that store, which it learns from the order you tick things in ("The order of a store"
+  below).
 - **Sharing**: one phone taps "Start sharing" and shows a code, the other taps "Join with a code".
 
 ## What is stored where
@@ -27,8 +31,8 @@ all of that, and none of it is written to the repository.
 |---|---|
 | Recipes, photos, the kitchen page | the recipe site (public; set its address in Settings) |
 | Dinners by day, who cooks, the two names | each phone, and the relay messages between them |
-| What is in the house for which dinner, what you buy for each ingredient | each phone, and the relay messages between them |
-| Which person this phone belongs to, reminder times | this phone only |
+| What is in the house for which dinner; what you buy for each ingredient, its packet size and section; the stores, and where things are in each | each phone, and the relay messages between them |
+| Which person this phone belongs to, reminder times, which store it is in right now | this phone only |
 
 ## How two phones stay the same
 
@@ -59,6 +63,16 @@ services:
 
 Both phones must be able to reach that address (the same Wi-Fi, or a private network such as
 Tailscale on both). When the machine is off the phones keep working and catch up later.
+
+## The order of a store
+
+Nobody types a store's layout (`lib/core/store_order.dart`). Each ingredient gets a section from
+its name, which the tag sheet can correct. While a phone is "in" a store, every line ticked there
+is recorded as coming after the line ticked before it (`pos/<store>/<ingredient>`, a number;
+smaller is met sooner). A line that is already further along stays put; otherwise it moves to just
+after the one before it, so where two trips disagree the latest wins. Sections are shown in the
+order the walk has met them, the rest after in a usual supermarket order. A phone stops counting
+as in the store two hours after its last tick, so ticks made at home teach nothing.
 
 ## Build and test
 

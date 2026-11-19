@@ -62,6 +62,14 @@ const Map<String, String> _units = {
   'tsp': 'tsp', 'teaspoon': 'tsp', 'teaspoons': 'tsp',
   'cup': 'cup', 'cups': 'cup',
   'clove': 'clove', 'cloves': 'clove',
+  'g': 'g', 'gram': 'g', 'grams': 'g',
+  'kg': 'kg', 'kilogram': 'kg', 'kilograms': 'kg',
+  'ml': 'ml', 'milliliter': 'ml', 'milliliters': 'ml',
+  'l': 'l', 'liter': 'l', 'liters': 'l', 'litre': 'l', 'litres': 'l',
+  'pt': 'pt', 'pint': 'pt', 'pints': 'pt',
+  'qt': 'qt', 'quart': 'qt', 'quarts': 'qt',
+  'gal': 'gal', 'gallon': 'gal', 'gallons': 'gal',
+  'ct': 'ct', 'count': 'ct', 'pk': 'ct', 'pack': 'ct', 'packs': 'ct',
 };
 
 final RegExp _amount = RegExp(r'^\s*(?:(\d+)\s*/\s*(\d+)|(\d+(?:\.\d+)?)(?:\s+(\d+)\s*/\s*(\d+))?)\s*([A-Za-z]*)');

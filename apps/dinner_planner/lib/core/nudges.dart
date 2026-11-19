@@ -148,11 +148,14 @@ List<Notice> noticesFor(
   return out;
 }
 
+/// The kinds of entry the shopping list is made of.
+const Set<String> _shopping = {'got', 'buy', 'size', 'sec', 'store', 'at', 'pos', 'code'};
+
 /// A short line saying what a batch of entries is, for the relay message a
 /// person may see as a notification.
 ({String title, String body}) headline(List<Entry> entries, Plan plan, String Function(String slug) recipeName, DateTime now) {
   if (entries.isEmpty) return (title: 'Dinner planner', body: 'In step.');
-  if (entries.every((e) => e.key.startsWith('got/') || e.key.startsWith('buy/'))) {
+  if (entries.every((e) => _shopping.contains(e.key.split('/').first))) {
     return (title: 'Shopping list updated', body: entries.length == 1 ? '' : '${entries.length} changes');
   }
   if (entries.length > 2) return (title: 'Dinner plan updated', body: '${entries.length} changes');

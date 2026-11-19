@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'core/nudges.dart';
 import 'core/plan.dart';
 import 'core/shopping.dart';
+import 'core/store_order.dart';
 import 'core/sync_core.dart';
 import 'data/recipes.dart';
 import 'data/relay.dart';
@@ -211,23 +212,136 @@ class AppModel extends ChangeNotifier {
   /// What has been ticked as in the house for those dinners.
   List<ShopLine> get shoppingGot => shoppingList(_dinners, where: _got);
 
-  Future<void> setGot(ShopLine line, bool got) {
+  Future<void> setGot(ShopLine line, bool got) async {
     var changed = false;
     for (final u in line.uses) {
       changed = session.core.set(gotKey(line.id, u.day), got ? '1' : null, now) || changed;
     }
-    return _wrote(changed, replan: false);
+    final store = shoppingAt;
+    if (got && store != null) {
+      // Ticked in a store: this is where it comes on the way round.
+      learnWalk(_walk(store), line.id, session.tripLast).forEach((id, place) {
+        changed = session.core.set(posKey(store, id), place, now) || changed;
+      });
+      session.tripLast = line.id;
+      session.tripAt = now;
+      await session.saveTrip();
+    }
+    await _wrote(changed, replan: false);
   }
 
   /// What the household actually buys for an ingredient, or null.
-  String? buy(String id) {
-    final v = session.core.value(buyKey(id));
-    return v is String && v.isNotEmpty ? v : null;
-  }
+  String? buy(String id) => _text(buyKey(id));
 
   Future<void> setBuy(String id, String text) {
     final t = text.trim();
     return _wrote(session.core.set(buyKey(id), t.isEmpty ? null : t, now), replan: false);
+  }
+
+  /// What one packet holds ("16 oz"), or null.
+  String? size(String id) => _text(sizeKey(id));
+
+  String? _text(String key) {
+    final v = session.core.value(key);
+    return v is String && v.isNotEmpty ? v : null;
+  }
+
+  /// How many packets the line takes, when its amounts and the packet size
+  /// can be compared.
+  int? packs(ShopLine line) {
+    final s = size(line.id);
+    return s == null ? null : packsNeeded(line.totals, s);
+  }
+
+  /// The section an ingredient is in: what the household said, else a guess.
+  String section(String id) {
+    final v = session.core.value(sectionKey(id));
+    return v is String && sections.containsKey(v) ? v : guessSection(id);
+  }
+
+  /// The stores the household shops at, by name.
+  List<({String id, String name})> get stores {
+    final out = <({String id, String name})>[];
+    for (final e in session.core.entries) {
+      final v = e.value;
+      if (e.key.startsWith('store/') && v is String && v.isNotEmpty) out.add((id: e.key.substring(6), name: v));
+    }
+    return out..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+  }
+
+  String storeName(String store) => _text(storeKey(store)) ?? store;
+
+  Future<void> addStores(Iterable<String> names) {
+    var changed = false;
+    for (final raw in names) {
+      final name = raw.trim(), slug = storeSlug(name);
+      if (slug.isEmpty || _text(storeKey(slug)) != null) continue;
+      changed = session.core.set(storeKey(slug), name.length > 40 ? name.substring(0, 40) : name, now) || changed;
+    }
+    return _wrote(changed, replan: false);
+  }
+
+  Future<void> removeStore(String store) async {
+    if (session.tripStore == store) await shopAt(null);
+    await _wrote(session.core.set(storeKey(store), null, now), replan: false);
+  }
+
+  /// A note on where an ingredient is in a store ("Aisle 7"), or null.
+  String? at(String store, String id) => _text(atKey(store, id));
+
+  /// How long after the last tick this phone still counts as in the store.
+  static const Duration tripRests = Duration(hours: 2);
+
+  /// The store this phone's owner is shopping in right now, or null.
+  String? get shoppingAt {
+    final store = session.tripStore, at = session.tripAt;
+    if (store == null || at == null || now.difference(at) > tripRests) return null;
+    return _text(storeKey(store)) == null ? null : store;
+  }
+
+  /// "I am in this store" (or, with null, "I have left"). While it holds the
+  /// list is in that store's order and ticks teach it the order.
+  Future<void> shopAt(String? store) async {
+    session.tripStore = store;
+    session.tripAt = store == null ? null : now;
+    session.tripLast = null;
+    await session.saveTrip();
+    notifyListeners();
+  }
+
+  Map<String, double> _walk(String store) {
+    final prefix = 'pos/$store/';
+    return {
+      for (final e in session.core.entries)
+        if (e.key.startsWith(prefix) && e.value is num) e.key.substring(prefix.length): (e.value as num).toDouble(),
+    };
+  }
+
+  /// What is still to buy, by section, in the order of the store this phone
+  /// is in (or the usual order when it is in none).
+  List<ShopGroup> get shoppingGroups {
+    final store = shoppingAt;
+    return arrange([for (final l in shopping) if (!l.loose) l], sectionOf: section, walk: store == null ? const {} : _walk(store));
+  }
+
+  /// Everything the household records about what it buys for an ingredient,
+  /// saved in one go. A null leaves that part as it is; '' clears it.
+  Future<void> saveProduct(String id, {String? buy, String? size, String? section, Map<String, String> at = const {}}) {
+    var changed = false;
+    void put(String key, String? text, {int max = 120}) {
+      if (text == null) return;
+      final t = text.trim();
+      changed = session.core.set(key, t.isEmpty ? null : (t.length > max ? t.substring(0, max) : t), now) || changed;
+    }
+
+    put(buyKey(id), buy, max: 200);
+    put(sizeKey(id), size, max: 40);
+    if (section != null) {
+      // Saying what the guess already says is not worth a shared fact.
+      changed = session.core.set(sectionKey(id), section.isEmpty || section == guessSection(id) ? null : section, now) || changed;
+    }
+    at.forEach((store, text) => put(atKey(store, id), text, max: 60));
+    return _wrote(changed, replan: false);
   }
 
   /// The list as plain text, for pasting anywhere.

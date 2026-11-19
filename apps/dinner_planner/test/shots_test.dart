@@ -218,22 +218,41 @@ void main() {
     await tester.tap(find.text('Shop'));
     await shoot(tester, '11-shop');
 
-    await model.setBuy('butter', 'Salted, the four-stick box');
-    await model.setBuy('cheddar-cheese', 'Sharp, the shredded two-pound bag');
-    for (final id in ['black-beans', 'broccoli', 'celery']) {
+    await tester.tap(find.byKey(const ValueKey('store-add')));
+    await tester.pumpAndSettle();
+    for (final store in ['kroger', 'costco']) {
+      await tester.tap(find.byKey(ValueKey('store-idea-$store')));
+    }
+    await shoot(tester, '12-shop-add-stores');
+    await tester.tap(find.byKey(const ValueKey('store-save')));
+    await tester.pumpAndSettle();
+
+    await model.saveProduct('butter', buy: 'Salted, the four-stick box', size: '16 oz');
+    await model.saveProduct('cheddar-cheese', buy: 'Sharp, shredded', size: '8 oz', at: {'kroger': 'Aisle 14'});
+    await model.saveProduct('carrot', size: '2 lb');
+    await model.saveProduct('ground-beef', buy: 'Store brand 88/12', size: '1 lb');
+    await shoot(tester, '13-shop-what-you-buy');
+
+    // A trip: the first things into the cart, then put back so the order shows.
+    await tester.tap(find.byKey(const ValueKey('store-kroger')));
+    await tester.pumpAndSettle();
+    for (final id in ['ground-beef', 'shrimp', 'cheddar-cheese', 'butter', 'sour-cream', 'carrot', 'broccoli', 'celery']) {
       await model.setGot(model.shopping.firstWhere((l) => l.id == id), true);
     }
-    await shoot(tester, '12-shop-real-names');
+    for (final l in model.shoppingGot) {
+      if (l.id != 'celery' && l.id != 'broccoli') await model.setGot(l, false);
+    }
+    await shoot(tester, '14-shop-in-a-store');
 
-    await tester.tap(find.byKey(const ValueKey('shop-edit-carrot')));
-    await shoot(tester, '13-shop-what-you-buy');
+    await tester.tap(find.byKey(const ValueKey('shop-edit-cheddar-cheese')));
+    await shoot(tester, '15-shop-product');
     await tester.tap(find.text('Cancel'));
     await tester.pumpAndSettle();
 
     final list = find.descendant(of: find.byType(ShopScreen), matching: find.byType(Scrollable)).first;
     await tester.scrollUntilVisible(find.byKey(const ValueKey('got-celery')), 400, scrollable: list);
     await tester.drag(list, const Offset(0, -400));
-    await shoot(tester, '14-shop-check-and-got');
+    await shoot(tester, '16-shop-check-and-got');
     await finish(tester);
   }, skip: shotsDir == null);
 

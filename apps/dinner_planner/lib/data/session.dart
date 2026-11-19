@@ -22,6 +22,7 @@ const String _profileKey = 'dp.profile';
 const String _settingsKey = 'dp.settings';
 const String _recipesKey = 'dp.recipes';
 const String _beatKey = 'dp.openBeat';
+const String _tripKey = 'dp.trip';
 
 class SyncReport {
   const SyncReport({this.changes = const [], this.error});
@@ -48,6 +49,12 @@ class Session {
 
   List<Recipe> recipes = const [];
   DateTime? recipesAt;
+
+  /// The store this phone's owner said they are in, when they said so or
+  /// last ticked a line there, and the line they ticked last.
+  String? tripStore;
+  DateTime? tripAt;
+  String? tripLast;
 
   Plan get plan => Plan(core);
 
@@ -81,6 +88,11 @@ class Session {
       if (s is String && s.isNotEmpty) site = s;
       times = NudgeTimes.fromJson(settings['times']);
     }
+    final trip = await store.readJson(_tripKey);
+    final tripWhere = trip is Map ? trip['store'] : null, tripWhen = trip is Map ? trip['at'] : null, tripWhat = trip is Map ? trip['last'] : null;
+    tripStore = tripWhere is String && tripWhen is int ? tripWhere : null;
+    tripAt = tripStore == null ? null : DateTime.fromMillisecondsSinceEpoch(tripWhen as int);
+    tripLast = tripStore != null && tripWhat is String ? tripWhat : null;
     final cached = await store.readJson(_recipesKey);
     if (cached is Map) {
       recipes = [
@@ -97,6 +109,8 @@ class Session {
   Future<void> saveHousehold() => store.writeJson(_householdKey, household?.toJson());
 
   Future<void> saveProfile() => store.writeJson(_profileKey, {'me': me});
+
+  Future<void> saveTrip() => store.writeJson(_tripKey, tripStore == null ? null : {'store': tripStore, 'at': tripAt?.millisecondsSinceEpoch, 'last': tripLast});
 
   Future<void> saveSettings() => store.writeJson(_settingsKey, {'site': site, 'times': times.toJson()});
 

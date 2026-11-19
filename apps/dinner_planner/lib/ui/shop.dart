@@ -4,7 +4,11 @@ import 'package:flutter/services.dart';
 import '../app_model.dart';
 import '../core/plan.dart';
 import '../core/shopping.dart';
+import '../core/store_order.dart';
 import '../core/sync_core.dart';
+
+/// Offered when adding a store, so the usual ones are a tap rather than typing.
+const List<String> storeIdeas = ['Albertsons', 'Aldi', 'Costco', "Fry's", 'Kroger', 'Safeway', 'Sprouts', 'Target', "Trader Joe's", 'Walmart', 'Whole Foods'];
 
 class ShopScreen extends StatelessWidget {
   const ShopScreen({super.key, required this.model, required this.onOpenWeek});
@@ -22,13 +26,14 @@ class ShopScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final now = model.now;
-    final lines = model.shopping;
-    final todo = [for (final l in lines) if (!l.loose) l];
-    final check = [for (final l in lines) if (l.loose) l];
+    final groups = model.shoppingGroups;
+    final check = [for (final l in model.shopping) if (l.loose) l];
     final done = model.shoppingGot;
+    final store = model.shoppingAt;
     final days = [for (var i = 0; i < 14; i++) dayText(dayAfter(now, i))];
     final planned = [for (final d in days) if (model.plan.meal(d) != null) d];
     final soft = theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final any = groups.isNotEmpty || check.isNotEmpty || done.isNotEmpty;
 
     Widget heading(String text) => Padding(
           padding: const EdgeInsets.fromLTRB(0, 20, 0, 4),
@@ -38,7 +43,7 @@ class ShopScreen extends StatelessWidget {
     final String lead;
     if (planned.isEmpty) {
       lead = 'Pick dinners for the week and what they need is added up here.';
-    } else if (lines.isEmpty && done.isEmpty) {
+    } else if (!any) {
       lead = 'The recipes have not loaded yet.';
     } else {
       final last = parseDay(planned.last)!;
@@ -51,7 +56,7 @@ class ShopScreen extends StatelessWidget {
         Row(
           children: [
             Expanded(child: Text('Shopping list', style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700))),
-            if (todo.isNotEmpty || check.isNotEmpty)
+            if (groups.isNotEmpty || check.isNotEmpty)
               IconButton(key: const ValueKey('shop-copy'), tooltip: 'Copy the list', icon: const Icon(Icons.copy), onPressed: () => _copy(context)),
           ],
         ),
@@ -61,9 +66,22 @@ class ShopScreen extends StatelessWidget {
           const SizedBox(height: 12),
           Align(alignment: Alignment.centerLeft, child: FilledButton.tonal(onPressed: onOpenWeek, child: const Text('Plan the week'))),
         ],
-        const SizedBox(height: 8),
-        for (final l in todo) _ShopTile(model: model, line: l, got: false),
-        if (todo.isEmpty && done.isNotEmpty) Padding(padding: const EdgeInsets.symmetric(vertical: 12), child: Text('Everything is in the house.', style: theme.textTheme.titleMedium)),
+        if (any) ...[
+          const SizedBox(height: 12),
+          _StoreBar(model: model),
+          if (store != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text('In the order you walk ${model.storeName(store)}. Tick things as they go in the cart and the list learns the way round.', style: soft),
+            )
+          else if (model.stores.isNotEmpty)
+            Padding(padding: const EdgeInsets.only(top: 4), child: Text('In a store? Tap its name and the list follows the way you walk it.', style: soft)),
+        ],
+        for (final g in groups) ...[
+          heading(sections[g.section] ?? g.section),
+          for (final l in g.lines) _ShopTile(model: model, line: l, got: false),
+        ],
+        if (groups.isEmpty && done.isNotEmpty) Padding(padding: const EdgeInsets.symmetric(vertical: 12), child: Text('Everything is in the house.', style: theme.textTheme.titleMedium)),
         if (check.isNotEmpty) heading('Check you have'),
         for (final l in check) _ShopTile(model: model, line: l, got: false),
         if (done.isNotEmpty) heading('Got'),
@@ -71,6 +89,122 @@ class ShopScreen extends StatelessWidget {
       ],
     );
   }
+}
+
+/// The household's stores as chips. The chosen one is where this phone's
+/// owner is shopping now.
+class _StoreBar extends StatelessWidget {
+  const _StoreBar({required this.model});
+
+  final AppModel model;
+
+  Future<void> _add(BuildContext context) async {
+    final names = await showDialog<List<String>>(context: context, builder: (_) => _StoreDialog(have: {for (final s in model.stores) s.id}));
+    if (names != null) await model.addStores(names);
+  }
+
+  Future<void> _remove(BuildContext context, ({String id, String name}) store) async {
+    final yes = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Take ${store.name} off the list of stores?'),
+        content: const Text('On both phones. What it learned about the store is kept in case you add it again.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Keep it')),
+          FilledButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Take it off')),
+        ],
+      ),
+    );
+    if (yes == true) await model.removeStore(store.id);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final stores = model.stores, here = model.shoppingAt;
+    return Wrap(
+      spacing: 8,
+      runSpacing: 4,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        for (final s in stores)
+          GestureDetector(
+            onLongPress: () => _remove(context, s),
+            child: ChoiceChip(
+              key: ValueKey('store-${s.id}'),
+              avatar: here == s.id ? null : const Icon(Icons.storefront_outlined, size: 18),
+              label: Text(s.name),
+              selected: here == s.id,
+              onSelected: (on) => model.shopAt(on ? s.id : null),
+            ),
+          ),
+        ActionChip(
+          key: const ValueKey('store-add'),
+          avatar: const Icon(Icons.add, size: 18),
+          label: Text(stores.isEmpty ? 'Add your stores' : 'Store'),
+          onPressed: () => _add(context),
+        ),
+      ],
+    );
+  }
+}
+
+class _StoreDialog extends StatefulWidget {
+  const _StoreDialog({required this.have});
+
+  /// The stores already listed, by id.
+  final Set<String> have;
+
+  @override
+  State<_StoreDialog> createState() => _StoreDialogState();
+}
+
+class _StoreDialogState extends State<_StoreDialog> {
+  final TextEditingController _text = TextEditingController();
+  final Set<String> _picked = {};
+
+  @override
+  void dispose() {
+    _text.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => AlertDialog(
+        title: const Text('Where do you shop?'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Wrap(
+                spacing: 8,
+                runSpacing: 4,
+                children: [
+                  for (final name in storeIdeas)
+                    if (!widget.have.contains(storeSlug(name)))
+                      FilterChip(
+                        key: ValueKey('store-idea-${storeSlug(name)}'),
+                        label: Text(name),
+                        selected: _picked.contains(name),
+                        onSelected: (on) => setState(() => on ? _picked.add(name) : _picked.remove(name)),
+                      ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                key: const ValueKey('store-name'),
+                controller: _text,
+                textCapitalization: TextCapitalization.words,
+                decoration: const InputDecoration(labelText: 'Another store', helperText: 'Both phones see the list of stores.', border: OutlineInputBorder()),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+          FilledButton(key: const ValueKey('store-save'), onPressed: () => Navigator.of(context).pop([..._picked, _text.text]), child: const Text('Add')),
+        ],
+      );
 }
 
 class _ShopTile extends StatelessWidget {
@@ -81,17 +215,31 @@ class _ShopTile extends StatelessWidget {
   final bool got;
 
   Future<void> _edit(BuildContext context) async {
-    final text = await showDialog<String>(context: context, builder: (_) => _BuyDialog(name: line.name, current: model.buy(line.id) ?? ''));
-    if (text != null) await model.setBuy(line.id, text);
+    final edit = await showModalBottomSheet<ProductEdit>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      showDragHandle: true,
+      builder: (_) => ProductSheet(model: model, id: line.id, name: line.name),
+    );
+    if (edit != null) await model.saveProduct(line.id, buy: edit.buy, size: edit.size, section: edit.section, at: edit.at);
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final buy = model.buy(line.id);
+    final buy = model.buy(line.id), size = model.size(line.id), packs = got ? null : model.packs(line);
+    final store = model.shoppingAt;
     final faded = theme.colorScheme.onSurfaceVariant;
     final dinners = {for (final u in line.uses) model.session.recipeName(u.slug)}.join(', ');
     final strike = got ? TextDecoration.lineThrough : null;
+    final known = buy != null || size != null;
+    final small = [
+      if (buy != null) line.name,
+      if (size != null) packs == null ? size : '$packs × $size',
+      if (store != null) ?model.at(store, line.id),
+      dinners,
+    ].join(' · ');
     return InkWell(
       key: ValueKey('${got ? 'got' : 'shop'}-${line.id}'),
       borderRadius: BorderRadius.circular(12),
@@ -116,19 +264,14 @@ class _ShopTile extends StatelessWidget {
                     ]),
                     style: theme.textTheme.titleMedium?.copyWith(decoration: strike, color: got ? faded : null),
                   ),
-                  Text(
-                    buy == null ? dinners : '${line.name} · $dinners',
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.bodySmall?.copyWith(color: faded),
-                  ),
+                  Text(small, maxLines: 2, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodySmall?.copyWith(color: faded)),
                 ],
               ),
             ),
             IconButton(
               key: ValueKey('${got ? 'got' : 'shop'}-edit-${line.id}'),
               tooltip: 'What you actually buy',
-              icon: Icon(buy == null ? Icons.sell_outlined : Icons.sell, color: buy == null ? faded : theme.colorScheme.primary),
+              icon: Icon(known ? Icons.sell : Icons.sell_outlined, color: known ? theme.colorScheme.primary : faded),
               onPressed: () => _edit(context),
             ),
           ],
@@ -140,40 +283,102 @@ class _ShopTile extends StatelessWidget {
 
 String _cap(String s) => s.isEmpty ? s : '${s[0].toUpperCase()}${s.substring(1)}';
 
-class _BuyDialog extends StatefulWidget {
-  const _BuyDialog({required this.name, required this.current});
+/// What the sheet below hands back when it is saved.
+typedef ProductEdit = ({String buy, String size, String section, Map<String, String> at});
 
+/// Everything the household records about what it buys for one ingredient:
+/// the name on the shelf, the packet size, its section, and a note per store
+/// on where it is.
+class ProductSheet extends StatefulWidget {
+  const ProductSheet({super.key, required this.model, required this.id, required this.name});
+
+  final AppModel model;
+  final String id;
   final String name;
-  final String current;
 
   @override
-  State<_BuyDialog> createState() => _BuyDialogState();
+  State<ProductSheet> createState() => _ProductSheetState();
 }
 
-class _BuyDialogState extends State<_BuyDialog> {
-  late final TextEditingController _text = TextEditingController(text: widget.current);
+class _ProductSheetState extends State<ProductSheet> {
+  late final TextEditingController _buy = TextEditingController(text: widget.model.buy(widget.id) ?? '');
+  late final TextEditingController _size = TextEditingController(text: widget.model.size(widget.id) ?? '');
+  late final Map<String, TextEditingController> _at = {
+    for (final s in widget.model.stores) s.id: TextEditingController(text: widget.model.at(s.id, widget.id) ?? ''),
+  };
+  late String _section = widget.model.section(widget.id);
 
   @override
   void dispose() {
-    _text.dispose();
+    _buy.dispose();
+    _size.dispose();
+    for (final c in _at.values) {
+      c.dispose();
+    }
     super.dispose();
   }
 
+  void _save() => Navigator.of(context).pop((buy: _buy.text, size: _size.text, section: _section, at: {for (final e in _at.entries) e.key: e.value.text}));
+
   @override
-  Widget build(BuildContext context) => AlertDialog(
-        title: Text('What do you buy for ${widget.name}?'),
-        content: TextField(
-          key: const ValueKey('shop-buy-text'),
-          controller: _text,
-          autofocus: true,
-          minLines: 1,
-          maxLines: 3,
-          textCapitalization: TextCapitalization.sentences,
-          decoration: const InputDecoration(labelText: 'Brand, or the name on the shelf', helperText: 'Both phones see it. Leave empty to clear.', border: OutlineInputBorder()),
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    const gap = SizedBox(height: 12);
+    return Padding(
+      padding: EdgeInsets.fromLTRB(20, 0, 20, 16 + MediaQuery.viewInsetsOf(context).bottom),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text('What do you buy for ${widget.name}?', style: theme.textTheme.titleLarge),
+            const SizedBox(height: 4),
+            Text('Both phones see it. Every part is optional.', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+            const SizedBox(height: 16),
+            TextField(
+              key: const ValueKey('shop-buy-text'),
+              controller: _buy,
+              minLines: 1,
+              maxLines: 2,
+              textCapitalization: TextCapitalization.sentences,
+              decoration: const InputDecoration(labelText: 'Brand, or the name on the shelf', border: OutlineInputBorder()),
+            ),
+            gap,
+            TextField(
+              key: const ValueKey('shop-size-text'),
+              controller: _size,
+              decoration: const InputDecoration(labelText: 'Packet size', hintText: '16 oz, 1 lb, 6 ct', border: OutlineInputBorder()),
+            ),
+            gap,
+            DropdownButtonFormField<String>(
+              key: const ValueKey('shop-section'),
+              initialValue: _section,
+              isExpanded: true,
+              decoration: const InputDecoration(labelText: 'Section', border: OutlineInputBorder()),
+              items: [for (final s in sections.entries) DropdownMenuItem(value: s.key, child: Text(s.value))],
+              onChanged: (s) => setState(() => _section = s ?? _section),
+            ),
+            for (final s in widget.model.stores) ...[
+              gap,
+              TextField(
+                key: ValueKey('shop-at-${s.id}'),
+                controller: _at[s.id],
+                textCapitalization: TextCapitalization.sentences,
+                decoration: InputDecoration(labelText: 'Where in ${s.name}', hintText: 'Aisle 7, by the eggs', border: const OutlineInputBorder()),
+              ),
+            ],
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+                const SizedBox(width: 8),
+                FilledButton(key: const ValueKey('shop-buy-save'), onPressed: _save, child: const Text('Save')),
+              ],
+            ),
+          ],
         ),
-        actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
-          FilledButton(key: const ValueKey('shop-buy-save'), onPressed: () => Navigator.of(context).pop(_text.text), child: const Text('Save')),
-        ],
-      );
+      ),
+    );
+  }
 }
