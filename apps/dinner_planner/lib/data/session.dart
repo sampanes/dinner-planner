@@ -55,6 +55,9 @@ class Session {
   /// phone only; without it barcode lookups share the public demo key.
   String usdaKey = '';
 
+  /// The owner waved the "start here" steps away on this phone.
+  bool startHidden = false;
+
   List<Recipe> recipes = const [];
   DateTime? recipesAt;
 
@@ -97,6 +100,7 @@ class Session {
       times = NudgeTimes.fromJson(settings['times']);
       final k = settings['usdaKey'];
       usdaKey = k is String ? k : '';
+      startHidden = settings['startHidden'] == true;
     }
     final trip = await store.readJson(_tripKey);
     final tripWhere = trip is Map ? trip['store'] : null, tripWhen = trip is Map ? trip['at'] : null, tripWhat = trip is Map ? trip['last'] : null;
@@ -122,7 +126,7 @@ class Session {
 
   Future<void> saveTrip() => store.writeJson(_tripKey, tripStore == null ? null : {'store': tripStore, 'at': tripAt?.millisecondsSinceEpoch, 'last': tripLast});
 
-  Future<void> saveSettings() => store.writeJson(_settingsKey, {'site': site, 'times': times.toJson(), 'usdaKey': usdaKey});
+  Future<void> saveSettings() => store.writeJson(_settingsKey, {'site': site, 'times': times.toJson(), 'usdaKey': usdaKey, if (startHidden) 'startHidden': true});
 
   Future<void> refreshRecipes(DateTime now) async {
     recipes = await fetchRecipes(client, site);

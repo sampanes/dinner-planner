@@ -5,7 +5,9 @@ dinner is on which night, who cooks it, and reminders on the nights you cook. Tw
 all of that, and none of it is written to the repository.
 
 - **Tonight**: what is for dinner, who is cooking, one button to open the recipe in the site's
-  kitchen page, and "What it needs" to check the fridge.
+  kitchen page, and "What it needs" to check the fridge. A new phone also gets a **Start here**
+  card: five first steps that tick themselves off from what the phone already holds. Skip hides
+  it; Settings brings it back.
 - **Week**: the next fourteen days. Tap a day to pick dinner, tap a name to say who cooks. The
   playlist button adds the dinners from the site's weekly plan to the empty days.
 - **Picking a dinner**: the list opens with three suggestions for the week as it stands, each

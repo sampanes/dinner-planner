@@ -279,6 +279,27 @@ void main() {
     await finish(tester);
   }, skip: shotsDir == null);
 
+  testWidgets('shots: start here', (tester) async {
+    final model = await start(tester);
+    await model.setMe('blue');
+    await model.setName('blue', 'Sam');
+    await model.setName('pink', 'Alex');
+    await shoot(tester, '20-start-here');
+
+    await model.setMeal('2026-11-20', _cast[1]);
+    await model.setCook('2026-11-20', 'blue');
+    await model.setMeal('2026-11-21', _cast[3]);
+    await model.addStores(['Costco', 'Kroger']);
+    await shoot(tester, '21-start-here-under-way');
+
+    await model.setMeal('2026-11-19', _cast[0]);
+    await model.setCook('2026-11-19', 'blue');
+    await tester.pumpAndSettle();
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -420));
+    await shoot(tester, '22-start-here-on-a-cooking-night');
+    await finish(tester);
+  }, skip: shotsDir == null);
+
   testWidgets('shots: the other phone, dark', (tester) async {
     final model = await start(tester, brightness: Brightness.dark);
     await fillWeek(model, me: 'pink');

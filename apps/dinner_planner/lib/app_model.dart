@@ -16,6 +16,10 @@ import 'data/relay.dart';
 import 'data/session.dart';
 import 'data/suggest.dart';
 
+/// What a new phone is walked through, in the order a first week brings
+/// them up.
+enum StartStep { plan, stores, scan, walk, share }
+
 class AppModel extends ChangeNotifier {
   AppModel(this.session, {DateTime Function()? clock}) : _clock = clock ?? DateTime.now;
 
@@ -179,6 +183,37 @@ class AppModel extends ChangeNotifier {
     syncError = null;
     lastSync = null;
     await session.saveHousehold();
+    notifyListeners();
+  }
+
+  /// The first steps already taken. They are read off what the phone holds,
+  /// so nothing has to be ticked; what the other phone did counts too.
+  Set<StartStep> get startDone {
+    final meals = <String>{}, cooks = <String>{};
+    var scanned = false, walked = false;
+    for (final e in session.core.entries) {
+      if (e.value == null) continue;
+      final k = e.key;
+      if (k.startsWith('meal/')) meals.add(k.substring(5));
+      if (k.startsWith('cook/')) cooks.add(k.substring(5));
+      if (k.startsWith('code/')) scanned = true;
+      if (k.startsWith('pos/')) walked = true;
+    }
+    return {
+      if (meals.any(cooks.contains)) StartStep.plan,
+      if (stores.isNotEmpty) StartStep.stores,
+      if (scanned) StartStep.scan,
+      if (walked) StartStep.walk,
+      if (household != null) StartStep.share,
+    };
+  }
+
+  /// The steps were skipped on this phone.
+  bool get startHidden => session.startHidden;
+
+  Future<void> hideStart(bool hidden) async {
+    session.startHidden = hidden;
+    await session.saveSettings();
     notifyListeners();
   }
 

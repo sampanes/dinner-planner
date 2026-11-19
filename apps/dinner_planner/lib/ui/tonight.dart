@@ -8,10 +8,12 @@ import '../data/recipes.dart';
 import 'parts.dart';
 
 class TonightScreen extends StatelessWidget {
-  const TonightScreen({super.key, required this.model, required this.onOpenWeek});
+  const TonightScreen({super.key, required this.model, required this.onOpen});
 
   final AppModel model;
-  final VoidCallback onOpenWeek;
+
+  /// Switches to another tab, by its place in the bar.
+  final ValueChanged<int> onOpen;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +21,7 @@ class TonightScreen extends StatelessWidget {
     final now = model.now;
     final day = model.today();
     final me = model.me;
+    final start = me != null && !model.startHidden && model.startDone.length < StartStep.values.length;
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
       children: [
@@ -27,11 +30,13 @@ class TonightScreen extends StatelessWidget {
         Text(_headline(day), style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700)),
         const SizedBox(height: 16),
         if (me == null) _WhoAreYou(model: model) else _TonightCard(model: model, day: day),
+        // Under tonight's dinner, which stays the first thing on the screen.
+        if (start) ...[const SizedBox(height: 12), _StartHere(model: model, onOpen: onOpen)],
         const SizedBox(height: 24),
         Row(
           children: [
             Expanded(child: Text('Coming up', style: theme.textTheme.titleLarge)),
-            TextButton(onPressed: onOpenWeek, child: const Text('Plan the week')),
+            TextButton(onPressed: () => onOpen(1), child: const Text('Plan the week')),
           ],
         ),
         for (var i = 1; i <= 4; i++) _UpcomingRow(model: model, date: dayAfter(now, i)),
@@ -79,6 +84,84 @@ class _WhoAreYou extends StatelessWidget {
                   },
                   child: Text(model.plan.name(who), style: const TextStyle(fontSize: 18)),
                 ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Each first step: what to do, why, and the tab it happens on.
+const Map<StartStep, ({String title, String why, int tab})> _startSteps = {
+  StartStep.plan: (title: 'Pick a dinner and who cooks it', why: 'The cook gets the reminders, and what it needs goes on the list.', tab: 1),
+  StartStep.stores: (title: 'Add the stores you shop at', why: 'The list sorts itself for each one.', tab: 2),
+  StartStep.scan: (title: 'Scan a packet from your kitchen', why: 'Say once what it is. After that, scanning it ticks it off the list.', tab: 2),
+  StartStep.walk: (title: 'Tick the list as you walk a store', why: 'Tap its name first, and the list learns your route.', tab: 2),
+  StartStep.share: (title: 'Share with the other phone', why: 'One plan and one list for both of you.', tab: 3),
+};
+
+/// The first steps as a list that ticks itself. The next one says why it is
+/// worth doing; tapping a step opens where it happens.
+class _StartHere extends StatelessWidget {
+  const _StartHere({required this.model, required this.onOpen});
+
+  final AppModel model;
+  final ValueChanged<int> onOpen;
+
+  void _skip(BuildContext context) {
+    final messenger = ScaffoldMessenger.of(context);
+    model.hideStart(true);
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        content: const Text('Hidden. Settings can bring it back.'),
+        persist: false,
+        action: SnackBarAction(label: 'Undo', onPressed: () => model.hideStart(false)),
+      ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final faded = theme.colorScheme.onSurfaceVariant;
+    final done = model.startDone;
+    final next = StartStep.values.firstWhere((s) => !done.contains(s));
+    return Card.outlined(
+      key: const ValueKey('start-here'),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 4, 0, 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 4, 0),
+              child: Row(
+                children: [
+                  Expanded(child: Text('Start here', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700))),
+                  Text('${done.length} of ${StartStep.values.length}', style: theme.textTheme.bodySmall?.copyWith(color: faded)),
+                  TextButton(key: const ValueKey('start-skip'), onPressed: () => _skip(context), child: const Text('Skip')),
+                ],
+              ),
+            ),
+            for (final step in StartStep.values)
+              ListTile(
+                key: ValueKey('start-${step.name}'),
+                dense: true,
+                visualDensity: VisualDensity.compact,
+                leading: done.contains(step)
+                    ? Icon(Icons.check_circle, color: theme.colorScheme.primary)
+                    : Icon(Icons.radio_button_unchecked, color: step == next ? theme.colorScheme.primary : faded),
+                title: Text(
+                  _startSteps[step]!.title,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: done.contains(step) ? faded : null,
+                    fontWeight: step == next ? FontWeight.w600 : null,
+                  ),
+                ),
+                subtitle: step == next ? Text(_startSteps[step]!.why) : null,
+                trailing: step == next ? const Icon(Icons.chevron_right) : null,
+                onTap: done.contains(step) ? null : () => onOpen(_startSteps[step]!.tab),
               ),
           ],
         ),

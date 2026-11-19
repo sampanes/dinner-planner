@@ -3,6 +3,8 @@ import 'package:dinner_planner/data/session.dart';
 import 'package:dinner_planner/data/store.dart';
 import 'package:dinner_planner/main.dart';
 import 'package:dinner_planner/notify/notifier.dart';
+import 'package:dinner_planner/ui/settings.dart';
+import 'package:dinner_planner/ui/tonight.dart';
 import 'package:dinner_planner/ui/week.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -121,6 +123,75 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('start here: the steps tick themselves, lead to their tab, and can be skipped', (tester) async {
+    final ntfy = FakeNtfy();
+    final store = MemoryStore();
+    final model = await startApp(tester, ntfy, store: store);
+    final card = find.byKey(const ValueKey('start-here'));
+    Future<void> go(String tab) async {
+      await tester.tap(find.text(tab));
+      await tester.pumpAndSettle();
+    }
+
+    expect(card, findsNothing, reason: 'first it asks whose phone this is');
+    await model.setMe('blue');
+    await tester.pumpAndSettle();
+    expect(find.text('0 of 5'), findsOneWidget);
+    expect(find.text('The cook gets the reminders, and what it needs goes on the list.'), findsOneWidget, reason: 'the next step says why');
+    expect(find.text('The list sorts itself for each one.'), findsNothing, reason: 'later steps stay one line');
+
+    await tester.tap(find.byKey(const ValueKey('start-plan')));
+    await tester.pumpAndSettle();
+    expect(find.text('Today'), findsOneWidget, reason: 'the step opens the Week tab');
+
+    await model.setMeal('2026-11-20', 'beef-chili');
+    expect(model.startDone, isEmpty, reason: 'nobody cooks it yet');
+    await model.setCook('2026-11-20', 'blue');
+    await model.addStores(['Costco']);
+    expect(model.startDone, {StartStep.plan, StartStep.stores});
+    await go('Tonight');
+    expect(find.text('2 of 5'), findsOneWidget);
+    expect(find.text('Say once what it is. After that, scanning it ticks it off the list.'), findsOneWidget);
+
+    await tester.ensureVisible(find.byKey(const ValueKey('start-share')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('start-share')));
+    await tester.pumpAndSettle();
+    expect(find.text('The two of you'), findsOneWidget, reason: 'the step opens Settings');
+    expect(find.byKey(const ValueKey('start-show')), findsNothing);
+
+    await go('Tonight');
+    await tester.ensureVisible(find.byKey(const ValueKey('start-skip')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('start-skip')));
+    await tester.pumpAndSettle();
+    expect(card, findsNothing);
+    final again = Session(store: store, client: ntfy.client(), notifier: SilentNotifier());
+    await again.load();
+    expect(again.startHidden, isTrue, reason: 'skipped stays skipped after a restart');
+    // Long enough for the "Hidden" message to leave the bottom of the screen.
+    await tester.pump(const Duration(seconds: 5));
+    await tester.pumpAndSettle();
+
+    await go('Settings');
+    final list = find.descendant(of: find.byType(SettingsScreen), matching: find.byType(Scrollable)).first;
+    await tester.scrollUntilVisible(find.byKey(const ValueKey('start-show')), 300, scrollable: list);
+    await tester.tap(find.byKey(const ValueKey('start-show')));
+    await tester.pumpAndSettle();
+    await go('Tonight');
+    expect(card, findsOneWidget);
+
+    // The rest of the steps, done: the card has nothing left to say.
+    await model.saveProduct('ground-beef', code: '012345000019');
+    await model.shopAt('costco');
+    await model.setGot(model.shopping.first, true);
+    await model.startHousehold();
+    await tester.pumpAndSettle();
+    expect(model.startDone, StartStep.values.toSet());
+    expect(card, findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('settings fit a small phone with large text', (tester) async {
     final ntfy = FakeNtfy();
     final model = await startApp(tester, ntfy);
@@ -129,6 +200,9 @@ void main() {
     tester.platformDispatcher.textScaleFactorTestValue = 1.5;
     addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
     await model.setMe('blue');
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.byKey(const ValueKey('start-share')), 200, scrollable: find.descendant(of: find.byType(TonightScreen), matching: find.byType(Scrollable)).first);
+    expect(tester.takeException(), isNull, reason: 'the start card overflows');
     await model.setMeal('2026-11-19', 'beef-chili');
     await model.setCook('2026-11-19', 'blue');
     await model.startHousehold();

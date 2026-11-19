@@ -31,7 +31,8 @@ class ShopScreen extends StatelessWidget {
     final messenger = ScaffoldMessenger.of(context);
     void say(String text, {SnackBarAction? action}) => messenger
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(text), action: action));
+      // A message with a button stays until swiped away unless told otherwise.
+      ..showSnackBar(SnackBar(content: Text(text), action: action, persist: false));
     final code = await scanCode(context);
     if (code == null || !context.mounted) return;
     final names = model.ingredientNames;

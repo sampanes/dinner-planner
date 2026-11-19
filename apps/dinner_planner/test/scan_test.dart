@@ -196,6 +196,10 @@ void main() {
       await tap(tester, 'shop-buy-save');
       expect(model.ingredientForCode(nobodyKnows), 'onion');
       expect(find.byKey(const ValueKey('got-onion')), findsOneWidget);
+      expect(find.text('Got: Yellow onions'), findsOneWidget);
+      await tester.pump(const Duration(seconds: 5));
+      await tester.pumpAndSettle();
+      expect(find.text('Got: Yellow onions'), findsNothing, reason: 'the message leaves on its own, Undo button or not');
 
       // Backing out anywhere leaves things as they were.
       next = beefCode;

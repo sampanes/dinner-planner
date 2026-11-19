@@ -51,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           child: IndexedStack(
             index: _tab,
             children: [
-              TonightScreen(model: model, onOpenWeek: () => setState(() => _tab = 1)),
+              TonightScreen(model: model, onOpen: (tab) => setState(() => _tab = tab)),
               WeekScreen(model: model),
               ShopScreen(model: model, onOpenWeek: () => setState(() => _tab = 1)),
               SettingsScreen(model: model),
