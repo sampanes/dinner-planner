@@ -1,0 +1,92 @@
+# The phone app (apps/dinner_planner): analyze and test on every change to
+# it. A tag like app-v0.1.0 also builds a signed APK and attaches it to a
+# GitHub release, which is where a phone (or Obtainium) picks it up.
+#
+# Signing needs four repository secrets: ANDROID_KEYSTORE_BASE64,
+# ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD. Without
+# them the release job fails and says so.
+name: Phone app
+
+on:
+  push:
+    branches: [main]
+    tags: ["app-v*"]
+    paths:
+      - "apps/dinner_planner/**"
+      - "data/runtime/recipes.runtime.json"
+      - ".github/workflows/app.yml"
+  pull_request:
+    paths:
+      - "apps/dinner_planner/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Analyze and test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/dinner_planner
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read the pinned Flutter version
+        id: pin
+        run: echo "version=$(python3 -c 'import json; print(json.load(open(".fvmrc"))["flutter"])')" >> "$GITHUB_OUTPUT"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.pin.outputs.version }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
+
+  release:
+    name: Signed APK
+    if: startsWith(github.ref, 'refs/tags/app-v')
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    defaults:
+      run:
+        working-directory: apps/dinner_planner
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read the pinned Flutter version
+        id: pin
+        run: echo "version=$(python3 -c 'import json; print(json.load(open(".fvmrc"))["flutter"])')" >> "$GITHUB_OUTPUT"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.pin.outputs.version }}
+          channel: stable
+          cache: true
+      - name: Signing key from the repository secrets
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ]; then
+            echo "::error::No ANDROID_KEYSTORE_BASE64 secret, so the APK cannot be signed. Add the four ANDROID_* secrets (apps/dinner_planner/README.md), then re-run this job."
+            exit 1
+          fi
+          echo "$KEYSTORE_BASE64" | base64 -d > android/app/release.jks
+          {
+            echo "storeFile=release.jks"
+            echo "storePassword=$KEYSTORE_PASSWORD"
+            echo "keyAlias=$KEY_ALIAS"
+            echo "keyPassword=$KEY_PASSWORD"
+          } > android/key.properties
+      - run: flutter pub get
+      - run: flutter build apk --release
+      - name: Name the APK after the tag
+        run: cp build/app/outputs/flutter-apk/app-release.apk "dinner-planner-${GITHUB_REF_NAME#app-}.apk"
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dinner-planner-*.apk --title "Phone app ${GITHUB_REF_NAME#app-}" --notes "Android APK. Install it over the previous one."

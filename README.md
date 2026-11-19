@@ -13,6 +13,8 @@ Live site: [sampanes.github.io/dinner-planner](https://sampanes.github.io/dinner
   tap-off grocery list. Open it on the Show with "Alexa, open Silk" and bookmark
   `https://sampanes.github.io/dinner-planner/kitchen.html`; on a phone, "Add to Home screen".
 - `recipes/` - one static page per recipe with schema.org Recipe data, generated
+- `apps/dinner_planner/` - the Android app: who cooks which night, reminders on your nights, and a
+  plan two phones share. Nothing it holds is written to this repository (`apps/dinner_planner/README.md`).
 
 ## Repo layout
 
