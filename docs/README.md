@@ -25,6 +25,10 @@ The project direction is intentionally narrow:
 11. `10_Review_Findings_2026-11.md` - review of the current code and the failed Alexa hello-world attempt
 12. `11_Alexa_Platform_Recheck_2026-11.md` - 2026-11-04 recheck: Alexa+ recipe library vs custom skill vs MCP
 
+One file here is for cooks instead of builders: `cooking-with-kids.md` sorts the recipes by how
+well they suit a picky eater, where a plain portion can be set aside, and which make good first
+recipes to cook with a child.
+
 ## Design stance
 
 This repo should optimize for these priorities:

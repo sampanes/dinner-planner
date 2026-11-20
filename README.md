@@ -19,6 +19,7 @@ Live site: [sampanes.github.io/dinner-planner](https://sampanes.github.io/dinner
 ## Repo layout
 
 - `docs/` product and architecture docs (start at `docs/README.md`)
+- `docs/cooking-with-kids.md` which recipes suit picky eaters, split into a plain and a full-flavor half, or make good first recipes to cook with a child
 - `data/source/recipes.json` the human-edited recipe data (ASCII only)
 - `data/runtime/` generated runtime data, committed
 - `data/reports/validation_report.md` generated build warnings, committed
