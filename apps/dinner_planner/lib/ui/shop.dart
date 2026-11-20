@@ -25,34 +25,50 @@ class ShopScreen extends StatelessWidget {
     messenger.showSnackBar(const SnackBar(content: Text('List copied.')));
   }
 
-  /// Scan a packet anywhere: in the store it ticks the line, at the pantry
-  /// shelf it teaches the app what the household buys.
-  Future<void> _scan(BuildContext context) async {
-    final messenger = ScaffoldMessenger.of(context);
-    void say(String text, {SnackBarAction? action}) => messenger
-      ..hideCurrentSnackBar()
-      // A message with a button stays until swiped away unless told otherwise.
-      ..showSnackBar(SnackBar(content: Text(text), action: action, persist: false));
-    final code = await scanCode(context);
-    if (code == null || !context.mounted) return;
-    final names = model.ingredientNames;
+  /// One barcode of a scanning session. In the store it ticks the line; at
+  /// the pantry shelf it teaches the app what the household buys; and an
+  /// extra that has run out goes back on the list.
+  Future<ScanOutcome?> _scanned(BuildContext context, String code) async {
+    var names = model.itemNames;
     var id = model.ingredientForCode(code);
     if (id == null || !names.containsKey(id)) {
-      // A packet the household has not scanned before: say what it is for,
-      // then look over what was found.
-      final picked = await Navigator.of(context).push<({String id, Product? found})>(MaterialPageRoute(fullscreenDialog: true, builder: (_) => MatchPage(model: model, code: code)));
-      if (picked == null || !context.mounted) return;
-      id = picked.id;
-      if (!await editProduct(context, model, id: id, name: names[id] ?? id, found: picked.found, code: code)) return;
+      // A packet the household has not scanned before: say what it is for.
+      final picked = await Navigator.of(context).push<({String? id, Product? found})>(MaterialPageRoute(fullscreenDialog: true, builder: (_) => MatchPage(model: model, code: code)));
+      if (picked == null || !context.mounted) return null;
+      final found = picked.found;
+      if (picked.id == null) {
+        final made = await showDialog<({String name, bool want})>(context: context, builder: (_) => _NewExtraDialog(found: found));
+        if (made == null) return null;
+        final madeId = await model.addExtra(made.name, want: made.want, code: code, buy: found?.shelfName, size: found?.size);
+        if (madeId == null) return null;
+        final name = model.itemNames[madeId] ?? made.name;
+        return made.want ? (text: 'On the list: $name', undo: () => model.wantExtra(madeId, false)) : (text: 'Saved: $name', undo: null);
+      }
+      id = picked.id!;
+      // Then look over what was found.
+      if (!await editProduct(context, model, id: id, name: names[id] ?? id, found: found, code: code)) return null;
+      names = model.itemNames;
     }
-    final name = model.buy(id) ?? names[id] ?? id;
-    final line = [for (final l in model.shopping) if (l.id == id) l].firstOrNull;
+    final item = id;
+    final name = model.buy(item) ?? _cap(names[item] ?? item);
+    final line = [for (final l in model.shopping) if (l.id == item) l].firstOrNull;
     if (line == null) {
-      say('$name: not on the list right now.');
-      return;
+      // Out of a store, scanning an extra means it has run out.
+      if (model.extras.containsKey(item) && model.shoppingAt == null) {
+        await model.wantExtra(item, true);
+        return (text: 'On the list: $name', undo: () => model.wantExtra(item, false));
+      }
+      return (text: '$name: not on the list right now.', undo: null);
     }
     await model.setGot(line, true);
-    say('Got: $name', action: SnackBarAction(label: 'Undo', onPressed: () => model.setGot(line, false)));
+    return (text: 'Got: $name', undo: () => model.setGot(line, false));
+  }
+
+  Future<void> _add(BuildContext context) async {
+    final names = await showDialog<List<String>>(context: context, builder: (_) => _AddDialog(model: model));
+    for (final name in names ?? const <String>[]) {
+      await model.addExtra(name);
+    }
   }
 
   @override
@@ -76,7 +92,7 @@ class ShopScreen extends StatelessWidget {
     final String lead;
     if (planned.isEmpty) {
       lead = 'Pick dinners for the week and what they need is added up here.';
-    } else if (!any) {
+    } else if (model.recipes.isEmpty) {
       lead = 'The recipes have not loaded yet.';
     } else {
       final last = parseDay(planned.last)!;
@@ -89,8 +105,9 @@ class ShopScreen extends StatelessWidget {
         Row(
           children: [
             Expanded(child: Text('Shopping list', style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700))),
+            IconButton(key: const ValueKey('shop-add'), tooltip: 'Add something else', icon: const Icon(Icons.add), onPressed: () => _add(context)),
             if (model.recipes.isNotEmpty)
-              IconButton(key: const ValueKey('shop-scan'), tooltip: 'Scan a packet', icon: const Icon(Icons.qr_code_scanner), onPressed: () => _scan(context)),
+              IconButton(key: const ValueKey('shop-scan'), tooltip: 'Scan packets', icon: const Icon(Icons.qr_code_scanner), onPressed: () => scanMany(context, _scanned)),
             if (groups.isNotEmpty || check.isNotEmpty)
               IconButton(key: const ValueKey('shop-copy'), tooltip: 'Copy the list', icon: const Icon(Icons.copy), onPressed: () => _copy(context)),
           ],
@@ -256,13 +273,15 @@ class _ShopTile extends StatelessWidget {
     final store = model.shoppingAt;
     final faded = theme.colorScheme.onSurfaceVariant;
     final dinners = {for (final u in line.uses) model.session.recipeName(u.slug)}.join(', ');
+    final asWell = !line.extra && !got && model.wantedToo(line.id);
     final strike = got ? TextDecoration.lineThrough : null;
     final known = buy != null || size != null;
     final small = [
       if (buy != null) line.name,
       if (size != null) packs == null ? size : '$packs × $size',
       if (store != null) ?model.at(store, line.id),
-      dinners,
+      if (dinners.isNotEmpty) dinners,
+      if (asWell) 'and for the house',
     ].join(' · ');
     return InkWell(
       key: ValueKey('${got ? 'got' : 'shop'}-${line.id}'),
@@ -283,12 +302,12 @@ class _ShopTile extends StatelessWidget {
                 children: [
                   Text.rich(
                     TextSpan(children: [
-                      if (!line.loose) TextSpan(text: '${line.amountText}  ', style: TextStyle(color: got ? faded : theme.colorScheme.primary, fontWeight: FontWeight.w700)),
+                      if (line.totals.isNotEmpty) TextSpan(text: '${line.amountText}  ', style: TextStyle(color: got ? faded : theme.colorScheme.primary, fontWeight: FontWeight.w700)),
                       TextSpan(text: buy ?? _cap(line.name)),
                     ]),
                     style: theme.textTheme.titleMedium?.copyWith(decoration: strike, color: got ? faded : null),
                   ),
-                  Text(small, maxLines: 2, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodySmall?.copyWith(color: faded)),
+                  if (small.isNotEmpty) Text(small, maxLines: 2, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodySmall?.copyWith(color: faded)),
                 ],
               ),
             ),
@@ -301,6 +320,135 @@ class _ShopTile extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// A scanned packet that is not for a recipe: what to call it on the list.
+class _NewExtraDialog extends StatefulWidget {
+  const _NewExtraDialog({this.found});
+
+  final Product? found;
+
+  @override
+  State<_NewExtraDialog> createState() => _NewExtraDialogState();
+}
+
+class _NewExtraDialogState extends State<_NewExtraDialog> {
+  late final TextEditingController _name = TextEditingController(text: widget.found?.name ?? '');
+
+  @override
+  void dispose() {
+    _name.dispose();
+    super.dispose();
+  }
+
+  void _close(bool want) {
+    if (_name.text.trim().isNotEmpty) Navigator.of(context).pop((name: _name.text.trim(), want: want));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final shelf = widget.found?.shelfName ?? '';
+    return AlertDialog(
+      title: const Text('What do you call it?'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (shelf.isNotEmpty) Padding(padding: const EdgeInsets.only(bottom: 12), child: Text(shelf)),
+          TextField(
+            key: const ValueKey('extra-name'),
+            controller: _name,
+            autofocus: true,
+            textCapitalization: TextCapitalization.sentences,
+            decoration: const InputDecoration(labelText: 'Short name for the list', hintText: 'Milk', border: OutlineInputBorder()),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+        TextButton(key: const ValueKey('extra-keep'), onPressed: () => _close(false), child: const Text('Just remember it')),
+        FilledButton(key: const ValueKey('extra-want'), onPressed: () => _close(true), child: const Text('Put it on the list')),
+      ],
+    );
+  }
+}
+
+/// Something to buy that no dinner asks for: typed, or picked from the
+/// extras the household has bought before.
+class _AddDialog extends StatefulWidget {
+  const _AddDialog({required this.model});
+
+  final AppModel model;
+
+  @override
+  State<_AddDialog> createState() => _AddDialogState();
+}
+
+class _AddDialogState extends State<_AddDialog> {
+  final TextEditingController _text = TextEditingController();
+  final Set<String> _picked = {};
+  late final Set<String> _onList = {for (final l in widget.model.shopping) l.id};
+
+  @override
+  void dispose() {
+    _text.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final known = widget.model.extras.entries.where((e) => !_onList.contains(e.key)).toList()..sort((a, b) => a.value.toLowerCase().compareTo(b.value.toLowerCase()));
+    return AlertDialog(
+      title: const Text('Something else to buy'),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextField(
+              key: const ValueKey('extra-text'),
+              controller: _text,
+              autofocus: known.isEmpty,
+              textCapitalization: TextCapitalization.sentences,
+              decoration: const InputDecoration(labelText: 'Milk, coffee, foil', helperText: 'Commas between several.', border: OutlineInputBorder()),
+            ),
+            if (known.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              Text('Bought before', style: Theme.of(context).textTheme.labelLarge),
+              const SizedBox(height: 4),
+              Wrap(
+                spacing: 8,
+                runSpacing: 4,
+                children: [
+                  for (final e in known)
+                    FilterChip(
+                      key: ValueKey('extra-idea-${e.key}'),
+                      label: Text(e.value),
+                      selected: _picked.contains(e.value),
+                      onSelected: (on) => setState(() => on ? _picked.add(e.value) : _picked.remove(e.value)),
+                      deleteButtonTooltipMessage: 'Forget it',
+                      onDeleted: () async {
+                        _picked.remove(e.value);
+                        await widget.model.forgetExtra(e.key);
+                        if (mounted) setState(() {});
+                      },
+                    ),
+                ],
+              ),
+            ],
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+        FilledButton(
+          key: const ValueKey('extra-add'),
+          onPressed: () => Navigator.of(context).pop([..._picked, for (final part in _text.text.split(',')) if (part.trim().isNotEmpty) part.trim()]),
+          child: const Text('Add'),
+        ),
+      ],
     );
   }
 }
@@ -375,7 +523,7 @@ class _ProductSheetState extends State<ProductSheet> {
   }
 
   Future<void> _scan() async {
-    final code = await scanCode(context);
+    final code = await scanOne(context);
     if (code == null || !mounted) return;
     setState(() => _looking = true);
     final found = await widget.model.lookUp(code);

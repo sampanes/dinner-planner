@@ -260,20 +260,54 @@ void main() {
   testWidgets('shots: scanning a packet', (tester) async {
     final model = await start(tester);
     await fillWeek(model, me: 'blue');
-    // The camera cannot be drawn here; this is the barcode it would hand back.
-    final camera = scanCode;
-    scanCode = (_) async => '012345000019';
-    addTearDown(() => scanCode = camera);
+    // The camera cannot be drawn here: a gray box stands where its picture goes.
+    final real = buildCamera;
+    late ValueChanged<String> camera;
+    buildCamera = (context, onCode) {
+      camera = onCode;
+      return const ColoredBox(color: Color(0xFF2B2B2B), child: Center(child: Icon(Icons.photo_camera_outlined, size: 72, color: Colors.white24)));
+    };
+    addTearDown(() => buildCamera = real);
     ntfy.openFoodFacts['012345000019'] = {'product_name': 'Sour Cream', 'brands': 'Meadow Farm', 'quantity': '16 oz'};
+    ntfy.openFoodFacts['012345000033'] = {'product_name': 'Ground Coffee', 'brands': 'Bean Barn', 'quantity': '12 oz'};
     await tester.tap(find.text('Shop'));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('shop-scan')));
+    await shoot(tester, '23-scan-camera-stays-open');
+    camera('012345000019');
     await shoot(tester, '17-scan-which-ingredient');
     await tester.tap(find.byKey(const ValueKey('match-sour-cream')));
     await shoot(tester, '18-scan-filled-in');
     await tester.tap(find.byKey(const ValueKey('shop-buy-save')));
+    await shoot(tester, '24-scan-got-and-next');
+
+    await tester.tap(find.byKey(const ValueKey('scan-type')));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const ValueKey('scan-number')), '0 12345 00003 3');
+    await shoot(tester, '25-scan-type-the-number');
+    await tester.tap(find.byKey(const ValueKey('scan-number-use')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('match-extra')));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const ValueKey('extra-name')), 'Coffee');
+    await shoot(tester, '26-scan-not-for-a-recipe');
+    await tester.tap(find.byKey(const ValueKey('extra-want')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('scan-done')));
+    await tester.pumpAndSettle();
+
+    await model.addExtra('Milk');
+    await model.addExtra('Paper towels');
+    await model.setGot(model.shopping.firstWhere((l) => l.id == 'paper-towels'), true);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('shop-add')));
+    await shoot(tester, '28-shop-add-something');
+    await tester.tap(find.text('Cancel'));
     await tester.pumpAndSettle();
     final list = find.descendant(of: find.byType(ShopScreen), matching: find.byType(Scrollable)).first;
+    await tester.scrollUntilVisible(find.byKey(const ValueKey('shop-coffee')), 300, scrollable: list);
+    await tester.drag(list, const Offset(0, -260));
+    await shoot(tester, '27-shop-with-extras');
     await tester.scrollUntilVisible(find.byKey(const ValueKey('got-sour-cream')), 400, scrollable: list);
     await shoot(tester, '19-scan-ticked');
     await finish(tester);

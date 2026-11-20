@@ -4,7 +4,8 @@ import '../app_model.dart';
 import '../data/products.dart';
 
 /// After a packet the household has not scanned before: which ingredient is
-/// it? The likeliest are on top, so most of the time it is one tap.
+/// it? The likeliest are on top, so most of the time it is one tap. Pops with
+/// the ingredient's id, or with a null id for "not for a recipe".
 class MatchPage extends StatefulWidget {
   const MatchPage({super.key, required this.model, required this.code});
 
@@ -17,7 +18,7 @@ class MatchPage extends StatefulWidget {
 
 class _MatchPageState extends State<MatchPage> {
   late final Future<Product?> _lookup = widget.model.lookUp(widget.code);
-  late final Map<String, String> _names = widget.model.ingredientNames;
+  late final Map<String, String> _names = widget.model.itemNames;
   late final Set<String> _onList = {for (final l in widget.model.shopping) l.id};
   final TextEditingController _filter = TextEditingController();
   Product? _found;
@@ -43,7 +44,7 @@ class _MatchPageState extends State<MatchPage> {
     super.dispose();
   }
 
-  Future<void> _pick(String id) async {
+  Future<void> _pick(String? id) async {
     if (_leaving) return;
     setState(() => _leaving = true);
     // A tap made before the answer came still gets the answer.
@@ -109,9 +110,18 @@ class _MatchPageState extends State<MatchPage> {
           Expanded(
             child: ListView(
               children: [
+                if (wanted.isEmpty)
+                  ListTile(
+                    key: const ValueKey('match-extra'),
+                    leading: const Icon(Icons.add_shopping_cart),
+                    title: const Text('Not for a recipe'),
+                    subtitle: const Text('Milk, coffee, foil: it goes on the list as its own thing.'),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => _pick(null),
+                  ),
                 if (top.isNotEmpty) label('Most likely'),
                 for (final id in top) tile(id),
-                if (others.isNotEmpty) label(top.isEmpty ? 'Every ingredient the recipes use' : 'Everything else'),
+                if (others.isNotEmpty) label(top.isEmpty ? 'Everything the app knows' : 'Everything else'),
                 for (final id in others) tile(id),
                 if (top.isEmpty && others.isEmpty) Padding(padding: const EdgeInsets.all(24), child: Text('No recipe uses an ingredient called that.', style: theme.textTheme.bodyLarge)),
               ],

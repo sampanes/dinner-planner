@@ -256,16 +256,81 @@ class AppModel extends ChangeNotifier {
 
   bool _got(String id, String day) => session.core.value(gotKey(id, day)) == '1';
 
-  /// What the dinners planned from today on still need, added up.
-  List<ShopLine> get shopping => shoppingList(_dinners, where: (id, day) => !_got(id, day));
+  /// The things the household buys that no recipe asks for, id -> name.
+  Map<String, String> get extras => {
+        for (final e in session.core.entries)
+          if (e.key.startsWith('extra/') && e.value is String && (e.value as String).isNotEmpty) e.key.substring(6): e.value as String,
+      };
 
-  /// What has been ticked as in the house for those dinners.
-  List<ShopLine> get shoppingGot => shoppingList(_dinners, where: _got);
+  bool _wanted(String id) => session.core.value(wantKey(id)) == '1';
+
+  /// A dinner needs it, and it is wanted for the house besides.
+  bool wantedToo(String id) => _wanted(id);
+
+  List<ShopLine> _withExtras(List<ShopLine> lines, bool Function(String id) where) {
+    final have = {for (final l in lines) l.id};
+    final names = extras;
+    return [
+      ...lines,
+      for (final e in names.entries)
+        if (!have.contains(e.key) && where(e.key)) ShopLine(e.key, e.value, extra: true),
+    ]..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+  }
+
+  /// What is still to buy: what the dinners planned from today on need,
+  /// added up, and the extras put on the list.
+  List<ShopLine> get shopping => _withExtras(shoppingList(_dinners, where: (id, day) => !_got(id, day)), _wanted);
+
+  /// What has been ticked as in the house: for those dinners, and the
+  /// extras got today.
+  List<ShopLine> get shoppingGot => _withExtras(shoppingList(_dinners, where: _got), (id) => !_wanted(id) && _got(id, today()));
+
+  /// Every name a barcode can stand for: the recipes' ingredients and the
+  /// household's extras.
+  Map<String, String> get itemNames => {...extras, ...ingredientNames};
+
+  /// Puts something no recipe asks for on the list (or, with [want] false,
+  /// only remembers it), and returns its id; null when [name] has no letters.
+  /// [code], [buy] and [size] are the packet it was scanned from.
+  Future<String?> addExtra(String name, {bool want = true, String? code, String? buy, String? size}) async {
+    final text = name.trim(), id = slugOf(text);
+    if (id.isEmpty) return null;
+    var changed = false;
+    if (!extras.containsKey(id)) {
+      changed = session.core.set(extraKey(id), text.length > 40 ? text.substring(0, 40) : text, now);
+    }
+    if (want) {
+      changed = session.core.set(wantKey(id), '1', now) || changed;
+      changed = session.core.set(gotKey(id, today()), null, now) || changed;
+    }
+    if (code != null) changed = session.core.set(codeKey(code), id, now) || changed;
+    if (buy != null && buy.trim().isNotEmpty && this.buy(id) == null) changed = session.core.set(buyKey(id), buy.trim(), now) || changed;
+    if (size != null && size.trim().isNotEmpty && this.size(id) == null) changed = session.core.set(sizeKey(id), size.trim(), now) || changed;
+    await _wrote(changed, replan: false);
+    return id;
+  }
+
+  /// Puts a known extra on the list, or takes it off without calling it got.
+  Future<void> wantExtra(String id, bool want) => _wrote(session.core.set(wantKey(id), want ? '1' : null, now), replan: false);
+
+  /// The household no longer buys this; its packet details are kept in case.
+  Future<void> forgetExtra(String id) {
+    var changed = session.core.set(extraKey(id), null, now);
+    changed = session.core.set(wantKey(id), null, now) || changed;
+    return _wrote(changed, replan: false);
+  }
 
   Future<void> setGot(ShopLine line, bool got) async {
     var changed = false;
     for (final u in line.uses) {
       changed = session.core.set(gotKey(line.id, u.day), got ? '1' : null, now) || changed;
+    }
+    if (line.extra) {
+      changed = session.core.set(wantKey(line.id), got ? null : '1', now) || changed;
+      changed = session.core.set(gotKey(line.id, today()), got ? '1' : null, now) || changed;
+    } else if (got && _wanted(line.id)) {
+      // Wanted for the house as well as for a dinner: one tick covers both.
+      changed = session.core.set(wantKey(line.id), null, now) || changed;
     }
     final store = shoppingAt;
     if (got && store != null) {
@@ -423,7 +488,7 @@ class AppModel extends ChangeNotifier {
     final loose = [for (final l in lines) if (l.loose) label(l)];
     return [
       for (final l in lines)
-        if (!l.loose) '- ${l.amountText} ${label(l)}',
+        if (!l.loose) '- ${l.extra ? '' : '${l.amountText} '}${label(l)}',
       if (loose.isNotEmpty) 'Check you have: ${loose.join(', ')}',
     ].join('\n');
   }

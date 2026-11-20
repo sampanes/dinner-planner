@@ -15,6 +15,9 @@ all of that, and none of it is written to the repository.
   already planned (so the other half of the sour cream gets used), and whether the week is short
   of that kind of dinner. One row of chips narrows by kind; the search looks at names and
   ingredients and forgives a typo (`lib/data/suggest.dart`).
+- **Extras**: the plus button puts things no dinner asks for on the same list (milk, coffee,
+  foil). They sort into sections, tick, and learn a store's order like everything else, and the
+  ones bought before are offered again with a tap.
 - **Reminders** on your nights: the evening before (check the fridge, start thawing), that morning,
   and when to start cooking. Times are in Settings. A night the other phone hands you gets its
   reminders without you opening the app.
@@ -29,7 +32,8 @@ all of that, and none of it is written to the repository.
   store while the other watches. The list copies as plain text.
 - **Scan**: point the camera at a packet's barcode and the name, brand and size fill themselves in
   ("Scanning a packet" below). Say once which ingredient a packet is; after that scanning it
-  ticks the line.
+  ticks the line. The camera stays open for the next packet, so a full cart or a pantry shelf is
+  one go, and a number the camera will not read can be typed.
 - **Stores**: add the stores you use, and tap one when you walk in. The list switches to the order
   you walk that store, which it learns from the order you tick things in ("The order of a store"
   below).
@@ -43,6 +47,7 @@ all of that, and none of it is written to the repository.
 | Dinners by day, who cooks, the two names | each phone, and the relay messages between them |
 | What is in the house for which dinner; what you buy for each ingredient, its packet size and section; the stores, and where things are in each | each phone, and the relay messages between them |
 | Which barcode is which ingredient | each phone, and the relay messages between them |
+| The extras the household buys, and which are on the list | each phone, and the relay messages between them |
 | Which person this phone belongs to, reminder times, which store it is in right now, a USDA key | this phone only |
 
 ## How two phones stay the same
@@ -103,7 +108,17 @@ neither knows is still remembered once you name it: the household keeps its own
 store printed on something it weighed (meat, deli) starts with 2 and ends in the price; the price
 part is dropped so the next pack of the same thing is recognized.
 
-The lookups are checked against stand-ins in the tests; the camera can only be tried on a phone.
+The scan button on the list keeps the camera open (`lib/ui/scan.dart`). Each barcode is dealt
+with and the result shown under the picture with an Undo; the same packet counts again only after
+four seconds out of view. "Type the number" takes the digits under the bars instead.
+
+A packet that is not for any recipe becomes an extra: name it once ("Coffee") and choose whether
+it goes on the list or is only remembered. From then on its barcode means that extra on both
+phones. Scanned in a store, a listed extra is ticked; scanned at home when it is not on the list,
+it is put on the list, which is how an empty carton gets itself bought again.
+
+The lookups, the scanning session and the extras are checked against stand-ins in the tests; the
+camera itself can only be tried on a phone.
 
 ## Build and test
 

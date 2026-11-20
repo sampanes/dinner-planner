@@ -149,7 +149,7 @@ List<Notice> noticesFor(
 }
 
 /// The kinds of entry the shopping list is made of.
-const Set<String> _shopping = {'got', 'buy', 'size', 'sec', 'store', 'at', 'pos', 'code'};
+const Set<String> _shopping = {'got', 'buy', 'size', 'sec', 'store', 'at', 'pos', 'code', 'extra', 'want'};
 
 /// A short line saying what a batch of entries is, for the relay message a
 /// person may see as a notification.

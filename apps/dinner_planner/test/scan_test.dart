@@ -93,15 +93,19 @@ void main() {
   group('on the Shop tab', () {
     late FakeNtfy ntfy;
     late AppModel model;
-    String? next;
+    // What the stand-in camera reports its barcodes to.
+    late ValueChanged<String> camera;
 
     Future<void> open(WidgetTester tester) async {
       tester.view.physicalSize = const Size(1080, 2400);
       tester.view.devicePixelRatio = 2.625;
       addTearDown(tester.view.reset);
-      final camera = scanCode;
-      scanCode = (_) async => next;
-      addTearDown(() => scanCode = camera);
+      final real = buildCamera;
+      buildCamera = (context, onCode) {
+        camera = onCode;
+        return const SizedBox.expand();
+      };
+      addTearDown(() => buildCamera = real);
       ntfy = lists();
       model = AppModel(Session(store: MemoryStore(), client: ntfy.client(), notifier: SilentNotifier()), clock: () => thursday);
       await model.start();
@@ -125,14 +129,30 @@ void main() {
       await tester.pumpAndSettle();
     }
 
+    /// The camera reads a barcode.
+    Future<void> see(WidgetTester tester, String code) async {
+      camera(code);
+      await tester.pumpAndSettle();
+    }
+
+    /// The number is put in by hand instead.
+    Future<void> type(WidgetTester tester, String digits) async {
+      await tap(tester, 'scan-type');
+      await tester.enterText(find.byKey(const ValueKey('scan-number')), digits);
+      await tap(tester, 'scan-number-use');
+    }
+
     String field(WidgetTester tester, String key) => tester.widget<TextField>(find.byKey(ValueKey(key))).controller!.text;
+    String said(WidgetTester tester) => tester.widget<Text>(find.byKey(const ValueKey('scan-said'))).data!;
+    List<String> toBuy() => [for (final l in model.shopping) l.id];
+    List<String> got() => [for (final l in model.shoppingGot) l.id];
 
     testWidgets('scan from a line: the packet fills in what you buy', (tester) async {
       await open(tester);
       await tap(tester, 'shop-edit-ground-beef');
-      next = beefCode;
       await tap(tester, 'shop-scan-packet');
-      expect(field(tester, 'shop-buy-text'), 'Ranch Hand Ground Beef 88% Lean');
+      await see(tester, beefCode);
+      expect(field(tester, 'shop-buy-text'), 'Ranch Hand Ground Beef 88% Lean', reason: 'one barcode and the camera closes');
       expect(field(tester, 'shop-size-text'), '1 lb');
       expect(find.textContaining('From the barcode.'), findsOneWidget);
       await tap(tester, 'shop-buy-save');
@@ -143,12 +163,13 @@ void main() {
 
       // Backing out of the camera changes nothing.
       await tap(tester, 'shop-edit-onion');
-      next = null;
       await tap(tester, 'shop-scan-packet');
+      await tester.tap(find.byType(CloseButton));
+      await tester.pumpAndSettle();
       expect(find.byKey(const ValueKey('shop-scan-note')), findsNothing);
-      // A packet nobody has on file is still remembered once it is named.
-      next = nobodyKnows;
+      // A packet nobody has on file, its number typed in: still remembered once it is named.
       await tap(tester, 'shop-scan-packet');
+      await type(tester, nobodyKnows);
       expect(find.textContaining('Neither list knows that barcode.'), findsOneWidget);
       await tester.enterText(find.byKey(const ValueKey('shop-buy-text')), 'Yellow onions, the 3 lb bag');
       await tap(tester, 'shop-buy-save');
@@ -156,10 +177,11 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('scan anything: say once what a packet is, after that it ticks itself', (tester) async {
+    testWidgets('keep scanning: say once what a packet is, after that it ticks itself', (tester) async {
       await open(tester);
-      next = penneCode;
       await tap(tester, 'shop-scan');
+      expect(said(tester), startsWith('Hold a barcode in view.'));
+      await see(tester, penneCode);
       expect(find.text('Which ingredient is this?'), findsOneWidget);
       expect(find.text('Pasta Co Penne Rigate'), findsOneWidget);
       expect(find.text('Most likely'), findsOneWidget);
@@ -169,24 +191,30 @@ void main() {
       expect(field(tester, 'shop-size-text'), '16 oz');
       await tap(tester, 'shop-buy-save');
       expect((model.buy('penne'), model.size('penne'), model.ingredientForCode(penneCode)), ('Pasta Co Penne Rigate', '16 oz', 'penne'));
-      expect(find.byKey(const ValueKey('got-penne')), findsOneWidget, reason: 'it is in the hand, so it is ticked');
-      expect(find.text('Got: Pasta Co Penne Rigate'), findsOneWidget);
+      expect(got(), contains('penne'), reason: 'it is in the hand, so it is ticked');
+      expect(said(tester), 'Got: Pasta Co Penne Rigate', reason: 'and the camera is still open');
 
-      await tester.tap(find.text('Undo'));
-      await tester.pumpAndSettle();
-      expect(find.byKey(const ValueKey('shop-penne')), findsOneWidget);
+      await tap(tester, 'scan-undo');
+      expect(said(tester), 'Undone.');
+      expect(toBuy(), contains('penne'));
+      // The packet is still in front of the camera: it is not taken again.
+      await see(tester, penneCode);
+      expect(said(tester), 'Undone.');
+      expect(toBuy(), contains('penne'));
 
-      // The second time needs no list and no questions.
+      // A number the camera will not read is typed; a known packet needs no questions.
       final asked = ntfy.lookups.length;
-      await tap(tester, 'shop-scan');
-      expect(find.byKey(const ValueKey('got-penne')), findsOneWidget);
+      await type(tester, '1234');
+      expect(find.text('A barcode has 8 to 14 digits.'), findsOneWidget);
+      await tester.enterText(find.byKey(const ValueKey('scan-number')), '0 12345 00001 9');
+      await tap(tester, 'scan-number-use');
+      expect(said(tester), 'Got: Pasta Co Penne Rigate');
       expect(ntfy.lookups.length, asked);
-      await tap(tester, 'shop-scan');
-      expect(find.text('Pasta Co Penne Rigate: not on the list right now.'), findsOneWidget);
+      await type(tester, penneCode);
+      expect(said(tester), 'Pasta Co Penne Rigate: not on the list right now.');
 
       // A packet neither list knows: find the ingredient, name it once.
-      next = nobodyKnows;
-      await tap(tester, 'shop-scan');
+      await see(tester, nobodyKnows);
       expect(find.byKey(const ValueKey('match-unknown')), findsOneWidget);
       await tester.enterText(find.byKey(const ValueKey('match-filter')), 'oni');
       await tester.pumpAndSettle();
@@ -195,20 +223,123 @@ void main() {
       await tester.enterText(find.byKey(const ValueKey('shop-buy-text')), 'Yellow onions');
       await tap(tester, 'shop-buy-save');
       expect(model.ingredientForCode(nobodyKnows), 'onion');
-      expect(find.byKey(const ValueKey('got-onion')), findsOneWidget);
-      expect(find.text('Got: Yellow onions'), findsOneWidget);
-      await tester.pump(const Duration(seconds: 5));
-      await tester.pumpAndSettle();
-      expect(find.text('Got: Yellow onions'), findsNothing, reason: 'the message leaves on its own, Undo button or not');
+      expect(said(tester), 'Got: Yellow onions');
 
-      // Backing out anywhere leaves things as they were.
-      next = beefCode;
-      await tap(tester, 'shop-scan');
+      // Backing out of the question leaves things as they were, camera still on.
+      await see(tester, beefCode);
       await tester.tap(find.byType(CloseButton));
       await tester.pumpAndSettle();
       expect(model.ingredientForCode(beefCode), isNull);
+      expect(said(tester), 'Got: Yellow onions');
+      expect(find.text('Done (4)'), findsOneWidget);
+
+      await tap(tester, 'scan-done');
+      expect(find.byKey(const ValueKey('got-onion')), findsOneWidget);
+      expect(find.byKey(const ValueKey('got-penne')), findsOneWidget);
       expect(find.byKey(const ValueKey('shop-ground-beef')), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
+
+    testWidgets('extras: typed in, scanned in, and back on the list when they run out', (tester) async {
+      await open(tester);
+      await tap(tester, 'shop-add');
+      await tester.enterText(find.byKey(const ValueKey('extra-text')), 'Milk, dish soap');
+      await tap(tester, 'extra-add');
+      expect(find.byKey(const ValueKey('shop-milk')), findsOneWidget);
+      expect(find.byKey(const ValueKey('shop-dish-soap')), findsOneWidget);
+      expect((model.section('milk'), model.section('dish-soap')), ('dairy', 'other'));
+      expect(model.shoppingText(), contains('- Milk'));
+
+      await tap(tester, 'shop-milk');
+      expect(find.byKey(const ValueKey('got-milk')), findsOneWidget);
+      expect(toBuy(), isNot(contains('milk')));
+      // It is offered again next time, and can be forgotten.
+      await tap(tester, 'shop-add');
+      expect(find.byKey(const ValueKey('extra-idea-dish-soap')), findsNothing, reason: 'already on the list');
+      await tap(tester, 'extra-idea-milk');
+      await tap(tester, 'extra-add');
+      expect(toBuy(), contains('milk'));
+      expect(got(), isNot(contains('milk')));
+
+      // A packet that is not for any recipe.
+      const coffeeCode = '012345000033';
+      ntfy.openFoodFacts[coffeeCode] = {'product_name': 'Ground Coffee', 'brands': 'Bean Barn', 'quantity': '12 oz'};
+      await tap(tester, 'shop-scan');
+      await see(tester, coffeeCode);
+      await tap(tester, 'match-extra');
+      expect(field(tester, 'extra-name'), 'Ground Coffee');
+      await tester.enterText(find.byKey(const ValueKey('extra-name')), 'Coffee');
+      await tap(tester, 'extra-want');
+      expect(said(tester), 'On the list: Coffee');
+      expect((model.extras['coffee'], model.buy('coffee'), model.size('coffee'), model.ingredientForCode(coffeeCode)), ('Coffee', 'Bean Barn Ground Coffee', '12 oz', 'coffee'));
+      expect(toBuy(), contains('coffee'));
+
+      // In the cart: one scan. Run out at home: one scan puts it back.
+      await type(tester, coffeeCode);
+      expect(said(tester), 'Got: Bean Barn Ground Coffee');
+      expect(got(), contains('coffee'));
+      await type(tester, coffeeCode);
+      expect(said(tester), 'On the list: Bean Barn Ground Coffee');
+      await tap(tester, 'scan-undo');
+      expect(toBuy(), isNot(contains('coffee')));
+      // In a store, something not on the list is left alone.
+      await model.addStores(['Costco']);
+      await model.shopAt('costco');
+      await type(tester, coffeeCode);
+      expect(said(tester), 'Bean Barn Ground Coffee: not on the list right now.');
+
+      // A second brand of the same thing is matched to the extra already known.
+      await see(tester, nobodyKnows);
+      await tester.enterText(find.byKey(const ValueKey('match-filter')), 'coff');
+      await tester.pumpAndSettle();
+      await tap(tester, 'match-coffee');
+      await tester.tap(find.text('Cancel'));
+      await tester.pumpAndSettle();
+      await tap(tester, 'scan-done');
+
+      await tap(tester, 'shop-add');
+      await tester.tap(find.descendant(of: find.byKey(const ValueKey('extra-idea-coffee')), matching: find.byTooltip('Forget it')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('extra-idea-coffee')), findsNothing);
+      expect(model.extras.keys, isNot(contains('coffee')));
+      expect(tester.takeException(), isNull);
+    });
+  });
+
+  test('extras are one list on both phones, and a tick for dinner covers the house', () async {
+    final ntfy = lists();
+    AppModel phone() => AppModel(Session(store: MemoryStore(), client: ntfy.client(), notifier: SilentNotifier()), clock: () => thursday);
+    final his = phone(), hers = phone();
+    await his.start();
+    await hers.start();
+    await his.startHousehold();
+    await hers.joinHousehold(his.household!.code);
+    await his.refreshRecipes();
+    await hers.refreshRecipes();
+
+    expect(await his.addExtra('  '), isNull);
+    expect(await his.addExtra('Paper towels'), 'paper-towels');
+    await pumpEventQueue();
+    await his.sync();
+    await hers.sync();
+    expect([for (final l in hers.shopping) (l.id, l.name, l.extra)], [('paper-towels', 'Paper towels', true)]);
+
+    await hers.setGot(hers.shopping.single, true);
+    await pumpEventQueue();
+    await hers.sync();
+    await his.sync();
+    expect(his.shopping, isEmpty);
+    expect([for (final l in his.shoppingGot) l.id], ['paper-towels']);
+    expect(his.extras, {'paper-towels': 'Paper towels'}, reason: 'still known, to put back with a tap');
+
+    // Onions for the house, and then a dinner that needs onions too: one line.
+    await his.addExtra('Onion');
+    await his.setMeal('2026-11-19', 'beef-chili');
+    final onion = his.shopping.where((l) => l.id == 'onion').toList();
+    expect(onion.length, 1);
+    expect((onion.single.extra, his.wantedToo('onion')), (false, true));
+    await his.setGot(onion.single, true);
+    expect(his.wantedToo('onion'), isFalse);
+    expect([for (final l in his.shopping) l.id], isNot(contains('onion')));
   });
 }

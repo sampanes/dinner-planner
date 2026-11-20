@@ -6,9 +6,21 @@
 // day's dinner is in the house; it is keyed by day so that a dinner planned
 // later asks for the ingredient again, and so old ticks age out with the
 // days they belong to.
+//
+// The list also takes things no dinner asks for: milk, coffee, foil.
+// "extra/<id>" is the name of one the household buys, kept so it can be put
+// back with a tap or a scan; "want/<id>" is set while it is on the list.
 
 String buyKey(String id) => 'buy/$id';
 String gotKey(String id, String day) => 'got/$id/$day';
+String extraKey(String id) => 'extra/$id';
+String wantKey(String id) => 'want/$id';
+
+/// The id a name gets: "Dish soap" -> "dish-soap".
+String slugOf(String s) {
+  final slug = s.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]+'), '-').replaceAll(RegExp(r'^-+|-+$'), '');
+  return slug.length > 48 ? slug.substring(0, 48) : slug;
+}
 
 /// One line of a recipe, as the recipe site publishes it.
 class Ingredient {
@@ -27,20 +39,18 @@ class Ingredient {
   Map<String, Object?> toJson() => {'id': id, 'displayName': name, 'amountText': amount, 'text': text};
 
   static Ingredient? fromJson(Object? raw) {
-    if (raw is String && raw.isNotEmpty) return Ingredient(id: _slug(raw), name: raw, text: raw);
+    if (raw is String && raw.isNotEmpty) return Ingredient(id: slugOf(raw), name: raw, text: raw);
     if (raw is! Map) return null;
     final text = raw['text'], name = raw['displayName'] ?? raw['canonicalName'], id = raw['id'], amount = raw['amountText'];
     final shown = name is String && name.isNotEmpty ? name : (text is String ? text : null);
     if (shown == null) return null;
     return Ingredient(
-      id: id is String && id.isNotEmpty ? id : _slug(shown),
+      id: id is String && id.isNotEmpty ? id : slugOf(shown),
       name: shown,
       amount: amount is String ? amount : '',
       text: text is String && text.isNotEmpty ? text : shown,
     );
   }
-
-  static String _slug(String s) => s.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]+'), '-').replaceAll(RegExp(r'^-+|-+$'), '');
 }
 
 /// An amount as a number and a unit. No number means "to taste" or anything
@@ -108,10 +118,13 @@ class ShopUse {
 }
 
 class ShopLine {
-  ShopLine(this.id, this.name);
+  ShopLine(this.id, this.name, {this.extra = false});
 
   final String id;
   final String name;
+
+  /// True for something no planned dinner asks for.
+  final bool extra;
 
   /// The total per unit, in the order the units were first met.
   final Map<String, double> totals = {};
@@ -120,7 +133,7 @@ class ShopLine {
   final List<ShopUse> uses = [];
 
   /// True when nothing about it could be counted: salt, oil.
-  bool get loose => totals.isEmpty;
+  bool get loose => totals.isEmpty && !extra;
 
   /// "3", "20 oz", "1 1/2 cups + 2 tbsp"; empty for a loose line.
   String get amountText => [for (final e in totals.entries) formatAmount(e.value, e.key)].join(' + ');
