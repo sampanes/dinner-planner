@@ -355,7 +355,7 @@ function renderRate(r, afterCooking) {
         const btns = [1, 2, 3, 4, 5].map(n => h('button', {
             class: 'star-btn', type: 'button', 'aria-label': `${n} stars`,
             onclick: () => { chosen[who] = chosen[who] === n ? 0 : n; paint(); }
-        }, '★'));
+        }, '\u2605'));
         const paint = () => btns.forEach((b, i) => b.classList.toggle('on', i < chosen[who]));
         paint();
         return h('div', { class: `rate-row ${who === 'pink' ? 'p' : 'b'}` }, h('div', { class: 'rate-who' }, people[who]), h('div', { class: 'rate-stars' }, btns));
