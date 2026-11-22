@@ -27,8 +27,15 @@ class TagTests(unittest.TestCase):
 
     def test_moods_come_in_a_fixed_order(self):
         self.assertEqual(moods("Spicy Beef Taco Rigatoni", ing("ground beef", "rigatoni pasta", "hot sauce")),
-                         ["Tex-Mex", "Pasta", "Spicy"])
+                         ["Kid-ready", "Tex-Mex", "Pasta", "Spicy"])
         self.assertEqual(moods("Beef & Mushroom Shepherd's Pie", ing("ground beef", "potatoes")), [])
+
+    def test_kid_ready_is_pasta_or_burgers_without_beans(self):
+        self.assertEqual(moods("Turkey Ragu Spaghetti", ing("ground turkey", "spaghetti"))[0], "Kid-ready")
+        self.assertIn("Kid-ready", moods("Crunch Burgers", ing("ground beef", "burger buns")))
+        self.assertIn("Kid-ready", moods("Beef & Bean Pasta", ing("ground beef", "penne pasta", "green beans")))
+        self.assertNotIn("Kid-ready", moods("Chili Mac", ing("ground beef", "macaroni", "black beans")))
+        self.assertNotIn("Kid-ready", moods("Beef Chili Bar", ing("ground beef", "kidney beans", "rice")))
 
     def test_three_cheeses_make_it_cheesy(self):
         self.assertIn("Cheesy", moods("Beef Bake", ing("mozzarella cheese", "parmesan cheese", "ricotta cheese")))

@@ -174,7 +174,7 @@ function kindFilters() {
         ...order(proteins, PROTEIN_ORDER).map(p => [p, r => (r.categories || []).includes(p)])
     ].filter(([, fn]) => count(fn) >= 3);
 }
-const MOOD_ORDER = ['Tex-Mex', 'Pasta', 'Cheesy', 'Creamy', 'Spicy', 'Handhelds', 'Bowls & soups', 'Asian'];
+const MOOD_ORDER = ['Kid-ready', 'Tex-Mex', 'Pasta', 'Cheesy', 'Creamy', 'Spicy', 'Handhelds', 'Bowls & soups', 'Asian'];
 const PROTEIN_ORDER = ['Beef', 'Chicken', 'Pork & sausage', 'Turkey', 'Seafood', 'Veggie'];
 
 function haveCount(r) { return (r.haves || []).filter(x => state.have.has(x)).length; }

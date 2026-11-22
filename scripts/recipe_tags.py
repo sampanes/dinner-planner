@@ -1,6 +1,6 @@
 """Tags the kitchen picker filters on, worked out from each recipe's name and ingredients.
 
-    moods(name, ingredients)     -> ["Tex-Mex", "Cheesy", ...]
+    moods(name, ingredients)     -> ["Kid-ready", "Pasta", "Cheesy", ...]
     proteins(name, ingredients)  -> ["Beef"], or ["Veggie"] when there is no meat
     haves(ingredients)           -> ["ground beef", "zucchini", "tortillas", ...]
 
@@ -103,7 +103,21 @@ def moods(name: str, ingredients: list[dict]) -> list[str]:
     cheeses = sum(1 for n in _names(ingredients) if re.search(r"chees|mozzarella|parmesan|cheddar|ricotta|queso", n))
     if "Cheesy" not in found and cheeses >= 3:
         found.append("Cheesy")
-    return sorted(found, key=[m for m, _, _ in MOODS].index)
+    found = sorted(found, key=[m for m, _, _ in MOODS].index)
+    if kid_ready(name, ingredients, found):
+        found.insert(0, KID_READY)
+    return found
+
+
+# House rules (docs/cooking-with-kids.md): any pasta works with the sauce set
+# aside, burgers work with the toppings left off, and beef-and-bean dishes are out.
+KID_READY = "Kid-ready"
+BEANS = re.compile(r"\bbeans?\b")
+
+
+def kid_ready(name: str, ingredients: list[dict], found_moods: list[str]) -> bool:
+    beans = any(BEANS.search(n) and "green bean" not in n for n in _names(ingredients))
+    return not beans and ("Pasta" in found_moods or re.search(r"\bburgers?\b", name.lower()) is not None)
 
 
 def haves(ingredients: list[dict]) -> list[str]:
