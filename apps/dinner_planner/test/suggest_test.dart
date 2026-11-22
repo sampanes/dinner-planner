@@ -111,7 +111,11 @@ void main() {
 
     // One chip narrows both the suggestions and the list.
     // The chips are one row that scrolls sideways.
-    await tester.scrollUntilVisible(find.byKey(const ValueKey('kind-Pasta')), 120, scrollable: find.ancestor(of: find.byKey(const ValueKey('kind-fav')), matching: find.byType(Scrollable)).first);
+    // Find the row once: the chip it is found by scrolls out of view on the way.
+    final chipRow = find.byWidget(tester.widget(find.ancestor(of: find.byKey(const ValueKey('kind-fav')), matching: find.byType(Scrollable)).first));
+    await tester.scrollUntilVisible(find.byKey(const ValueKey('kind-Pasta')), 120, scrollable: chipRow);
+    await tester.ensureVisible(find.byKey(const ValueKey('kind-Pasta')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('kind-Pasta')));
     await tester.pumpAndSettle();
     final pasta = model.recipes.where((r) => r.tags.contains('Pasta')).length;

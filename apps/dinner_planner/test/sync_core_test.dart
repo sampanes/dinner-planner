@@ -67,6 +67,21 @@ void main() {
     expect(relay.published, before, reason: 'two phones in step have nothing to say');
   });
 
+  test('a kitchen screen that only listens is sent the plan but is not the other phone', () {
+    final relay = FakeRelay();
+    final a = Phone('aaaa', relay);
+    a.core.set('meal/2026-11-19', 'beef-ragu-pasta-bar', start);
+    a.sync(start);
+    // The screen checks in holding nothing.
+    relay.publish('$wireMark{"d":"show-0123abcd","g":"0000000000000000","s":[]}', start.add(const Duration(hours: 7)));
+    final now = start.add(const Duration(hours: 7, minutes: 1));
+    final before = relay.published;
+    a.sync(now);
+    expect(relay.published, greaterThan(before), reason: 'the screen is behind, so the phone sends the plan');
+    expect(a.core.peerCount, 0);
+    expect(a.core.inStep(now), isTrue, reason: 'a screen that is behind is not a phone to catch up with');
+  });
+
   test('the newest write wins whatever order the writes arrive in', () {
     final relay = FakeRelay();
     final a = Phone('aaaa', relay), b = Phone('bbbb', relay);

@@ -23,6 +23,14 @@ import 'package:crypto/crypto.dart';
 /// The line that carries the machine half of a relay message.
 const String wireMark = 'dp2 ';
 
+/// Devices whose id starts with this only listen: the kitchen screen
+/// (house.js on the recipe site). They are still sent what they lack, but they
+/// are not "the other phone": they do not count as a phone, and one that is
+/// behind does not make this phone say it is catching up.
+const String listenerPrefix = 'show-';
+
+bool isListener(String dev) => dev.startsWith(listenerPrefix);
+
 /// A changed entry is offered to a phone that lacks it at most this often.
 const Duration resendEvery = Duration(hours: 6);
 
@@ -152,12 +160,13 @@ class SyncCore {
 
   Iterable<Entry> get entries => _entries.values;
 
-  int get peerCount => _peers.length;
+  /// Other phones heard from; listeners (the kitchen screen) do not count.
+  int get peerCount => _peers.keys.where((id) => !isListener(id)).length;
 
   /// True when every phone heard from holds the same state as this one.
   bool inStep(DateTime now) {
     final mine = digest(now);
-    return _peers.values.every((p) => p.digest == mine);
+    return _peers.entries.every((p) => isListener(p.key) || p.value.digest == mine);
   }
 
   /// Records a write made on this phone. Returns false when it changes nothing.
