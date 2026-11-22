@@ -9,7 +9,7 @@
 const DATA_URL = 'data/runtime/recipes.runtime.json';
 const HAVES_URL = 'data/runtime/haves.json';
 const KEYS = { resume: 'kitchen.resume', timers: 'kitchen.timers', filter: 'kitchen.filter', size: 'kitchen.size', got: 'kitchen.got',
-    kind: 'kitchen.kind', have: 'kitchen.have', shop: 'kitchen.shop' };
+    kind: 'kitchen.kind', have: 'kitchen.have', shop: 'kitchen.shop', photos: 'kitchen.photos' };
 
 // ---------- storage (never required: private windows and previews can block it) ----------
 const store = {
@@ -474,7 +474,9 @@ function renderRecipe(r) {
             `Resume at step ${resume.step + 1}`),
         h('button', { class: 'big-btn ' + (canResume ? 'secondary' : 'primary'), type: 'button', onclick: () => go(`#/cook/${r.slug}/1`) },
             canResume ? 'Start over' : 'Start cooking'),
-        h('button', { class: 'big-btn secondary', type: 'button', onclick: () => go(`#/rate/${r.slug}`) }, isNew(r) ? 'Rate it' : 'Change rating'));
+        h('button', { class: 'big-btn secondary', type: 'button', onclick: () => go(`#/rate/${r.slug}`) }, isNew(r) ? 'Rate it' : 'Change rating'),
+        hasPhotos(r) && h('button', { class: 'big-btn secondary', type: 'button', onclick: () => { store.set(KEYS.photos, !photosOn()); renderRecipe(r); } },
+            photosOn() ? 'Step photos: on' : 'Step photos: off'));
 
     app.replaceChildren(h('div', { class: 'recipe' },
         h('div', { class: 'recipe-hero' },
@@ -492,6 +494,11 @@ function renderRecipe(r) {
 
 // ---------- cook view ----------
 let stepEls = [];
+
+// HelloFresh's photo for each step, from data/source/step_photos.json. One
+// switch on the recipe screen turns them off everywhere on this device.
+function photosOn() { return store.get(KEYS.photos, true) !== false; }
+function hasPhotos(r) { return r.steps.some(s => s.photo); }
 let scrollTimer = null;
 
 // The build names what each timer is for ("penne pasta", "bake"); a section
@@ -526,17 +533,22 @@ function renderCook(r, startStep) {
     stepEls = r.steps.map((step, i) => {
         const uses = (step.ingredientRefs || []).map(id => byId.get(id)).filter(Boolean);
         const hints = usefulTimers(step);
-        return h('section', { class: 'step', 'data-i': i },
-            h('div', { class: 'step-head' },
-                h('div', { class: 'step-section' }, step.section || ''),
-                h('div', { class: 'step-count' }, `Step ${i + 1} of ${total}`)),
+        const photo = photosOn() && step.photo;
+        const body = [
             h('p', { class: 'step-text' }, step.displayText),
             uses.length ? h('div', { class: 'step-uses' }, uses.map(u => h('span', {}, u.text || u.displayName))) : null,
             hints.length ? h('div', { class: 'step-timers' },
                 hints.map(t => h('button', { class: 'big-btn primary timer-btn', type: 'button', onclick: () => startTimer(timerLabel(step, i, t), t.seconds) },
                     h('span', { class: 'tb-time' }, `Start ${shortTime(t.text)} timer`),
                     h('span', { class: 'tb-label' }, timerLabel(step, i, t)))),
-                h('span', { class: 'say' }, alexaPhrase(hints[0].seconds, timerLabel(step, i, hints[0])))) : null);
+                h('span', { class: 'say' }, alexaPhrase(hints[0].seconds, timerLabel(step, i, hints[0])))) : null];
+        return h('section', { class: photo ? 'step has-photo' : 'step', 'data-i': i },
+            h('div', { class: 'step-head' },
+                h('div', { class: 'step-section' }, step.section || ''),
+                h('div', { class: 'step-count' }, `Step ${i + 1} of ${total}`)),
+            photo ? h('div', { class: 'step-main' },
+                h('img', { class: 'step-photo', src: photo, alt: '', loading: 'lazy' }),
+                h('div', { class: 'step-body' }, body)) : body);
     });
 
     const done = h('section', { class: 'step done-step', 'data-i': total },
@@ -566,7 +578,8 @@ function topOffset() { return $('topbar').offsetHeight; }
 // Shrink the text of any step that would not fit on one screen, so every step
 // is readable without scrolling inside it: first shrink the text to 34px, then
 // compact the chips and drop the Alexa hint, then shrink to the 28px floor
-// (26px and 20px on a phone, which is held close).
+// (26px and 20px on a phone, which is held close). The Large text size opts
+// out: its steps keep their size and scroll instead, or Aa would look broken.
 function fitSteps() {
     const avail = window.innerHeight - topOffset() - $('cookbar').offsetHeight;
     for (const el of stepEls) {
@@ -574,11 +587,14 @@ function fitSteps() {
         if (!text) continue;
         text.style.fontSize = '';
         el.classList.remove('tight');
+        if (size === 2) continue;
         let px = parseFloat(getComputedStyle(text).fontSize);
         const shrinkTo = (floor) => {
             while (el.offsetHeight > avail && px > floor) { px -= 2; text.style.fontSize = `${px}px`; }
         };
         const phone = window.innerWidth <= 600;
+        // With a photo, the photo gives up room before the text does.
+        if (el.classList.contains('has-photo') && el.offsetHeight > avail) el.classList.add('tight');
         shrinkTo(phone ? 26 : 34);
         if (el.offsetHeight > avail) el.classList.add('tight');
         shrinkTo(phone ? 20 : 28);
@@ -831,8 +847,20 @@ function applySize() { document.documentElement.classList.remove('size-0', 'size
 $('sizeBtn').addEventListener('click', () => {
     size = (size + 1) % 3; store.set(KEYS.size, size); applySize();
     if (state.view === 'cook') { fitSteps(); goToStep(state.step, false); }
+    flashNote(['Small text', 'Medium text', 'Large text'][size]);
 });
 applySize();
+
+// A short message over the page that goes away by itself.
+let noteTimer = null;
+function flashNote(text) {
+    let el = document.getElementById('flashNote');
+    if (!el) { el = h('div', { id: 'flashNote', class: 'flash-note', role: 'status' }); document.body.append(el); }
+    el.textContent = text;
+    el.classList.add('on');
+    clearTimeout(noteTimer);
+    noteTimer = setTimeout(() => el.classList.remove('on'), 1200);
+}
 
 // ---------- boot ----------
 async function init() {

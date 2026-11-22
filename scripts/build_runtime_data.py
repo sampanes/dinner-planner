@@ -32,6 +32,7 @@ from recipe_tags import haves, haves_catalog, moods, proteins  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 SOURCE_PATH = ROOT / "data" / "source" / "recipes.json"
+STEP_PHOTOS_PATH = ROOT / "data" / "source" / "step_photos.json"
 RUNTIME_DIR = ROOT / "data" / "runtime"
 REPORTS_DIR = ROOT / "data" / "reports"
 PAGES_DIR = ROOT / "recipes"
@@ -433,9 +434,27 @@ def render_index_page(runtime_recipes: list[dict]) -> str:
 # ---------------------------------------------------------------------------
 
 
-def build_outputs(source_recipes: list[dict]) -> dict[Path, str]:
+def attach_step_photos(runtime_recipe: dict, photos: list[str]) -> None:
+    """Give each step its HelloFresh photo, keyed by source step.
+
+    Only when the photo count equals the recipe's source step count: a recipe
+    typed in with its steps merged or split differently gets no photos rather
+    than the wrong ones (scripts/step_photos.py --report lists those).
+    """
+    source_steps = sorted({step["sourceStep"] for step in runtime_recipe["steps"]})
+    if not photos or len(photos) != len(source_steps):
+        return
+    by_step = dict(zip(source_steps, photos))
+    for step in runtime_recipe["steps"]:
+        if by_step.get(step["sourceStep"]):
+            step["photo"] = by_step[step["sourceStep"]]
+
+
+def build_outputs(source_recipes: list[dict], step_photos: dict | None = None) -> dict[Path, str]:
     """Return every output file as {path: text}."""
     runtime_recipes = [build_runtime_recipe(recipe) for recipe in source_recipes]
+    for recipe in runtime_recipes:
+        attach_step_photos(recipe, (step_photos or {}).get(recipe["slug"], {}).get("photos", []))
     alias_index, ingredient_index = build_indexes(runtime_recipes)
 
     def dump(data: object) -> str:
@@ -470,9 +489,13 @@ def load_source() -> list[dict]:
     return json.loads(SOURCE_PATH.read_text(encoding="utf-8"))
 
 
+def load_step_photos() -> dict:
+    return json.loads(STEP_PHOTOS_PATH.read_text(encoding="utf-8")) if STEP_PHOTOS_PATH.exists() else {}
+
+
 def main(argv: list[str]) -> int:
     check = "--check" in argv
-    outputs = build_outputs(load_source())
+    outputs = build_outputs(load_source(), load_step_photos())
 
     if check:
         stale = stale_outputs(outputs)

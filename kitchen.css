@@ -171,6 +171,24 @@ main { padding: 20px; }
 .say { font-size: 22px; color: var(--muted); }
 .step-timers .timer-btn { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; line-height: 1.1; padding-top: 10px; padding-bottom: 12px; }
 .timer-btn .tb-label { font-size: 22px; font-weight: 600; opacity: 0.75; max-width: 420px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Text size only matters on the step screens. */
+html:not(.cook-mode) #sizeBtn { display: none; }
+.flash-note {
+    position: fixed; left: 50%; top: 40%; transform: translate(-50%, -50%);
+    padding: 18px 30px; border-radius: var(--radius); background: var(--surface-2); color: var(--text, #fff);
+    font-size: 30px; font-weight: 700; opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 50;
+}
+.flash-note.on { opacity: 1; }
+
+/* Step photo beside the text on the Show; above it on a phone (see the 600px block). */
+.step-main { display: flex; gap: 32px; align-items: flex-start; flex: 1; min-height: 0; }
+.step-photo {
+    flex: none; width: 40%; aspect-ratio: 3 / 2; object-fit: cover;
+    max-height: calc(100vh - var(--top-h) - var(--bar-h) - 120px);
+    border-radius: var(--radius); background: var(--surface);
+}
+.step.tight .step-photo { width: 30%; }
+.step-body { flex: 1; min-width: 0; align-self: stretch; display: flex; flex-direction: column; }
 .step.done-step { justify-content: center; align-items: center; text-align: center; }
 .step.done-step .step-text { margin-bottom: 30px; }
 
@@ -233,6 +251,9 @@ main { padding: 20px; }
     html.size-0 { --step-size: 26px; }
     html.size-1 { --step-size: 32px; }
     html.size-2 { --step-size: 40px; }
+    .step-main { flex-direction: column; gap: 14px; }
+    .step-photo { width: 100%; max-height: 30vh; }
+    .step.tight .step-photo { width: 100%; max-height: 20vh; }
     main { padding: 16px; }
     .grid { grid-template-columns: 1fr 1fr; gap: 12px; }
     .tile .t-name { font-size: 18px; min-height: 0; }

@@ -194,7 +194,7 @@ class BuildTests(unittest.TestCase):
         self.assertEqual(non_ascii_count(page), 0)
 
     def test_committed_outputs_are_current(self):
-        outputs = build.build_outputs(build.load_source())
+        outputs = build.build_outputs(build.load_source(), build.load_step_photos())
         stale = build.stale_outputs(outputs)
         self.assertEqual([p.relative_to(ROOT).as_posix() for p in stale], [], "run python scripts/build_runtime_data.py")
 
@@ -203,7 +203,7 @@ class BuildTests(unittest.TestCase):
         self.assertEqual(non_ascii_count(text), 0, "run python scripts/normalize_source.py")
 
     def test_outputs_are_ascii(self):
-        for path, text in build.build_outputs(build.load_source()).items():
+        for path, text in build.build_outputs(build.load_source(), build.load_step_photos()).items():
             self.assertEqual(non_ascii_count(text), 0, path.name)
 
 
