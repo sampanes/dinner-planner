@@ -7,7 +7,7 @@ import 'parts.dart';
 
 /// The kinds of dinner, in the order the chips show them; anything else the
 /// recipes carry comes after.
-const List<String> _kindOrder = ['Tex-Mex', 'Pasta', 'Cheesy', 'Creamy', 'Spicy', 'Handhelds', 'Bowls & soups', 'Asian', 'Beef', 'Chicken', 'Pork & sausage', 'Turkey', 'Seafood', 'Veggie'];
+const List<String> _kindOrder = ['Kid-ready', 'Tex-Mex', 'Pasta', 'Cheesy', 'Creamy', 'Spicy', 'Handhelds', 'Bowls & soups', 'Asian', 'Beef', 'Chicken', 'Pork & sausage', 'Turkey', 'Seafood', 'Veggie'];
 
 /// With fewer recipes than this there is nothing to suggest between.
 const int _enoughToSuggest = 6;
