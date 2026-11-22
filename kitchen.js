@@ -138,7 +138,7 @@ function render() {
 
 // ---------- sheets ----------
 // While a sheet is open the page behind it must not scroll under the finger.
-const SHEETS = ['ingOverlay', 'timerOverlay', 'haveOverlay', 'decideOverlay'];
+const SHEETS = ['ingOverlay', 'timerOverlay', 'haveOverlay', 'decideOverlay', 'linkOverlay'];
 function openSheet(id) { $(id).hidden = false; document.documentElement.classList.add('sheet-open'); }
 function closeSheet(id) {
     $(id).hidden = true;
@@ -220,6 +220,8 @@ function pickSummary(count, whoLabel) {
 }
 
 function planRecipes() {
+    const phones = House.upcoming(7).map(m => bySlug.get(m.slug)).filter(Boolean);
+    if (phones.length) return [...new Set(phones)];
     const plan = Sync.plan();
     return plan ? plan.slugs.map(s => bySlug.get(s)).filter(Boolean) : [];
 }
@@ -238,6 +240,36 @@ function showResults() {
     }
 }
 
+// Where cooking stopped, if that was recent: a dinner left half-cooked last
+// week should not greet the kitchen tonight.
+const RESUME_MAX_MS = 12 * 3600e3;
+function currentResume() {
+    const resume = store.get(KEYS.resume, null);
+    if (!resume || !bySlug.has(resume.slug)) return null;
+    if (!resume.at || Date.now() - resume.at > RESUME_MAX_MS) { store.del(KEYS.resume); return null; }
+    return resume;
+}
+
+// Tonight's dinner from the phones, with who cooks it.
+function tonightCard() {
+    const tonight = House.upcoming(1)[0];
+    const r = tonight && bySlug.get(tonight.slug);
+    if (!r) return null;
+    const cook = tonight.cook ? `${House.name(tonight.cook, Sync.people()[tonight.cook])} cooks` : 'Planned on the phones';
+    return h('button', { class: 'tonight', type: 'button', onclick: () => go(`#/r/${r.slug}`) },
+        h('img', { src: imageAt(r.image, 360, 240), alt: '' }),
+        h('div', { class: 't-body' },
+            h('div', { class: 'r-kicker' }, `Tonight - ${cook}`),
+            h('div', { class: 'r-name' }, r.displayName)),
+        h('div', { class: 'r-go' }, 'Open >'));
+}
+
+function dayWord(m) {
+    if (m.offset === 0) return 'Tonight';
+    if (m.offset === 1) return 'Tomorrow';
+    return m.day.toLocaleDateString(undefined, { weekday: 'long' });
+}
+
 function renderPick() {
     setTop('Kitchen', null);
     // Rebuilding the view must not snap the sideways-scrolled rows back to the start.
@@ -247,7 +279,7 @@ function renderPick() {
     const activeWho = (who.find(f => f[0] === state.filter) || who[0])[0];
     const list = pickList();
 
-    const resume = store.get(KEYS.resume, null);
+    const resume = currentResume();
     const resumeRecipe = resume && bySlug.get(resume.slug);
     const resumeBtn = resumeRecipe && h('button', {
         class: 'resume', type: 'button',
@@ -258,12 +290,16 @@ function renderPick() {
             h('div', { class: 'r-name' }, resumeRecipe.displayName)),
         h('div', { class: 'r-go' }, 'Resume >'));
 
+    const coming = House.upcoming(7).filter(m => m.offset > 0 && bySlug.has(m.slug));
     const planned = planRecipes();
+    const weekRow = coming.length
+        ? coming.map(m => h('div', { class: 'day-tile' }, h('div', { class: 'day-word' }, dayWord(m)), tile(bySlug.get(m.slug), true)))
+        : planned.map(r => tile(r, true));
     const week = planned.length ? h('section', { class: 'week' },
         h('div', { class: 'week-head' },
-            h('h2', {}, 'This week'),
+            h('h2', {}, coming.length ? 'Coming up' : 'This week'),
             h('button', { class: 'big-btn secondary', type: 'button', onclick: () => go('#/shop') }, 'Grocery list')),
-        h('div', { class: 'week-row' }, planned.map(r => tile(r, true)))) : null;
+        weekRow.length ? h('div', { class: 'week-row' }, weekRow) : null) : null;
 
     const actions = h('div', { class: 'pick-actions' },
         h('button', { class: 'big-btn primary', type: 'button', onclick: openDecide }, "Can't decide?"),
@@ -294,8 +330,12 @@ function renderPick() {
             onclick: () => { state.filter = 'all'; state.kind = null; state.have.clear(); store.set(KEYS.filter, 'all'); store.set(KEYS.kind, null); saveHave(); showResults(); }
         }, 'Show all') : null);
 
-    app.replaceChildren(resumeBtn || '', week || '', actions, whoChips, kindChips, count,
-        list.length ? grid : h('p', { class: 'empty' }, activeWho === 'while' ? 'Nothing cooked yet.' : 'Nothing matches. Tap a chip again to turn it off.'));
+    const linkBtn = h('button', { class: 'big-btn secondary link-btn', type: 'button', onclick: openLink },
+        House.linked() ? 'Linked to the phones' : 'Link to the phones');
+
+    app.replaceChildren(resumeBtn || '', tonightCard() || '', week || '', actions, whoChips, kindChips, count,
+        list.length ? grid : h('p', { class: 'empty' }, activeWho === 'while' ? 'Nothing cooked yet.' : 'Nothing matches. Tap a chip again to turn it off.'),
+        linkBtn);
     SIDE.forEach((sel, i) => { const el = app.querySelector(sel); if (el) el.scrollLeft = sideScroll[i]; });
 }
 
@@ -466,7 +506,7 @@ function madeLine(r) {
 
 function renderRecipe(r) {
     setTop(r.displayName, '#/');
-    const resume = store.get(KEYS.resume, null);
+    const resume = currentResume();
     const canResume = resume && resume.slug === r.slug && resume.step > 0;
 
     const actions = h('div', { class: 'actions' },
@@ -633,7 +673,7 @@ function setStep(i) {
     $('nextBtn').textContent = i >= total - 1 ? (i >= total ? 'Finish' : 'Done >') : 'Next >';
     if (i < total) {
         history.replaceState(null, '', `#/cook/${r.slug}/${i + 1}`);
-        store.set(KEYS.resume, { slug: r.slug, step: i });
+        store.set(KEYS.resume, { slug: r.slug, step: i, at: Date.now() });
     }
 }
 
@@ -862,6 +902,79 @@ function flashNote(text) {
     noteTimer = setTimeout(() => el.classList.remove('on'), 1200);
 }
 
+// ---------- linking to the phones (house.js) ----------
+let pairing = null; // { code, stop }
+
+function openLink() { renderLink(); openSheet('linkOverlay'); }
+function closeLink() {
+    if (pairing) { pairing.stop = true; pairing = null; }
+    closeSheet('linkOverlay');
+    if (state.view === 'pick') renderPick();
+}
+$('linkClose').addEventListener('click', closeLink);
+
+function renderLink(message) {
+    const body = $('linkBody');
+    const note = message ? h('p', { class: 'link-msg' }, message) : null;
+    if (House.linked()) {
+        const heard = House.heardMs();
+        body.replaceChildren(
+            h('p', { class: 'link-text' }, 'This screen shows the dinners planned in the phone app. ' +
+                (heard ? `Last checked ${ago(new Date(heard).toISOString())}.` : 'Not checked yet.')),
+            note,
+            h('div', { class: 'link-row' },
+                h('button', { class: 'big-btn primary', type: 'button', onclick: () => syncPhones(true) }, 'Check the phones now'),
+                h('button', { class: 'big-btn secondary', type: 'button', onclick: () => { House.unlink(); renderLink('Unlinked.'); } }, 'Unlink')),
+            h('p', { class: 'link-hint' }, 'A plan made before this screen was linked shows up once a phone has the app open.'));
+        return;
+    }
+    const codeBox = h('textarea', { class: 'link-input', rows: '3', placeholder: 'Household code from the phone app', autocomplete: 'off', spellcheck: 'false' });
+    const screenBox = h('input', { class: 'link-input short', placeholder: 'Screen code', maxlength: '6', autocomplete: 'off', spellcheck: 'false' });
+    body.replaceChildren(
+        h('h3', {}, 'On the kitchen screen'),
+        h('p', { class: 'link-text' }, 'Show a code here, then send the household code to it from a phone.'),
+        pairing
+            ? h('div', { class: 'pair-code' }, h('div', { class: 'pc-code' }, pairing.code), h('div', { class: 'pc-wait' }, 'Waiting for a phone...'))
+            : h('button', { class: 'big-btn primary', type: 'button', onclick: startPairing }, 'Show a code'),
+        note,
+        h('h3', {}, 'On a phone'),
+        h('p', { class: 'link-text' }, 'In the phone app, open Settings and copy the household code. Paste it here.'),
+        codeBox,
+        h('div', { class: 'link-row' },
+            screenBox,
+            h('button', { class: 'big-btn primary', type: 'button', onclick: async () => {
+                const ok = await House.sendToScreen(codeBox.value, screenBox.value).catch(() => false);
+                renderLink(ok ? 'Sent. The screen links in a few seconds.' : 'Check both codes: that did not send.');
+            } }, 'Send to the screen'),
+            h('button', { class: 'big-btn secondary', type: 'button', onclick: async () => {
+                const ok = await House.link(codeBox.value);
+                renderLink(ok ? 'Linked.' : 'That is not a household code.');
+            } }, 'Link this device')));
+}
+
+function startPairing() {
+    const job = { code: House.newPairCode(), stop: false };
+    pairing = job;
+    renderLink();
+    House.waitForPair(job.code, () => job.stop).then(ok => {
+        if (pairing === job) pairing = null;
+        if (ok && !$('linkOverlay').hidden) renderLink('Linked. Tonight shows on the home screen once a phone has sent the plan.');
+        if (ok && state.view === 'pick') renderPick();
+    });
+}
+
+// Folds in what the phones sent. On the home screen this runs every couple of
+// minutes; `force` also asks the phones to send everything again.
+async function syncPhones(force) {
+    if (!House.linked()) return;
+    let changed = false;
+    try { changed = await House.refresh(force); } catch (e) { if (force) renderLink(`Could not reach the relay (${e.message}).`); return; }
+    if (force && !$('linkOverlay').hidden) renderLink(changed ? 'Updated.' : 'Asked the phones. Anything new shows up within a few minutes.');
+    if (changed && state.view === 'pick' && $('linkOverlay').hidden) renderPick();
+}
+setInterval(() => { if (state.view === 'pick' && document.visibilityState === 'visible') syncPhones(false); }, 2 * 60e3);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && state.view === 'pick') syncPhones(false); });
+
 // ---------- boot ----------
 async function init() {
     tickTimers();
@@ -882,6 +995,7 @@ async function init() {
     }
     window.addEventListener('hashchange', render);
     render();
+    syncPhones(false);
     if (timers.some(t => t.fired)) showAlarm();
 }
 
