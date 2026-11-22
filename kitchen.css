@@ -495,3 +495,76 @@ html.sheet-open, html.sheet-open body { overflow: hidden; }
     .link-text { font-size: 19px; }
     .pc-code { font-size: 52px; }
 }
+
+/* ---------- phones: ordinary phone sizes ----------
+   Everything above is sized for the kitchen screen, read from across the room.
+   A phone is held in the hand, so below 600px wide the home screen, recipe
+   page, sheets and top bar drop to normal app sizes. The Show is 1280 wide and
+   never sees this block. The cooking steps keep their own Aa sizes. */
+@media (max-width: 600px) {
+    :root { --top-h: 56px; --radius: 14px; }
+    .top-title { font-size: 20px; }
+    .top-btn { font-size: 16px; min-height: 40px; padding: 0 12px; border-radius: 10px; }
+    main { padding: 12px; }
+    .big-btn { font-size: 17px; min-height: 50px; padding: 0 18px; }
+    .big-btn.huge { font-size: 26px; min-height: 76px; }
+
+    .pick-actions { gap: 8px; margin-bottom: 12px; }
+    .pick-actions .big-btn { min-height: 46px; font-size: 16px; padding: 0 10px; }
+    .chips { gap: 8px; margin-bottom: 8px; }
+    .chips.scroll { margin-bottom: 8px; margin-left: -12px; margin-right: -12px; padding-left: 12px; padding-right: 12px; }
+    .chip, .chips.kinds .chip { min-height: 36px; font-size: 15px; padding: 0 14px; border-width: 2px; }
+    .pick-count { font-size: 14px; margin-bottom: 10px; }
+    .pick-count .chip.reset { min-height: 32px; font-size: 14px; padding: 0 12px; }
+    .grid { gap: 10px; }
+    .tile .t-name { font-size: 15px; padding: 8px 10px 2px; }
+    .tile .t-meta { font-size: 13px; padding: 0 10px 10px; }
+
+    .week { margin-bottom: 12px; }
+    .week-head h2 { font-size: 18px; }
+    .week-head .big-btn { min-height: 36px; font-size: 14px; padding: 0 12px; }
+    .week-row { gap: 10px; }
+    .tile.small, .day-tile { flex-basis: 210px; }
+    .tile.small { min-height: 60px; }
+    .tile.small img { width: 60px; min-height: 60px; flex-basis: 60px; }
+    .tile.small .t-name { font-size: 14px; }
+    .tile.small .t-meta { font-size: 12px; }
+    .day-word { font-size: 13px; }
+    .resume { min-height: 60px; padding: 8px 16px; gap: 12px; margin-bottom: 12px; }
+    .resume .r-kicker { font-size: 13px; }
+    .resume .r-name, .resume .r-go { font-size: 17px; }
+    .tonight { margin-bottom: 12px; border-width: 2px; }
+    .tonight img { width: 72px; }
+    .tonight .r-kicker { font-size: 13px; }
+    .tonight .r-name { font-size: 17px; }
+    .link-btn { min-height: 40px; font-size: 15px; }
+
+    .recipe { gap: 16px; }
+    .recipe-hero h1 { font-size: 22px; margin: 12px 0 6px; }
+    .recipe-hero .meta { font-size: 15px; margin-bottom: 12px; }
+    .recipe-hero .actions { gap: 8px; }
+    .recipe-side h2 { font-size: 19px; }
+    .notes { font-size: 15px; }
+    .ing-list li { margin-bottom: 6px; }
+    .ing-list button { min-height: 44px; padding: 8px 12px; font-size: 16px; border-radius: 10px; }
+    .ing-hint { font-size: 14px; }
+    .shop h2 { font-size: 17px; margin: 20px 0 8px; }
+    .shop-item .s-amt { font-size: 13px; }
+
+    .sheet-head h2 { font-size: 19px; }
+    .sheet-head .big-btn { min-height: 40px; font-size: 15px; padding: 0 14px; }
+    .have { min-height: 46px; font-size: 15px; border-width: 2px; border-radius: 10px; }
+    .have .n { font-size: 12px; }
+    .have-group h3 { font-size: 13px; }
+    .link-text, .link-msg { font-size: 16px; }
+    .link-hint { font-size: 14px; }
+    #linkBody h3 { font-size: 18px; margin: 18px 0 6px; }
+    .link-input { font-size: 16px; }
+    .link-input.short { font-size: 18px; }
+    .pc-code { font-size: 40px; letter-spacing: 6px; }
+
+    .rate h1 { font-size: 24px; }
+    .rate-hint { font-size: 14px; }
+    .rate-who { font-size: 18px; }
+    .star-btn { width: 48px; height: 48px; font-size: 32px; border-radius: 10px; }
+}
