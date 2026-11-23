@@ -229,6 +229,91 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('notes on a step: tap its number, and the note says which step it is on', (tester) async {
+    final ntfy = FakeNtfy();
+    final model = await startApp(tester, ntfy);
+    await model.setMe('blue');
+    await model.setMeal('2026-11-19', 'beef-chili');
+    await tester.pumpAndSettle();
+    final add = find.byKey(const ValueKey('note-add-beef-chili'));
+    // Mid-screen, clear of the bars at the top and bottom.
+    Future<void> show(Finder f) async {
+      await Scrollable.ensureVisible(tester.element(f), alignment: 0.5);
+      await tester.pumpAndSettle();
+    }
+
+    Future<void> write(String text) async {
+      await tester.enterText(find.byKey(const ValueKey('note-field')), text);
+      await tester.tap(find.byKey(const ValueKey('note-save')));
+      await tester.pumpAndSettle();
+    }
+
+    await tester.tap(add);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('note-place-3')), findsOneWidget, reason: 'one number per step');
+    expect(find.byKey(const ValueKey('note-place-4')), findsNothing);
+    await tester.tap(find.byKey(const ValueKey('note-place-2')));
+    await tester.pumpAndSettle();
+    expect(find.text('Step 2: Brown the beef in a large pot, 5-7 minutes.'), findsOneWidget, reason: 'the step is read back before writing');
+    await write('Garlic salt goes in here');
+    var notes = model.plan.notes('beef-chili');
+    expect(notes.single.step, '8b807cd6');
+    expect(notes.single.anchor, 'Brown the beef in a large pot, 5-7 minutes.');
+    expect(find.text('Garlic salt goes in here'), findsOneWidget);
+    expect(find.text('Step 2: Brown the beef in a large pot, 5-7 minutes.'), findsOneWidget, reason: 'the note shows which step it is on');
+
+    // A second note, on the whole recipe, and a third on another step.
+    await show(add);
+    await tester.tap(add);
+    await tester.pumpAndSettle();
+    await write('Double it');
+    await show(add);
+    await tester.tap(add);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('note-place-1')));
+    await tester.pumpAndSettle();
+    await write('Use the red onion');
+    notes = model.plan.notes('beef-chili');
+    expect(notes.length, 3);
+    expect(model.plan.note('beef-chili'), 'Double it');
+
+    // Choosing a step that already has a note changes that note.
+    await show(add);
+    await tester.tap(add);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('note-place-2')));
+    await tester.pumpAndSettle();
+    expect(tester.widget<TextField>(find.byKey(const ValueKey('note-field'))).controller!.text, 'Garlic salt goes in here');
+    await write('Garlic salt and a pinch of sugar');
+    expect(model.plan.notes('beef-chili').length, 3);
+
+    // Tapping a note changes it where it is: no step to choose.
+    final tile = find.byKey(const ValueKey('note-beef-chili-8b807cd6'));
+    await show(tile);
+    await tester.tap(tile);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('note-place-all')), findsNothing);
+    await write('Garlic salt');
+    final changed = model.plan.notes('beef-chili').firstWhere((n) => n.step == '8b807cd6');
+    expect(changed.text, 'Garlic salt');
+    expect(changed.anchor, 'Brown the beef in a large pot, 5-7 minutes.');
+
+    await show(tile);
+    await tester.tap(tile);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('note-clear')));
+    await tester.pumpAndSettle();
+    expect([for (final n in model.plan.notes('beef-chili')) n.text], ['Double it', 'Use the red onion']);
+
+    // A note whose step has been rewritten since still shows, with the old words.
+    model.session.core.set('note/beef-chili/deadbeef', 'Saute the peppers\nNo peppers for us', DateTime.utc(2026, 11, 19, 12));
+    await model.setCook('2026-11-19', 'blue');
+    await tester.pumpAndSettle();
+    expect(find.text('A step that has changed since: Saute the peppers'), findsOneWidget);
+    expect(find.text('No peppers for us'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('settings fit a small phone with large text', (tester) async {
     final ntfy = FakeNtfy();
     final model = await startApp(tester, ntfy);

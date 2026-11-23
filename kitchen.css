@@ -575,6 +575,8 @@ html.sheet-open, html.sheet-open body { overflow: hidden; }
     background: var(--surface-2); border-left: 6px solid var(--accent); border-radius: 12px;
 }
 .step .house-note { font-size: 24px; margin-bottom: 14px; }
+/* A note on this one step sits under the step's own words. */
+.step .step-text + .house-note { margin-top: 14px; }
 @media (max-width: 600px) {
     .house-note, .step .house-note { font-size: 16px; padding: 8px 12px; border-left-width: 4px; margin-bottom: 10px; }
 }

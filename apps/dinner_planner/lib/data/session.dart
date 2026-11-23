@@ -26,7 +26,7 @@ const String _tripKey = 'dp.trip';
 
 /// Goes up when the phone starts keeping more of each recipe, so a list saved
 /// by an older version is fetched again instead of waiting to go stale.
-const int _recipeFields = 2;
+const int _recipeFields = 3;
 
 class SyncReport {
   const SyncReport({this.changes = const [], this.error});

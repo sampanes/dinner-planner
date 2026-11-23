@@ -334,6 +334,36 @@ void main() {
     await finish(tester);
   }, skip: shotsDir == null);
 
+  testWidgets('shots: notes', (tester) async {
+    final model = await start(tester);
+    await fillWeek(model, me: 'blue');
+    await model.hideStart(true);
+    await tester.pumpAndSettle();
+    final slug = _cast[0];
+    final steps = model.session.recipe(slug)!.steps;
+    final add = find.byKey(ValueKey('note-add-$slug'));
+    Future<void> show(Finder f, double alignment) async {
+      await Scrollable.ensureVisible(tester.element(f), alignment: alignment);
+      await tester.pumpAndSettle();
+    }
+
+    await show(add, 0.5);
+    await tester.tap(add);
+    await shoot(tester, '30-note-new');
+    await tester.tap(find.byKey(const ValueKey('note-place-3')));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const ValueKey('note-field')), 'I like to add a little garlic salt to the rice at this stage');
+    await shoot(tester, '31-note-on-a-step');
+    await tester.tap(find.byKey(const ValueKey('note-save')));
+    await tester.pumpAndSettle();
+    await model.setNote(slug, 'Make extra sauce next time');
+    await model.setNote(slug, 'Line the sheet with foil first', step: steps[4]);
+    await tester.pumpAndSettle();
+    await show(add, 0.75);
+    await shoot(tester, '32-notes-on-tonight');
+    await finish(tester);
+  }, skip: shotsDir == null);
+
   testWidgets('shots: the other phone, dark', (tester) async {
     final model = await start(tester, brightness: Brightness.dark);
     await fillWeek(model, me: 'pink');

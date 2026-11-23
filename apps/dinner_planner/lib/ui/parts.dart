@@ -69,46 +69,101 @@ class CookPicker extends StatelessWidget {
   }
 }
 
-/// The household's note on a recipe ("add parmesan at the end"), tap to
-/// change it; or, with no note yet, a button to write one. Notes are shared
-/// like the plan: the other phone and a linked kitchen screen see them.
-class RecipeNote extends StatelessWidget {
-  const RecipeNote({super.key, required this.model, required this.slug});
+/// What the household wrote on a recipe: "add parmesan at the end" on the
+/// whole recipe, or "garlic salt goes in here" on one step. Tap a note to
+/// change it; the button adds another. Notes are shared like the plan: the
+/// other phone, a linked kitchen screen and scripts/house_notes.py on a
+/// computer see them, and they stay until someone deletes them or the recipe
+/// is fixed at the computer.
+class RecipeNotes extends StatelessWidget {
+  const RecipeNotes({super.key, required this.model, required this.slug});
 
   final AppModel model;
   final String slug;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final note = model.plan.note(slug);
-    if (note == null) {
-      return Align(
-        alignment: Alignment.centerLeft,
-        child: TextButton.icon(
-          key: ValueKey('note-add-$slug'),
-          icon: const Icon(Icons.edit_note),
-          label: const Text('Add a note'),
-          onPressed: () => editNote(context, model, slug),
-        ),
-      );
+    final steps = model.session.recipe(slug)?.steps ?? const <String>[];
+    final ids = [for (final s in steps) stepId(s)];
+    // Where a note sits: -1 the whole recipe, then its step, then steps that
+    // have been rewritten since.
+    int place(NoteLine n) {
+      if (n.step == null) return -1;
+      final i = ids.indexOf(n.step!);
+      return i < 0 ? steps.length : i;
     }
+
+    final notes = model.plan.notes(slug);
+    final order = {for (var i = 0; i < notes.length; i++) notes[i].key: i};
+    notes.sort((a, b) {
+      final c = place(a).compareTo(place(b));
+      return c != 0 ? c : order[a.key]!.compareTo(order[b.key]!);
+    });
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        for (final n in notes)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: _NoteTile(note: n, where: _where(n, place(n), steps), onTap: () => editNote(context, model, n)),
+          ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: TextButton.icon(
+            key: ValueKey('note-add-$slug'),
+            icon: const Icon(Icons.edit_note),
+            label: Text(notes.isEmpty ? 'Add a note' : 'Add another note'),
+            onPressed: () => addNote(context, model, slug),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// The line above a note on a step, saying which step.
+  static String? _where(NoteLine n, int place, List<String> steps) {
+    if (n.step == null) return null;
+    if (place < steps.length) return 'Step ${place + 1}: ${steps[place]}';
+    return n.anchor == null ? 'A step that has changed since' : 'A step that has changed since: ${n.anchor}';
+  }
+}
+
+class _NoteTile extends StatelessWidget {
+  const _NoteTile({required this.note, required this.where, required this.onTap});
+
+  final NoteLine note;
+  final String? where;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final ink = theme.colorScheme.onSecondaryContainer;
     return Material(
       color: theme.colorScheme.secondaryContainer,
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
-        key: ValueKey('note-$slug'),
+        key: ValueKey(note.step == null ? 'note-${note.slug}' : 'note-${note.slug}-${note.step}'),
         borderRadius: BorderRadius.circular(12),
-        onTap: () => editNote(context, model, slug),
+        onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(12, 10, 10, 10),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.sticky_note_2_outlined, color: theme.colorScheme.onSecondaryContainer),
+              Icon(Icons.sticky_note_2_outlined, color: ink),
               const SizedBox(width: 10),
-              Expanded(child: Text(note, style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSecondaryContainer))),
-              Icon(Icons.edit, size: 18, color: theme.colorScheme.onSecondaryContainer),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (where != null)
+                      Text(where!, maxLines: 1, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodySmall?.copyWith(color: ink.withValues(alpha: 0.75))),
+                    Text(note.text, style: theme.textTheme.bodyLarge?.copyWith(color: ink)),
+                  ],
+                ),
+              ),
+              Icon(Icons.edit, size: 18, color: ink),
             ],
           ),
         ),
@@ -117,27 +172,66 @@ class RecipeNote extends StatelessWidget {
   }
 }
 
-/// Asks for the note on a recipe and saves it; an empty note clears it.
-Future<void> editNote(BuildContext context, AppModel model, String slug) async {
-  final text = await showDialog<String>(
+/// Asks for a new note on a recipe: what it says and, when the recipe's steps
+/// are known, which step it is about. Choosing a place that already has a
+/// note changes that note.
+Future<void> addNote(BuildContext context, AppModel model, String slug) async {
+  final steps = model.session.recipe(slug)?.steps ?? const <String>[];
+  final ids = [for (final s in steps) stepId(s)];
+  final there = <int, String>{};
+  for (final n in model.plan.notes(slug)) {
+    final at = n.step == null ? -1 : ids.indexOf(n.step!);
+    if (n.step == null || at >= 0) there[at] = n.text;
+  }
+  final made = await showDialog<({int place, String text})>(
     context: context,
-    builder: (context) => _NoteDialog(title: model.session.recipeName(slug), start: model.plan.note(slug) ?? ''),
+    builder: (context) => _NoteDialog(title: model.session.recipeName(slug), steps: steps, there: there),
   );
-  if (text != null) await model.setNote(slug, text);
+  if (made != null) await model.setNote(slug, made.text, step: made.place < 0 ? null : steps[made.place]);
+}
+
+/// Asks for new words for a note that is already there; none deletes it.
+Future<void> editNote(BuildContext context, AppModel model, NoteLine note) async {
+  final steps = model.session.recipe(note.slug)?.steps ?? const <String>[];
+  final at = note.step == null ? -1 : [for (final s in steps) stepId(s)].indexOf(note.step!);
+  final made = await showDialog<({int place, String text})>(
+    context: context,
+    builder: (context) => _NoteDialog(
+      title: model.session.recipeName(note.slug),
+      steps: steps,
+      there: {at: note.text},
+      fixed: at,
+      fixedLine: note.step == null
+          ? null
+          : at >= 0
+              ? 'Step ${at + 1}: ${steps[at]}'
+              : 'A step that has changed since${note.anchor == null ? '' : ': ${note.anchor}'}',
+    ),
+  );
+  if (made != null) await model.changeNote(note, made.text);
 }
 
 class _NoteDialog extends StatefulWidget {
-  const _NoteDialog({required this.title, required this.start});
+  const _NoteDialog({required this.title, required this.steps, required this.there, this.fixed, this.fixedLine});
 
   final String title;
-  final String start;
+  final List<String> steps;
+
+  /// The notes already on the recipe, by place: -1 the whole recipe, else the
+  /// step's position.
+  final Map<int, String> there;
+
+  /// Set when changing one note: its place cannot be moved.
+  final int? fixed;
+  final String? fixedLine;
 
   @override
   State<_NoteDialog> createState() => _NoteDialogState();
 }
 
 class _NoteDialogState extends State<_NoteDialog> {
-  late final TextEditingController _text = TextEditingController(text: widget.start);
+  late int _place = widget.fixed ?? -1;
+  late final TextEditingController _text = TextEditingController(text: widget.there[_place] ?? '');
 
   @override
   void dispose() {
@@ -145,30 +239,93 @@ class _NoteDialogState extends State<_NoteDialog> {
     super.dispose();
   }
 
+  void _pick(int place) {
+    final had = widget.there[_place] ?? '';
+    setState(() {
+      // What was typed moves with the choice; a note already at the new place
+      // shows only when nothing was typed.
+      if (_text.text.trim().isEmpty || _text.text == had) _text.text = widget.there[place] ?? '';
+      _place = place;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final faded = theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final choosing = widget.fixed == null && widget.steps.isNotEmpty;
+    final onStep = _place >= 0 || widget.fixedLine != null;
     return AlertDialog(
       title: Text(widget.title),
-      content: TextField(
-        key: const ValueKey('note-field'),
-        controller: _text,
-        autofocus: true,
-        minLines: 2,
-        maxLines: 6,
-        maxLength: noteMax,
-        textCapitalization: TextCapitalization.sentences,
-        decoration: const InputDecoration(
-          hintText: 'Add parmesan at the end',
-          helperText: 'The other phone and the kitchen screen see it too.',
-          helperMaxLines: 2,
-          border: OutlineInputBorder(),
+      scrollable: true,
+      content: SizedBox(
+        width: double.maxFinite,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (choosing) ...[
+              Text('What is it about?', style: theme.textTheme.labelLarge),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 6,
+                runSpacing: 2,
+                children: [
+                  ChoiceChip(
+                    key: const ValueKey('note-place-all'),
+                    label: const Text('The whole recipe'),
+                    selected: _place < 0,
+                    showCheckmark: false,
+                    visualDensity: VisualDensity.compact,
+                    onSelected: (_) => _pick(-1),
+                  ),
+                  for (var i = 0; i < widget.steps.length; i++)
+                    ChoiceChip(
+                      key: ValueKey('note-place-${i + 1}'),
+                      label: Text('${i + 1}'),
+                      tooltip: 'Step ${i + 1}',
+                      selected: _place == i,
+                      showCheckmark: false,
+                      visualDensity: VisualDensity.compact,
+                      onSelected: (_) => _pick(i),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Text(
+                _place < 0 ? 'Or tap the number of the step it belongs to.' : 'Step ${_place + 1}: ${widget.steps[_place]}',
+                key: const ValueKey('note-place-text'),
+                style: faded,
+              ),
+              const SizedBox(height: 12),
+            ],
+            if (widget.fixedLine != null) ...[
+              Text(widget.fixedLine!, style: faded),
+              const SizedBox(height: 12),
+            ],
+            TextField(
+              key: const ValueKey('note-field'),
+              controller: _text,
+              autofocus: true,
+              minLines: 2,
+              maxLines: 6,
+              maxLength: onStep ? stepNoteMax : noteMax,
+              textCapitalization: TextCapitalization.sentences,
+              decoration: InputDecoration(
+                hintText: onStep ? 'Garlic salt goes in here' : 'Add parmesan at the end',
+                helperText: 'The other phone and the kitchen screen see it too.',
+                helperMaxLines: 2,
+                border: const OutlineInputBorder(),
+              ),
+            ),
+          ],
         ),
       ),
       actions: [
-        if (widget.start.isNotEmpty)
-          TextButton(key: const ValueKey('note-clear'), onPressed: () => Navigator.pop(context, ''), child: const Text('Delete')),
+        if (widget.there.containsKey(_place))
+          TextButton(key: const ValueKey('note-clear'), onPressed: () => Navigator.pop(context, (place: _place, text: '')), child: const Text('Delete')),
         TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
-        FilledButton(key: const ValueKey('note-save'), onPressed: () => Navigator.pop(context, _text.text), child: const Text('Save')),
+        FilledButton(key: const ValueKey('note-save'), onPressed: () => Navigator.pop(context, (place: _place, text: _text.text)), child: const Text('Save')),
       ],
     );
   }

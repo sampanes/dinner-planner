@@ -250,10 +250,37 @@ const House = (() => {
     // What the household wrote about a recipe on the phones, or null.
     function note(slug) { return text(`note/${slug}`); }
 
+    // A short, stable name for a step, from its text (plan.dart stepId: FNV-1a
+    // over UTF-8). A note on one step is kept under "note/<slug>/<step id>".
+    function stepId(stepText) {
+        let hash = 0x811c9dc5;
+        for (const b of new TextEncoder().encode(String(stepText))) hash = Math.imul(hash ^ b, 0x01000193) >>> 0;
+        return hash.toString(16).padStart(8, '0');
+    }
+
+    // Everything written about a recipe: { whole, steps: [{ id, anchor, text }] },
+    // oldest step note first. A step note's value is how the step started, a
+    // line break, then the note (plan.dart Plan.notes).
+    function notes(slug) {
+        const out = { whole: note(slug), steps: [] };
+        if (!state) return out;
+        const prefix = `note/${slug}/`;
+        const keys = Object.keys(state.entries).filter(k => k.startsWith(prefix))
+            .sort((a, b) => state.entries[a][1] < state.entries[b][1] ? -1 : state.entries[a][1] > state.entries[b][1] ? 1 : 0);
+        for (const k of keys) {
+            const value = text(k);
+            if (!value) continue;
+            const cut = value.indexOf('\n');
+            const body = (cut < 0 ? value : value.slice(cut + 1)).trim();
+            if (body) out.steps.push({ id: k.slice(prefix.length), anchor: cut > 0 ? value.slice(0, cut) : null, text: body });
+        }
+        return out;
+    }
+
     return {
         linked: () => !!state,
         heardMs: () => (state && state.heardMs) || 0,
-        refresh, link, unlink, upcoming, name, note,
+        refresh, link, unlink, upcoming, name, note, notes, stepId,
         newPairCode, waitForPair, sendToScreen, houseFromCode,
         digestOf
     };

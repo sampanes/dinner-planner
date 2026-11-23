@@ -31,6 +31,10 @@ class FakeNtfy {
       {'id': 'ground-beef', 'displayName': 'ground beef', 'amountText': '1 lb', 'text': '1 lb ground beef'},
       {'id': 'onion', 'displayName': 'onion', 'amountText': '2', 'text': '2 onion'},
       {'id': 'salt', 'displayName': 'salt', 'amountText': 'to taste', 'text': 'salt, to taste'},
+    ], 'steps': [
+      {'index': 0, 'sourceStep': 1, 'displayText': 'Dice the onion.'},
+      {'index': 1, 'sourceStep': 2, 'displayText': 'Brown the beef in a large pot, 5-7 minutes.'},
+      {'index': 2, 'sourceStep': 2, 'displayText': 'Stir in the beans and simmer 20 minutes.'},
     ]},
     {'slug': 'shrimp-tacos', 'displayName': 'Shrimp Tacos', 'categories': ['Seafood'], 'ingredients': [{'text': '10 oz shrimp'}]},
     {'slug': 'baked-penne', 'displayName': 'Baked Penne', 'categories': ['Pasta'], 'ingredients': [

@@ -506,9 +506,35 @@ function madeLine(r) {
 
 // The note written on the phones for this recipe ("add parmesan as a step"),
 // when this screen is linked to them.
-function houseNote(r) {
-    const note = House.note(r.slug);
-    return note ? h('p', { class: 'house-note' }, h('b', {}, 'Note: '), note) : null;
+// A note can be on the whole recipe or on one step; one whose step has been
+// rewritten since it was written is "loose" and shows with the whole recipe.
+function houseNotes(r) {
+    const all = House.notes(r.slug);
+    const ids = r.steps.map(s => House.stepId(s.displayText));
+    const byStep = new Map();
+    const loose = [];
+    for (const n of all.steps) {
+        const i = ids.indexOf(n.id);
+        if (i < 0) loose.push(n); else byStep.set(i, n);
+    }
+    return { whole: all.whole, byStep, loose };
+}
+
+function noteLine(label, text) { return h('p', { class: 'house-note' }, h('b', {}, `${label}: `), text); }
+
+// The notes that are not on a step of the recipe as it reads today.
+function wholeNotes(notes) {
+    return [
+        notes.whole ? noteLine('Note', notes.whole) : null,
+        ...notes.loose.map(n => noteLine(n.anchor ? `Note on "${n.anchor}"` : 'Note on a step that has changed', n.text))];
+}
+
+// Every note, for the recipe's front page.
+function recipeNotes(r) {
+    const notes = houseNotes(r);
+    return [
+        ...wholeNotes(notes),
+        ...[...notes.byStep.keys()].sort((a, b) => a - b).map(i => noteLine(`Note on step ${i + 1}`, notes.byStep.get(i).text))];
 }
 
 function renderRecipe(r) {
@@ -531,7 +557,7 @@ function renderRecipe(r) {
             h('h1', {}, r.displayName),
             h('div', { class: 'meta' }, starBadge(r), ` - ${r.ingredients.length} ingredients, ${r.steps.length} steps`),
             madeLine(r),
-            houseNote(r),
+            recipeNotes(r),
             actions),
         h('div', { class: 'recipe-side' },
             h('h2', {}, 'Ingredients'),
@@ -577,14 +603,16 @@ function renderCook(r, startStep) {
 
     const byId = new Map(r.ingredients.map(i => [i.id, i]));
     const total = r.steps.length;
+    const notes = houseNotes(r);
 
     stepEls = r.steps.map((step, i) => {
         const uses = (step.ingredientRefs || []).map(id => byId.get(id)).filter(Boolean);
         const hints = usefulTimers(step);
         const photo = photosOn() && step.photo;
         const body = [
-            i === 0 ? houseNote(r) : null,
+            i === 0 ? wholeNotes(notes) : null,
             h('p', { class: 'step-text' }, step.displayText),
+            notes.byStep.has(i) ? noteLine('Note', notes.byStep.get(i).text) : null,
             uses.length ? h('div', { class: 'step-uses' }, uses.map(u => h('span', {}, u.text || u.displayName))) : null,
             hints.length ? h('div', { class: 'step-timers' },
                 hints.map(t => h('button', { class: 'big-btn primary timer-btn', type: 'button', onclick: () => startTimer(timerLabel(step, i, t), t.seconds) },

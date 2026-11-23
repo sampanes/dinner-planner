@@ -196,7 +196,7 @@ class _TonightCard extends StatelessWidget {
                   slug == null ? 'Nothing is planned for tonight' : model.session.recipeName(slug),
                   style: theme.textTheme.headlineSmall,
                 ),
-                if (slug != null) ...[const SizedBox(height: 8), RecipeNote(model: model, slug: slug)],
+                if (slug != null) ...[const SizedBox(height: 8), RecipeNotes(model: model, slug: slug)],
                 const SizedBox(height: 12),
                 Row(
                   children: [
@@ -315,7 +315,7 @@ Future<void> showNeeds(BuildContext context, AppModel model, Recipe recipe, Stri
             Text(when, style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
             Text(recipe.name, style: theme.textTheme.headlineSmall),
             const SizedBox(height: 8),
-            RecipeNote(model: model, slug: recipe.slug),
+            RecipeNotes(model: model, slug: recipe.slug),
             const SizedBox(height: 12),
             for (final line in recipe.ingredients.map((i) => i.text))
               Padding(

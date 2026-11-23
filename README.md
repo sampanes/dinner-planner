@@ -16,6 +16,19 @@ Live site: [sampanes.github.io/dinner-planner](https://sampanes.github.io/dinner
 - `apps/dinner_planner/` - the Android app: who cooks which night, reminders on your nights, and a
   plan two phones share. Nothing it holds is written to this repository (`apps/dinner_planner/README.md`).
 
+## Recipe notes waiting on the phones
+
+Notes written in the phone app ("garlic salt goes in here", on a step or on the whole recipe) are
+requests to change a recipe. They wait on the phones until someone at a computer works them in:
+
+    python scripts/house_notes.py --wait 60       # list them, each with the step it is on
+    # edit data/source/recipes.json, keeping the recipe's number of card steps
+    python scripts/build_runtime_data.py && python -m unittest discover -s tests
+    python scripts/house_notes.py --done <slug>   # after the push: clear them on both phones
+
+The first run needs `--link` and the household code from the app's Settings; it is kept in
+`private/`, which git ignores. Details: `apps/dinner_planner/README.md`, "Notes that wait for a fix".
+
 ## Repo layout
 
 - `docs/` product and architecture docs (start at `docs/README.md`)

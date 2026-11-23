@@ -40,8 +40,11 @@ all of that, and none of it is written to the repository.
 - **Sharing**: one phone taps "Start sharing" and shows a QR code; the other taps "Scan the other
   phone's code" (or "Join with a code" and pastes it).
 - **Notes**: "Add a note" under tonight's dinner, or in "What it needs", keeps a line on that recipe
-  ("add parmesan as a step"). The other phone, a linked kitchen screen and
-  `scripts/house_notes.py` on a computer see it too.
+  ("make extra sauce next time"). Tap a step's number first and the note belongs to that step
+  ("garlic salt goes in here"); the step is read back before you type. A recipe can carry one note
+  of its own and one per step. The other phone sees them, a linked kitchen screen shows each one on
+  its step, and they wait there until someone deletes them or the recipe is fixed at a computer
+  ("Notes that wait for a fix" below).
 
 ## Linked kitchen screens and computers
 
@@ -49,6 +52,27 @@ The site's kitchen page (`house.js`) and `scripts/house_notes.py` can join the h
 listeners, with the same code. Their device ids start with `show-`: the phones send them the plan
 but never count them as "the other phone". The script keeps the code in `private/house.json`,
 which git ignores.
+
+## Notes that wait for a fix
+
+A note is a request to change the recipe, written where the cooking happens and kept until the
+recipe says it. At a computer with this repository:
+
+1. `python scripts/house_notes.py --wait 60` lists every note with the step it is on (open the app
+   on a phone to hurry it). The first time, `--link` asks for the household code from Settings.
+2. Work each note into `data/source/recipes.json`, rebuild, test and push as for any recipe edit.
+3. `python scripts/house_notes.py --done <recipe slug>` clears that recipe's notes on both phones
+   (or pass one note's key to clear just that one).
+
+A note on the whole recipe is kept as `note/<slug>`. A note on a step is kept as
+`note/<slug>/<step id>`, where the id is made from the step's own words (`stepId` in
+`lib/core/plan.dart`), and its value starts with how the step began. So a note stays on its step
+when other steps are added or reordered, and when the step itself is rewritten the note is still
+shown, with the old opening words, under "a step that has changed since".
+
+Clearing a note is the only thing the script ever writes. A phone that was not around while the
+relay held that message hears it from the other phone some hours later, and the script sends it
+again each time it runs for two weeks.
 
 ## What is stored where
 

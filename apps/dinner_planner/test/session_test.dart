@@ -101,6 +101,95 @@ void main() {
     expect((his.notifier as SilentNotifier).shown, isEmpty, reason: 'a note is not worth a buzz');
   });
 
+  test('a step is named by its own words, the same way on the phones, the kitchen page and the computer', () {
+    // house.js and scripts/house_notes.py are tested against these same four.
+    expect(stepId(''), '811c9dc5');
+    expect(stepId('a'), 'e40c292c');
+    expect(stepId('Brown the beef in a large pot, 5-7 minutes.'), '8b807cd6');
+    expect(stepId('Sauté the onion.'), '9763783c');
+    expect(stepAnchor('  Brown the beef\n in a large pot  '), 'Brown the beef in a large pot');
+    expect(stepAnchor('x' * 200).length, 60);
+    expect(stepNoteKey('italian-chicken-sausage-gluten-free-fusilli-rosa', 'a').length, lessThanOrEqualTo(80), reason: 'the longest recipe name still fits in a key');
+  });
+
+  test('a note on one step reaches the other phone and stays on that step', () async {
+    final ntfy = FakeNtfy();
+    final his = await phone(ntfy, me: 'blue', household: house);
+    final hers = await phone(ntfy, me: 'pink', household: house);
+    await his.refreshRecipes(ntfy.now);
+    await hers.refreshRecipes(ntfy.now);
+    const step = 'Brown the beef in a large pot, 5-7 minutes.';
+    expect(his.recipe('beef-chili')!.steps, contains(step));
+
+    hers.core.set(noteKey('beef-chili'), 'Double it', ntfy.now);
+    hers.core.set(stepNoteKey('beef-chili', step), '${stepAnchor(step)}\nGarlic salt goes in here', ntfy.now);
+    hers.core.set('note/beef-chili/deadbeef', 'Words of a step that was rewritten\nStill true', ntfy.now);
+    hers.core.set('note/beef-chili-bar/8b807cd6', 'Another recipe\nNot this one', ntfy.now);
+    await hers.sync(ntfy.now);
+    await his.sync(ntfy.now);
+
+    final notes = his.plan.notes('beef-chili');
+    expect([for (final n in notes) n.text], ['Double it', 'Garlic salt goes in here', 'Still true']);
+    expect(notes[0].step, isNull);
+    expect(notes[1].step, stepId(step));
+    expect(notes[1].anchor, step);
+    expect(notes[1].key, 'note/beef-chili/8b807cd6');
+    expect(notes[2].anchor, 'Words of a step that was rewritten');
+    expect(his.plan.note('beef-chili'), 'Double it', reason: 'the note on the whole recipe is still the plain one');
+
+    his.core.set('note/beef-chili/8b807cd6', null, ntfy.now.add(const Duration(seconds: 1)));
+    expect(his.plan.notes('beef-chili').length, 2);
+  });
+
+  test('the computer that fixes the recipes clears a note, and both phones drop it', () async {
+    final ntfy = FakeNtfy();
+    final his = await phone(ntfy, me: 'blue', household: house);
+    final hers = await phone(ntfy, me: 'pink', household: house);
+    const step = 'Brown the beef in a large pot, 5-7 minutes.';
+    hers.core.set(stepNoteKey('beef-chili', step), '${stepAnchor(step)}\nGarlic salt goes in here', ntfy.now);
+    await hers.sync(ntfy.now);
+    await his.sync(ntfy.now);
+    expect(his.plan.notes('beef-chili').single.text, 'Garlic salt goes in here');
+
+    // What scripts/house_notes.py --done sends: the note's key with nothing in
+    // it, dated a millisecond after the note, from a device that only listens.
+    final wrote = hers.core.entry('note/beef-chili/8b807cd6')!.at;
+    final after = stamp(DateTime.parse(wrote).add(const Duration(milliseconds: 1)));
+    final line = 'dp2 {"d":"show-pc-1a2b3c4d","g":"0000000000000000","s":[["note/beef-chili/8b807cd6",null,"$after","show-pc-1a2b3c4d"]]}';
+    await ntfy.client().post(Uri.parse('${house.server}/${house.topic}?title=Kitchen+computer+checked+in&priority=1'), body: 'The kitchen computer is reading the notes.\n\n$line');
+
+    final report = await his.sync(ntfy.now);
+    expect(report.changes.single.after, isNull);
+    expect(his.plan.notes('beef-chili'), isEmpty);
+    expect(his.core.peerCount, 1, reason: 'the computer does not count as a phone');
+    await hers.sync(ntfy.now);
+    expect(hers.plan.notes('beef-chili'), isEmpty, reason: 'each phone reads it from the relay itself');
+  });
+
+  test('a phone that missed the computer clearing a note hears it from the other phone', () async {
+    final ntfy = FakeNtfy();
+    final his = await phone(ntfy, me: 'blue', household: house);
+    final hers = await phone(ntfy, me: 'pink', household: house);
+    hers.core.set(noteKey('beef-chili'), 'Double it', ntfy.now);
+    await hers.sync(ntfy.now);
+    await his.sync(ntfy.now);
+    await hers.sync(ntfy.now);
+
+    // Only his phone was around while the relay still had the message.
+    final after = stamp(ntfy.now.add(const Duration(seconds: 1)));
+    his.core.receive('dp2 {"d":"show-pc-1a2b3c4d","g":"0000000000000000","s":[["note/beef-chili",null,"$after","show-pc-1a2b3c4d"]]}', ntfy.now);
+    expect(his.plan.note('beef-chili'), isNull);
+
+    // His phone passes it on, though not at once: what it was handed counts as
+    // just sent, and is offered again after resendEvery.
+    ntfy.now = ntfy.now.add(resendEvery + const Duration(minutes: 1));
+    await his.sync(ntfy.now);
+    await hers.sync(ntfy.now);
+    await his.sync(ntfy.now);
+    await hers.sync(ntfy.now);
+    expect(hers.plan.note('beef-chili'), isNull);
+  });
+
   test('housekeeping messages are sent quietly', () async {
     final ntfy = FakeNtfy();
     final his = await phone(ntfy, me: 'blue', household: house);

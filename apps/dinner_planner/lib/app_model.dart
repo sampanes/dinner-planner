@@ -121,11 +121,29 @@ class AppModel extends ChangeNotifier {
     return _wrote(session.core.set(nameKey(who), text.isEmpty ? null : text, now));
   }
 
-  /// Saves the household's note on a recipe; blank clears it.
-  Future<void> setNote(String slug, String text) {
+  /// Saves the household's note on a recipe, or on one of its steps when
+  /// [step] is that step's text; blank clears it.
+  Future<void> setNote(String slug, String text, {String? step}) {
     final t = text.trim();
-    return _wrote(session.core.set(noteKey(slug), t.isEmpty ? null : (t.length > noteMax ? t.substring(0, noteMax) : t), now), replan: false);
+    if (step == null) {
+      return _wrote(session.core.set(noteKey(slug), t.isEmpty ? null : _cut(t, noteMax), now), replan: false);
+    }
+    return _wrote(session.core.set(stepNoteKey(slug, step), t.isEmpty ? null : '${stepAnchor(step)}\n${_cut(t, stepNoteMax)}', now), replan: false);
   }
+
+  /// Changes a note that is already there, keeping the step it is on; blank
+  /// clears it.
+  Future<void> changeNote(NoteLine note, String text) {
+    final t = text.trim();
+    final Object? value = t.isEmpty
+        ? null
+        : note.step == null
+            ? _cut(t, noteMax)
+            : '${note.anchor ?? ''}\n${_cut(t, stepNoteMax)}';
+    return _wrote(session.core.set(note.key, value, now), replan: false);
+  }
+
+  static String _cut(String text, int max) => text.length > max ? text.substring(0, max) : text;
 
   Future<void> setMe(String who) async {
     session.me = who;
