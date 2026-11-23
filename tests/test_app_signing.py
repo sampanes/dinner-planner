@@ -3,6 +3,7 @@
 import base64
 import re
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -47,6 +48,41 @@ class SigningSetupTests(unittest.TestCase):
         self.assertIn(f"keyAlias={signing_setup.ALIAS}\n", text)
         self.assertEqual(signing_setup.password_in("note\nalias: a\npassword: s3-cr_et\n"), "s3-cr_et")
         self.assertIsNone(signing_setup.password_in("nothing here"))
+
+    def test_a_key_the_computer_already_builds_with_is_the_one_handed_over(self):
+        text = "# made by hand\nstoreFile=../../../keys/mine.jks\nstorePassword=one\nkeyAlias=upload\nkeyPassword = two\n"
+        key = signing_setup.key_named_by(text, Path("/repo/apps/dinner_planner"))
+        self.assertEqual(key.store, Path("/repo/apps/dinner_planner/android/app/../../../keys/mine.jks"))
+        self.assertEqual((key.alias, key.store_password, key.key_password), ("upload", "one", "two"))
+        values = signing_setup.secret_values(b"k", key.store_password, key.alias, key.key_password)
+        self.assertEqual(values["ANDROID_KEY_ALIAS"], "upload")
+        self.assertEqual(values["ANDROID_KEYSTORE_PASSWORD"], "one")
+        self.assertEqual(values["ANDROID_KEY_PASSWORD"], "two")
+        self.assertIsNone(signing_setup.key_named_by("storeFile=x.jks\n", Path("/repo/apps/dinner_planner")))
+        # What this script writes itself reads back as the same key, absolute path and all.
+        own = signing_setup.key_properties(signing_setup.KEYSTORE, "pw")
+        back = signing_setup.key_named_by(own, signing_setup.APP)
+        self.assertEqual(back.store, signing_setup.KEYSTORE)
+        self.assertEqual((back.alias, back.store_password, back.key_password), (signing_setup.ALIAS, "pw", "pw"))
+
+    def test_the_note_beside_the_key_remembers_which_name_it_has(self):
+        note = signing_setup.key_note(signing_setup.DEBUG_ALIAS, signing_setup.DEBUG_PASSWORD)
+        self.assertEqual(signing_setup.alias_in(note), "androiddebugkey")
+        self.assertEqual(signing_setup.password_in(note), "android")
+        self.assertEqual(signing_setup.alias_in("password: x\n"), signing_setup.ALIAS, "notes from before the alias was kept")
+
+    @unittest.skipUnless(signing_setup.find_keytool(), "needs keytool (any Java)")
+    def test_a_key_made_here_opens_with_its_password_and_no_other(self):
+        keytool = signing_setup.find_keytool()
+        with tempfile.TemporaryDirectory() as folder:
+            store = Path(folder) / "throwaway.jks"
+            self.assertIsNone(signing_setup.make_key(keytool, store, "some-alias", "correct-horse"))
+            self.assertTrue(signing_setup.opens(keytool, store, "some-alias", "correct-horse"))
+            self.assertFalse(signing_setup.opens(keytool, store, "some-alias", "wrong-horse"))
+            self.assertFalse(signing_setup.opens(keytool, store, "another-alias", "correct-horse"))
+            signing_setup.set_aside(store)
+            self.assertFalse(store.exists())
+            self.assertEqual(len(list(Path(folder).glob("throwaway.old-*.jks"))), 1)
 
     def test_the_key_and_its_note_live_where_git_does_not_look(self):
         ignored = (ROOT / ".gitignore").read_text(encoding="utf-8").split()

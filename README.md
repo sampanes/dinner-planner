@@ -1,5 +1,48 @@
 # Dinner Planner
 
+## Owed: one step on the owner's computer
+
+*Delete this section in the commit that reports the step done.*
+
+**What changed.** The phones no longer take the app from a build made on a computer. GitHub builds
+and signs every version with one key, and the phones install it from this repository's releases page.
+
+**Why.** Android only installs an update signed with the same key as the copy already on the phone,
+and a build made on a computer is signed with that computer's own debug key. Copies from two
+computers cannot update each other: the install is refused, and the only way past that is removing
+the app, which clears everything it kept.
+
+**What is owed.** The app's key does not exist yet, so the "Phone app" workflow tests each push and
+publishes nothing (0.8.0 is waiting). The key can only be set up where `gh` is signed in as this
+repository's owner; the script refuses anywhere else and changes nothing.
+
+1. `python apps/dinner_planner/tool/signing_setup.py --check` says what is set up and changes nothing.
+2. Settle on the key. It is chosen once and kept for good, so it is the owner's call:
+   - `python apps/dinner_planner/tool/signing_setup.py --adopt-debug-key` makes this computer's
+     debug key the app's key. A phone whose copy was installed from this computer then takes the
+     signed releases as plain updates and loses nothing. Pick this when a phone holds a copy from
+     this computer and its data matters, above all when only one phone uses the app.
+   - `python apps/dinner_planner/tool/signing_setup.py` makes a new key, the tidier choice if the app
+     is ever published in a store. Every phone that has the app must then remove it once.
+   - If this computer's release builds already use a key (`android/key.properties`), the script
+     hands that one to GitHub and there is nothing to choose.
+3. The script starts the "Phone app" run; a few minutes later release `app-v0.8.0` is at
+   `/releases/latest`.
+4. On each phone, open that page and install the APK over the copy it has. If Android refuses,
+   nothing is lost: that copy was signed on another computer, and "Moving a phone to the signed
+   app" in `apps/dinner_planner/README.md` moves it without losing the shared plan.
+5. Keep `private/keys/` (git ignores it; it is the only copy of the key outside GitHub), then delete
+   this section and push.
+
+**From then on, for anyone working here, person or agent:**
+
+- Do not put a build made on a computer onto a phone (`adb install`, `flutter install`,
+  `flutter run` at a phone). Builds on a computer are for tests and screenshots.
+- To ship the app: raise `version:` in `apps/dinner_planner/pubspec.yaml`, push to `main`, then check
+  that the "Phone app" run passed and release `app-v<version>` appeared.
+- Notes typed on the phones wait for a recipe fix at a computer: "Recipe notes waiting on the
+  phones" below.
+
 Live site: [sampanes.github.io/dinner-planner](https://sampanes.github.io/dinner-planner/index.html)
 
 - `index.html` - the recipe vault (browse, search by ingredient, edit in the browser). On a phone a
@@ -15,6 +58,7 @@ Live site: [sampanes.github.io/dinner-planner](https://sampanes.github.io/dinner
 - `recipes/` - one static page per recipe with schema.org Recipe data, generated
 - `apps/dinner_planner/` - the Android app: who cooks which night, reminders on your nights, and a
   plan two phones share. Nothing it holds is written to this repository (`apps/dinner_planner/README.md`).
+  The phones install it from this repository's releases, never from a build made on a computer.
 
 ## Recipe notes waiting on the phones
 

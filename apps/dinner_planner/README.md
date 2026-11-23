@@ -195,13 +195,21 @@ It makes the key in `private/keys/` (ignored by git; keep that folder, it is the
 gives it to the repository as the four `ANDROID_*` secrets, points that computer's own release
 builds at the same key through `android/key.properties` (never committed), and starts the first
 signed build. `--check` says what is set up. It refuses to run as anyone but the owner and never
-touches a computer's debug key. On any other computer a release build still falls back to the
-debug key: fine for trying something on an emulator, not for the phones.
+changes or deletes a computer's debug key. On any other computer a release build still falls back
+to the debug key: fine for trying something on an emulator, not for the phones.
+
+Which key becomes the app's key is settled once:
+
+- If that computer's release builds already use a key (`android/key.properties`), that one.
+- With `--adopt-debug-key`, a copy of that computer's debug key. Every copy installed from that
+  computer so far carries it, so those phones take the signed releases as plain updates.
+- Otherwise a new key, and every phone that has the app moves to it once (below).
 
 ### Moving a phone to the signed app
 
-A copy that was installed from a computer has that computer's key, so the signed APK will not
-install over it: the old copy has to be removed first, and removing it clears what the app kept.
+A copy that was installed from a computer has that computer's key. Unless that key became the
+app's key, the signed APK will not install over it (Android says so and changes nothing): the old
+copy has to be removed first, and removing it clears what the app kept.
 Everything shared comes back from the other phone, so move one phone at a time:
 
 1. On the phone that stays, check Settings shows the household as shared and both phones in step.
