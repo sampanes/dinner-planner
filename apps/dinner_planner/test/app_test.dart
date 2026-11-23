@@ -192,6 +192,41 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('notes: write one on the dinner tonight, change it, delete it', (tester) async {
+    final ntfy = FakeNtfy();
+    final model = await startApp(tester, ntfy);
+    await model.setMe('blue');
+    await model.setMeal('2026-11-19', 'beef-chili');
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey('note-add-beef-chili')));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const ValueKey('note-field')), '  Add parmesan as a step  ');
+    await tester.tap(find.byKey(const ValueKey('note-save')));
+    await tester.pumpAndSettle();
+    expect(model.plan.note('beef-chili'), 'Add parmesan as a step');
+    expect(find.text('Add parmesan as a step'), findsOneWidget);
+
+    // The same note shows in the sheet of what it needs, and can be changed there.
+    await tester.tap(find.byKey(const ValueKey('needs-tonight')));
+    await tester.pumpAndSettle();
+    expect(find.text('Add parmesan as a step'), findsNWidgets(2));
+    await tester.tap(find.byKey(const ValueKey('note-beef-chili')).last);
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const ValueKey('note-field')), 'x' * 500);
+    await tester.tap(find.byKey(const ValueKey('note-save')));
+    await tester.pumpAndSettle();
+    expect(model.plan.note('beef-chili')!.length, 400, reason: 'kept to what one shared value holds');
+
+    await tester.tap(find.byKey(const ValueKey('note-beef-chili')).last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('note-clear')));
+    await tester.pumpAndSettle();
+    expect(model.plan.note('beef-chili'), isNull);
+    expect(find.byKey(const ValueKey('note-add-beef-chili')), findsNWidgets(2));
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('settings fit a small phone with large text', (tester) async {
     final ntfy = FakeNtfy();
     final model = await startApp(tester, ntfy);

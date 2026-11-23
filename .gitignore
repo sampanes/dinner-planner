@@ -23,6 +23,9 @@ coverage/
 # Logs
 *.log
 
+# The household code and what scripts/house_notes.py heard from the phones
+private/
+
 # Local-only scratch files
 PROMPT_STAGING.md
 trash*

@@ -121,6 +121,12 @@ class AppModel extends ChangeNotifier {
     return _wrote(session.core.set(nameKey(who), text.isEmpty ? null : text, now));
   }
 
+  /// Saves the household's note on a recipe; blank clears it.
+  Future<void> setNote(String slug, String text) {
+    final t = text.trim();
+    return _wrote(session.core.set(noteKey(slug), t.isEmpty ? null : (t.length > noteMax ? t.substring(0, noteMax) : t), now), replan: false);
+  }
+
   Future<void> setMe(String who) async {
     session.me = who;
     await session.saveProfile();

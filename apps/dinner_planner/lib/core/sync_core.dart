@@ -297,7 +297,9 @@ class SyncCore {
     }
 
     for (final e in send.values) {
-      final len = jsonEncode(e.toWire()).length + 1;
+      // Bytes, not characters: ntfy's limit is in bytes, and a note may hold
+      // letters that take several.
+      final len = utf8.encode(jsonEncode(e.toWire())).length + 1;
       if (batch.isNotEmpty && size + len > _maxChunk) flush();
       batch.add(e);
       size += len;

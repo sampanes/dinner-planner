@@ -196,6 +196,7 @@ class _TonightCard extends StatelessWidget {
                   slug == null ? 'Nothing is planned for tonight' : model.session.recipeName(slug),
                   style: theme.textTheme.headlineSmall,
                 ),
+                if (slug != null) ...[const SizedBox(height: 8), RecipeNote(model: model, slug: slug)],
                 const SizedBox(height: 12),
                 Row(
                   children: [
@@ -303,27 +304,33 @@ Future<void> showNeeds(BuildContext context, AppModel model, Recipe recipe, Stri
       expand: false,
       initialChildSize: 0.7,
       maxChildSize: 0.95,
-      builder: (context, scroll) => ListView(
-        controller: scroll,
-        // Clear of the system's buttons, which are drawn over the sheet.
-        padding: EdgeInsets.fromLTRB(20, 0, 20, 24 + MediaQuery.paddingOf(context).bottom),
-        children: [
-          Text(when, style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
-          Text(recipe.name, style: theme.textTheme.headlineSmall),
-          const SizedBox(height: 12),
-          for (final line in recipe.ingredients.map((i) => i.text))
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              child: Text(line, style: theme.textTheme.titleMedium),
+      // Rebuilt when the note changes, which happens while the sheet is open.
+      builder: (context, scroll) => ListenableBuilder(
+        listenable: model,
+        builder: (context, _) => ListView(
+          controller: scroll,
+          // Clear of the system's buttons, which are drawn over the sheet.
+          padding: EdgeInsets.fromLTRB(20, 0, 20, 24 + MediaQuery.paddingOf(context).bottom),
+          children: [
+            Text(when, style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+            Text(recipe.name, style: theme.textTheme.headlineSmall),
+            const SizedBox(height: 8),
+            RecipeNote(model: model, slug: recipe.slug),
+            const SizedBox(height: 12),
+            for (final line in recipe.ingredients.map((i) => i.text))
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                child: Text(line, style: theme.textTheme.titleMedium),
+              ),
+            const SizedBox(height: 16),
+            FilledButton.icon(
+              style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52)),
+              icon: const Icon(Icons.play_arrow),
+              label: const Text('Open the recipe'),
+              onPressed: () => launchUrl(kitchenPage(model.site, recipe.slug), mode: LaunchMode.externalApplication),
             ),
-          const SizedBox(height: 16),
-          FilledButton.icon(
-            style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52)),
-            icon: const Icon(Icons.play_arrow),
-            label: const Text('Open the recipe'),
-            onPressed: () => launchUrl(kitchenPage(model.site, recipe.slug), mode: LaunchMode.externalApplication),
-          ),
-        ],
+          ],
+        ),
       ),
     ),
   );

@@ -9,6 +9,10 @@ const List<String> people = ['pink', 'blue'];
 String mealKey(String day) => 'meal/$day';
 String cookKey(String day) => 'cook/$day';
 String nameKey(String who) => 'name/$who';
+String noteKey(String slug) => 'note/$slug';
+
+/// The longest note a recipe can carry (the most one shared value can hold).
+const int noteMax = 400;
 
 const List<String> _weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const List<String> _months = [
@@ -48,6 +52,9 @@ class Plan {
     final who = _text(core.value(cookKey(day)));
     return people.contains(who) ? who : null;
   }
+
+  /// What the household wrote down about a recipe ("add parmesan"), or null.
+  String? note(String? slug) => slug == null ? null : _text(core.value(noteKey(slug)));
 
   String name(String who) => _text(core.value(nameKey(who))) ?? '${who[0].toUpperCase()}${who.substring(1)}';
 

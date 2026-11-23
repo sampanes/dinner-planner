@@ -247,10 +247,13 @@ const House = (() => {
 
     function name(who, fallback) { return text(`name/${who}`) || fallback; }
 
+    // What the household wrote about a recipe on the phones, or null.
+    function note(slug) { return text(`note/${slug}`); }
+
     return {
         linked: () => !!state,
         heardMs: () => (state && state.heardMs) || 0,
-        refresh, link, unlink, upcoming, name,
+        refresh, link, unlink, upcoming, name, note,
         newPairCode, waitForPair, sendToScreen, houseFromCode,
         digestOf
     };

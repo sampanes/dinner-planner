@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dinner_planner/core/sync_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -168,6 +170,18 @@ void main() {
       expect(m.payload.length, lessThan(4000));
     }
     expect(out.expand((m) => m.entries).length, 200);
+  });
+
+  test('the size limit counts bytes, so notes with accents still fit', () {
+    final core = SyncCore('aaaa');
+    for (var i = 0; i < 40; i++) {
+      core.set('note/$i', String.fromCharCode(0xe9) * 400, start);
+    }
+    final out = core.outbox(start);
+    for (final m in out) {
+      expect(utf8.encode(m.payload).length, lessThan(4000));
+    }
+    expect(out.expand((m) => m.entries).length, 40);
   });
 
   test('a write dated in the future is refused', () {

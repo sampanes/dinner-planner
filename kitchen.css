@@ -568,3 +568,13 @@ html.sheet-open, html.sheet-open body { overflow: hidden; }
     .rate-who { font-size: 18px; }
     .star-btn { width: 48px; height: 48px; font-size: 32px; border-radius: 10px; }
 }
+
+/* ---------- the note written on the phones (house.js) ---------- */
+.house-note {
+    margin: 0 0 16px; padding: 12px 18px; font-size: 26px; line-height: 1.3;
+    background: var(--surface-2); border-left: 6px solid var(--accent); border-radius: 12px;
+}
+.step .house-note { font-size: 24px; margin-bottom: 14px; }
+@media (max-width: 600px) {
+    .house-note, .step .house-note { font-size: 16px; padding: 8px 12px; border-left-width: 4px; margin-bottom: 10px; }
+}

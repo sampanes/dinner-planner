@@ -38,13 +38,23 @@ all of that, and none of it is written to the repository.
   you walk that store, which it learns from the order you tick things in ("The order of a store"
   below).
 - **Sharing**: one phone taps "Start sharing" and shows a code, the other taps "Join with a code".
+- **Notes**: "Add a note" under tonight's dinner, or in "What it needs", keeps a line on that recipe
+  ("add parmesan as a step"). The other phone, a linked kitchen screen and
+  `scripts/house_notes.py` on a computer see it too.
+
+## Linked kitchen screens and computers
+
+The site's kitchen page (`house.js`) and `scripts/house_notes.py` can join the household's topic as
+listeners, with the same code. Their device ids start with `show-`: the phones send them the plan
+but never count them as "the other phone". The script keeps the code in `private/house.json`,
+which git ignores.
 
 ## What is stored where
 
 | What | Where |
 |---|---|
 | Recipes, photos, the kitchen page | the recipe site (public; set its address in Settings) |
-| Dinners by day, who cooks, the two names | each phone, and the relay messages between them |
+| Dinners by day, who cooks, the two names, notes on recipes | each phone, and the relay messages between them |
 | What is in the house for which dinner; what you buy for each ingredient, its packet size and section; the stores, and where things are in each | each phone, and the relay messages between them |
 | Which barcode is which ingredient | each phone, and the relay messages between them |
 | The extras the household buys, and which are on the list | each phone, and the relay messages between them |
@@ -148,7 +158,6 @@ as the copy already on the phone, so use one key for every release.
 ## Not built yet
 
 - Timers that keep running with the screen off (the kitchen page's timers stop when the phone sleeps).
-- Showing tonight's dinner on the Echo Show when a phone starts cooking.
 - A scan-able code for joining, a home-screen widget, sharing a recipe link into the app.
 - Reading the words on a label or shelf tag when a barcode is on no list; turning cups and
   spoonfuls into packets sold by weight; choosing the store by where the phone is.

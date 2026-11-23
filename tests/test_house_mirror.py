@@ -4,10 +4,16 @@ import json
 import re
 import shutil
 import subprocess
+import sys
 import unittest
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "scripts"))
+
+import house_notes  # noqa: E402
+
 HOUSE_JS = (ROOT / "house.js").read_text(encoding="utf-8")
 SYNC_CORE = (ROOT / "apps" / "dinner_planner" / "lib" / "core" / "sync_core.dart").read_text(encoding="utf-8")
 
@@ -51,6 +57,46 @@ class HouseMirrorTests(unittest.TestCase):
         )
         out = subprocess.run(["node", "-e", script, str(ROOT / "house.js")], capture_output=True, text=True, timeout=60)
         self.assertEqual(out.stdout.strip(), DART_DIGEST, out.stderr)
+
+
+class HouseNotesScriptTests(unittest.TestCase):
+    """scripts/house_notes.py: the same rules, in Python."""
+
+    def test_digest_matches_the_dart_one(self):
+        self.assertEqual(house_notes.digest_of(ENTRIES, NOW_MS), DART_DIGEST)
+
+    def test_constants_match(self):
+        self.assertEqual(house_notes.WIRE, dart_const(r"const String wireMark = '([^']*)';"))
+        self.assertEqual(house_notes.DIGEST_DAYS, int(dart_const(r"const int digestDays = (\d+);")))
+        self.assertEqual(house_notes.KEEP_DAYS, int(dart_const(r"const int keepDays = (\d+);")))
+        minutes = int(dart_const(r"const Duration clockSlack = Duration\(minutes: (\d+)\);"))
+        self.assertEqual(house_notes.CLOCK_SLACK.total_seconds(), minutes * 60)
+
+    def test_listens_under_the_listener_prefix(self):
+        prefix = dart_const(r"const String listenerPrefix = '([^']*)';")
+        self.assertIn(f'"dev": f"{prefix}', (ROOT / "scripts" / "house_notes.py").read_text(encoding="utf-8"))
+
+    def test_newest_write_wins_and_notes_are_listed(self):
+        state = {"dev": "show-pc-1", "entries": {}}
+        now = datetime(2026, 11, 22, 18, tzinfo=timezone.utc)
+
+        def line(dev, *entries):
+            return "dp2 " + json.dumps({"d": dev, "g": "x", "s": [list(e) for e in entries]})
+
+        self.assertTrue(house_notes.receive(state, line("a", ("note/beef-chili", "Add cheese", "2026-11-22T10:00:00.000Z", "a")), now))
+        self.assertFalse(house_notes.receive(state, line("b", ("note/beef-chili", "older", "2026-11-22T09:00:00.000Z", "b")), now))
+        self.assertFalse(house_notes.receive(state, line("b", ("note/beef-chili", "from the future", "2026-11-23T10:00:00.000Z", "b")), now))
+        self.assertFalse(house_notes.receive(state, line("show-pc-1", ("note/x", "mine", "2026-11-22T10:00:00.000Z", "show-pc-1")), now))
+        house_notes.receive(state, line("b", ("note/tacos", None, "2026-11-22T11:00:00.000Z", "b")), now)
+        self.assertEqual(house_notes.notes(state), {"beef-chili": "Add cheese"})
+
+    def test_household_codes_round_trip_and_junk_is_refused(self):
+        import base64
+        code = base64.urlsafe_b64encode(json.dumps({"s": "https://relay.example/", "t": "dp-0123456789abcdef"}).encode()).decode().rstrip("=")
+        self.assertEqual(house_notes.house_from_code(code), {"s": "https://relay.example", "t": "dp-0123456789abcdef", "k": None})
+        self.assertIsNone(house_notes.house_from_code("hello there"))
+        bad = base64.urlsafe_b64encode(json.dumps({"s": "ftp://x", "t": "dp-0123456789abcdef"}).encode()).decode()
+        self.assertIsNone(house_notes.house_from_code(bad))
 
 
 if __name__ == "__main__":

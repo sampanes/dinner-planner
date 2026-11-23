@@ -168,6 +168,8 @@ const Set<String> _shopping = {'got', 'buy', 'size', 'sec', 'store', 'at', 'pos'
       lines.add(v is String && people.contains(v) ? '${plan.name(v)} cooks ${dayLabel(date, now)}' : 'No cook ${dayLabel(date, now)}');
     } else if (date != null && parts[0] == 'meal') {
       lines.add(v is String ? '${_cap(dayLabel(date, now))}: ${recipeName(v)}' : '${_cap(dayLabel(date, now))}: no dinner');
+    } else if (parts.length == 2 && parts[0] == 'note') {
+      lines.add('Note on ${recipeName(parts[1])}');
     } else {
       lines.add('Dinner plan updated');
     }

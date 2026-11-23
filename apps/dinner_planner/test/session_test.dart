@@ -83,6 +83,24 @@ void main() {
     expect(shown.single.body, 'Beef Chili');
   });
 
+  test('a note on a recipe reaches the other phone without a reminder', () async {
+    final ntfy = FakeNtfy();
+    final his = await phone(ntfy, me: 'blue', household: house);
+    final hers = await phone(ntfy, me: 'pink', household: house);
+    await his.refreshRecipes(ntfy.now);
+    await hers.refreshRecipes(ntfy.now);
+
+    hers.core.set(noteKey('beef-chili'), 'Add parmesan as a step', ntfy.now);
+    await hers.sync(ntfy.now);
+    expect(ntfy.messages.last.title, 'Note on Beef Chili');
+
+    final report = await his.sync(ntfy.now);
+    expect(his.plan.note('beef-chili'), 'Add parmesan as a step');
+    expect(his.plan.note('shrimp-tacos'), isNull);
+    await his.announce(report.changes, ntfy.now.toLocal());
+    expect((his.notifier as SilentNotifier).shown, isEmpty, reason: 'a note is not worth a buzz');
+  });
+
   test('housekeeping messages are sent quietly', () async {
     final ntfy = FakeNtfy();
     final his = await phone(ntfy, me: 'blue', household: house);

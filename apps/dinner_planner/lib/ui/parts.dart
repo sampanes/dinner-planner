@@ -68,3 +68,108 @@ class CookPicker extends StatelessWidget {
     );
   }
 }
+
+/// The household's note on a recipe ("add parmesan at the end"), tap to
+/// change it; or, with no note yet, a button to write one. Notes are shared
+/// like the plan: the other phone and a linked kitchen screen see them.
+class RecipeNote extends StatelessWidget {
+  const RecipeNote({super.key, required this.model, required this.slug});
+
+  final AppModel model;
+  final String slug;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final note = model.plan.note(slug);
+    if (note == null) {
+      return Align(
+        alignment: Alignment.centerLeft,
+        child: TextButton.icon(
+          key: ValueKey('note-add-$slug'),
+          icon: const Icon(Icons.edit_note),
+          label: const Text('Add a note'),
+          onPressed: () => editNote(context, model, slug),
+        ),
+      );
+    }
+    return Material(
+      color: theme.colorScheme.secondaryContainer,
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        key: ValueKey('note-$slug'),
+        borderRadius: BorderRadius.circular(12),
+        onTap: () => editNote(context, model, slug),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(12, 10, 10, 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(Icons.sticky_note_2_outlined, color: theme.colorScheme.onSecondaryContainer),
+              const SizedBox(width: 10),
+              Expanded(child: Text(note, style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSecondaryContainer))),
+              Icon(Icons.edit, size: 18, color: theme.colorScheme.onSecondaryContainer),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Asks for the note on a recipe and saves it; an empty note clears it.
+Future<void> editNote(BuildContext context, AppModel model, String slug) async {
+  final text = await showDialog<String>(
+    context: context,
+    builder: (context) => _NoteDialog(title: model.session.recipeName(slug), start: model.plan.note(slug) ?? ''),
+  );
+  if (text != null) await model.setNote(slug, text);
+}
+
+class _NoteDialog extends StatefulWidget {
+  const _NoteDialog({required this.title, required this.start});
+
+  final String title;
+  final String start;
+
+  @override
+  State<_NoteDialog> createState() => _NoteDialogState();
+}
+
+class _NoteDialogState extends State<_NoteDialog> {
+  late final TextEditingController _text = TextEditingController(text: widget.start);
+
+  @override
+  void dispose() {
+    _text.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(widget.title),
+      content: TextField(
+        key: const ValueKey('note-field'),
+        controller: _text,
+        autofocus: true,
+        minLines: 2,
+        maxLines: 6,
+        maxLength: noteMax,
+        textCapitalization: TextCapitalization.sentences,
+        decoration: const InputDecoration(
+          hintText: 'Add parmesan at the end',
+          helperText: 'The other phone and the kitchen screen see it too.',
+          helperMaxLines: 2,
+          border: OutlineInputBorder(),
+        ),
+      ),
+      actions: [
+        if (widget.start.isNotEmpty)
+          TextButton(key: const ValueKey('note-clear'), onPressed: () => Navigator.pop(context, ''), child: const Text('Delete')),
+        TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+        FilledButton(key: const ValueKey('note-save'), onPressed: () => Navigator.pop(context, _text.text), child: const Text('Save')),
+      ],
+    );
+  }
+}

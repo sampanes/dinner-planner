@@ -504,6 +504,13 @@ function madeLine(r) {
     return hist.count ? h('div', { class: 'meta made' }, `Made ${hist.count === 1 ? 'once' : `${hist.count} times`}, last ${ago(hist.last)}`) : null;
 }
 
+// The note written on the phones for this recipe ("add parmesan as a step"),
+// when this screen is linked to them.
+function houseNote(r) {
+    const note = House.note(r.slug);
+    return note ? h('p', { class: 'house-note' }, h('b', {}, 'Note: '), note) : null;
+}
+
 function renderRecipe(r) {
     setTop(r.displayName, '#/');
     const resume = currentResume();
@@ -524,6 +531,7 @@ function renderRecipe(r) {
             h('h1', {}, r.displayName),
             h('div', { class: 'meta' }, starBadge(r), ` - ${r.ingredients.length} ingredients, ${r.steps.length} steps`),
             madeLine(r),
+            houseNote(r),
             actions),
         h('div', { class: 'recipe-side' },
             h('h2', {}, 'Ingredients'),
@@ -575,6 +583,7 @@ function renderCook(r, startStep) {
         const hints = usefulTimers(step);
         const photo = photosOn() && step.photo;
         const body = [
+            i === 0 ? houseNote(r) : null,
             h('p', { class: 'step-text' }, step.displayText),
             uses.length ? h('div', { class: 'step-uses' }, uses.map(u => h('span', {}, u.text || u.displayName))) : null,
             hints.length ? h('div', { class: 'step-timers' },
