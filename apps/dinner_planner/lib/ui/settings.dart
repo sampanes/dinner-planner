@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 import '../app_model.dart';
 import '../core/plan.dart';
+import '../data/relay.dart';
 import 'parts.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -212,6 +215,14 @@ class _Sharing extends StatelessWidget {
     if (!ok) messenger.showSnackBar(const SnackBar(content: Text('That is not a sharing code.')));
   }
 
+  Future<void> _scanToJoin(BuildContext context) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final code = await Navigator.of(context).push<String>(MaterialPageRoute(builder: (_) => const _ScanHouseholdCode()));
+    if (code == null) return;
+    final ok = await model.joinHousehold(code);
+    messenger.showSnackBar(SnackBar(content: Text(ok ? 'Joined. The plan arrives in a few seconds.' : 'That is not a sharing code.')));
+  }
+
   Future<void> _startOnOwnServer(BuildContext context) async {
     final server = await showDialog<String>(
       context: context,
@@ -238,6 +249,13 @@ class _Sharing extends StatelessWidget {
           const SizedBox(height: 12),
           FilledButton(key: const ValueKey('share-start'), onPressed: model.startHousehold, child: const Text('Start sharing')),
           const SizedBox(height: 8),
+          FilledButton.tonalIcon(
+            key: const ValueKey('share-scan'),
+            onPressed: () => _scanToJoin(context),
+            icon: const Icon(Icons.qr_code_scanner),
+            label: const Text("Scan the other phone's code"),
+          ),
+          const SizedBox(height: 8),
           OutlinedButton(key: const ValueKey('share-join'), onPressed: () => _join(context), child: const Text('Join with a code')),
           TextButton(onPressed: () => _startOnOwnServer(context), child: const Text('Start on my own server')),
         ],
@@ -258,7 +276,18 @@ class _Sharing extends StatelessWidget {
         const SizedBox(height: 4),
         Text('Through ${Uri.parse(h.server).host}', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
         const SizedBox(height: 12),
-        const Text('On the other phone choose "Join with a code" and paste this:'),
+        const Text("On the other phone choose \"Scan the other phone's code\" and point it here:"),
+        const SizedBox(height: 12),
+        Center(
+          child: Container(
+            // Black on white whatever the theme: scanners read that best.
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+            child: QrImageView(key: const ValueKey('share-qr'), data: h.code, size: 220, backgroundColor: Colors.white, padding: EdgeInsets.zero),
+          ),
+        ),
+        const SizedBox(height: 12),
+        const Text('Or choose "Join with a code" and paste this:'),
         const SizedBox(height: 8),
         Container(
           padding: const EdgeInsets.all(12),
@@ -335,4 +364,71 @@ class _TextDialogState extends State<_TextDialog> {
           FilledButton(onPressed: () => Navigator.of(context).pop(_text.text), child: Text(widget.action)),
         ],
       );
+}
+
+/// The camera, looking for the QR code another phone shows under Sharing.
+/// Pops with the household code once it sees one.
+class _ScanHouseholdCode extends StatefulWidget {
+  const _ScanHouseholdCode();
+
+  @override
+  State<_ScanHouseholdCode> createState() => _ScanHouseholdCodeState();
+}
+
+class _ScanHouseholdCodeState extends State<_ScanHouseholdCode> {
+  final MobileScannerController _camera = MobileScannerController(formats: const [BarcodeFormat.qrCode]);
+  bool _done = false;
+
+  @override
+  void dispose() {
+    _camera.dispose();
+    super.dispose();
+  }
+
+  void _seen(BarcodeCapture capture) {
+    if (_done) return;
+    for (final b in capture.barcodes) {
+      final code = b.rawValue;
+      if (code == null || Household.fromCode(code) == null) continue;
+      _done = true;
+      HapticFeedback.mediumImpact();
+      Navigator.of(context).pop(code);
+      return;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Scaffold(
+      appBar: AppBar(title: const Text("Scan the other phone's code")),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: MobileScanner(
+              controller: _camera,
+              onDetect: _seen,
+              errorBuilder: (context, error) => Padding(
+                padding: const EdgeInsets.all(32),
+                child: Center(
+                  child: Text(
+                    error.errorCode == MobileScannerErrorCode.permissionDenied
+                        ? "The camera is not allowed. Allow it for Dinner Planner in the phone's settings, or go back and paste the code."
+                        : 'The camera would not start. Go back and paste the code instead.',
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.titleMedium,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text('On the other phone open Settings; the code is under Sharing.', textAlign: TextAlign.center, style: theme.textTheme.bodyLarge),
+          ),
+        ],
+      ),
+    );
+  }
 }

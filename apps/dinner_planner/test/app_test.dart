@@ -103,9 +103,11 @@ void main() {
     await tester.pumpAndSettle();
     await tester.ensureVisible(find.byKey(const ValueKey('share-start')));
     await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('share-scan')), findsOneWidget, reason: 'joining can scan the code');
     await tester.tap(find.byKey(const ValueKey('share-start')));
     await tester.pumpAndSettle();
     expect(find.text('Waiting for the other phone to join.'), findsOneWidget);
+    expect(find.byKey(const ValueKey('share-qr')), findsOneWidget, reason: 'the code shows as a QR code to scan');
     final code = tester.widget<SelectableText>(find.byKey(const ValueKey('share-code'))).data!;
     expect(ntfy.messages, isNotEmpty, reason: 'what was planned before sharing is sent once sharing starts');
 

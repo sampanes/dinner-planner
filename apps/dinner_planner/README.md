@@ -37,7 +37,8 @@ all of that, and none of it is written to the repository.
 - **Stores**: add the stores you use, and tap one when you walk in. The list switches to the order
   you walk that store, which it learns from the order you tick things in ("The order of a store"
   below).
-- **Sharing**: one phone taps "Start sharing" and shows a code, the other taps "Join with a code".
+- **Sharing**: one phone taps "Start sharing" and shows a QR code; the other taps "Scan the other
+  phone's code" (or "Join with a code" and pastes it).
 - **Notes**: "Add a note" under tonight's dinner, or in "What it needs", keeps a line on that recipe
   ("add parmesan as a step"). The other phone, a linked kitchen screen and
   `scripts/house_notes.py` on a computer see it too.
