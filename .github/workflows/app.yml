@@ -1,10 +1,17 @@
 # The phone app (apps/dinner_planner): analyze and test on every change to
-# it. A tag like app-v0.1.0 also builds a signed APK and attaches it to a
+# it, then build the APK, sign it with the app's one key and attach it to a
 # GitHub release, which is where a phone (or Obtainium) picks it up.
 #
+# A release is made once per version: when a push to main carries a version
+# in pubspec.yaml that has no "app-v<version>" release yet. Pushing such a tag
+# by hand, or running this workflow from the Actions page, does the same. So
+# it does not matter which computer the change came from: every APK is built
+# here and signed with the same key.
+#
 # Signing needs four repository secrets: ANDROID_KEYSTORE_BASE64,
-# ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD. Without
-# them the release job fails and says so.
+# ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD
+# (apps/dinner_planner/tool/signing_setup.py makes the key and sets them).
+# Until they are set the release job says so and makes nothing.
 name: Phone app
 
 on:
@@ -46,7 +53,7 @@ jobs:
 
   release:
     name: Signed APK
-    if: startsWith(github.ref, 'refs/tags/app-v')
+    if: github.event_name != 'pull_request'
     needs: test
     runs-on: ubuntu-latest
     permissions:
@@ -56,25 +63,48 @@ jobs:
         working-directory: apps/dinner_planner
     steps:
       - uses: actions/checkout@v4
+      - name: Decide whether this version still needs a release
+        id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HAS_KEY: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/app-v* ]]; then
+            tag="$GITHUB_REF_NAME"
+          else
+            tag="app-v$(sed -n 's/^version: *\([0-9][0-9.]*\).*/\1/p' pubspec.yaml)"
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          if [ "$tag" = "app-v" ]; then
+            echo "::error::No version found in pubspec.yaml."
+            exit 1
+          elif gh release view "$tag" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            echo "::notice::$tag is already released. Raise the version in pubspec.yaml to make a new one."
+            echo "go=false" >> "$GITHUB_OUTPUT"
+          elif [ "$HAS_KEY" != "true" ]; then
+            echo "::warning::No signing key yet, so no APK was made for $tag. Run apps/dinner_planner/tool/signing_setup.py once (apps/dinner_planner/README.md, \"Installing and updating\")."
+            echo "go=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "go=true" >> "$GITHUB_OUTPUT"
+          fi
       - name: Read the pinned Flutter version
+        if: steps.plan.outputs.go == 'true'
         id: pin
         run: echo "version=$(python3 -c 'import json; print(json.load(open(".fvmrc"))["flutter"])')" >> "$GITHUB_OUTPUT"
       - uses: subosito/flutter-action@v2
+        if: steps.plan.outputs.go == 'true'
         with:
           flutter-version: ${{ steps.pin.outputs.version }}
           channel: stable
           cache: true
       - name: Signing key from the repository secrets
+        if: steps.plan.outputs.go == 'true'
         env:
           KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
-          if [ -z "$KEYSTORE_BASE64" ]; then
-            echo "::error::No ANDROID_KEYSTORE_BASE64 secret, so the APK cannot be signed. Add the four ANDROID_* secrets (apps/dinner_planner/README.md), then re-run this job."
-            exit 1
-          fi
           echo "$KEYSTORE_BASE64" | base64 -d > android/app/release.jks
           {
             echo "storeFile=release.jks"
@@ -82,11 +112,18 @@ jobs:
             echo "keyAlias=$KEY_ALIAS"
             echo "keyPassword=$KEY_PASSWORD"
           } > android/key.properties
-      - run: flutter pub get
-      - run: flutter build apk --release
-      - name: Name the APK after the tag
-        run: cp build/app/outputs/flutter-apk/app-release.apk "dinner-planner-${GITHUB_REF_NAME#app-}.apk"
+      - if: steps.plan.outputs.go == 'true'
+        run: flutter pub get
+      - if: steps.plan.outputs.go == 'true'
+        run: flutter build apk --release
       - name: Publish the release
+        if: steps.plan.outputs.go == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" dinner-planner-*.apk --title "Phone app ${GITHUB_REF_NAME#app-}" --notes "Android APK. Install it over the previous one."
+          TAG: ${{ steps.plan.outputs.tag }}
+        run: |
+          apk="dinner-planner-${TAG#app-v}.apk"
+          cp build/app/outputs/flutter-apk/app-release.apk "$apk"
+          gh release create "$TAG" "$apk" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --latest \
+            --title "Phone app ${TAG#app-v}" \
+            --notes "Android APK, signed with the app's own key. Open it on the phone to install it over the previous one."

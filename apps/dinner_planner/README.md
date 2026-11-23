@@ -176,9 +176,43 @@ The icons (launcher, and the white shape Android shows in the status bar) are ge
 `art/icon.png`; after changing the art run `python tool/make_icons.py` (Pillow and numpy), and
 `--check` says whether the committed files are current.
 
-A release build is signed with the key named in `android/key.properties` (never committed) and
-falls back to the debug key without it. Android only installs an update signed with the same key
-as the copy already on the phone, so use one key for every release.
+## Installing and updating
+
+Android only installs an update signed with the same key as the copy already on the phone, and a
+build made on a computer is signed with that computer's own debug key. So the phones do not take
+builds from a computer. GitHub builds every version and signs it with the app's one key:
+
+- Raise `version:` in `pubspec.yaml` and push to `main` from any computer. The "Phone app" workflow
+  tests it, builds the APK, signs it and attaches it to a release named `app-v<version>`.
+- On the phone, open the repository's releases page (`/releases/latest`), tap the APK and install.
+  [Obtainium](https://github.com/ImranR98/Obtainium) can watch that page and offer each update.
+
+One-time setup, on a computer where `gh` is signed in as the repository's owner:
+
+    python apps/dinner_planner/tool/signing_setup.py
+
+It makes the key in `private/keys/` (ignored by git; keep that folder, it is the only other copy),
+gives it to the repository as the four `ANDROID_*` secrets, points that computer's own release
+builds at the same key through `android/key.properties` (never committed), and starts the first
+signed build. `--check` says what is set up. It refuses to run as anyone but the owner and never
+touches a computer's debug key. On any other computer a release build still falls back to the
+debug key: fine for trying something on an emulator, not for the phones.
+
+### Moving a phone to the signed app
+
+A copy that was installed from a computer has that computer's key, so the signed APK will not
+install over it: the old copy has to be removed first, and removing it clears what the app kept.
+Everything shared comes back from the other phone, so move one phone at a time:
+
+1. On the phone that stays, check Settings shows the household as shared and both phones in step.
+2. On the phone being moved, remove the app, install the signed APK, then join with the other
+   phone's code (Settings, "Scan the other phone's code"). The plan, shopping list, stores, scans
+   and notes arrive within a minute.
+3. Set again what only that phone knew: whose phone it is, the reminder times, a USDA key.
+4. Then do the same with the other phone.
+
+With only one phone using the app there is nowhere for the shared part to wait, so pair a second
+phone before moving the first.
 
 ## Not built yet
 
