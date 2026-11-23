@@ -131,7 +131,7 @@ In these twelve, the split gives a bowl of plain pasta and not much else, becaus
 | [Lone Star Poblano Mac & Cheese](https://sampanes.github.io/dinner-planner/recipes/lone-star-poblano-mac-cheese.html) | After the cavatappi is drained. The cheese sauce itself has pepper jack and Southwest spice | Cavatappi with butter and Monterey Jack |
 | [Chicken Sausage and Spinach Ravioli](https://sampanes.github.io/dinner-planner/recipes/chicken-sausage-and-spinach-ravioli.html) | After the ravioli are drained, before they go into the sausage sauce | Buttered ravioli. The filling is spinach and ricotta |
 | [Mushroom Ravioli in a Tomato Cream Sauce](https://sampanes.github.io/dinner-planner/recipes/mushroom-ravioli-in-a-tomato-cream-sauce.html) | After the ravioli are drained | Buttered ravioli with a spoonful of ricotta. The filling is still mushroom |
-| [Creamy Tomato Sirloin Steak & Mushroom Ravioli](https://sampanes.github.io/dinner-planner/recipes/creamy-tomato-sirloin-steak-mushroom-ravioli.html) | After the ravioli are drained. The sauce has sliced mushrooms and tomatoes | Buttered ravioli with ricotta. The filling is still mushroom |
+| [Creamy Tomato Sirloin Steak & Mushroom Ravioli](https://sampanes.github.io/dinner-planner/recipes/creamy-tomato-sirloin-steak-mushroom-ravioli.html) | After the ravioli are drained. The sauce has sliced mushrooms and tomatoes | Buttered ravioli with ricotta and plain sliced steak. The filling is still mushroom |
 
 ### Cannot be split
 
@@ -141,7 +141,7 @@ Eleven recipes have no natural point where a plain portion comes out. For the th
 - [One-Pot Italian Beef & Tomato Soup](https://sampanes.github.io/dinner-planner/recipes/one-pot-italian-beef-tomato-soup.html): beef, carrots, kale, and couscous simmer together. The garlic bread is the familiar food on the table.
 - [Italian Sausage Rigatoni](https://sampanes.github.io/dinner-planner/recipes/italian-sausage-rigatoni.html): sausage, pasta, peas, and romesco bake in one tray.
 - [One-Pan Trattoria Tortelloni Bake](https://sampanes.github.io/dinner-planner/recipes/one-pan-trattoria-tortelloni-bake.html): the tortelloni cook in the sauce, and the chili flakes go into its base. Leaving the chili out makes the whole pan mild, but there is still diced tomato throughout.
-- [One-Pan Beef Tortelloni Bake](https://sampanes.github.io/dinner-planner/recipes/one-pan-beef-tortelloni-bake.html): the tortelloni cook in the sauce with peas and diced tomato. The chili flakes are "to taste," so the pan can be made mild.
+- [One-Pan Beef Tortelloni Bake](https://sampanes.github.io/dinner-planner/recipes/one-pan-beef-tortelloni-bake.html): the tortelloni cook in the sauce with peas and diced tomato. The chili flakes are "to taste," so the pan can be made mild. The beef is browned on its own first, so a plain spoonful can be kept back.
 - [Pub-Style Shepherd's Pie](https://sampanes.github.io/dinner-planner/recipes/pub-style-shepherd-s-pie.html): the beef is browned in the same pan as the carrot, celery, and onion. Only the mashed potatoes can be served plain.
 - [Beef Ragu Zucchini "Lasagna"](https://sampanes.github.io/dinner-planner/recipes/beef-ragu-zucchini-lasagna.html): zucchini planks are the layers.
 - [Pork Chili 'n' Cheese Stuffed Poblanos](https://sampanes.github.io/dinner-planner/recipes/pork-chili-n-cheese-stuffed-poblanos.html): the spice is in the pork filling and the pepper is the dish.
@@ -202,7 +202,7 @@ Picky-friendly: **yes** means fine as written, **pasta** means plain pasta with 
 | [Creamy Dreamy Cheese Tortelloni Bake](https://sampanes.github.io/dinner-planner/recipes/creamy-dreamy-cheese-tortelloni-bake.html) | pasta | some jobs | Zucchini goes in last, hot sauce at the table. Kids sprinkle the panko |
 | [Creamy Lemon-Basil Beef Rigatoni](https://sampanes.github.io/dinner-planner/recipes/creamy-lemon-basil-beef-rigatoni.html) | pasta | some jobs | Plain rigatoni only. Kids zest the lemon and snip the scallions |
 | [Creamy Tomato Penne & Beef Meatballs](https://sampanes.github.io/dinner-planner/recipes/creamy-tomato-penne-beef-meatballs.html) | yes | good | Plain meatballs on mild pink pasta. Kids roll the meatballs |
-| [Creamy Tomato Sirloin Steak & Mushroom Ravioli](https://sampanes.github.io/dinner-planner/recipes/creamy-tomato-sirloin-steak-mushroom-ravioli.html) | pasta | some jobs | Plain ravioli only, and the filling is mushroom. Kids stir the ricotta |
+| [Creamy Tomato Sirloin Steak & Mushroom Ravioli](https://sampanes.github.io/dinner-planner/recipes/creamy-tomato-sirloin-steak-mushroom-ravioli.html) | pasta | some jobs | Plain ravioli and plain sliced steak. The filling is mushroom. Kids stir the ricotta |
 | [Family-Style Creamy Chicken Pasta Bake](https://sampanes.github.io/dinner-planner/recipes/family-style-creamy-chicken-pasta-bake.html) | yes | good | Mild cheddar sauce, visible broccoli florets. Kids whisk the cold sauce |
 | [Firecracker Meatballs](https://sampanes.github.io/dinner-planner/recipes/firecracker-meatballs.html) | split | good | Pull meatballs before the sauce toss. Sriracha is "to taste" |
 | [Galactic Beef Melts](https://sampanes.github.io/dinner-planner/recipes/galactic-beef-melts.html) | split | some jobs | Peppers, mustard, and hot sauce can be left off. Onions are in the beef |
@@ -220,7 +220,7 @@ Picky-friendly: **yes** means fine as written, **pasta** means plain pasta with 
 | [One Pot Spicy Rigatoni alla Rossa](https://sampanes.github.io/dinner-planner/recipes/one-pot-spicy-rigatoni-alla-rossa.html) | pasta | good | Pasta cooks in the sauce. Leave chili out and lift a portion before the spinach |
 | [One-Pan Baja Chicken Quesadillas](https://sampanes.github.io/dinner-planner/recipes/one-pan-baja-chicken-quesadillas.html) | split | good | Cheese-only quesadilla. The chicken cooks in blackening spice |
 | [One-Pan Baja Organic Beef Quesadillas](https://sampanes.github.io/dinner-planner/recipes/one-pan-baja-organic-beef-quesadillas.html) | split | good | Cheese-only quesadilla. The meat cooks in blackening spice |
-| [One-Pan Beef Tortelloni Bake](https://sampanes.github.io/dinner-planner/recipes/one-pan-beef-tortelloni-bake.html) | pasta | some jobs | Tortelloni cook in the sauce with peas and tomato. Kids mix the panko topping |
+| [One-Pan Beef Tortelloni Bake](https://sampanes.github.io/dinner-planner/recipes/one-pan-beef-tortelloni-bake.html) | pasta | some jobs | Tortelloni cook in the sauce with peas and tomato, and plain beef can be kept back. Kids mix the panko topping |
 | [One-Pan Cantina Shrimp Fajitas](https://sampanes.github.io/dinner-planner/recipes/one-pan-cantina-shrimp-fajitas.html) | hard | some jobs | One pan, spice on everything. Kids mix the guacamole |
 | [One-Pan Cheesy Beef Tortilla Melts](https://sampanes.github.io/dinner-planner/recipes/one-pan-cheesy-beef-tortilla-melts.html) | split | good | Hot sauce is "to taste." Kids spread, fill, and fold |
 | [One-Pan Cheesy Chicken Tortilla Melts](https://sampanes.github.io/dinner-planner/recipes/one-pan-cheesy-chicken-tortilla-melts.html) | split | good | Hot sauce is "to taste." Kids spread, fill, and fold |
