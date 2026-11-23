@@ -615,11 +615,13 @@ function leaveCook() {
 
 function topOffset() { return $('topbar').offsetHeight; }
 
-// Shrink the text of any step that would not fit on one screen, so every step
-// is readable without scrolling inside it: first shrink the text to 34px, then
-// compact the chips and drop the Alexa hint, then shrink to the 28px floor
-// (26px and 20px on a phone, which is held close). The Large text size opts
-// out: its steps keep their size and scroll instead, or Aa would look broken.
+// Shrink the text of any step that would not fit on one screen: first shrink
+// the text, then compact the chips and drop the Alexa hint, then shrink to a
+// floor. Each Aa size has its own floors, and Medium's floor sits above where
+// Small starts, so the two never end up the same size on a long step. Small
+// always fits the screen; a Medium step that still does not fit scrolls; Large
+// never shrinks.
+const FIT_FLOORS = { 0: { show: [34, 28], phone: [26, 20] }, 1: { show: [46, 46], phone: [30, 30] } };
 function fitSteps() {
     const avail = window.innerHeight - topOffset() - $('cookbar').offsetHeight;
     for (const el of stepEls) {
@@ -632,12 +634,12 @@ function fitSteps() {
         const shrinkTo = (floor) => {
             while (el.offsetHeight > avail && px > floor) { px -= 2; text.style.fontSize = `${px}px`; }
         };
-        const phone = window.innerWidth <= 600;
+        const [first, last] = FIT_FLOORS[size][window.innerWidth <= 600 ? 'phone' : 'show'];
         // With a photo, the photo gives up room before the text does.
         if (el.classList.contains('has-photo') && el.offsetHeight > avail) el.classList.add('tight');
-        shrinkTo(phone ? 26 : 34);
+        shrinkTo(first);
         if (el.offsetHeight > avail) el.classList.add('tight');
-        shrinkTo(phone ? 20 : 28);
+        shrinkTo(last);
     }
 }
 
