@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:workmanager/workmanager.dart';
 
+import 'core/nudges.dart';
 import 'data/session.dart';
 import 'data/store.dart';
 import 'notify/notifier.dart';
@@ -29,6 +30,14 @@ void backgroundMain() {
       await session.replan(now);
       // A rating given from a reminder while the app was shut.
       await session.flushSite(now);
+      // Said once for each new version; the app's own card says it after that.
+      if (await session.checkUpdate(now)) {
+        await session.notifier.show(Notice(
+          'Dinner Planner ${session.newest!.version} is ready',
+          'Open the app and tap Update. Everything on this phone is kept.',
+          ref: const NudgeRef('update'),
+        ));
+      }
     } finally {
       client.close();
     }

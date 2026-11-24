@@ -102,7 +102,7 @@ class NudgeRef {
 }
 
 class Nudge {
-  const Nudge(this.id, this.when, this.title, this.body, {this.ref, this.buttons = const [], this.quiet = false});
+  const Nudge(this.id, this.when, this.title, this.body, {this.ref, this.buttons = const [], this.quiet = false, this.loud = false});
 
   final int id;
 
@@ -115,6 +115,9 @@ class Nudge {
 
   /// Shown without a sound: a question, not something to act on now.
   final bool quiet;
+
+  /// A kitchen timer running out: it has to be heard over a pan.
+  final bool loud;
 }
 
 class Notice {
@@ -128,7 +131,7 @@ class Notice {
 
 /// What a reminder needs to know about one planned dinner.
 class DinnerFacts {
-  const DinnerFacts({required this.name, this.minutes, this.thaw = const [], this.missing = const []});
+  const DinnerFacts({required this.name, this.minutes, this.thaw = const [], this.missing = const [], this.check = const []});
 
   final String name;
 
@@ -138,8 +141,13 @@ class DinnerFacts {
   /// The meat and fish in it: what may be in the freezer.
   final List<String> thaw;
 
-  /// What it needs that is not ticked as in the house, staples left out.
+  /// What it needs that is not in the house: not ticked for it, not a
+  /// staple, and nothing says it was bought lately.
   final List<String> missing;
+
+  /// What it needs that was bought lately and is probably still there, but
+  /// was not ticked for this dinner: worth a look in the cupboard.
+  final List<String> check;
 }
 
 const NudgeButton skipButton = NudgeButton('skip', 'Not tonight');
@@ -187,7 +195,7 @@ List<Nudge> planNudges({
           Nudge(base + 3, at(day, startMinutes(times, null)), 'Time to start dinner', 'Nothing is picked. Choose something quick.', ref: NudgeRef('start', day: key)),
         ]);
       } else {
-        final thaw = listText(f.thaw), missing = listText(f.missing);
+        final thaw = listText(f.thaw), missing = listText(f.missing), check = listText(f.check);
         final start = startMinutes(times, f.minutes);
         candidates.addAll([
           Nudge(
@@ -196,10 +204,12 @@ List<Nudge> planNudges({
             'You cook tomorrow: ${f.name}',
             [
               if (thaw.isNotEmpty) 'If the $thaw is frozen, move it to the fridge tonight.',
-              if (missing.isNotEmpty) 'Still to get: $missing.' else thaw.isEmpty ? 'Everything it needs is in the house.' : 'Everything else is in the house.',
+              if (missing.isNotEmpty) 'Still to get: $missing.',
+              if (check.isNotEmpty) 'Check you still have the $check.',
+              if (missing.isEmpty && check.isEmpty) thaw.isEmpty ? 'Everything it needs is in the house.' : 'Everything else is in the house.',
             ].join(' '),
             ref: NudgeRef('eve', day: key, slug: slug!),
-            buttons: [if (missing.isNotEmpty) ...[haveButton, listButton]],
+            buttons: [if (missing.isNotEmpty || check.isNotEmpty) ...[haveButton, listButton]],
           ),
           Nudge(
             base + 2,
@@ -268,6 +278,50 @@ DateTime weekAskTime({required DateTime now, required int evening, DateTime? las
   return next;
 }
 
+/// The one reminder to go shopping, and how often it may come.
+const int shopNudgeId = 6;
+const Duration shopAskEvery = Duration(days: 3);
+
+/// When to say there is shopping to do: the coming [morning], but not within
+/// [shopAskEvery] of the last time.
+DateTime shopAskTime({required DateTime now, required int morning, DateTime? lastAsk}) {
+  if (lastAsk != null && lastAsk.isAfter(now)) return lastAsk;
+  var next = DateTime(now.year, now.month, now.day, morning ~/ 60, morning % 60);
+  if (!next.isAfter(now)) next = DateTime(now.year, now.month, now.day + 1, morning ~/ 60, morning % 60);
+  if (lastAsk != null) {
+    final earliest = lastAsk.add(shopAskEvery);
+    while (next.isBefore(earliest)) {
+      next = DateTime(next.year, next.month, next.day + 1, morning ~/ 60, morning % 60);
+    }
+  }
+  return next;
+}
+
+/// "There is shopping to do": [things] are still to buy, for [dinners]
+/// dinners, the first of them on [first].
+Nudge shopNudge(DateTime when, {required List<String> things, required int dinners, required DateTime first}) => Nudge(
+      shopNudgeId,
+      when,
+      '${things.length} thing${things.length == 1 ? '' : 's'} to buy for $dinners dinner${dinners == 1 ? '' : 's'}',
+      'First needed ${dayLabel(first, when)}. ${_cap(listText(things, most: 4))}.',
+      ref: const NudgeRef('shop'),
+      buttons: const [listButton],
+    );
+
+/// Kitchen timers ring from ids above the reminders' own.
+const int timerNudgeBase = 2000000000;
+
+/// A timer started on the recipe page, rung by the phone so that it is heard
+/// with the screen off or the page shut.
+Nudge timerNudge(int id, DateTime when, String label, {String slug = ''}) => Nudge(
+      timerNudgeBase + id % 100000,
+      when,
+      'Timer done: $label',
+      'Tap to go back to the recipe.',
+      ref: NudgeRef('timer', slug: slug),
+      loud: true,
+    );
+
 /// The offer itself: [nights] are the dinners it would put on the plan.
 Nudge weekNudge(DateTime when, List<({DateTime date, String name})> nights) => Nudge(
       weekNudgeId,
@@ -334,12 +388,14 @@ List<Notice> noticesFor(
 }
 
 /// The kinds of entry the shopping list is made of.
-const Set<String> _shopping = {'got', 'buy', 'size', 'sec', 'store', 'at', 'pos', 'code', 'extra', 'want', 'have'};
+const Set<String> _shopping = {'got', 'buy', 'size', 'sec', 'store', 'at', 'pos', 'code', 'extra', 'want', 'have', 'in'};
 
 /// A short line saying what a batch of entries is, for the relay message a
 /// person may see as a notification.
 ({String title, String body}) headline(List<Entry> entries, Plan plan, String Function(String slug) recipeName, DateTime now) {
   if (entries.isEmpty) return (title: 'Dinner planner', body: 'In step.');
+  // A phone saying which version it runs is nothing anyone needs to read.
+  if (entries.every((e) => e.key.startsWith('ver/'))) return (title: 'Dinner planner', body: 'In step.');
   if (entries.every((e) => _shopping.contains(e.key.split('/').first))) {
     return (title: 'Shopping list updated', body: entries.length == 1 ? '' : '${entries.length} changes');
   }

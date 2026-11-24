@@ -8,7 +8,9 @@ all of that, and none of it is written to the repository.
   kitchen page, and "What it needs" to check the fridge. A new phone also gets a **Start here**
   card: five first steps that tick themselves off from what the phone already holds. Skip hides
   it; Settings brings it back. The card says when to start cooking, "Not tonight" calls the night
-  off, and once dinner time has come it asks how the dinner was, with five stars.
+  off, and once dinner time has come it asks how the dinner was, with five stars. With nothing
+  planned it offers "What can I make with what's here?". A line under "Coming up" counts the
+  dinners eaten at home this week and how many of them this phone's owner cooked.
 - **Week**: the next fourteen days. Tap a day to pick dinner, tap a name to say who cooks. "Fill
   the empty nights" drafts a dinner and a cook for each empty night of the coming week, to look
   over and take with one tap ("A drafted week" below). The playlist button adds the dinners from
@@ -52,6 +54,28 @@ all of that, and none of it is written to the repository.
   ("Notes that wait for a fix" below). While cooking, "+ Note on this step" on the recipe's own
   page opens the app on that step with the keyboard up, and Save goes back to the recipe.
 
+## What is in the house
+
+`lib/core/pantry.dart`. Nobody keeps an inventory, so the app keeps one from what it is told
+anyway. `in/<ingredient>` is the day an ingredient last came into the house: the day its line was
+ticked on the list, "All here" was tapped on a reminder, a packet no dinner was waiting for was
+scanned at home, or someone tapped it on the "What's in the house" page (the fridge button on the
+Shop tab). Both phones share it, so what one of them buys the other one has.
+
+From that day the app works out whether it is still there. Each section keeps for so long
+(`keepsDays`: meat three days, produce a week, dairy twelve days, the cupboard for months). A
+dinner uses up the fresh things it asks for (`usedUp`: meat, produce, bread, deli, cans), so the
+beef bought for Monday is not there for Thursday, while the tub of sour cream is. It is a guess,
+and the app treats it as one:
+
+- **The shopping list** sets such things apart as "Probably in the house": not on the list to buy
+  and not ticked. A tap says "seen it" and ticks it for that dinner; the cross says it is gone,
+  which puts it on the list for every dinner that was counting on it.
+- **The evening reminder** says "Check you still have the sour cream" in place of "Still to get".
+- **"What can I make with what's here?"** is on the Tonight card when nothing is planned, and is
+  the first chip in the picker: every recipe, the least to buy first, each saying what it still
+  needs. Until someone has ticked or said anything it says so and offers the page to say it on.
+
 ## Reminders that do the next thing
 
 `lib/core/nudges.dart` writes them; nothing is asked of the cook that the phone already knows.
@@ -70,9 +94,25 @@ all of that, and none of it is written to the repository.
   fine", "Not again".
 - **Dinners for the coming week** comes on the evening the plan is two days from running out, and
   then at most every three days: "Use these" or "Change".
+- **Things to buy** comes the morning after the coming week's dinners need something that is not
+  in the house, to both phones, and then at most every three days while there still is: how many
+  things, for how many dinners, and the first day one is needed. "Open the list" opens the Shop
+  tab. Tonight's dinner is left to the cook's own reminders.
+- **Timer done** rings a timer started on the recipe page ("A timer that rings with the screen
+  off" below).
 
 Every button brings the app to the front, where the tap is carried out and shown with Undo.
 Nothing is changed in the background, where it could collide with the open app.
+
+## A timer that rings with the screen off
+
+The recipe page's own timers stop when the phone sleeps or the page is left. When the app opened
+the page (`kitchen.html?app=1&ring=1`), starting a timer there also opens
+`dinnerplanner://open/timer?id=..&end=<ms>&label=..&slug=..`: the app sets an exact alarm for that
+moment on its loudest channel ("Kitchen timers"), shows "Rings at 5:42 pm" for a second, and puts
+itself back behind the browser. "+1 min" and "Cancel" on the page send the same link again (an
+end of 0 stops it). Tapping the notification opens the recipe. Settings, "Ring recipe timers on
+this phone", turns the hand-over off; the page's own timers work as before either way.
 
 ## A night off
 
@@ -152,7 +192,8 @@ again each time it runs for two weeks.
 |---|---|
 | Recipes, photos, the kitchen page | the recipe site (public; set its address in Settings) |
 | Dinners by day, who cooks, nights off, the two names, notes on recipes | each phone, and the relay messages between them |
-| What the house always has | each phone, and the relay messages between them |
+| What the house always has, and what was bought or said to be there lately | each phone, and the relay messages between them |
+| Which version of the app each phone runs | each phone, and the relay messages between them |
 | How each of you rated a dinner | the recipe site (sent as "pink" or "blue", without names) |
 | What is in the house for which dinner; what you buy for each ingredient, its packet size and section; the stores, and where things are in each | each phone, and the relay messages between them |
 | Which barcode is which ingredient | each phone, and the relay messages between them |
@@ -304,12 +345,27 @@ Everything shared comes back from the other phone, so move one phone at a time:
 With only one phone using the app there is nowhere for the shared part to wait, so pair a second
 phone before moving the first.
 
+### Updating from the phone itself
+
+`lib/data/updates.dart`. From 0.10.0 a phone needs the computer once more at most. Twice a day
+(when opened, and from the hourly background task) the app asks GitHub for the repository's
+releases, taking the repository from the recipe site's address. When there is a newer `app-v`
+release than its own version, a card on Tonight and in Settings says so, and the background task
+says so once in a notification. "Update" downloads the APK into the app's cache, checks its size
+and the SHA-256 GitHub publishes for it, and hands it to Android's installer, which asks before
+installing. The first time, Android asks the owner to let Dinner Planner install apps. Android
+itself refuses a file that is not signed with the app's key.
+
+Each phone also tells the other which version it runs (`ver/<device>`), and the line at the foot
+of Tonight says when the two differ: an older phone ignores the facts a newer one writes.
+
+Android's developer verification is due to reach the United States some time in 2027; from then a
+tapped APK from an unregistered developer is refused, and adb stays open. Google's free
+"limited distribution" account (up to 20 devices) covers an app like this one: register package
+`dev.dinnerplanner.dinner_planner` with it before then.
+
 ## Not built yet
 
-- Updating without a computer. A phone gets a new version over adb (`install-phones.bat`); a
-  button in the app that fetches the newest release would need the developer registration Android
-  asks for from 2027, so that a tapped APK still installs. To look into.
-- Timers that keep running with the screen off (the kitchen page's timers stop when the phone sleeps).
 - A scan-able code for joining, a home-screen widget, sharing a recipe link into the app.
 - Reading the words on a label or shelf tag when a barcode is on no list; turning cups and
   spoonfuls into packets sold by weight; choosing the store by where the phone is.

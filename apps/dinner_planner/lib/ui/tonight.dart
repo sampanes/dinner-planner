@@ -6,6 +6,7 @@ import '../core/plan.dart';
 import '../core/sync_core.dart';
 import '../data/recipes.dart';
 import 'parts.dart';
+import 'update_card.dart';
 
 class TonightScreen extends StatelessWidget {
   const TonightScreen({super.key, required this.model, required this.onOpen});
@@ -30,6 +31,7 @@ class TonightScreen extends StatelessWidget {
         const SizedBox(height: 4),
         Text(_headline(day), style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700)),
         const SizedBox(height: 16),
+        if (model.updateReady || model.updateProgress != null) ...[UpdateCard(model: model), const SizedBox(height: 12)],
         if (me == null)
           _WhoAreYou(model: model)
         else if (off != null)
@@ -46,6 +48,7 @@ class TonightScreen extends StatelessWidget {
           ],
         ),
         for (var i = 1; i <= 4; i++) _UpcomingRow(model: model, date: dayAfter(now, i)),
+        if (model.weekTally.cooked > 0) ...[const SizedBox(height: 12), _Tally(model: model)],
         const SizedBox(height: 16),
         _ShareLine(model: model),
       ],
@@ -271,6 +274,15 @@ class _TonightCard extends StatelessWidget {
                     child: const Text('What it needs'),
                   ),
                 ],
+                if (slug == null && model.recipes.isNotEmpty) ...[
+                  FilledButton.tonalIcon(
+                    key: const ValueKey('cook-from-here'),
+                    style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52)),
+                    icon: const Icon(Icons.kitchen_outlined),
+                    label: const Text("What can I make with what's here?"),
+                    onPressed: () => pickDinner(context, model, day, 'Dinner tonight', kind: 'here'),
+                  ),
+                ],
                 const SizedBox(height: 8),
                 Row(
                   children: [
@@ -364,6 +376,28 @@ class _UpcomingRow extends StatelessWidget {
   }
 }
 
+/// The week so far, in a line: something to be pleased about.
+class _Tally extends StatelessWidget {
+  const _Tally({required this.model});
+
+  final AppModel model;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final t = model.weekTally;
+    final dinners = '${t.cooked} dinner${t.cooked == 1 ? '' : 's'} at home this week';
+    return Row(
+      key: const ValueKey('week-tally'),
+      children: [
+        Icon(Icons.local_fire_department_outlined, size: 20, color: theme.colorScheme.primary),
+        const SizedBox(width: 8),
+        Expanded(child: Text(t.mine == 0 ? '$dinners.' : '$dinners, ${t.mine} cooked by you.', style: theme.textTheme.bodyMedium)),
+      ],
+    );
+  }
+}
+
 class _ShareLine extends StatelessWidget {
   const _ShareLine({required this.model});
 
@@ -380,7 +414,7 @@ class _ShareLine extends StatelessWidget {
     } else if (model.otherPhones == 0) {
       text = 'Shared, waiting for the other phone to join.';
     } else {
-      text = model.inStep ? 'Both phones show the same plan.' : 'Catching up with the other phone.';
+      text = model.versionNote ?? (model.inStep ? 'Both phones show the same plan.' : 'Catching up with the other phone.');
     }
     return Text(text, textAlign: TextAlign.center, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant));
   }

@@ -87,7 +87,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(model.plan.cook('2026-11-20'), 'pink');
     final notifier = model.session.notifier as SilentNotifier;
-    expect([for (final n in notifier.scheduled) if (!n.quiet && n.ref?.kind != 'week') n.title], ['You cook tomorrow: Baked Penne', "You're cooking tonight: Baked Penne", 'Time to start: Baked Penne']);
+    expect([for (final n in notifier.scheduled) if (!n.quiet && n.ref?.kind != 'week' && n.ref?.kind != 'shop') n.title], ['You cook tomorrow: Baked Penne', "You're cooking tonight: Baked Penne", 'Time to start: Baked Penne']);
 
     final list = find.descendant(of: find.byType(WeekScreen), matching: find.byType(Scrollable)).first;
     await tester.scrollUntilVisible(find.byKey(const ValueKey('day-2026-12-02')), 300, scrollable: list);
@@ -103,7 +103,7 @@ void main() {
     await his.setCook('2026-11-20', 'blue');
     await tester.tap(find.text('Settings'));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.byKey(const ValueKey('share-start')));
+    await tester.scrollUntilVisible(find.byKey(const ValueKey('share-start')), 300, scrollable: find.descendant(of: find.byType(SettingsScreen), matching: find.byType(Scrollable)).first);
     await tester.pumpAndSettle();
     expect(find.byKey(const ValueKey('share-scan')), findsOneWidget, reason: 'joining can scan the code');
     await tester.tap(find.byKey(const ValueKey('share-start')));

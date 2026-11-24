@@ -7,6 +7,7 @@ import 'dart:math';
 import 'package:http/http.dart' as http;
 
 import '../core/nudges.dart';
+import '../core/pantry.dart';
 import '../core/plan.dart';
 import '../core/shopping.dart';
 import '../core/store_order.dart';
@@ -16,6 +17,7 @@ import 'autoplan.dart';
 import 'recipes.dart';
 import 'relay.dart';
 import 'store.dart';
+import 'updates.dart';
 
 /// The recipe site the app reads until Settings names another.
 const String defaultSite = 'https://sampanes.github.io/dinner-planner';
@@ -29,6 +31,19 @@ const String _beatKey = 'dp.openBeat';
 const String _tripKey = 'dp.trip';
 const String _ratesKey = 'dp.rates';
 const String _weekAskKey = 'dp.weekAsk';
+const String _shopAskKey = 'dp.shopAsk';
+const String _timersKey = 'dp.timers';
+const String _updateKey = 'dp.update';
+
+/// `ver/<device>` is the version of the app a phone runs, so that each can
+/// say when the other is behind.
+String versionKey(String dev) => 'ver/$dev';
+
+/// How often the phone asks whether there is a newer version.
+const Duration updateCheckEvery = Duration(hours: 12);
+
+/// A timer started on the recipe page and handed to the phone to ring.
+typedef KitchenTimer = ({int id, String label, DateTime end, String slug});
 
 /// Goes up when the phone starts keeping more of each recipe, so a list saved
 /// by an older version is fetched again instead of waiting to go stale.
@@ -71,6 +86,9 @@ class Session {
   /// The owner waved the "start here" steps away on this phone.
   bool startHidden = false;
 
+  /// Timers started on the recipe page are rung by this phone too.
+  bool ringTimers = true;
+
   List<Recipe> recipes = const [];
   DateTime? recipesAt;
 
@@ -89,6 +107,18 @@ class Session {
 
   /// Where those go; read from the site once per run.
   String? siteTopic;
+
+  /// The kitchen timers still running.
+  final List<KitchenTimer> timers = [];
+
+  /// The newest version GitHub has, when it was last asked, and the version
+  /// this phone has already been told about.
+  Release? newest;
+  DateTime? newestAt;
+  String? newestTold;
+
+  /// True when a newer version than this one is waiting.
+  bool get updateReady => newest != null && compareVersions(newest!.version, appVersion) > 0;
 
   Plan get plan => Plan(core);
 
@@ -115,20 +145,32 @@ class Session {
   /// A staple that has run out, or an extra that is wanted.
   bool wanted(String id) => core.value(wantKey(id)) == '1';
 
-  /// Whether a dinner on [day] still has to have [id] bought for it.
+  /// Whether a dinner on [day] is still without [id]: not ticked for it,
+  /// and not something the house always has.
   bool needs(String id, String day) => core.value(gotKey(id, day)) != '1' && (!staple(id) || wanted(id));
 
+  /// What the house holds, as far as the app has been told.
+  Pantry pantry(DateTime now) => Pantry(core: core, section: section, staple: staple, dinners: pantryDinners(plan, now, (slug) => recipe(slug)?.ingredients), now: now);
+
+  /// Not ticked for the dinner on [day], but bought lately and probably
+  /// still there.
+  bool likely(String id, String day, Pantry pantry) => needs(id, day) && !staple(id) && pantry.has(id, day);
+
   /// What a reminder says about the dinner on [day].
-  DinnerFacts facts(String day, String slug) {
+  DinnerFacts facts(String day, String slug, Pantry pantry) {
     final r = recipe(slug);
     if (r == null) return DinnerFacts(name: recipeName(slug));
-    final thaw = <String>[], missing = <String>[], seen = <String>{};
+    final thaw = <String>[], missing = <String>[], check = <String>[], seen = <String>{};
     for (final i in r.ingredients) {
       if (!seen.add(i.id)) continue;
       if (section(i.id) == 'meat') thaw.add(i.name);
-      if (needs(i.id, day)) missing.add(i.name);
+      if (likely(i.id, day, pantry)) {
+        check.add(i.name);
+      } else if (needs(i.id, day)) {
+        missing.add(i.name);
+      }
     }
-    return DinnerFacts(name: r.name, minutes: r.minutes, thaw: thaw, missing: missing);
+    return DinnerFacts(name: r.name, minutes: r.minutes, thaw: thaw, missing: missing, check: check);
   }
 
   Future<void> load() async {
@@ -152,6 +194,7 @@ class Session {
       final k = settings['usdaKey'];
       usdaKey = k is String ? k : '';
       startHidden = settings['startHidden'] == true;
+      ringTimers = settings['ringTimers'] != false;
     }
     final trip = await store.readJson(_tripKey);
     final tripWhere = trip is Map ? trip['store'] : null, tripWhen = trip is Map ? trip['at'] : null, tripWhat = trip is Map ? trip['last'] : null;
@@ -182,6 +225,61 @@ class Session {
         siteQueue.addAll([for (final e in queue) if (e is Map && e['k'] is String && e['slug'] is String) e.cast<String, Object?>()]);
       }
     }
+    final kept = await store.readJson(_timersKey);
+    timers.clear();
+    if (kept is List) {
+      for (final t in kept) {
+        if (t is Map && t['id'] is int && t['label'] is String && t['end'] is int) {
+          timers.add((id: t['id'] as int, label: t['label'] as String, end: DateTime.fromMillisecondsSinceEpoch(t['end'] as int), slug: t['slug'] is String ? t['slug'] as String : ''));
+        }
+      }
+    }
+    final update = await store.readJson(_updateKey);
+    newest = update is Map ? Release.fromJson(update['release']) : null;
+    final asked = update is Map ? update['at'] : null, told = update is Map ? update['told'] : null;
+    newestAt = asked is int ? DateTime.fromMillisecondsSinceEpoch(asked) : null;
+    newestTold = told is String ? told : null;
+  }
+
+  Future<void> saveTimers() => store.writeJson(_timersKey, [for (final t in timers) {'id': t.id, 'label': t.label, 'end': t.end.millisecondsSinceEpoch, 'slug': t.slug}]);
+
+  Future<void> _saveUpdate() => store.writeJson(_updateKey, {'release': newest?.toJson(), 'at': newestAt?.millisecondsSinceEpoch, 'told': newestTold});
+
+  /// Says which version this phone runs, where the other phone can read it.
+  /// True when that was news.
+  bool noteVersion(DateTime now) => core.set(versionKey(core.dev), appVersion, now);
+
+  /// The oldest version another phone of the household says it runs. '' when
+  /// one of them has never said, which only a version before 0.10 does; null
+  /// when there is no other phone.
+  String? get otherVersion {
+    String? oldest;
+    for (final dev in core.phones) {
+      final v = core.value(versionKey(dev));
+      if (v is! String || v.isEmpty) return '';
+      if (oldest == null || compareVersions(v, oldest) < 0) oldest = v;
+    }
+    return oldest;
+  }
+
+  /// Asks GitHub for the newest version, at most every [updateCheckEvery]
+  /// unless [force]. True when a version newer than this one was found that
+  /// the phone had not been told about before.
+  Future<bool> checkUpdate(DateTime now, {bool force = false}) async {
+    final last = newestAt;
+    if (!force && last != null && now.difference(last).abs() < updateCheckEvery) return false;
+    try {
+      final found = await fetchNewest(client, site);
+      if (found == null) return false;
+      newest = found;
+    } on Exception {
+      return false;
+    }
+    newestAt = now;
+    final fresh = updateReady && newestTold != newest!.version;
+    if (fresh) newestTold = newest!.version;
+    await _saveUpdate();
+    return fresh;
   }
 
   Future<void> saveCore() => store.writeJson(_coreKey, core.toJson());
@@ -192,7 +290,7 @@ class Session {
 
   Future<void> saveTrip() => store.writeJson(_tripKey, tripStore == null ? null : {'store': tripStore, 'at': tripAt?.millisecondsSinceEpoch, 'last': tripLast});
 
-  Future<void> saveSettings() => store.writeJson(_settingsKey, {'site': site, 'times': times.toJson(), 'usdaKey': usdaKey, if (startHidden) 'startHidden': true});
+  Future<void> saveSettings() => store.writeJson(_settingsKey, {'site': site, 'times': times.toJson(), 'usdaKey': usdaKey, if (startHidden) 'startHidden': true, if (!ringTimers) 'ringTimers': false});
 
   Future<void> saveRates() => store.writeJson(_ratesKey, {
         'on': {for (final e in rated.entries) e.key: [e.value.day, e.value.stars]},
@@ -224,7 +322,7 @@ class Session {
       }
       for (final out in core.outbox(now)) {
         final line = headline(out.entries, plan, recipeName, now);
-        final ok = await relay.publish(h, title: line.title, body: line.body, payload: out.payload, quiet: out.entries.isEmpty);
+        final ok = await relay.publish(h, title: line.title, body: line.body, payload: out.payload, quiet: out.entries.every((e) => e.key.startsWith('ver/')));
         if (!ok) {
           error = 'The relay refused a message.';
           break;
@@ -248,11 +346,57 @@ class Session {
       await notifier.schedule(const []);
       return;
     }
-    final nudges = planNudges(me: who, now: now, times: times, plan: plan, facts: facts, rated: (day, slug) => rated[slug]?.day == day);
+    final house = pantry(now);
+    final nudges = planNudges(me: who, now: now, times: times, plan: plan, facts: (day, slug) => facts(day, slug, house), rated: (day, slug) => rated[slug]?.day == day);
     final week = await _weekOffer(now);
     if (week != null) nudges.add(week);
+    final shop = await _shopOffer(now, house);
+    if (shop != null) nudges.add(shop);
+    final before = timers.length;
+    timers.removeWhere((t) => !t.end.isAfter(now));
+    if (timers.length != before) await saveTimers();
+    nudges.addAll([for (final t in timers) timerNudge(t.id, t.end, t.label, slug: t.slug)]);
     nudges.sort((a, b) => a.when.compareTo(b.when));
     await notifier.schedule(nudges);
+  }
+
+  /// What the dinners from tomorrow through seven days on still need bought:
+  /// the things, how many dinners, and the first day one is needed.
+  ({List<String> things, int dinners, DateTime? first}) toBuy(DateTime now, Pantry house) {
+    final things = <String, String>{};
+    var dinners = 0;
+    DateTime? first;
+    for (var i = 1; i <= 7; i++) {
+      final date = dayAfter(now, i), day = dayText(date);
+      final r = recipe(plan.meal(day));
+      if (r == null) continue;
+      var some = false;
+      for (final x in r.ingredients) {
+        if (needs(x.id, day) && !likely(x.id, day, house)) {
+          things[x.id] = x.name;
+          some = true;
+        }
+      }
+      if (some) {
+        dinners++;
+        first ??= date;
+      }
+    }
+    return (things: things.values.toList(), dinners: dinners, first: first);
+  }
+
+  /// "There is shopping to do", the morning after there is some, and then
+  /// every few days while there still is. Tonight's dinner is left to the
+  /// cook's own reminders.
+  Future<Nudge?> _shopOffer(DateTime now, Pantry house) async {
+    final buy = toBuy(now, house);
+    final first = buy.first;
+    if (first == null) return null;
+    final kept = int.tryParse(await store.read(_shopAskKey) ?? '');
+    final last = kept == null ? null : DateTime.fromMillisecondsSinceEpoch(kept);
+    final when = shopAskTime(now: now, morning: times.morning, lastAsk: last);
+    if (when != last) await store.write(_shopAskKey, '${when.millisecondsSinceEpoch}');
+    return shopNudge(when, things: buy.things, dinners: buy.dinners, first: first);
   }
 
   /// The offer of a new week, when the plan is about to run out. When it was

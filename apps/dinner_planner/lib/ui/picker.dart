@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../app_model.dart';
 import '../data/recipes.dart';
+import '../core/nudges.dart' show listText;
 import '../data/suggest.dart';
+import 'house_page.dart';
 import 'parts.dart';
 
 /// The kinds of dinner, in the order the chips show them; anything else the
@@ -17,7 +19,7 @@ const int _enoughToSuggest = 6;
 /// Pops with the recipe's slug, with '' to clear the day, or with null when
 /// backed out of.
 class RecipePicker extends StatefulWidget {
-  const RecipePicker({super.key, required this.model, required this.title, this.day, this.current});
+  const RecipePicker({super.key, required this.model, required this.title, this.day, this.current, this.kind});
 
   final AppModel model;
   final String title;
@@ -26,8 +28,11 @@ class RecipePicker extends StatefulWidget {
   final String? day;
   final String? current;
 
-  static Future<String?> open(BuildContext context, AppModel model, {required String title, String? day, String? current}) =>
-      Navigator.of(context).push<String>(MaterialPageRoute(builder: (_) => RecipePicker(model: model, title: title, day: day, current: current)));
+  /// The chip to open on: 'here' for "what can I cook with what's here".
+  final String? kind;
+
+  static Future<String?> open(BuildContext context, AppModel model, {required String title, String? day, String? current, String? kind}) =>
+      Navigator.of(context).push<String>(MaterialPageRoute(builder: (_) => RecipePicker(model: model, title: title, day: day, current: current, kind: kind)));
 
   @override
   State<RecipePicker> createState() => _RecipePickerState();
@@ -35,13 +40,15 @@ class RecipePicker extends StatefulWidget {
 
 class _RecipePickerState extends State<RecipePicker> {
   String _query = '';
-  String? _kind;
+  late String? _kind = widget.kind;
   int _turn = 0;
   final Map<String, String> _text = {};
 
   bool _is(Recipe r, String kind) => switch (kind) {
         'fav' => r.pink + r.blue >= 8,
         'new' => r.pink + r.blue == 0,
+        // Every recipe, in another order: the ones the house can make first.
+        'here' => true,
         _ => r.tags.contains(kind) || r.categories.contains(kind),
       };
 
@@ -54,6 +61,7 @@ class _RecipePickerState extends State<RecipePicker> {
       });
     final rated = all.any((r) => r.pink + r.blue > 0);
     return [
+      if (all.isNotEmpty) ('here', "What's here"),
       if (all.any((r) => _is(r, 'fav'))) ('fav', 'Favorites'),
       if (rated && all.any((r) => _is(r, 'new'))) ('new', 'Not tried yet'),
       for (final k in kinds) (k, k),
@@ -75,7 +83,9 @@ class _RecipePickerState extends State<RecipePicker> {
         final searching = _query.trim().isNotEmpty;
         final list = searching ? [for (final r in ofKind) if (searchMatches(_text.putIfAbsent(r.slug, () => searchText(r)), _query)) r] : ofKind;
 
-        final ranked = !searching && all.length >= _enoughToSuggest ? model.suggestFor(widget.day, ofKind) : const <Suggestion>[];
+        final here = kind == 'here';
+        final fromHere = here ? model.cookFromHere(list) : const <HereIdea>[];
+        final ranked = !here && !searching && all.length >= _enoughToSuggest ? model.suggestFor(widget.day, ofKind) : const <Suggestion>[];
         // "Show others" walks down the ranking three at a time, then starts over.
         final ideas = ranked.skip(ranked.isEmpty ? 0 : (_turn % (ranked.length / 3).ceil()) * 3).take(3).toList();
 
@@ -169,7 +179,25 @@ class _RecipePickerState extends State<RecipePicker> {
                         for (final s in ideas) tile(s.recipe, why: s.why.isEmpty ? 'Worth a turn' : s.why.take(2).join(' · ')),
                         label(kind == null ? 'All ${all.length} recipes' : '${ofKind.length} of ${all.length} recipes'),
                       ],
-                      for (final r in list) tile(r),
+                      if (here) ...[
+                        if (model.pantryUntold)
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('The app does not know what is in the house yet. Ticking the shopping list teaches it; so does saying what is there now.', key: const ValueKey('here-untold'), style: TextStyle(color: faded)),
+                                const SizedBox(height: 8),
+                                FilledButton.tonal(key: const ValueKey('here-say'), onPressed: () => HousePage.open(context, model), child: const Text("Say what's in the house")),
+                              ],
+                            ),
+                          )
+                        else
+                          label('The least to buy first', action: TextButton(key: const ValueKey('here-edit'), onPressed: () => HousePage.open(context, model), child: const Text("What's in the house"))),
+                        for (final h in fromHere)
+                          tile(h.recipe, why: h.missing.isEmpty ? 'Everything is in the house' : 'Have ${h.total - h.missing.length} of ${h.total} \u00b7 need ${listText(h.missing)}'),
+                      ] else
+                        for (final r in list) tile(r),
                       if (list.isEmpty) const Padding(padding: EdgeInsets.all(24), child: Center(child: Text('Nothing matches.'))),
                     ],
                   ),
@@ -183,8 +211,8 @@ class _RecipePickerState extends State<RecipePicker> {
 }
 
 /// Opens the picker for [day] and applies the choice.
-Future<void> pickDinner(BuildContext context, AppModel model, String day, String title) async {
-  final choice = await RecipePicker.open(context, model, title: title, day: day, current: model.plan.meal(day));
+Future<void> pickDinner(BuildContext context, AppModel model, String day, String title, {String? kind}) async {
+  final choice = await RecipePicker.open(context, model, title: title, day: day, current: model.plan.meal(day), kind: kind);
   if (choice == null) return;
   await model.setMeal(day, choice.isEmpty ? null : choice);
 }

@@ -111,6 +111,25 @@ const fromApp = (() => {
     } catch (e) { return marked; }
 })();
 
+// "ring=1" comes with it unless the phone's owner switched it off: a timer
+// started here is then also handed to the app, which rings it as a
+// notification, so it is heard with the screen off or this page shut. The
+// app shows "Rings at 5:42" for a moment and puts this page back in front.
+const ringOnPhone = fromApp && (() => {
+    const marked = /[?&]ring=1(&|$)/.test(location.search);
+    try {
+        if (marked) sessionStorage.setItem('dp.ring', '1');
+        return sessionStorage.getItem('dp.ring') === '1';
+    } catch (e) { return marked; }
+})();
+
+// The app knows a timer by a short whole number; end 0 stops it.
+function timerLink(t, end) {
+    const slug = state.recipe ? state.recipe.slug : '';
+    return `dinnerplanner://open/timer?id=${Math.floor(t.id) % 100000}&end=${Math.round(end)}&label=${encodeURIComponent(t.label)}&slug=${encodeURIComponent(slug)}`;
+}
+function handToPhone(t, end) { if (ringOnPhone) location.href = timerLink(t, end); }
+
 function noteLink(slug, stepText) {
     return `dinnerplanner://open/note?slug=${encodeURIComponent(slug)}&step=${House.stepId(stepText)}`;
 }
@@ -860,9 +879,11 @@ function beepOnce() {
 
 function startTimer(label, seconds) {
     unlockAudio();
-    timers.push({ id: Date.now() + Math.random(), label, end: Date.now() + seconds * 1000, fired: false, dismissed: false });
+    const t = { id: Date.now() + Math.random(), label, end: Date.now() + seconds * 1000, fired: false, dismissed: false };
+    timers.push(t);
     saveTimers();
     tickTimers();
+    handToPhone(t, t.end);
 }
 
 function remaining(t) { return Math.max(0, Math.ceil((t.end - Date.now()) / 1000)); }
@@ -921,11 +942,13 @@ function renderTimerSheet() {
         h('div', { class: 'tr-name' }, t.label),
         h('div', { class: 'tr-time' }, t.fired ? 'DONE' : fmt(remaining(t))),
         h('div', { class: 'tr-btns' },
-            !t.fired && h('button', { class: 'big-btn secondary', type: 'button', onclick: () => { t.end += 60000; saveTimers(); tickTimers(); } }, '+1 min'),
+            !t.fired && h('button', { class: 'big-btn secondary', type: 'button', onclick: () => { t.end += 60000; saveTimers(); tickTimers(); handToPhone(t, t.end); } }, '+1 min'),
             h('button', { class: 'big-btn danger', type: 'button', onclick: () => {
+                const running = !t.fired;
                 timers = timers.filter(x => x !== t); saveTimers();
                 if (!timers.some(x => x.fired)) { stopBeeping(); $('alarm').hidden = true; }
                 tickTimers();
+                if (running) handToPhone(t, 0);
             } }, t.fired ? 'Clear' : 'Cancel'))));
     $('timerSheetList').replaceChildren(...(rows.length ? rows : [h('p', { class: 'empty' }, 'No timers running.')]));
 }

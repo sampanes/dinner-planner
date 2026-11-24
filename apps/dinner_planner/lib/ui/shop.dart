@@ -7,6 +7,7 @@ import '../core/shopping.dart';
 import '../core/store_order.dart';
 import '../core/sync_core.dart';
 import '../data/products.dart';
+import 'house_page.dart';
 import 'match.dart';
 import 'parts.dart' show say;
 import 'scan.dart';
@@ -52,12 +53,18 @@ class ShopScreen extends StatelessWidget {
     }
     final item = id;
     final name = model.buy(item) ?? _cap(names[item] ?? item);
-    final line = [for (final l in model.shopping) if (l.id == item) l].firstOrNull;
+    final line = [for (final l in [...model.shopping, ...model.shoppingLikely]) if (l.id == item) l].firstOrNull;
     if (line == null) {
       // Out of a store, scanning an extra means it has run out.
       if (model.extras.containsKey(item) && model.shoppingAt == null) {
         await model.wantExtra(item, true);
         return (text: 'On the list: $name', undo: () => model.wantExtra(item, false));
+      }
+      // A packet from the shelf at home that no dinner is waiting for: now
+      // the app knows it is there.
+      if (model.ingredientNames.containsKey(item) && !model.staple(item) && !model.here(item)) {
+        await model.setHere(item, true);
+        return (text: 'In the house: $name', undo: () => model.setHere(item, false));
       }
       return (text: '$name: not on the list right now.', undo: null);
     }
@@ -78,12 +85,13 @@ class ShopScreen extends StatelessWidget {
     final now = model.now;
     final groups = model.shoppingGroups;
     final check = [for (final l in model.shopping) if (l.loose) l];
+    final likely = model.shoppingLikely;
     final done = model.shoppingGot;
     final store = model.shoppingAt;
     final days = [for (var i = 0; i < 14; i++) dayText(dayAfter(now, i))];
     final planned = [for (final d in days) if (model.plan.meal(d) != null) d];
     final soft = theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant);
-    final any = groups.isNotEmpty || check.isNotEmpty || done.isNotEmpty;
+    final any = groups.isNotEmpty || check.isNotEmpty || done.isNotEmpty || likely.isNotEmpty;
 
     Widget heading(String text) => Padding(
           padding: const EdgeInsets.fromLTRB(0, 20, 0, 4),
@@ -106,6 +114,8 @@ class ShopScreen extends StatelessWidget {
         Row(
           children: [
             Expanded(child: Text('Shopping list', style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700))),
+            if (model.recipes.isNotEmpty)
+              IconButton(key: const ValueKey('shop-house'), tooltip: 'What is in the house', icon: const Icon(Icons.kitchen_outlined), onPressed: () => HousePage.open(context, model)),
             IconButton(key: const ValueKey('shop-add'), tooltip: 'Add something else', icon: const Icon(Icons.add), onPressed: () => _add(context)),
             if (model.recipes.isNotEmpty)
               IconButton(key: const ValueKey('shop-scan'), tooltip: 'Scan packets', icon: const Icon(Icons.qr_code_scanner), onPressed: () => scanMany(context, _scanned)),
@@ -139,7 +149,12 @@ class ShopScreen extends StatelessWidget {
           heading(sections[g.section] ?? g.section),
           for (final l in g.lines) _ShopTile(model: model, line: l, got: false),
         ],
-        if (groups.isEmpty && done.isNotEmpty) Padding(padding: const EdgeInsets.symmetric(vertical: 12), child: Text('Everything is in the house.', style: theme.textTheme.titleMedium)),
+        if (groups.isEmpty && likely.isEmpty && done.isNotEmpty) Padding(padding: const EdgeInsets.symmetric(vertical: 12), child: Text('Everything is in the house.', style: theme.textTheme.titleMedium)),
+        if (likely.isNotEmpty) ...[
+          heading('Probably in the house'),
+          Text('The app believes these are still there, so they are not on the list to buy. Tap one when you have seen it; the cross if it is gone.', key: const ValueKey('likely-hint'), style: soft),
+          for (final l in likely) _LikelyTile(model: model, line: l),
+        ],
         if (check.isNotEmpty) heading('Check you have'),
         for (final l in check) _ShopTile(model: model, line: l, got: false),
         if (done.isNotEmpty) heading('Got'),
@@ -387,6 +402,68 @@ class _ShopTile extends StatelessWidget {
               tooltip: 'What you actually buy',
               icon: Icon(known ? Icons.sell : Icons.sell_outlined, color: known ? theme.colorScheme.primary : faded),
               onPressed: () => editProduct(context, model, id: line.id, name: line.name),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// A line the app believes is already in the house: bought lately for
+/// another dinner, or said to be there. A tap agrees; the cross says it is
+/// gone and puts it on the list to buy.
+class _LikelyTile extends StatelessWidget {
+  const _LikelyTile({required this.model, required this.line});
+
+  final AppModel model;
+  final ShopLine line;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final faded = theme.colorScheme.onSurfaceVariant;
+    final since = model.hereSince(line.id);
+    final dinners = {for (final u in line.uses) model.session.recipeName(u.slug)}.join(', ');
+    final name = model.buy(line.id) ?? _cap(line.name);
+    return InkWell(
+      key: ValueKey('likely-${line.id}'),
+      borderRadius: BorderRadius.circular(12),
+      onTap: () async {
+        final messenger = ScaffoldMessenger.of(context);
+        await model.setGot(line, true, fresh: false);
+        say(messenger, '$name: ticked for $dinners.', () => model.setGot(line, false));
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(padding: const EdgeInsets.fromLTRB(4, 2, 12, 0), child: Icon(Icons.kitchen_outlined, color: faded)),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text.rich(
+                    TextSpan(children: [
+                      if (line.totals.isNotEmpty) TextSpan(text: '${line.amountText}  ', style: TextStyle(color: faded, fontWeight: FontWeight.w700)),
+                      TextSpan(text: name),
+                    ]),
+                    style: theme.textTheme.titleMedium,
+                  ),
+                  Text([if (since != null) 'In the house since $since', if (dinners.isNotEmpty) dinners].join(' \u00b7 '), maxLines: 2, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodySmall?.copyWith(color: faded)),
+                ],
+              ),
+            ),
+            IconButton(
+              key: ValueKey('likely-gone-${line.id}'),
+              tooltip: 'It is gone: put it on the list',
+              icon: Icon(Icons.close, color: faded),
+              onPressed: () async {
+                final messenger = ScaffoldMessenger.of(context);
+                final done = await model.notHere(line.id, name: name);
+                say(messenger, done.text, done.undo);
+              },
             ),
           ],
         ),

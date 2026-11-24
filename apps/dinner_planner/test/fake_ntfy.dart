@@ -45,6 +45,12 @@ class FakeNtfy {
   ]);
   /// Where the recipe site takes ratings (its data/source/kitchen.json).
   String kitchenJson = jsonEncode({'ntfyTopic': 'dinner-site-0123456789abcdef', 'people': {'pink': 'Pink', 'blue': 'Blue'}});
+  /// What GitHub lists as the project's releases, and the file each one's
+  /// download link serves; null answers 404, as for a project with none.
+  String? releasesJson;
+  final Map<String, List<int>> downloads = {};
+  final List<String> asked = [];
+
   String logJson = jsonEncode({'plan': {'id': 'p1', 'slugs': ['beef-chili', 'baked-penne'], 'at': '2026-11-18T00:00:00Z'}, 'cooked': [], 'rated': {}});
 
   http.Client client() => MockClient((request) async {
@@ -57,6 +63,15 @@ class FakeNtfy {
           final p = openFoodFacts[code];
           if (p == null) return http.Response(jsonEncode({'code': code, 'status': 0, 'status_verbose': 'product not found'}), 404, headers: json);
           return http.Response(jsonEncode({'code': code, 'status': 1, 'product': p}), 200, headers: json);
+        }
+        if (request.url.host == 'api.github.com') {
+          asked.add(path);
+          final list = releasesJson;
+          return list == null ? http.Response('{}', 404) : http.Response(list, 200, headers: json);
+        }
+        if (request.url.host == 'github.com') {
+          final bytes = downloads[path];
+          return bytes == null ? http.Response('not found', 404) : http.Response.bytes(bytes, 200);
         }
         if (request.url.host == 'api.nal.usda.gov') {
           final code = request.url.queryParameters['query'];

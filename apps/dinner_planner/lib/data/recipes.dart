@@ -106,8 +106,9 @@ Future<List<String>> fetchKitchenPlan(http.Client client, String site) async {
 
 /// The page that walks through a recipe step by step. "app=1" tells the page
 /// it was opened from the phone app, so it offers "Note" on each step, which
-/// comes back here ([noteLink]).
-Uri kitchenPage(String site, String slug) => Uri.parse('${_trim(site)}/kitchen.html?app=1#/r/${Uri.encodeComponent(slug)}');
+/// comes back here ([noteLink]). With [ring] it also hands each timer it
+/// starts to the app, which rings it whatever the screen is doing.
+Uri kitchenPage(String site, String slug, {bool ring = true}) => Uri.parse('${_trim(site)}/kitchen.html?app=1${ring ? '&ring=1' : ''}#/r/${Uri.encodeComponent(slug)}');
 
 /// The topic the recipe site's own changes travel on (ratings, "we cooked
 /// this"); the site's hourly job folds them into its data. Null when the site

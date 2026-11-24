@@ -9,6 +9,10 @@
          kind up to an hour late. -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" android:maxSdkVersion="32"/>
     <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
+    <!-- A new version without a computer: the app fetches it from the
+         project's releases and hands it to Android's installer, which asks
+         the owner before installing. -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
 
     <!-- allowBackup and the two rule files: Android's own backup keeps what
          the app holds (the plan, the list, the stores, the sharing code), so a
@@ -37,8 +41,10 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-            <!-- The kitchen page's "Note" button on a step:
-                 dinnerplanner://open/note?slug=...&step=... -->
+            <!-- From the kitchen page: "Note" on a step
+                 (dinnerplanner://open/note?slug=...&step=...) and a timer
+                 handed over to be rung by the phone
+                 (dinnerplanner://open/timer?id=...&end=...). -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -60,6 +66,16 @@
                 <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
             </intent-filter>
         </receiver>
+
+        <!-- Lets Android's installer read a downloaded update, and nothing
+             else (res/xml/file_paths.xml). -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.files"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths"/>
+        </provider>
 
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

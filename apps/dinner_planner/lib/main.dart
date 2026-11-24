@@ -10,6 +10,7 @@ import 'data/store.dart';
 import 'notify/notifier.dart';
 import 'ui/home.dart';
 import 'ui/note_page.dart';
+import 'ui/timer_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,8 +34,12 @@ class DinnerApp extends StatelessWidget {
   /// (`dinnerplanner://open/note?slug=...`) and Flutter passes on only its
   /// path and query (`/note?slug=...`) when the app is already running.
   Route<void>? _linked(String? name) {
-    final target = model.noteLink(Uri.tryParse(name ?? ''));
-    return target == null ? null : MaterialPageRoute<void>(fullscreenDialog: true, builder: (_) => NotePage(model: model, target: target));
+    final link = Uri.tryParse(name ?? '');
+    final target = model.noteLink(link);
+    if (target != null) return MaterialPageRoute<void>(fullscreenDialog: true, builder: (_) => NotePage(model: model, target: target));
+    // A timer the kitchen page hands over: taken, said, and back to the page.
+    final timer = model.timerLink(link);
+    return timer == null ? null : MaterialPageRoute<void>(fullscreenDialog: true, builder: (_) => TimerPage(model: model, ask: timer));
   }
 
   @override

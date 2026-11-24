@@ -105,6 +105,20 @@ class LocalNotifier implements Notifier {
         ),
       );
 
+  /// A kitchen timer: as loud as Android lets a notification be.
+  static NotificationDetails _timer(String body) => NotificationDetails(
+        android: AndroidNotificationDetails(
+          'timers',
+          'Kitchen timers',
+          channelDescription: 'A timer started on the recipe page has run out.',
+          importance: Importance.max,
+          priority: Priority.max,
+          category: AndroidNotificationCategory.alarm,
+          color: _accent,
+          styleInformation: BigTextStyleInformation(body),
+        ),
+      );
+
   static NotificationDetails _question(String body, List<NudgeButton> buttons) => NotificationDetails(
         android: AndroidNotificationDetails(
           'questions',
@@ -207,7 +221,7 @@ class LocalNotifier implements Notifier {
         title: n.title,
         body: n.body,
         scheduledDate: tz.TZDateTime.from(n.when, tz.local),
-        notificationDetails: n.quiet ? _question(n.body, n.buttons) : _reminder(n.body, n.buttons),
+        notificationDetails: n.loud ? _timer(n.body) : (n.quiet ? _question(n.body, n.buttons) : _reminder(n.body, n.buttons)),
         payload: n.ref?.text,
         androidScheduleMode: exact ? AndroidScheduleMode.exactAllowWhileIdle : AndroidScheduleMode.inexactAllowWhileIdle,
       );

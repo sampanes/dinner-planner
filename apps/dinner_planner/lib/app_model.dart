@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'core/nudges.dart';
+import 'core/pantry.dart';
 import 'core/plan.dart';
 import 'core/shopping.dart';
 import 'core/store_order.dart';
@@ -17,6 +18,7 @@ import 'data/recipes.dart';
 import 'data/relay.dart';
 import 'data/session.dart';
 import 'data/suggest.dart';
+import 'data/updates.dart';
 import 'notify/notifier.dart';
 
 /// What a new phone is walked through, in the order a first week brings
@@ -60,14 +62,25 @@ typedef Done = ({String text, Future<void> Function() undo});
 /// (its place in the recipe and its words) unless it is about the whole thing.
 typedef NoteTarget = ({String slug, int? place, String? step});
 
+/// A timer the kitchen page hands over: which one, what it is for, when it
+/// ends (null to stop it), and the recipe it belongs to.
+typedef TimerAsk = ({int id, String label, DateTime? end, String slug});
+
+/// One thing the recipes use, and whether the house holds it.
+typedef HouseItem = ({String id, String name, bool here});
+
 class AppModel extends ChangeNotifier {
-  AppModel(this.session, {DateTime Function()? clock, Future<bool> Function(Uri page)? open})
+  AppModel(this.session, {DateTime Function()? clock, Future<bool> Function(Uri page)? open, Installer? installer})
       : _clock = clock ?? DateTime.now,
-        _open = open ?? ((page) => launchUrl(page, mode: LaunchMode.externalApplication));
+        _open = open ?? ((page) => launchUrl(page, mode: LaunchMode.externalApplication)),
+        installer = installer ?? AndroidInstaller();
 
   final Session session;
   final DateTime Function() _clock;
   final Future<bool> Function(Uri page) _open;
+
+  /// Android's part of an update, and of stepping back behind the browser.
+  final Installer installer;
   final List<Ask> _asks = [];
 
   bool ready = false;
@@ -94,6 +107,7 @@ class AppModel extends ChangeNotifier {
 
   Future<void> start() async {
     await session.load();
+    if (session.noteVersion(now)) await session.saveCore();
     ready = true;
     notifyListeners();
     session.notifier.onTap = (tap) => unawaited(handleTap(tap));
@@ -114,7 +128,16 @@ class AppModel extends ChangeNotifier {
   }
 
   /// The recipe's step-by-step page, in the browser.
-  Future<void> openRecipe(String slug) => _open(kitchenPage(site, slug));
+  Future<void> openRecipe(String slug) => _open(kitchenPage(site, slug, ring: session.ringTimers));
+
+  /// Whether timers started on the recipe page are rung by this phone too.
+  bool get ringTimers => session.ringTimers;
+
+  Future<void> setRingTimers(bool on) async {
+    session.ringTimers = on;
+    await session.saveSettings();
+    notifyListeners();
+  }
 
   /// A reminder, or one of its buttons, was tapped.
   Future<void> handleTap(NudgeTap tap) async {
@@ -150,16 +173,24 @@ class AppModel extends ChangeNotifier {
         switch (ref.kind) {
           case 'start' when slug != null && ref.day == today && plan.meal(today) == slug:
             await openRecipe(slug);
-          case 'eve' when slug != null && session.facts(ref.day, slug).missing.isNotEmpty:
+          case 'eve' when slug != null && _unsure(session.facts(ref.day, slug, pantry)):
             _ask(const AskTab(2));
           case 'week':
             _ask(const AskTab(1));
             _ask(const AskDraft());
+          case 'shop':
+            _ask(const AskTab(2));
+          case 'update':
+            _ask(const AskTab(3));
+          case 'timer' when slug != null:
+            await openRecipe(slug);
           default:
             _ask(const AskTab(0));
         }
     }
   }
+
+  static bool _unsure(DinnerFacts f) => f.missing.isNotEmpty || f.check.isNotEmpty;
 
   /// What a link that opened the app is asking for. The kitchen page's
   /// "Note" button is the only one: `dinnerplanner://open/note?slug=...&step=...`,
@@ -175,10 +206,39 @@ class AppModel extends ChangeNotifier {
     return (slug: slug, place: at < 0 ? null : at, step: at < 0 ? null : steps[at]);
   }
 
+  /// A timer the kitchen page hands over to be rung by the phone:
+  /// `dinnerplanner://open/timer?id=..&label=..&end=<ms>&slug=..`, where an
+  /// end of 0 stops it. Null for anything else, and for an end that makes no
+  /// sense (already past, or more than half a day off).
+  TimerAsk? timerLink(Uri? link) {
+    if (link == null || !(link.path.endsWith('/timer') || link.path == 'timer' || link.host == 'timer')) return null;
+    final q = link.queryParameters;
+    final id = int.tryParse(q['id'] ?? ''), end = int.tryParse(q['end'] ?? '');
+    if (id == null || end == null) return null;
+    final when = end <= 0 ? null : DateTime.fromMillisecondsSinceEpoch(end);
+    if (when != null && (!when.isAfter(now) || when.difference(now) > const Duration(hours: 12))) return null;
+    final label = (q['label'] ?? '').replaceAll(RegExp(r'\s+'), ' ').trim();
+    final slug = q['slug'] ?? '';
+    return (id: id, label: label.isEmpty ? 'Timer' : _cut(label, 40), end: when, slug: slug.length > 60 ? '' : slug);
+  }
+
+  /// Sets, moves or stops a kitchen timer. The phone rings it when it ends,
+  /// whatever the screen is doing by then.
+  Future<void> setTimer(TimerAsk ask) async {
+    session.timers.removeWhere((t) => t.id == ask.id);
+    final end = ask.end;
+    if (end != null) session.timers.add((id: ask.id, label: ask.label, end: end, slug: ask.slug));
+    await session.saveTimers();
+    await session.replan(now);
+    notifyListeners();
+  }
+
   /// The app came to the front: pick up anything the background task wrote,
   /// then keep in step while it stays open.
   Future<void> wake() async {
     await session.load();
+    if (session.noteVersion(now)) await session.saveCore();
+    unawaited(session.checkUpdate(now).then((_) => notifyListeners()));
     await session.beat(now);
     notifyListeners();
     _poll?.cancel();
@@ -314,6 +374,11 @@ class AppModel extends ChangeNotifier {
         if (session.needs(i.id, day)) gotKey(i.id, day): '1',
     };
     if (values.isEmpty) return null;
+    // Said to be here, so it is in the house for other dinners too.
+    final house = pantry;
+    for (final i in recipe.ingredients) {
+      if (session.needs(i.id, day) && !staple(i.id) && !house.has(i.id, today())) values[inKey(i.id)] = today();
+    }
     final undo = await _setAll(values);
     return (text: 'Everything for ${recipe.name} is ticked.', undo: undo);
   }
@@ -345,7 +410,77 @@ class AppModel extends ChangeNotifier {
     }
     if (count == 0) return null;
     final undo = await _setAll(values);
-    return (text: '$count dinner${count == 1 ? '' : 's'} planned. The list has what they need.', undo: undo);
+    final buy = session.toBuy(now, pantry).things.length;
+    final list = buy == 0 ? 'Everything they need is in the house.' : '$buy thing${buy == 1 ? '' : 's'} to buy, on the list.';
+    return (text: '$count dinner${count == 1 ? '' : 's'} planned. $list', undo: undo);
+  }
+
+  /// The dinners eaten at home this week (Monday on) and how many of them
+  /// this phone's owner cooked. Tonight counts once dinner time has come.
+  ({int cooked, int mine}) get weekTally {
+    var cooked = 0, mine = 0;
+    for (var i = 1 - now.weekday; i <= 0; i++) {
+      if (i == 0 && !afterDinner) break;
+      final day = dayText(dayAfter(now, i));
+      if (plan.meal(day) == null) continue;
+      cooked++;
+      if (me != null && plan.cook(day) == me) mine++;
+    }
+    return (cooked: cooked, mine: mine);
+  }
+
+  /// What to say when the two phones run different versions, or null.
+  String? get versionNote {
+    final other = session.otherVersion;
+    if (other == null) return null;
+    if (other.isEmpty) return 'The other phone has an older version of the app, so some of this will not show there.';
+    final c = compareVersions(other, appVersion);
+    if (c < 0) return 'The other phone has an older version ($other), so some of this will not show there.';
+    if (c > 0) return 'The other phone has a newer version ($other) than this one.';
+    return null;
+  }
+
+  /// A newer version is waiting on GitHub.
+  bool get updateReady => session.updateReady;
+
+  /// The newest version there is, as far as the phone knows.
+  String? get newestVersion => session.newest?.version;
+
+  /// How far along the download is (0 to 1) while an update is being fetched.
+  double? updateProgress;
+
+  /// Why the last update did not go through, in a sentence.
+  String? updateError;
+
+  /// Asks GitHub now, whenever it was last asked.
+  Future<void> checkForUpdate() async {
+    await session.checkUpdate(now, force: true);
+    notifyListeners();
+  }
+
+  /// Fetches the newest version and hands it to Android, which asks the
+  /// owner before putting it in. Everything the app holds is kept.
+  Future<void> update() async {
+    final release = session.newest;
+    if (release == null || updateProgress != null) return;
+    updateProgress = 0;
+    updateError = null;
+    notifyListeners();
+    try {
+      var shown = 0.0;
+      final file = await downloadRelease(session.client, release, await installer.folder(), progress: (done) {
+        if (done - shown < 0.02 && done < 1) return;
+        shown = done;
+        updateProgress = done;
+        notifyListeners();
+      });
+      if (!await installer.install(file.path)) updateError = 'Android would not open the update.';
+    } on Exception {
+      updateError = 'The download did not finish. Try again on Wi-Fi.';
+    } finally {
+      updateProgress = null;
+      notifyListeners();
+    }
   }
 
   /// How many stars this phone's owner gives a recipe, 0 for none yet.
@@ -563,7 +698,80 @@ class AppModel extends ChangeNotifier {
   /// What is still to buy: what the dinners planned from today on need,
   /// added up, without what is always in the house; and the extras, and the
   /// staples that have run out.
-  List<ShopLine> get shopping => _withExtras(shoppingList(_dinners, where: session.needs), _wanted);
+  List<ShopLine> get shopping => _withExtras(shoppingList(_dinners, where: (id, day) => session.needs(id, day) && !_likely(id, day)), _wanted);
+
+  Pantry? _pantry;
+  Object? _pantryOf;
+
+  /// What the house holds, as far as the app has been told. Worked out once
+  /// for each state of the shared facts.
+  Pantry get pantry {
+    final of = (session.core, session.core.tick, today(), session.recipes);
+    if (_pantry == null || _pantryOf != of) {
+      _pantry = session.pantry(now);
+      _pantryOf = of;
+    }
+    return _pantry!;
+  }
+
+  bool _likely(String id, String day) => session.likely(id, day, pantry);
+
+  /// What the planned dinners need that nobody ticked for them, but that was
+  /// bought lately and is probably still in the house: a look in the
+  /// cupboard, not a trip to the store.
+  List<ShopLine> get shoppingLikely => shoppingList(_dinners, where: _likely);
+
+  /// When [id] came into the house ("Saturday"), if the app believes it is
+  /// still there.
+  String? hereSince(String id) {
+    final day = pantry.since(id);
+    return day == null ? null : sinceText(day, now);
+  }
+
+  /// It is not in the house after all: [id] goes on the list to buy, for
+  /// every dinner that was counting on it.
+  Future<Done> notHere(String id, {String? name}) async {
+    final undo = await _setAll({
+      inKey(id): null,
+      for (var i = 0; i < 14; i++)
+        if (_got(id, dayText(dayAfter(now, i)))) gotKey(id, dayText(dayAfter(now, i))): null,
+    });
+    return (text: '${name ?? itemNames[id] ?? id} is on the list to buy.', undo: undo);
+  }
+
+  /// Says [id] is in the house today, or that it is not.
+  Future<void> setHere(String id, bool here) => _wrote(session.core.set(inKey(id), here ? today() : null, now));
+
+  bool _reserved(String id) {
+    for (var i = 0; i < 14; i++) {
+      if (_got(id, dayText(dayAfter(now, i)))) return true;
+    }
+    return false;
+  }
+
+  /// Whether [id] is in the house right now: bought lately, always there, or
+  /// ticked for a dinner still to come.
+  bool here(String id) => pantry.has(id, today()) || _reserved(id);
+
+  /// True until someone has ticked, scanned or said what is in the house.
+  bool get pantryUntold => pantry.untold;
+
+  /// Everything the recipes use that is not a staple, by section in the
+  /// usual order, each with whether it is in the house.
+  List<({String section, List<HouseItem> items})> get houseItems {
+    final bySection = <String, List<HouseItem>>{};
+    ingredientNames.forEach((id, name) {
+      if (!staple(id)) (bySection[section(id)] ??= []).add((id: id, name: name, here: here(id)));
+    });
+    return [
+      for (final s in sections.keys)
+        if (bySection[s] case final items?) (section: s, items: items..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()))),
+    ];
+  }
+
+  /// [pool] in the order of how little each needs bought, for a dinner
+  /// tonight from what is in the house.
+  List<HereIdea> cookFromHere(Iterable<Recipe> pool) => fromWhatsHere(pool, here);
 
   /// What has been ticked as in the house: for those dinners, and the
   /// extras got today.
@@ -635,10 +843,22 @@ class AppModel extends ChangeNotifier {
     return _wrote(changed, replan: false);
   }
 
-  Future<void> setGot(ShopLine line, bool got) async {
+  /// Ticks a line, or takes the tick off. A tick also says the thing is in
+  /// the house from today, unless [fresh] is false: then it was there
+  /// already and only this dinner's tick was missing.
+  Future<void> setGot(ShopLine line, bool got, {bool fresh = true}) async {
     var changed = false;
     for (final u in line.uses) {
       changed = session.core.set(gotKey(line.id, u.day), got ? '1' : null, now) || changed;
+    }
+    if (!line.extra && !staple(line.id)) {
+      if (got && fresh) {
+        changed = session.core.set(inKey(line.id), today(), now) || changed;
+      } else if (!got && session.core.value(inKey(line.id)) == today() && !_reserved(line.id)) {
+        // A slip of the thumb taken back: it was never bought. Not so when
+        // another dinner still holds its own tick for the same thing.
+        changed = session.core.set(inKey(line.id), null, now) || changed;
+      }
     }
     if (line.extra) {
       changed = session.core.set(wantKey(line.id), got ? null : '1', now) || changed;

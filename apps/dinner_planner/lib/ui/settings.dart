@@ -6,7 +6,9 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../app_model.dart';
 import '../core/plan.dart';
 import '../data/relay.dart';
+import '../data/updates.dart' show appVersion;
 import 'parts.dart';
+import 'update_card.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key, required this.model});
@@ -46,6 +48,14 @@ class SettingsScreen extends StatelessWidget {
           minutes: model.times.eat,
           onPicked: (m) => model.setTimes(model.times.copyWith(eat: m)),
         ),
+        SwitchListTile(
+          key: const ValueKey('ring-timers'),
+          contentPadding: EdgeInsets.zero,
+          title: const Text('Ring recipe timers on this phone'),
+          subtitle: const Text('A timer started on the recipe page rings here too, even with the screen off.'),
+          value: model.ringTimers,
+          onChanged: model.setRingTimers,
+        ),
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
@@ -78,6 +88,8 @@ class SettingsScreen extends StatelessWidget {
         const Text('A scanned barcode is looked up in Open Food Facts and in the USDA\'s list of branded foods; only the barcode is sent. The USDA answers ten lookups an hour without a key. A free key from api.data.gov lifts that, and stays on this phone.'),
         const SizedBox(height: 12),
         _CommitField(key: const ValueKey('usda-key'), value: model.usdaKey, label: 'USDA key (optional)', onCommit: model.setUsdaKey),
+        heading('This app'),
+        _Version(model: model),
         if (model.startHidden && model.startDone.length < StartStep.values.length) ...[
           const SizedBox(height: 16),
           Align(
@@ -85,6 +97,46 @@ class SettingsScreen extends StatelessWidget {
             child: TextButton(key: const ValueKey('start-show'), onPressed: () => model.hideStart(false), child: const Text('Show the "start here" steps again')),
           ),
         ],
+      ],
+    );
+  }
+}
+
+/// Which version this phone runs, whether the other phone matches, and the
+/// way to a newer one without a computer.
+class _Version extends StatelessWidget {
+  const _Version({required this.model});
+
+  final AppModel model;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final faded = theme.colorScheme.onSurfaceVariant;
+    final note = model.versionNote;
+    final newest = model.newestVersion;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          'Version $appVersion${newest != null && !model.updateReady ? ', the newest there is.' : ''}',
+          key: const ValueKey('version-line'),
+          style: theme.textTheme.bodyLarge,
+        ),
+        if (note != null) Padding(padding: const EdgeInsets.only(top: 4), child: Text(note, key: const ValueKey('version-note'), style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.primary))),
+        const SizedBox(height: 8),
+        if (model.updateReady || model.updateProgress != null)
+          UpdateCard(model: model)
+        else
+          Align(
+            alignment: Alignment.centerLeft,
+            child: OutlinedButton(key: const ValueKey('update-check'), onPressed: model.checkForUpdate, child: const Text('Look for a new version')),
+          ),
+        const SizedBox(height: 4),
+        Text(
+          'A new version comes from this project\'s page on GitHub. The first time, Android asks you to let Dinner Planner install apps: say yes, then come back.',
+          style: theme.textTheme.bodySmall?.copyWith(color: faded),
+        ),
       ],
     );
   }

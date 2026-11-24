@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The one folder Android's installer may read from: where a downloaded
+     update waits (MainActivity "updatesDir"). -->
+<paths>
+    <cache-path name="updates" path="updates/"/>
+</paths>

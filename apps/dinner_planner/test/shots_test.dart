@@ -7,6 +7,7 @@
 // the photos those recipes point at (otherwise the photo boxes stay blank).
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dinner_planner/app_model.dart';
@@ -16,6 +17,7 @@ import 'package:dinner_planner/data/store.dart';
 import 'package:dinner_planner/main.dart';
 import 'package:dinner_planner/notify/notifier.dart';
 import 'package:dinner_planner/ui/scan.dart';
+import 'package:dinner_planner/ui/settings.dart';
 import 'package:dinner_planner/ui/shop.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -437,6 +439,102 @@ void main() {
     await shoot(tester, '52-how-was-it');
     await tester.tap(find.byKey(const ValueKey('rate-4')));
     await shoot(tester, '53-your-stars');
+    await finish(tester);
+  }, skip: shotsDir == null);
+
+  testWidgets('shots: the app knows the kitchen', (tester) async {
+    ntfy.releasesJson = jsonEncode([
+      {'tag_name': 'app-v0.11.0', 'assets': [{'name': 'dinner-planner-0.11.0.apk', 'size': 0, 'browser_download_url': 'https://github.com/sampanes/dinner-planner/releases/download/app-v0.11.0/dinner-planner-0.11.0.apk'}]},
+    ]);
+    addTearDown(() => ntfy.releasesJson = null);
+    final model = await start(tester);
+    await model.setMe('blue');
+    await model.setName('blue', 'Sam');
+    await model.setName('pink', 'Alex');
+    await model.hideStart(true);
+    await model.refreshRecipes();
+    await tester.pumpAndSettle();
+    Future<void> show(Finder f, double alignment) async {
+      await Scrollable.ensureVisible(tester.element(f), alignment: alignment);
+      await tester.pumpAndSettle();
+    }
+
+    await show(find.byKey(const ValueKey('cook-from-here')), 0.6);
+    await shoot(tester, '70-nothing-planned');
+    await tester.tap(find.byKey(const ValueKey('cook-from-here')));
+    await shoot(tester, '71-whats-here-not-known-yet');
+    await tester.tap(find.byKey(const ValueKey('here-say')));
+    await tester.pumpAndSettle();
+    // A walk round the kitchen: everything for two dinners, most of a third.
+    final here = <String>{
+      for (final slug in [_cast[3], _cast[5]]) ...[for (final i in model.session.recipe(slug)!.ingredients) i.id],
+      ...[for (final i in model.session.recipe(_cast[0])!.ingredients) i.id].skip(2),
+      'sour-cream', 'carrot', 'potatoes', 'cheddar-cheese', 'flour-tortillas',
+    };
+    for (final id in here) {
+      if (!model.staple(id)) await model.setHere(id, true);
+    }
+    await shoot(tester, '72-whats-in-the-house');
+    await tester.tap(find.byType(CloseButton));
+    await shoot(tester, '73-whats-here');
+    await tester.tap(find.byKey(ValueKey('idea-${_cast[3]}')));
+    await tester.pumpAndSettle();
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, 5000));
+    await shoot(tester, '74-tonight-update-ready');
+
+    // The week so far, and the shopping list with what was bought lately.
+    await model.setCook('2026-11-19', 'blue');
+    await model.setMeal('2026-11-17', _cast[1]);
+    await model.setCook('2026-11-17', 'blue');
+    await model.setMeal('2026-11-18', _cast[4]);
+    await model.setCook('2026-11-18', 'pink');
+    await model.setMeal('2026-11-21', _cast[6]);
+    await model.setMeal('2026-11-22', _cast[2]);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Shop'));
+    await tester.pumpAndSettle();
+    final list = find.descendant(of: find.byType(ShopScreen), matching: find.byType(Scrollable)).first;
+    await tester.scrollUntilVisible(find.byKey(const ValueKey('likely-hint')), 300, scrollable: list);
+    await show(find.byKey(const ValueKey('likely-hint')), 0.25);
+    await shoot(tester, '75-shop-probably-in-the-house');
+
+    await tester.tap(find.text('Settings'));
+    await tester.pumpAndSettle();
+    final settings = find.descendant(of: find.byType(SettingsScreen), matching: find.byType(Scrollable)).first;
+    await tester.scrollUntilVisible(find.byKey(const ValueKey('version-line')), 400, scrollable: settings);
+    await tester.drag(settings, const Offset(0, -900));
+    await shoot(tester, '76-settings-this-app');
+    await tester.scrollUntilVisible(find.byKey(const ValueKey('ring-timers')), -300, scrollable: settings);
+    await show(find.byKey(const ValueKey('ring-timers')), 0.5);
+    await shoot(tester, '77-settings-ring-timers');
+    await finish(tester);
+  }, skip: shotsDir == null);
+
+  testWidgets('shots: a timer handed over, and the week so far', (tester) async {
+    final model = await start(tester, at: DateTime(2026, 11, 19, 18, 40));
+    await fillWeek(model, me: 'blue');
+    await model.hideStart(true);
+    await model.setMeal('2026-11-16', _cast[5]);
+    await model.setCook('2026-11-16', 'blue');
+    await model.setMeal('2026-11-17', _cast[6]);
+    await model.setCook('2026-11-17', 'pink');
+    await model.setMeal('2026-11-18', _cast[4]);
+    await model.setCook('2026-11-18', 'blue');
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.byKey(const ValueKey('week-tally')), 300, scrollable: find.byType(Scrollable).first);
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -400));
+    await shoot(tester, '78-the-week-so-far');
+
+    final end = DateTime(2026, 11, 19, 18, 52).millisecondsSinceEpoch;
+    await tester.binding.defaultBinaryMessenger.handlePlatformMessage(
+      'flutter/navigation',
+      const JSONMethodCodec().encodeMethodCall(MethodCall('pushRouteInformation', {'location': '/timer?id=7&end=$end&label=rigatoni%20pasta&slug=${_cast[5]}', 'state': null})),
+      (_) {},
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+    await expectLater(find.byType(MaterialApp), matchesGoldenFile(Uri.file('$shotsDir/79-timer-handed-over.png')));
+    await tester.pump(const Duration(seconds: 2));
     await finish(tester);
   }, skip: shotsDir == null);
 

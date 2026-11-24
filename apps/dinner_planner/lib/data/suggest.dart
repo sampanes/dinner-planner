@@ -98,6 +98,39 @@ List<Suggestion> suggest(Iterable<Recipe> pool, {Iterable<Recipe> planned = cons
   return out;
 }
 
+/// A dinner that could be cooked from what is in the house.
+class HereIdea {
+  const HereIdea(this.recipe, this.missing, this.total);
+
+  final Recipe recipe;
+
+  /// What it needs that is not in the house, by name.
+  final List<String> missing;
+
+  /// How many different things it needs in all.
+  final int total;
+}
+
+/// [pool] in the order of how little each still needs bought: the dinners
+/// that could be cooked tonight first. [has] says whether an ingredient is in
+/// the house. Ties go to the better rated.
+List<HereIdea> fromWhatsHere(Iterable<Recipe> pool, bool Function(String id) has) {
+  final out = <HereIdea>[];
+  for (final r in pool) {
+    final seen = <String>{}, missing = <String>[];
+    for (final i in r.ingredients) {
+      if (seen.add(i.id) && !has(i.id)) missing.add(i.name);
+    }
+    if (seen.isNotEmpty) out.add(HereIdea(r, missing, seen.length));
+  }
+  out.sort((a, b) {
+    var c = a.missing.length.compareTo(b.missing.length);
+    if (c == 0) c = (b.recipe.pink + b.recipe.blue).compareTo(a.recipe.pink + a.recipe.blue);
+    return c != 0 ? c : a.recipe.name.toLowerCase().compareTo(b.recipe.name.toLowerCase());
+  });
+  return out;
+}
+
 /// Everything about a recipe a search should look in, lower case.
 String searchText(Recipe r) => '${r.name} ${r.categories.join(' ')} ${r.tags.join(' ')} ${r.ingredients.map((i) => i.text).join(' ')}'.toLowerCase();
 

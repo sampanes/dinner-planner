@@ -163,6 +163,12 @@ class SyncCore {
   /// Other phones heard from; listeners (the kitchen screen) do not count.
   int get peerCount => _peers.keys.where((id) => !isListener(id)).length;
 
+  /// The ids of those phones.
+  Iterable<String> get phones => _peers.keys.where((id) => !isListener(id));
+
+  /// Goes up with every change to the facts, made here or received.
+  int get tick => _tick;
+
   /// True when every phone heard from holds the same state as this one.
   bool inStep(DateTime now) {
     final mine = digest(now);

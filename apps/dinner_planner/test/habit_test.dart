@@ -294,7 +294,7 @@ void main() {
       final asks = m.takeAsks();
       expect(asks.whereType<AskTab>().single.tab, 1);
       final said = asks.whereType<AskSay>().single;
-      expect(said.text, '3 dinners planned. The list has what they need.');
+      expect(said.text, '3 dinners planned. 4 things to buy, on the list.');
       expect(bell(m).scheduled.where((n) => n.ref?.kind == 'week'), isEmpty, reason: 'the plan no longer runs out');
       expect(m.plan.cook(dayText(dayAfter(clock.now, 1))), isNotNull);
 
@@ -461,13 +461,13 @@ void main() {
       // "Time to start": the recipe itself.
       bell(model).tap(const NudgeTap(NudgeRef('start', day: today, slug: 'beef-chili')));
       await tester.pumpAndSettle();
-      expect(opened.single.toString(), endsWith('/kitchen.html?app=1#/r/beef-chili'));
+      expect(opened.single.toString(), endsWith('/kitchen.html?app=1&ring=1#/r/beef-chili'));
 
       // "All here" on tomorrow's dinner.
       bell(model).tap(const NudgeTap(NudgeRef('eve', day: friday, slug: 'baked-penne'), 'have'));
       await tester.pumpAndSettle();
       expect(find.text('Everything for Baked Penne is ticked.'), findsOneWidget);
-      expect(model.session.facts(friday, 'baked-penne').missing, isEmpty);
+      expect(model.session.facts(friday, 'baked-penne', model.pantry).missing, isEmpty);
       expect(find.text("You're cooking tonight"), findsOneWidget, reason: 'the app came to the front on Tonight');
 
       // "Not tonight" from the morning reminder.
@@ -487,7 +487,7 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('draft-use')));
       await tester.pumpAndSettle();
       expect(model.plan.meal(sunday), 'shrimp-tacos');
-      expect(find.text('1 dinner planned. The list has what they need.'), findsOneWidget);
+      expect(find.textContaining('1 dinner planned.'), findsOneWidget);
       expect(find.text('The next two weeks'), findsOneWidget, reason: 'on the Week tab');
       expect(tester.takeException(), isNull);
     });
@@ -513,7 +513,7 @@ void main() {
       await tester.pumpAndSettle();
       expect((model.plan.meal(friday) != null, model.plan.meal(saturday), model.plan.meal(sunday) != null), (true, null, true));
       expect(model.plan.cook(friday), isNotNull);
-      expect(find.text('2 dinners planned. The list has what they need.'), findsOneWidget);
+      expect(find.textContaining('2 dinners planned.'), findsOneWidget);
       await tester.tap(find.text('Undo'));
       await tester.pumpAndSettle();
       expect(model.plan.meal(friday), isNull);

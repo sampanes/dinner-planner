@@ -273,7 +273,8 @@ void main() {
     });
 
     test('the kitchen link opens the recipe overview', () {
-      expect(kitchenPage('https://site.example/dinner/', 'beef-chili').toString(), 'https://site.example/dinner/kitchen.html?app=1#/r/beef-chili');
+      expect(kitchenPage('https://site.example/dinner/', 'beef-chili').toString(), 'https://site.example/dinner/kitchen.html?app=1&ring=1#/r/beef-chili');
+      expect(kitchenPage('https://site.example/dinner/', 'beef-chili', ring: false).toString(), 'https://site.example/dinner/kitchen.html?app=1#/r/beef-chili');
     });
   });
 
