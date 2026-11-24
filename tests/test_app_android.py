@@ -115,6 +115,62 @@ class UpdateTests(unittest.TestCase):
         self.assertIn(f"const String appVersion = '{version}';", read("lib/data/updates.dart"))
 
 
+class WidgetTests(unittest.TestCase):
+    """Tonight's dinner on the home screen: the app writes, Android draws."""
+
+    KOTLIN = "android/app/src/main/kotlin/dev/dinnerplanner/dinner_planner/"
+
+    def test_android_knows_the_widget(self):
+        receivers = {r.get(f"{ANDROID}name"): r for r in MANIFEST.iter("receiver")}
+        widget = receivers.get(".DinnerWidget")
+        self.assertIsNotNone(widget)
+        self.assertEqual([a.get(f"{ANDROID}name") for a in widget.iter("action")], ["android.appwidget.action.APPWIDGET_UPDATE"])
+        self.assertEqual(widget.find("meta-data").get(f"{ANDROID}resource"), "@xml/dinner_widget_info")
+        info = ET.parse(MAIN / "res" / "xml" / "dinner_widget_info.xml").getroot()
+        self.assertEqual(info.get(f"{ANDROID}initialLayout"), "@layout/dinner_widget")
+        self.assertEqual(info.get(f"{ANDROID}updatePeriodMillis"), "1800000", "half an hour is the least Android allows")
+
+    def test_both_sides_read_and_write_the_same_place(self):
+        kotlin = read(self.KOTLIN + "DinnerWidget.kt")
+        self.assertIn('"FlutterSharedPreferences"', kotlin)
+        self.assertIn('"flutter.dp.glance"', kotlin)
+        self.assertIn("const String glanceKey = 'dp.glance';", read("lib/data/session.dart"))
+        self.assertIn("'days':", read("lib/core/glance.dart"))
+        for word in ('optJSONObject("days")', '"title"', '"sub"', '"yyyy-MM-dd"'):
+            self.assertIn(word, kotlin)
+
+    def test_the_layout_has_what_the_code_fills_in(self):
+        layout = (MAIN / "res" / "layout" / "dinner_widget.xml").read_text(encoding="utf-8")
+        kotlin = read(self.KOTLIN + "DinnerWidget.kt")
+        for view in ("widget_root", "widget_title", "widget_sub"):
+            self.assertIn(f'android:id="@+id/{view}"', layout)
+            self.assertIn(f"R.id.{view}", kotlin)
+        names = set(re.findall(r'@(?:string|color|drawable)/(\w+)', layout + (MAIN / "res" / "drawable" / "widget_background.xml").read_text(encoding="utf-8")))
+        day = (MAIN / "res" / "values" / "widget.xml").read_text(encoding="utf-8")
+        night = (MAIN / "res" / "values-night" / "widget.xml").read_text(encoding="utf-8")
+        for name in names - {"widget_background"}:
+            self.assertIn(f'name="{name}"', day)
+        for color in re.findall(r'<color name="(\w+)"', day):
+            self.assertIn(f'name="{color}"', night, "the widget follows dark mode")
+
+
+class ShareTests(unittest.TestCase):
+    """A recipe's page shared into the app becomes a recipe asked for."""
+
+    def test_the_app_is_offered_when_text_is_shared(self):
+        share = next(a for a in MANIFEST.iter("activity") if a.get(f"{ANDROID}name") == ".ShareActivity")
+        self.assertEqual(share.get(f"{ANDROID}exported"), "true")
+        self.assertEqual([a.get(f"{ANDROID}name") for a in share.iter("action")], ["android.intent.action.SEND"])
+        self.assertEqual([d.get(f"{ANDROID}mimeType") for d in share.iter("data")], ["text/plain"])
+
+    def test_what_is_shared_waits_where_the_app_looks(self):
+        kotlin = read("android/app/src/main/kotlin/dev/dinnerplanner/dinner_planner/ShareActivity.kt")
+        self.assertIn('"FlutterSharedPreferences"', kotlin)
+        self.assertIn('"flutter.dp.shared"', kotlin)
+        self.assertIn("static const String _sharedKey = 'dp.shared';", read("lib/data/store.dart"))
+        self.assertIn("MainActivity::class.java", kotlin)
+
+
 class ReminderTests(unittest.TestCase):
     def test_reminder_buttons_have_the_receiver_that_carries_their_taps(self):
         receivers = {r.get(f"{ANDROID}name"): r for r in MANIFEST.iter("receiver")}

@@ -53,6 +53,30 @@
             </intent-filter>
         </activity>
 
+        <!-- "Share" from a browser, with Dinner Planner picked: a recipe
+             asked for. It notes the link, opens the app, and goes. -->
+        <activity
+            android:name=".ShareActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:label="Ask for this recipe"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/plain"/>
+            </intent-filter>
+        </activity>
+
+        <!-- Tonight's dinner on the home screen. -->
+        <receiver android:name=".DinnerWidget" android:exported="true" android:label="Dinner tonight">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/dinner_widget_info"/>
+        </receiver>
+
         <!-- flutter_local_notifications: shows a scheduled reminder, and sets
              them all again after a restart or an app update. -->
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />

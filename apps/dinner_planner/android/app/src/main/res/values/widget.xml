@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The home-screen widget's words and colors (the app's own cream and brown). -->
+<resources>
+    <string name="widget_label">Dinner tonight</string>
+    <string name="widget_open">Open Dinner Planner</string>
+    <string name="widget_about">Tonight\'s dinner, who cooks, and when to start.</string>
+    <color name="widget_back">#FFF8F5</color>
+    <color name="widget_text">#231917</color>
+    <color name="widget_soft">#53433F</color>
+    <color name="widget_accent">#8F4C38</color>
+</resources>

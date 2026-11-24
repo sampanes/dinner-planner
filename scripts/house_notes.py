@@ -26,6 +26,11 @@ The code and what was heard are kept in private/house.json, which git ignores.
     python scripts/house_notes.py --wait 90    ask the phones again and wait for answers
     python scripts/house_notes.py --json       the notes as a JSON list
     python scripts/house_notes.py --done SLUG  clear every note on that recipe (or pass one note's key)
+
+Recipes asked for from a phone ride along. Sharing a recipe's page into the
+phone app keeps its link as ask/<id>; this script lists them under the notes,
+and once the recipe is in data/source/recipes.json, --done ask/<id> clears it
+from both phones.
     python scripts/house_notes.py --unlink     forget the code
 
 Mirrors apps/dinner_planner/lib/core/sync_core.dart; tests/test_house_mirror.py
@@ -299,6 +304,13 @@ def note_rows(state: dict, recipes: dict[str, dict]) -> list[dict]:
     return rows
 
 
+def asked_for(state: dict) -> list[dict]:
+    """The recipes asked for from a phone and not yet added, oldest first."""
+    rows = [{"key": k, "link": e[0], "at": e[1]} for k, e in state["entries"].items()
+            if k.startswith("ask/") and k.count("/") == 1 and isinstance(e[0], str) and e[0]]
+    return sorted(rows, key=lambda r: r["at"])
+
+
 def describe(row: dict) -> str:
     """One note as a line for a person (or an agent) about to fix the recipe."""
     if row["step"] is not None:
@@ -320,9 +332,15 @@ def mark_done(state: dict, targets: list[str], now: datetime) -> list[str]:
     cleared = []
     for key, entry in sorted(state["entries"].items()):
         parts = key.split("/")
-        if parts[0] != "note" or len(parts) not in (2, 3) or entry[0] is None:
+        if entry[0] is None:
             continue
-        if key not in targets and parts[1] not in targets:
+        if parts[0] == "ask" and len(parts) == 2:
+            # A recipe that was asked for is cleared by its own key only.
+            if key not in targets:
+                continue
+        elif parts[0] != "note" or len(parts) not in (2, 3):
+            continue
+        elif key not in targets and parts[1] not in targets:
             continue
         after = datetime.strptime(entry[1], "%Y-%m-%dT%H:%M:%S.%f%z") + timedelta(milliseconds=1)
         state["entries"][key] = [None, stamp(max(now, after)), state["dev"]]
@@ -395,16 +413,22 @@ def main(argv=None) -> int:
             print(f"[OK] Cleared {key}. The phones drop it when they next sync.")
         if not cleared:
             print("[!] Nothing to clear under: " + ", ".join(args.done))
+    asks = asked_for(state)
     if not rows:
         print("No notes waiting.")
-        return 0
     slug = None
     for row in rows:
         if row["slug"] != slug:
             slug = row["slug"]
             print(f"\n{row['name']}  ({slug})")
         print(describe(row))
-    print("\nOnce a note is in the recipe:  python scripts/house_notes.py --done <slug or key>")
+    if rows:
+        print("\nOnce a note is in the recipe:  python scripts/house_notes.py --done <slug or key>")
+    if asks:
+        print("\nRecipes asked for from a phone:")
+        for ask in asks:
+            print(f"  - {ask['link']}\n      key:  {ask['key']}")
+        print("\nOnce one is in data/source/recipes.json:  python scripts/house_notes.py --done ask/<id>")
     return 0
 
 

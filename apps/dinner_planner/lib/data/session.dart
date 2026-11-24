@@ -1,11 +1,13 @@
 // One loaded copy of everything the phone remembers, and the sync cycle
 // that the open app and the hourly background task both run.
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
 import 'package:http/http.dart' as http;
 
+import '../core/glance.dart';
 import '../core/nudges.dart';
 import '../core/pantry.dart';
 import '../core/plan.dart';
@@ -34,6 +36,10 @@ const String _weekAskKey = 'dp.weekAsk';
 const String _shopAskKey = 'dp.shopAsk';
 const String _timersKey = 'dp.timers';
 const String _updateKey = 'dp.update';
+
+/// Where the home-screen widget's words are published (DinnerWidget.kt reads
+/// the same name).
+const String glanceKey = 'dp.glance';
 
 /// `ver/<device>` is the version of the app a phone runs, so that each can
 /// say when the other is behind.
@@ -344,6 +350,7 @@ class Session {
     final who = me;
     if (who == null) {
       await notifier.schedule(const []);
+      await publishGlance(now);
       return;
     }
     final house = pantry(now);
@@ -358,7 +365,26 @@ class Session {
     nudges.addAll([for (final t in timers) timerNudge(t.id, t.end, t.label, slug: t.slug)]);
     nudges.sort((a, b) => a.when.compareTo(b.when));
     await notifier.schedule(nudges);
+    await publishGlance(now);
   }
+
+  /// Called when the widget's words have changed, to have it drawn again.
+  /// Only the open app can ask; otherwise Android redraws it within half an
+  /// hour.
+  Future<void> Function()? onGlance;
+
+  /// Writes down what the home-screen widget says for the coming days.
+  Future<void> publishGlance(DateTime now) async {
+    final json = glanceJson(now, (day) => glanceFor(day, plan: plan, me: me, times: times, recipeName: recipeName, minutes: (slug) => recipe(slug)?.minutes));
+    // Not waited for: the widget is Android's to draw, in its own time.
+    if (await store.publish(glanceKey, json)) unawaited(onGlance?.call());
+  }
+
+  /// The recipes asked for from a phone and not yet added: id -> link.
+  Map<String, String> get asks => {
+        for (final e in core.entries)
+          if (e.key.startsWith('ask/') && e.value is String && (e.value as String).isNotEmpty) e.key.substring(4): e.value as String,
+      };
 
   /// What the dinners from tomorrow through seven days on still need bought:
   /// the things, how many dinners, and the first day one is needed.

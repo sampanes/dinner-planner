@@ -17,7 +17,7 @@ import 'package:http/http.dart' as http;
 
 /// This version, the same as `version:` in pubspec.yaml (a test holds the
 /// two together). A constant, so the background task knows it too.
-const String appVersion = '0.10.0';
+const String appVersion = '0.11.0';
 
 const String _tagPrefix = 'app-v';
 
@@ -123,6 +123,9 @@ abstract class Installer {
   /// Puts the app behind whatever was in front of it before a link opened
   /// it, leaving it running.
   Future<void> stepBack();
+
+  /// Has the home-screen widget drawn again from what was last published.
+  Future<void> redrawWidget();
 }
 
 class AndroidInstaller implements Installer {
@@ -140,6 +143,15 @@ class AndroidInstaller implements Installer {
       await _channel.invokeMethod<void>('stepBack');
     } on Exception {
       await SystemNavigator.pop();
+    }
+  }
+
+  @override
+  Future<void> redrawWidget() async {
+    try {
+      await _channel.invokeMethod<void>('redrawWidget');
+    } on Exception {
+      // No widget to redraw; Android redraws it on its own every half hour.
     }
   }
 }

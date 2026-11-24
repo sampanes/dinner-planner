@@ -3,6 +3,7 @@
     install-phones.bat                  (repo root; same as the line below)
     python apps/dinner_planner/tool/install_phones.py
     python apps/dinner_planner/tool/install_phones.py --list      which version each phone has
+    python apps/dinner_planner/tool/install_phones.py --version 0.10.0   that release, not the newest
     python apps/dinner_planner/tool/install_phones.py --build     build here instead of downloading
 
 On each phone: Settings > Developer options > Wireless debugging, on, same Wi-Fi as this computer.
@@ -136,13 +137,15 @@ def download(url: str, dest: Path, size: int) -> None:
     part.replace(dest)
 
 
-def latest_apk() -> Path | None:
+def latest_apk(version: str | None = None) -> Path | None:
     slug = repo_slug()
     if not slug:
         print("[X] This clone's origin is not a GitHub repository.")
         return None
     try:
-        found = newest_app_release(fetch_json(f"https://api.github.com/repos/{slug}/releases?per_page=30"))
+        releases = fetch_json(f"https://api.github.com/repos/{slug}/releases?per_page=30")
+        # One named version, or the newest there is.
+        found = newest_app_release([r for r in releases if version is None or r.get("tag_name") == TAG_PREFIX + version])
     except OSError as e:
         print(f"[X] Could not ask GitHub for the releases ({e}).")
         return None
@@ -189,6 +192,7 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Install the newest phone app from GitHub on every reachable phone.")
     ap.add_argument("--list", action="store_true", help="only list the phones found, with the version each has")
     ap.add_argument("--build", action="store_true", help="build here instead of downloading GitHub's copy")
+    ap.add_argument("--version", metavar="X.Y.Z", help="install that release instead of the newest (Android refuses to go back to an older one)")
     args = ap.parse_args(argv)
 
     adb = find_adb()
@@ -214,7 +218,7 @@ def main(argv=None) -> int:
     if args.list:
         return 0
 
-    apk = build_here() if args.build else latest_apk()
+    apk = build_here() if args.build else latest_apk(args.version)
     if not apk:
         return 1
 

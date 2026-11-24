@@ -177,6 +177,22 @@ class HouseNotesScriptTests(unittest.TestCase):
         self.assertEqual(house_notes.own_writes(state, datetime(2026, 12, 20, tzinfo=timezone.utc)), [])
         self.assertEqual(house_notes.note_rows(state, {})[0]["slug"], "tacos")
 
+    def test_recipes_asked_for_from_a_phone_are_listed_and_cleared_by_their_own_key(self):
+        state = {"dev": "show-pc-1", "entries": {
+            "ask/2222bbbb": ["https://example.com/second", "2026-11-23T09:00:00.000Z", "a"],
+            "ask/1111aaaa": ["https://example.com/first", "2026-11-22T09:00:00.000Z", "b"],
+            "ask/3333cccc": [None, "2026-11-22T09:00:00.000Z", "b"],
+            "note/1111aaaa": ["A note on a recipe that happens to share the id", "2026-11-22T10:00:00.000Z", "a"],
+        }}
+        self.assertEqual([(a["key"], a["link"]) for a in house_notes.asked_for(state)],
+                         [("ask/1111aaaa", "https://example.com/first"), ("ask/2222bbbb", "https://example.com/second")])
+        now = datetime(2026, 11, 24, 8, tzinfo=timezone.utc)
+        self.assertEqual(house_notes.mark_done(state, ["1111aaaa"], now), ["note/1111aaaa"], "a bare id is a recipe's notes, never a request")
+        self.assertEqual(house_notes.mark_done(state, ["ask/1111aaaa"], now), ["ask/1111aaaa"])
+        self.assertEqual([a["key"] for a in house_notes.asked_for(state)], ["ask/2222bbbb"])
+        # The phone app keeps them under the same key.
+        self.assertIn("String askKey(String id) => 'ask/$id';", (ROOT / "apps" / "dinner_planner" / "lib" / "core" / "glance.dart").read_text(encoding="utf-8"))
+
     def test_household_codes_round_trip_and_junk_is_refused(self):
         import base64
         code = base64.urlsafe_b64encode(json.dumps({"s": "https://relay.example/", "t": "dp-0123456789abcdef"}).encode()).decode().rstrip("=")

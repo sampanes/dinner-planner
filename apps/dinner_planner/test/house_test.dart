@@ -8,6 +8,7 @@ import 'dart:io';
 
 import 'package:crypto/crypto.dart';
 import 'package:dinner_planner/app_model.dart';
+import 'package:dinner_planner/core/glance.dart';
 import 'package:dinner_planner/core/nudges.dart';
 import 'package:dinner_planner/core/pantry.dart';
 import 'package:dinner_planner/core/plan.dart';
@@ -52,6 +53,11 @@ class FakeInstaller implements Installer {
 
   @override
   Future<void> stepBack() async => steppedBack++;
+
+  int redrawn = 0;
+
+  @override
+  Future<void> redrawWidget() async => redrawn++;
 }
 
 Map<String, Object?> _item(String id, String amount) => {'id': id, 'displayName': id.replaceAll('-', ' '), 'amountText': amount, 'text': '$amount ${id.replaceAll('-', ' ')}'};
@@ -570,6 +576,95 @@ void main() {
       await m.setRingTimers(false);
       await m.openRecipe('beef-chili');
       expect([for (final u in opened) u.query], ['app=1&ring=1', 'app=1']);
+    });
+  });
+
+  group('tonight on the home screen', () {
+    test('the widget is handed a line for each coming day, and redrawn when one changes', () async {
+      final store = MemoryStore();
+      final installer = FakeInstaller('');
+      final clock = Clock(thursday);
+      final m = await phone(FakeNtfy(), clock: clock, store: store, installer: installer);
+      Map<String, dynamic> days() => (jsonDecode(store.published[glanceKey]!) as Map<String, dynamic>)['days'] as Map<String, dynamic>;
+      await m.setMe('blue');
+      await m.setName('pink', 'Alex');
+      expect(days()[today], {'title': 'Nothing planned', 'sub': 'Tap to pick a dinner'});
+      expect(days().keys, hasLength(8));
+
+      final before = installer.redrawn;
+      await m.setMeal(today, 'beef-chili');
+      await m.setCook(today, 'blue');
+      expect(days()[today], {'title': 'Beef Chili', 'sub': 'You cook \u00b7 start by 5:15 pm'}, reason: '35 minutes and ten to spare before 6:00');
+      expect(installer.redrawn, greaterThan(before));
+      await m.setMeal(friday, 'baked-penne');
+      await m.setCook(friday, 'pink');
+      expect(days()[friday], {'title': 'Baked Penne', 'sub': 'Alex cooks \u00b7 start by 5:10 pm'}, reason: 'no time of its own, so forty minutes');
+      await m.setCook(friday, null);
+      expect((days()[friday] as Map)['sub'], 'Nobody is down to cook \u00b7 start by 5:10 pm');
+      await m.skipDinner(today, 'leftovers');
+      expect(days()[today], {'title': 'Leftovers', 'sub': 'Nobody cooks tonight'});
+
+      // Nothing changed, nothing redrawn.
+      final settled = installer.redrawn;
+      await m.session.replan(clock.now);
+      expect(installer.redrawn, settled);
+    });
+  });
+
+  group('asking for a recipe from the phone', () {
+    test('a shared link is tidied, named once, and read back as a person would say it', () {
+      expect(sharedLink('Firecracker Meatballs https://www.hellofresh.com/recipes/firecracker-meatballs-5f6?utm_source=share&utm_medium=app.'), 'https://www.hellofresh.com/recipes/firecracker-meatballs-5f6');
+      expect(sharedLink('https://example.com/r?id=7&fbclid=abc'), 'https://example.com/r?id=7');
+      expect(sharedLink('just some words'), isNull);
+      expect(askId('https://Example.com/R'), askId('https://example.com/r'));
+      expect(linkLabel('https://www.hellofresh.com/recipes/firecracker-meatballs-5f6/'), 'hellofresh.com/recipes/firecracker-meatballs-5f6');
+    });
+
+    test('it waits on both phones until it is added, and can be taken back', () async {
+      final ntfy = FakeNtfy();
+      final store = MemoryStore();
+      final a = await phone(ntfy, store: store), b = await phone(ntfy);
+      await a.startHousehold();
+      await b.joinHousehold(a.household!.code);
+      await exchange(a, b);
+      a.takeAsks();
+
+      // Shared from the browser while the app was shut.
+      store.shared.add('Look at this https://www.hellofresh.com/recipes/crispy-parmesan-chicken-5a?utm_campaign=x');
+      await a.wake();
+      final asks = a.takeAsks();
+      expect(asks.whereType<AskTab>().single.tab, 3, reason: 'Settings, where the list of them is');
+      expect(asks.whereType<AskSay>().single.text, 'Asked for: hellofresh.com/recipes/crispy-parmesan-chicken-5a. It joins the recipes once it is added at a computer.');
+      expect(store.shared, isEmpty, reason: 'taken once');
+      await exchange(a, b);
+      expect(b.asks.single.link, 'https://www.hellofresh.com/recipes/crispy-parmesan-chicken-5a');
+      expect(ntfy.messages.any((m) => m.title == 'A recipe was asked for'), isTrue);
+
+      expect((await b.askFor('https://www.hellofresh.com/recipes/crispy-parmesan-chicken-5a'))!.text, startsWith('Already asked for'));
+      expect(await b.askFor('nothing to see'), isNull);
+      store.shared.add('no link here');
+      await a.wake();
+      expect(a.takeAsks().whereType<AskSay>().single.text, startsWith('That has no link in it'));
+
+      await b.dropAsk(b.asks.single.id);
+      await exchange(b, a);
+      expect(a.asks, isEmpty);
+      await a.sleep();
+    });
+
+    testWidgets('Settings lists what is waiting', (tester) async {
+      final model = await startApp(tester, FakeNtfy());
+      await model.setMe('blue');
+      await model.askFor('https://www.hellofresh.com/recipes/crispy-parmesan-chicken-5a');
+      await tester.tap(find.text('Settings'));
+      await tester.pumpAndSettle();
+      final list = find.descendant(of: find.byType(SettingsScreen), matching: find.byType(Scrollable)).first;
+      await tester.scrollUntilVisible(find.byKey(const ValueKey('ask-hint')), 300, scrollable: list);
+      expect(find.text('hellofresh.com/recipes/crispy-parmesan-chicken-5a'), findsOneWidget);
+      await tester.tap(find.byKey(ValueKey('ask-drop-${model.asks.single.id}')));
+      await tester.pumpAndSettle();
+      expect(model.asks, isEmpty);
+      expect(find.text('hellofresh.com/recipes/crispy-parmesan-chicken-5a'), findsNothing);
     });
   });
 

@@ -7,9 +7,10 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import java.io.File
 
-// The three things the app asks Android for by name (lib/data/updates.dart):
-// a folder for a downloaded update, handing that update to Android's own
-// installer, and stepping back behind the browser a link came from.
+// The things the app asks Android for by name (lib/data/updates.dart): a
+// folder for a downloaded update, handing that update to Android's own
+// installer, stepping back behind the browser a link came from, and having
+// the home-screen widget drawn again.
 class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -41,6 +42,10 @@ class MainActivity : FlutterActivity() {
                 }
                 "stepBack" -> {
                     moveTaskToBack(true)
+                    result.success(null)
+                }
+                "redrawWidget" -> {
+                    DinnerWidget.redraw(this)
                     result.success(null)
                 }
                 else -> result.notImplemented()

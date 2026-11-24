@@ -114,6 +114,24 @@ itself back behind the browser. "+1 min" and "Cancel" on the page send the same 
 end of 0 stops it). Tapping the notification opens the recipe. Settings, "Ring recipe timers on
 this phone", turns the hand-over off; the page's own timers work as before either way.
 
+## Tonight on the home screen
+
+A widget (long-press the home screen, Widgets, Dinner Planner): tonight's dinner, who cooks, and
+when to start, and a tap opens the app. Android draws it, not the app, so the app writes down the
+two lines for each of the next eight days (`lib/core/glance.dart`, kept under `dp.glance` in the
+settings file plain Android code can read) and `DinnerWidget.kt` shows today's. Android redraws it
+every half hour, which is what moves it on at midnight; the open app asks for a redraw whenever
+the plan changes. A change that arrives while the app is shut shows within half an hour.
+
+## Asking for a recipe from the phone
+
+Open a recipe's page in the browser (or the HelloFresh app), tap Share and pick "Ask for this
+recipe". `ShareActivity.kt` notes the link and opens the app, which keeps it as `ask/<id>`, shared
+by both phones and listed in Settings under Recipes until it is taken back or added. Adding it is
+a job for a computer: `python scripts/house_notes.py` lists the links under the notes, and once
+the recipe is in `data/source/recipes.json` (with its time and step photos),
+`python scripts/house_notes.py --done ask/<id>` clears it from both phones.
+
 ## A night off
 
 "Not tonight" (the Tonight card, or the morning and start reminders) asks one thing: leftovers,
@@ -194,6 +212,7 @@ again each time it runs for two weeks.
 | Dinners by day, who cooks, nights off, the two names, notes on recipes | each phone, and the relay messages between them |
 | What the house always has, and what was bought or said to be there lately | each phone, and the relay messages between them |
 | Which version of the app each phone runs | each phone, and the relay messages between them |
+| The links of recipes asked for from a phone | each phone, and the relay messages between them |
 | How each of you rated a dinner | the recipe site (sent as "pink" or "blue", without names) |
 | What is in the house for which dinner; what you buy for each ingredient, its packet size and section; the stores, and where things are in each | each phone, and the relay messages between them |
 | Which barcode is which ingredient | each phone, and the relay messages between them |
@@ -366,6 +385,5 @@ tapped APK from an unregistered developer is refused, and adb stays open. Google
 
 ## Not built yet
 
-- A scan-able code for joining, a home-screen widget, sharing a recipe link into the app.
 - Reading the words on a label or shelf tag when a barcode is on no list; turning cups and
   spoonfuls into packets sold by weight; choosing the store by where the phone is.

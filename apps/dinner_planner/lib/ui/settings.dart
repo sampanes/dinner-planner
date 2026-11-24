@@ -4,6 +4,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../app_model.dart';
+import '../core/glance.dart' show linkLabel;
 import '../core/plan.dart';
 import '../data/relay.dart';
 import '../data/updates.dart' show appVersion;
@@ -83,6 +84,25 @@ class SettingsScreen extends StatelessWidget {
                 ? const Padding(padding: EdgeInsets.all(12), child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)))
                 : TextButton(onPressed: model.refreshRecipes, child: const Text('Refresh')),
           ],
+        ),
+        if (model.asks.isNotEmpty) ...[
+          const SizedBox(height: 8),
+          Text('Asked for, waiting to be added at a computer', style: theme.textTheme.titleSmall),
+          for (final a in model.asks)
+            ListTile(
+              key: ValueKey('ask-${a.id}'),
+              dense: true,
+              contentPadding: EdgeInsets.zero,
+              leading: const Icon(Icons.link),
+              title: Text(linkLabel(a.link), maxLines: 2, overflow: TextOverflow.ellipsis),
+              trailing: IconButton(key: ValueKey('ask-drop-${a.id}'), tooltip: 'Take it back', icon: const Icon(Icons.close), onPressed: () => model.dropAsk(a.id)),
+            ),
+        ],
+        const SizedBox(height: 4),
+        Text(
+          'To ask for a new recipe, open its page in the browser, tap Share and pick Dinner Planner.',
+          key: const ValueKey('ask-hint'),
+          style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
         ),
         heading('Scanning packets'),
         const Text('A scanned barcode is looked up in Open Food Facts and in the USDA\'s list of branded foods; only the barcode is sent. The USDA answers ten lookups an hour without a key. A free key from api.data.gov lifts that, and stays on this phone.'),

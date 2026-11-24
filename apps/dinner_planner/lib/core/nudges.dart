@@ -413,6 +413,8 @@ const Set<String> _shopping = {'got', 'buy', 'size', 'sec', 'store', 'at', 'pos'
       lines.add(v is String && offKinds.containsKey(v) ? '${_cap(dayLabel(date, now))}: ${offKinds[v]!.toLowerCase()}' : '${_cap(dayLabel(date, now))}: dinner is back on');
     } else if ((parts.length == 2 || parts.length == 3) && parts[0] == 'note') {
       lines.add('Note on ${recipeName(parts[1])}');
+    } else if (parts[0] == 'ask') {
+      lines.add(v == null ? 'A recipe that was asked for is in' : 'A recipe was asked for');
     } else {
       lines.add('Dinner plan updated');
     }

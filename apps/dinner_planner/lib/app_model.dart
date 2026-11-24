@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'core/glance.dart';
 import 'core/nudges.dart';
 import 'core/pantry.dart';
 import 'core/plan.dart';
@@ -108,6 +109,7 @@ class AppModel extends ChangeNotifier {
   Future<void> start() async {
     await session.load();
     if (session.noteVersion(now)) await session.saveCore();
+    session.onGlance = installer.redrawWidget;
     ready = true;
     notifyListeners();
     session.notifier.onTap = (tap) => unawaited(handleTap(tap));
@@ -233,6 +235,37 @@ class AppModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Whatever was shared into the app since it last looked: a link becomes a
+  /// recipe asked for; anything else is said to be no use.
+  Future<void> _takeShared() async {
+    for (final text in await session.store.takeShared()) {
+      final done = await askFor(text);
+      _ask(const AskTab(3));
+      _ask(done == null ? const AskSay('That has no link in it. Share a recipe\'s page from the browser.') : AskSay(done.text, done.undo));
+    }
+  }
+
+  /// The recipes asked for from a phone and not yet added, oldest first.
+  List<({String id, String link})> get asks {
+    final at = {for (final e in session.core.entries) if (e.key.startsWith('ask/')) e.key.substring(4): e.at};
+    final out = [for (final e in session.asks.entries) (id: e.key, link: e.value)];
+    return out..sort((a, b) => (at[a.id] ?? '').compareTo(at[b.id] ?? ''));
+  }
+
+  /// Asks for the recipe a shared [text] links to. It waits on both phones
+  /// until someone adds it at a computer. Null when there is no link in it.
+  Future<Done?> askFor(String text) async {
+    final link = sharedLink(text);
+    if (link == null) return null;
+    final id = askId(link);
+    if (session.asks.containsKey(id)) return (text: 'Already asked for: ${linkLabel(link)}', undo: () async {});
+    final undo = await _setAll({askKey(id): link}, replan: false);
+    return (text: 'Asked for: ${linkLabel(link)}. It joins the recipes once it is added at a computer.', undo: undo);
+  }
+
+  /// Takes back a recipe that was asked for.
+  Future<void> dropAsk(String id) => _wrote(session.core.set(askKey(id), null, now), replan: false);
+
   /// The app came to the front: pick up anything the background task wrote,
   /// then keep in step while it stays open.
   Future<void> wake() async {
@@ -240,6 +273,7 @@ class AppModel extends ChangeNotifier {
     if (session.noteVersion(now)) await session.saveCore();
     unawaited(session.checkUpdate(now).then((_) => notifyListeners()));
     await session.beat(now);
+    await _takeShared();
     notifyListeners();
     _poll?.cancel();
     _poll = Timer.periodic(const Duration(seconds: 20), (_) {
