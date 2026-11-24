@@ -182,17 +182,18 @@ Android only installs an update signed with the same key as the copy already on 
 app has one key; the computer that set it up (below) signs its own builds with it, and so does
 GitHub.
 
-The usual way, from that computer: turn on Wireless debugging on each phone (Developer options,
-same Wi-Fi) and run `install-phones.bat` in the repository's root. It builds the app and installs
-it on every phone it finds, keeping everything the app holds; `install-phones.bat --list` only
-says which version each phone has. Installs over adb are the route Android's developer
-verification leaves open, which a downloaded APK will not have for an unregistered developer.
-On any other computer the script refuses: its builds carry that computer's own debug key, which
-the phones would refuse.
+To ship a version: raise `version:` in `pubspec.yaml` and push to `main` from any computer. The
+"Phone app" workflow tests it, builds and signs the APK and attaches it to a release named
+`app-v<version>`.
 
-A spare copy: raise `version:` in `pubspec.yaml` and push to `main`, and the "Phone app" workflow
-tests it, builds and signs the APK and attaches it to a release named `app-v<version>`
-(`/releases/latest`), which a phone can install while unverified installs are still allowed.
+To put it on the phones: turn on Wireless debugging on each phone (Developer options, same Wi-Fi
+as the computer) and run `install-phones.bat` in the repository's root, on any computer with adb.
+It downloads the newest release's APK into `build/releases/` and installs it over adb on every
+phone it finds, keeping everything the app holds; `install-phones.bat --list` only says which
+version each phone has. Installs over adb are the route Android's developer verification leaves
+open, which a downloaded APK tapped on the phone will not have for an unregistered developer.
+`--build` builds on the computer instead, which only matches the phones' key on the computer
+that set it up.
 
 One-time setup, on a computer where `gh` is signed in as the repository's owner:
 

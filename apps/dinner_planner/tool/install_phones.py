@@ -1,37 +1,44 @@
-"""Builds the phone app here and installs it on every phone adb can reach.
+"""Puts the newest phone app from GitHub on every phone adb can reach.
 
-    install-phones.bat                 (repo root; same as the line below)
+    install-phones.bat                  (repo root; same as the line below)
     python apps/dinner_planner/tool/install_phones.py
-    python apps/dinner_planner/tool/install_phones.py --no-build    install the last build again
+    python apps/dinner_planner/tool/install_phones.py --list      which version each phone has
+    python apps/dinner_planner/tool/install_phones.py --build     build here instead of downloading
 
 On each phone: Settings > Developer options > Wireless debugging, on, same Wi-Fi as this computer.
 Phones paired with this computer before are found and connected by themselves; a USB cable works too.
 
-It only runs on a computer whose release builds are signed with the app's key
-(android/key.properties, written by signing_setup.py): a build signed with any
-other key would not install over the phones' copy. An install Android refuses
-is reported and left alone; this never uninstalls anything.
+GitHub's "Phone app" workflow builds and signs every version (raise `version:`
+in pubspec.yaml and push) and attaches it to a release named app-v<version>.
+This downloads the newest one, keeps it in build/releases/, and installs it
+over adb, which keeps everything the app holds. The APK is signed by GitHub, so
+this works from any computer. adb installs are also the route Android's
+developer verification leaves open.
 
-adb installs are the way in that Android's developer verification leaves open,
-so this is the main way the phones get the app. GitHub's "Phone app" workflow
-signs the same version with the same key and keeps it as a release, as a
-spare copy.
+--build signs with this computer's key instead, which only matches the phones'
+copy on the computer that set up the app's key (android/key.properties).
+An install Android refuses is reported and left alone; this never uninstalls.
 """
 
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import re
 import shutil
 import subprocess
 import sys
+import urllib.request
 from pathlib import Path
 
 APP = Path(__file__).resolve().parent.parent
+ROOT = APP.parent.parent
 KEY_PROPERTIES = APP / "android" / "key.properties"
-APK = APP / "build" / "app" / "outputs" / "flutter-apk" / "app-release.apk"
+BUILT_APK = APP / "build" / "app" / "outputs" / "flutter-apk" / "app-release.apk"
+DOWNLOADS = APP / "build" / "releases"
 PACKAGE = "dev.dinnerplanner.dinner_planner"
+TAG_PREFIX = "app-v"
 
 
 def run(cmd: list[str], timeout: float = 60) -> subprocess.CompletedProcess:
@@ -64,22 +71,120 @@ def ready_devices(devices_output: str) -> list[str]:
     return [row[0] for row in rows if len(row) >= 2 and row[1] == "device"]
 
 
-def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(description="Build the phone app and install it on every reachable phone.")
-    ap.add_argument("--no-build", action="store_true", help="install the APK already built")
-    ap.add_argument("--list", action="store_true", help="only list the phones found, with the version each has")
-    args = ap.parse_args(argv)
+def repo_slug() -> str | None:
+    url = run(["git", "-C", str(ROOT), "remote", "get-url", "origin"]).stdout.strip()
+    m = re.search(r"github\.com[:/]([^/]+)/([^/]+?)(?:\.git)?$", url)
+    return f"{m.group(1)}/{m.group(2)}" if m else None
 
+
+def newest_app_release(releases: list[dict]) -> tuple[str, dict] | None:
+    """(tag, apk asset) of the newest published app release that has an APK."""
+    for rel in releases:  # the API lists newest first
+        tag = rel.get("tag_name") or ""
+        if not tag.startswith(TAG_PREFIX) or rel.get("draft") or rel.get("prerelease"):
+            continue
+        for asset in rel.get("assets") or []:
+            if str(asset.get("name", "")).endswith(".apk"):
+                return tag, asset
+    return None
+
+
+def fetch_json(url: str):
+    req = urllib.request.Request(url, headers={"Accept": "application/vnd.github+json", "User-Agent": "install-phones"})
+    with urllib.request.urlopen(req, timeout=30) as res:
+        return json.load(res)
+
+
+def download(url: str, dest: Path, size: int) -> None:
+    part = dest.with_suffix(".part")
+    curl = shutil.which("curl")
+    if curl:
+        # curl (part of Windows 10) keeps a steady pace where urllib has stalled,
+        # and its bar shows how far along it is.
+        done = subprocess.run([curl, "-L", "--fail", "--retry", "3", "-#", "-o", str(part), url], stdin=subprocess.DEVNULL)
+        if done.returncode != 0:
+            part.unlink(missing_ok=True)
+            raise OSError(f"curl exited with {done.returncode}")
+        if size and part.stat().st_size != size:
+            part.unlink()
+            raise OSError("the download was cut short")
+        part.replace(dest)
+        return
+    req = urllib.request.Request(url, headers={"User-Agent": "install-phones"})
+    with urllib.request.urlopen(req, timeout=60) as res, open(part, "wb") as out:
+        got, shown = 0, -1
+        while chunk := res.read(1 << 20):
+            out.write(chunk)
+            got += len(chunk)
+            pct = got * 100 // size if size else 0
+            if pct // 10 != shown:
+                shown = pct // 10
+                print(f"    {got >> 20} of {size >> 20} MB", flush=True)
+    if size and part.stat().st_size != size:
+        part.unlink()
+        raise OSError("the download was cut short")
+    part.replace(dest)
+
+
+def latest_apk() -> Path | None:
+    slug = repo_slug()
+    if not slug:
+        print("[X] This clone's origin is not a GitHub repository.")
+        return None
+    try:
+        found = newest_app_release(fetch_json(f"https://api.github.com/repos/{slug}/releases?per_page=30"))
+    except OSError as e:
+        print(f"[X] Could not ask GitHub for the releases ({e}).")
+        return None
+    if not found:
+        print(f"[X] {slug} has no app release with an APK yet. Raise version: in pubspec.yaml and push.")
+        return None
+    tag, asset = found
+    dest = DOWNLOADS / asset["name"]
+    if dest.is_file() and dest.stat().st_size == asset.get("size"):
+        print(f"[OK] {tag}: already downloaded.")
+        return dest
+    DOWNLOADS.mkdir(parents=True, exist_ok=True)
+    print(f"... downloading {tag} ({asset.get('size', 0) >> 20} MB)", flush=True)
+    try:
+        download(asset["browser_download_url"], dest, int(asset.get("size") or 0))
+    except OSError as e:
+        print(f"[X] The download failed ({e}).")
+        return None
+    return dest
+
+
+def build_here() -> Path | None:
     if not KEY_PROPERTIES.is_file():
         print("[X] This computer's builds are not signed with the app's key (no android/key.properties),")
-        print("    so they would not install over the phones' copy. Build and install from the computer that")
-        print("    has it, or see \"Installing and updating\" in apps/dinner_planner/README.md.")
-        return 1
+        print("    so the phones would refuse them. Leave out --build to install GitHub's signed copy.")
+        return None
+    flutter = shutil.which("flutter")
+    if not flutter:
+        print("[X] flutter was not found.")
+        return None
+    print("... building the app (a minute or three)", flush=True)
+    if subprocess.run([flutter, "build", "apk", "--release"], cwd=APP, stdin=subprocess.DEVNULL).returncode != 0:
+        print("[X] The build failed; nothing was installed.")
+        return None
+    return BUILT_APK
+
+
+def installed_version(adb: str, serial: str) -> str | None:
+    m = re.search(r"versionName=(\S+)", run([adb, "-s", serial, "shell", "dumpsys", "package", PACKAGE]).stdout)
+    return m.group(1) if m else None
+
+
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser(description="Install the newest phone app from GitHub on every reachable phone.")
+    ap.add_argument("--list", action="store_true", help="only list the phones found, with the version each has")
+    ap.add_argument("--build", action="store_true", help="build here instead of downloading GitHub's copy")
+    args = ap.parse_args(argv)
+
     adb = find_adb()
     if not adb:
         print("[X] adb was not found. It comes with the Android SDK (platform-tools).")
         return 1
-
     for address in wireless_addresses(run([adb, "mdns", "services"]).stdout):
         run([adb, "connect", address], timeout=15)
     serials, seen = [], set()
@@ -94,44 +199,30 @@ def main(argv=None) -> int:
         print("    on the same Wi-Fi as this computer (a phone never paired here needs \"Pair device with")
         print("    pairing code\" once, then  adb pair IP:PORT ). Or plug it in with a USB cable.")
         return 1
-    print(f"[OK] Found {len(serials)} phone(s).")
+    models = {s: run([adb, "-s", s, "shell", "getprop", "ro.product.model"]).stdout.strip() or s for s in serials}
+    print(f"[OK] Found {len(serials)} phone(s): " + ", ".join(f"{models[s]} ({installed_version(adb, s) or 'no app'})" for s in serials))
     if args.list:
-        for serial in serials:
-            model = run([adb, "-s", serial, "shell", "getprop", "ro.product.model"]).stdout.strip() or serial
-            version = re.search(r"versionName=(\S+)", run([adb, "-s", serial, "shell", "dumpsys", "package", PACKAGE]).stdout)
-            print(f"     {model}: {version.group(1) if version else 'app not installed'}")
         return 0
 
-    if not args.no_build:
-        flutter = shutil.which("flutter")
-        if not flutter:
-            print("[X] flutter was not found.")
-            return 1
-        print("... building the app (a minute or three)", flush=True)
-        built = subprocess.run([flutter, "build", "apk", "--release"], cwd=APP, stdin=subprocess.DEVNULL)
-        if built.returncode != 0:
-            print("[X] The build failed; nothing was installed.")
-            return 1
-    if not APK.is_file():
-        print(f"[X] No APK at {APK}. Run without --no-build.")
+    apk = build_here() if args.build else latest_apk()
+    if not apk:
         return 1
 
     failed = 0
     for serial in serials:
-        model = run([adb, "-s", serial, "shell", "getprop", "ro.product.model"]).stdout.strip() or serial
-        done = run([adb, "-s", serial, "install", "-r", str(APK)], timeout=600)
+        done = run([adb, "-s", serial, "install", "-r", str(apk)], timeout=600)
         text = (done.stdout + done.stderr).strip()
         if done.returncode == 0 and "Success" in text:
-            info = run([adb, "-s", serial, "shell", "dumpsys", "package", PACKAGE]).stdout
-            version = re.search(r"versionName=(\S+)", info)
-            print(f"[OK] {model}: installed {version.group(1) if version else ''}")
+            print(f"[OK] {models[serial]}: now {installed_version(adb, serial) or 'installed'}")
             continue
         failed += 1
         if "UPDATE_INCOMPATIBLE" in text:
-            print(f"[X] {model}: Android refused, because the copy on it was signed with another key. Nothing was")
-            print("    changed. To move it, see \"Moving a phone to the signed app\" in apps/dinner_planner/README.md.")
+            print(f"[X] {models[serial]}: Android refused, because the copy on it was signed with another key. Nothing")
+            print("    was changed. To move it, see \"Moving a phone to the signed app\" in apps/dinner_planner/README.md.")
+        elif "VERSION_DOWNGRADE" in text:
+            print(f"[X] {models[serial]}: it already has a newer version than this one. Nothing was changed.")
         else:
-            print(f"[X] {model}: {text.splitlines()[-1] if text else 'install failed'}")
+            print(f"[X] {models[serial]}: {text.splitlines()[-1] if text else 'install failed'}")
     return 1 if failed else 0
 
 

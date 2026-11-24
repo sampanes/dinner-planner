@@ -33,5 +33,21 @@ class AdbOutputTests(unittest.TestCase):
         self.assertEqual(ip.ready_devices(devices), ["SERIAL1", "10.0.0.6:40002"])
 
 
+class ReleaseTests(unittest.TestCase):
+    def test_newest_app_release_with_an_apk_is_picked(self):
+        releases = [
+            {"tag_name": "app-v0.9.0", "draft": True, "assets": [{"name": "a.apk"}]},
+            {"tag_name": "site-2026", "assets": [{"name": "b.apk"}]},
+            {"tag_name": "app-v0.8.1", "assets": [{"name": "notes.txt"}]},
+            {"tag_name": "app-v0.8.0", "assets": [{"name": "x.txt"}, {"name": "dinner-planner-0.8.0.apk", "size": 5}]},
+            {"tag_name": "app-v0.7.0", "assets": [{"name": "dinner-planner-0.7.0.apk"}]},
+        ]
+        tag, asset = ip.newest_app_release(releases)
+        self.assertEqual((tag, asset["name"]), ("app-v0.8.0", "dinner-planner-0.8.0.apk"))
+
+    def test_no_release_gives_none(self):
+        self.assertIsNone(ip.newest_app_release([]))
+
+
 if __name__ == "__main__":
     unittest.main()
