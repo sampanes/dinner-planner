@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The same as backup_rules.xml, in the form Android 12 and newer read:
+     once for the backup in the owner's Google account, once for a cable or
+     Wi-Fi transfer to a new phone. -->
+<data-extraction-rules>
+    <cloud-backup>
+        <include domain="file" path="datastore/"/>
+        <include domain="sharedpref" path="."/>
+    </cloud-backup>
+    <device-transfer>
+        <include domain="file" path="datastore/"/>
+        <include domain="sharedpref" path="."/>
+    </device-transfer>
+</data-extraction-rules>

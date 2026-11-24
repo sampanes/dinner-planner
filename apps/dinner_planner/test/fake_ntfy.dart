@@ -27,7 +27,7 @@ class FakeNtfy {
 
   /// What the recipe site serves.
   String recipesJson = jsonEncode([
-    {'slug': 'beef-chili', 'displayName': 'Beef Chili', 'image': 'https://img.example/c_fill,w_1200,h_800/chili.jpg', 'categories': ['Beef'], 'tags': ['Spicy'], 'sourceStars': {'pink': 4, 'blue': 5}, 'ingredients': [
+    {'slug': 'beef-chili', 'displayName': 'Beef Chili', 'image': 'https://img.example/c_fill,w_1200,h_800/chili.jpg', 'categories': ['Beef'], 'tags': ['Spicy'], 'sourceStars': {'pink': 4, 'blue': 5}, 'minutes': 35, 'ingredients': [
       {'id': 'ground-beef', 'displayName': 'ground beef', 'amountText': '1 lb', 'text': '1 lb ground beef'},
       {'id': 'onion', 'displayName': 'onion', 'amountText': '2', 'text': '2 onion'},
       {'id': 'salt', 'displayName': 'salt', 'amountText': 'to taste', 'text': 'salt, to taste'},
@@ -43,6 +43,8 @@ class FakeNtfy {
       {'id': 'ground-beef', 'displayName': 'ground beef', 'amountText': '10 ounce', 'text': '10 ounce ground beef'},
     ]},
   ]);
+  /// Where the recipe site takes ratings (its data/source/kitchen.json).
+  String kitchenJson = jsonEncode({'ntfyTopic': 'dinner-site-0123456789abcdef', 'people': {'pink': 'Pink', 'blue': 'Blue'}});
   String logJson = jsonEncode({'plan': {'id': 'p1', 'slugs': ['beef-chili', 'baked-penne'], 'at': '2026-11-18T00:00:00Z'}, 'cooked': [], 'rated': {}});
 
   http.Client client() => MockClient((request) async {
@@ -65,6 +67,7 @@ class FakeNtfy {
         }
         if (path.endsWith('/data/runtime/recipes.runtime.json')) return http.Response(recipesJson, 200, headers: {'content-type': 'application/json; charset=utf-8'});
         if (path.endsWith('/data/source/log.json')) return http.Response(logJson, 200);
+        if (path.endsWith('/data/source/kitchen.json')) return http.Response(kitchenJson, 200);
         if (requireToken != null && request.headers['Authorization'] != 'Bearer $requireToken') return http.Response('forbidden', 403);
         final seconds = now.millisecondsSinceEpoch ~/ 1000;
         if (request.method == 'POST') {

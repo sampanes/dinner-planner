@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- What Android's backup keeps, on Android 11 and older: everything the app
+     remembers (lib/data/store.dart keeps it in a DataStore file), and the
+     settings the plugins keep. -->
+<full-backup-content>
+    <include domain="file" path="datastore/"/>
+    <include domain="sharedpref" path="."/>
+</full-backup-content>

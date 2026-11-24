@@ -16,6 +16,19 @@ String gotKey(String id, String day) => 'got/$id/$day';
 String extraKey(String id) => 'extra/$id';
 String wantKey(String id) => 'want/$id';
 
+/// `have/<id>` is '1' for something the household always has in the house and
+/// '0' for something it does not, where the app guessed that it does. A staple
+/// is never on the list for a dinner; it goes on when someone says it has run
+/// out (`want/<id>`), and comes off again when it is bought.
+String haveKey(String id) => 'have/$id';
+
+/// What nearly every kitchen has, so nobody has to say so. `have/<id>` = '0'
+/// takes one out.
+const Set<String> usualStaples = {'salt', 'pepper', 'black-pepper', 'oil', 'olive-oil', 'cooking-oil', 'vegetable-oil', 'butter', 'sugar', 'flour', 'water'};
+
+/// Whether [id] is always in the house, given what `have/<id>` holds.
+bool isStaple(String id, Object? said) => said == '1' || (said != '0' && usualStaples.contains(id));
+
 /// The id a name gets: "Dish soap" -> "dish-soap".
 String slugOf(String s) {
   final slug = s.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]+'), '-').replaceAll(RegExp(r'^-+|-+$'), '');

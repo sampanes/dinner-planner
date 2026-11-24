@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import '../core/shopping.dart';
 
 class Recipe {
-  const Recipe({required this.slug, required this.name, this.image, this.categories = const [], this.tags = const [], this.pink = 0, this.blue = 0, this.ingredients = const [], this.steps = const []});
+  const Recipe({required this.slug, required this.name, this.image, this.categories = const [], this.tags = const [], this.pink = 0, this.blue = 0, this.ingredients = const [], this.steps = const [], this.minutes});
 
   final String slug;
   final String name;
@@ -29,10 +29,13 @@ class Recipe {
   /// numbers them ("Step 7 of 17").
   final List<String> steps;
 
+  /// Start to table, when the recipe site knows.
+  final int? minutes;
+
   /// The photo at list size. HelloFresh image urls carry their crop size.
   String? get thumb => image?.replaceFirst(RegExp(r'w_\d+,h_\d+'), 'w_300,h_200');
 
-  Map<String, Object?> toJson() => {'slug': slug, 'name': name, 'image': image, 'categories': categories, 'tags': tags, 'sourceStars': {'pink': pink, 'blue': blue}, 'ingredients': [for (final i in ingredients) i.toJson()], 'steps': steps};
+  Map<String, Object?> toJson() => {'slug': slug, 'name': name, 'image': image, 'categories': categories, 'tags': tags, 'sourceStars': {'pink': pink, 'blue': blue}, 'ingredients': [for (final i in ingredients) i.toJson()], 'steps': steps, 'minutes': ?minutes};
 
   static Recipe? fromJson(Object? raw) {
     if (raw is! Map) return null;
@@ -62,6 +65,7 @@ class Recipe {
           for (final item in raw['steps'] as List)
             if (item is String) item else if (item is Map && item['displayText'] is String) item['displayText'] as String
       ],
+      minutes: raw['minutes'] is num && (raw['minutes'] as num) > 0 ? (raw['minutes'] as num).round() : null,
     );
   }
 }
@@ -100,5 +104,18 @@ Future<List<String>> fetchKitchenPlan(http.Client client, String site) async {
   ];
 }
 
-/// The page that walks through a recipe step by step.
-Uri kitchenPage(String site, String slug) => Uri.parse('${_trim(site)}/kitchen.html#/r/${Uri.encodeComponent(slug)}');
+/// The page that walks through a recipe step by step. "app=1" tells the page
+/// it was opened from the phone app, so it offers "Note" on each step, which
+/// comes back here ([noteLink]).
+Uri kitchenPage(String site, String slug) => Uri.parse('${_trim(site)}/kitchen.html?app=1#/r/${Uri.encodeComponent(slug)}');
+
+/// The topic the recipe site's own changes travel on (ratings, "we cooked
+/// this"); the site's hourly job folds them into its data. Null when the site
+/// names none.
+Future<String?> fetchSiteTopic(http.Client client, String site) async {
+  final res = await client.get(Uri.parse('${_trim(site)}/data/source/kitchen.json')).timeout(const Duration(seconds: 30));
+  if (res.statusCode != 200) return null;
+  final raw = jsonDecode(utf8.decode(res.bodyBytes));
+  final topic = raw is Map ? raw['ntfyTopic'] : null;
+  return topic is String && RegExp(r'^[A-Za-z0-9_-]{8,64}$').hasMatch(topic) ? topic : null;
+}

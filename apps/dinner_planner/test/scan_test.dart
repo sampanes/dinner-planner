@@ -5,6 +5,7 @@ import 'package:dinner_planner/data/store.dart';
 import 'package:dinner_planner/main.dart';
 import 'package:dinner_planner/notify/notifier.dart';
 import 'package:dinner_planner/ui/scan.dart';
+import 'package:dinner_planner/ui/shop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -123,6 +124,11 @@ void main() {
     }
 
     Future<void> tap(WidgetTester tester, String key) async {
+      if (find.byKey(ValueKey(key)).evaluate().isEmpty) {
+        // The list is built as it scrolls: go back to the top for its buttons.
+        await tester.drag(find.descendant(of: find.byType(ShopScreen), matching: find.byType(Scrollable)).first, const Offset(0, 5000));
+        await tester.pumpAndSettle();
+      }
       await tester.ensureVisible(find.byKey(ValueKey(key)));
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(ValueKey(key)));

@@ -10,6 +10,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dinner_planner/app_model.dart';
+import 'package:dinner_planner/core/plan.dart';
 import 'package:dinner_planner/data/session.dart';
 import 'package:dinner_planner/data/store.dart';
 import 'package:dinner_planner/main.dart';
@@ -144,7 +145,7 @@ void main() {
     client.close();
   });
 
-  Future<AppModel> start(WidgetTester tester, {Brightness brightness = Brightness.light}) async {
+  Future<AppModel> start(WidgetTester tester, {Brightness brightness = Brightness.light, DateTime? at}) async {
     tester.view.physicalSize = const Size(1080, 2400);
     tester.view.devicePixelRatio = 2.625;
     tester.platformDispatcher.platformBrightnessTestValue = brightness;
@@ -153,7 +154,7 @@ void main() {
     // Tests draw shadows as hard black outlines unless told otherwise.
     debugDisableShadows = false;
     if (photos.isNotEmpty) debugNetworkImageHttpClientProvider = _PhotoClient.new;
-    final model = AppModel(Session(store: MemoryStore(), client: ntfy.client(), notifier: SilentNotifier()), clock: () => thursday);
+    final model = AppModel(Session(store: MemoryStore(), client: ntfy.client(), notifier: SilentNotifier()), clock: () => at ?? thursday, open: (_) async => true);
     await model.start();
     await tester.pumpWidget(DinnerApp(model: model));
     await tester.pumpAndSettle();
@@ -361,6 +362,81 @@ void main() {
     await tester.pumpAndSettle();
     await show(add, 0.75);
     await shoot(tester, '32-notes-on-tonight');
+    await finish(tester);
+  }, skip: shotsDir == null);
+
+  testWidgets('shots: the plan runs itself', (tester) async {
+    final model = await start(tester);
+    await model.setMe('blue');
+    await model.setName('blue', 'Sam');
+    await model.setName('pink', 'Alex');
+    await model.hideStart(true);
+    await model.setMeal('2026-11-19', _cast[3]);
+    await model.setCook('2026-11-19', 'blue');
+    await model.setMeal('2026-11-20', _cast[1]);
+    await model.setCook('2026-11-20', 'pink');
+    await tester.pumpAndSettle();
+    Future<void> show(Finder f, double alignment) async {
+      await Scrollable.ensureVisible(tester.element(f), alignment: alignment);
+      await tester.pumpAndSettle();
+    }
+
+    await shoot(tester, '40-tonight-when-to-start');
+    final skip = find.byKey(const ValueKey('not-tonight'));
+    await show(skip, 0.8);
+    await shoot(tester, '41-tonight-buttons');
+    await tester.tap(skip);
+    await shoot(tester, '42-not-tonight');
+    await tester.tap(find.byKey(const ValueKey('skip-leftovers')));
+    await tester.pumpAndSettle();
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, 5000));
+    await shoot(tester, '43-leftovers-tonight');
+
+    await tester.tap(find.text('Week'));
+    await shoot(tester, '44-week-fill-button');
+    await tester.tap(find.byKey(const ValueKey('draft-week')));
+    await shoot(tester, '45-week-drafted');
+    await tester.tap(find.byKey(const ValueKey('draft-use')));
+    await shoot(tester, '46-week-filled');
+
+    await tester.tap(find.text('Shop'));
+    await tester.pumpAndSettle();
+    await shoot(tester, '47-shop-hint');
+    final line = find.byWidgetPredicate((w) => w.key is ValueKey<String> && (w.key! as ValueKey<String>).value.startsWith('shop-') && !(w.key! as ValueKey<String>).value.contains('-edit-') && w is InkWell).first;
+    await tester.longPress(line);
+    await shoot(tester, '48-shop-always-have');
+    final list = find.descendant(of: find.byType(ShopScreen), matching: find.byType(Scrollable)).first;
+    await tester.scrollUntilVisible(find.text('Always in the house'), 400, scrollable: list);
+    await tester.drag(list, const Offset(0, -600));
+    await shoot(tester, '49-shop-always-in-the-house');
+
+    await tester.tap(find.text('Settings'));
+    await shoot(tester, '50-settings-dinner-time');
+
+    final slug = _cast[1];
+    final step = model.session.recipe(slug)!.steps[3];
+    await tester.binding.defaultBinaryMessenger.handlePlatformMessage(
+      'flutter/navigation',
+      const JSONMethodCodec().encodeMethodCall(MethodCall('pushRouteInformation', {'location': '/note?slug=$slug&step=${stepId(step)}', 'state': null})),
+      (_) {},
+    );
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const ValueKey('stove-note-field')), 'Pull the shrimp a minute early');
+    await shoot(tester, '51-note-from-the-stove');
+    await finish(tester);
+  }, skip: shotsDir == null);
+
+  testWidgets('shots: how was it', (tester) async {
+    final model = await start(tester, at: DateTime(2026, 11, 19, 19, 30));
+    await model.setMe('blue');
+    await model.setName('blue', 'Sam');
+    await model.setName('pink', 'Alex');
+    await model.hideStart(true);
+    await model.setMeal('2026-11-19', _cast[3]);
+    await model.setCook('2026-11-19', 'blue');
+    await shoot(tester, '52-how-was-it');
+    await tester.tap(find.byKey(const ValueKey('rate-4')));
+    await shoot(tester, '53-your-stars');
     await finish(tester);
   }, skip: shotsDir == null);
 

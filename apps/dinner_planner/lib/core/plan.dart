@@ -13,6 +13,14 @@ String cookKey(String day) => 'cook/$day';
 String nameKey(String who) => 'name/$who';
 String noteKey(String slug) => 'note/$slug';
 
+/// "No cooking that night": set when a dinner is called off, to what the
+/// household is doing instead. The day then has no dinner and no cook, and
+/// nothing fills it in.
+String offKey(String day) => 'off/$day';
+
+/// What a night off can be, and how each one reads.
+const Map<String, String> offKinds = {'leftovers': 'Leftovers', 'out': 'Eating out', 'skip': 'No dinner'};
+
 /// The longest note a recipe can carry (the most one shared value can hold).
 const int noteMax = 400;
 
@@ -95,6 +103,12 @@ class Plan {
   String? cook(String day) {
     final who = _text(core.value(cookKey(day)));
     return people.contains(who) ? who : null;
+  }
+
+  /// Why nobody cooks that day (a key of [offKinds]), or null on an ordinary day.
+  String? off(String day) {
+    final why = _text(core.value(offKey(day)));
+    return offKinds.containsKey(why) ? why : null;
   }
 
   /// What the household wrote down about a recipe ("add parmesan"), or null.

@@ -56,14 +56,16 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('cook-2026-11-19-blue')));
     await tester.pumpAndSettle();
     expect(find.text("You're cooking tonight"), findsOneWidget);
-    expect(notifier.scheduled.single.when, DateTime(2026, 11, 19, 17));
-    expect(notifier.scheduled.single.body, 'Beef Chili. Tap to open it.');
+    final start = notifier.scheduled.firstWhere((n) => n.ref?.kind == 'start');
+    expect(start.when, DateTime(2026, 11, 19, 17, 15), reason: 'thirty-five minutes of chili and ten to spare before dinner at six');
+    expect(start.body, 'About 35 minutes, so dinner is at 6:00 pm. Tap to open the recipe.');
+    expect(find.text('About 35 minutes. Start by 5:15 pm.'), findsOneWidget);
 
     // Tapping the chosen name again hands the night back.
     await tester.tap(find.byKey(const ValueKey('cook-2026-11-19-blue')));
     await tester.pumpAndSettle();
     expect(find.text('Who cooks tonight?'), findsOneWidget);
-    expect(notifier.scheduled, isEmpty);
+    expect([for (final n in notifier.scheduled) n.ref?.kind], ['rate', 'week'], reason: 'what is left is for both of them: how it was, and next week');
     expect(tester.takeException(), isNull);
   });
 
@@ -85,7 +87,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(model.plan.cook('2026-11-20'), 'pink');
     final notifier = model.session.notifier as SilentNotifier;
-    expect([for (final n in notifier.scheduled) n.title], ['You cook tomorrow: Baked Penne', "You're cooking tonight", 'Time to start dinner']);
+    expect([for (final n in notifier.scheduled) if (!n.quiet && n.ref?.kind != 'week') n.title], ['You cook tomorrow: Baked Penne', "You're cooking tonight: Baked Penne", 'Time to start: Baked Penne']);
 
     final list = find.descendant(of: find.byType(WeekScreen), matching: find.byType(Scrollable)).first;
     await tester.scrollUntilVisible(find.byKey(const ValueKey('day-2026-12-02')), 300, scrollable: list);

@@ -97,6 +97,24 @@ function ago(iso) {
 }
 function lastMade(r) { const hist = Sync.history(r.slug); return hist.last ? `made ${ago(hist.last)}` : ''; }
 
+// ---------- opened from the phone app ----------
+// The app opens this page with "?app=1" on the address. Each step then offers
+// "Note on this step", a link that opens the app on that step with the
+// keyboard up (dinnerplanner://open/note, apps/dinner_planner). The mark is
+// kept for the tab, so it survives a reload. Without it the link is left out:
+// on the Show, or a phone without the app, it would lead nowhere.
+const fromApp = (() => {
+    const marked = /[?&]app=1(&|$)/.test(location.search);
+    try {
+        if (marked) sessionStorage.setItem('dp.fromApp', '1');
+        return sessionStorage.getItem('dp.fromApp') === '1';
+    } catch (e) { return marked; }
+})();
+
+function noteLink(slug, stepText) {
+    return `dinnerplanner://open/note?slug=${encodeURIComponent(slug)}&step=${House.stepId(stepText)}`;
+}
+
 // ---------- routing ----------
 function parseRoute() {
     const parts = (location.hash || '#/').replace(/^#\/?/, '').split('/').filter(Boolean).map(decodeURIComponent);
@@ -613,6 +631,7 @@ function renderCook(r, startStep) {
             i === 0 ? wholeNotes(notes) : null,
             h('p', { class: 'step-text' }, step.displayText),
             notes.byStep.has(i) ? noteLine('Note', notes.byStep.get(i).text) : null,
+            fromApp ? h('a', { class: 'note-link', href: noteLink(r.slug, step.displayText) }, notes.byStep.has(i) ? 'Change the note' : '+ Note on this step') : null,
             uses.length ? h('div', { class: 'step-uses' }, uses.map(u => h('span', {}, u.text || u.displayName))) : null,
             hints.length ? h('div', { class: 'step-timers' },
                 hints.map(t => h('button', { class: 'big-btn primary timer-btn', type: 'button', onclick: () => startTimer(timerLabel(step, i, t), t.seconds) },
@@ -1013,6 +1032,13 @@ async function syncPhones(force) {
 }
 setInterval(() => { if (state.view === 'pick' && document.visibilityState === 'visible') syncPhones(false); }, 2 * 60e3);
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && state.view === 'pick') syncPhones(false); });
+// Back from writing a note in the phone app: show it on its step.
+document.addEventListener('visibilitychange', async () => {
+    if (document.visibilityState !== 'visible' || state.view !== 'cook' || !fromApp || !House.linked()) return;
+    let changed = false;
+    try { changed = await House.refresh(false); } catch (e) { return; }
+    if (changed && state.view === 'cook') { const at = state.step; leaveCook(); renderCook(state.recipe, at); }
+});
 
 // ---------- boot ----------
 async function init() {

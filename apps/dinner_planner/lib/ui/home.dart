@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../app_model.dart';
+import 'parts.dart';
 import 'settings.dart';
 import 'shop.dart';
 import 'tonight.dart';
@@ -17,17 +18,22 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   int _tab = 0;
+  bool _busy = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    widget.model.addListener(_asked);
     widget.model.wake();
+    // A reminder that started the app has already asked for something.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _asked());
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    widget.model.removeListener(_asked);
     widget.model.sleep();
     super.dispose();
   }
@@ -38,6 +44,36 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       widget.model.wake();
     } else if (state == AppLifecycleState.paused) {
       widget.model.sleep();
+    }
+  }
+
+  /// Carries out what a tapped reminder asked for, one thing after another:
+  /// the right tab first, then the sheet or the message on top of it.
+  Future<void> _asked() async {
+    if (_busy || !mounted) return;
+    _busy = true;
+    try {
+      while (mounted) {
+        final asks = widget.model.takeAsks();
+        if (asks.isEmpty || !mounted) break;
+        // Whatever was open belongs to what the person was doing before.
+        Navigator.of(context).popUntil((route) => route.isFirst);
+        for (final ask in asks) {
+          if (!mounted) return;
+          switch (ask) {
+            case AskTab(:final tab):
+              setState(() => _tab = tab);
+            case AskSay(:final text, :final undo):
+              say(ScaffoldMessenger.of(context), text, undo);
+            case AskSkip(:final day):
+              await showSkip(context, widget.model, day);
+            case AskDraft():
+              await showDraft(context, widget.model);
+          }
+        }
+      }
+    } finally {
+      _busy = false;
     }
   }
 

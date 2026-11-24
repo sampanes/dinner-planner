@@ -7,9 +7,12 @@ all of that, and none of it is written to the repository.
 - **Tonight**: what is for dinner, who is cooking, one button to open the recipe in the site's
   kitchen page, and "What it needs" to check the fridge. A new phone also gets a **Start here**
   card: five first steps that tick themselves off from what the phone already holds. Skip hides
-  it; Settings brings it back.
-- **Week**: the next fourteen days. Tap a day to pick dinner, tap a name to say who cooks. The
-  playlist button adds the dinners from the site's weekly plan to the empty days.
+  it; Settings brings it back. The card says when to start cooking, "Not tonight" calls the night
+  off, and once dinner time has come it asks how the dinner was, with five stars.
+- **Week**: the next fourteen days. Tap a day to pick dinner, tap a name to say who cooks. "Fill
+  the empty nights" drafts a dinner and a cook for each empty night of the coming week, to look
+  over and take with one tap ("A drafted week" below). The playlist button adds the dinners from
+  the site's weekly plan to the empty days.
 - **Picking a dinner**: the list opens with three suggestions for the week as it stands, each
   with its reason: how the two of you rated it on the recipe site, what it shares with dinners
   already planned (so the other half of the sour cream gets used), and whether the week is short
@@ -18,9 +21,10 @@ all of that, and none of it is written to the repository.
 - **Extras**: the plus button puts things no dinner asks for on the same list (milk, coffee,
   foil). They sort into sections, tick, and learn a store's order like everything else, and the
   ones bought before are offered again with a tap.
-- **Reminders** on your nights: the evening before (check the fridge, start thawing), that morning,
-  and when to start cooking. Times are in Settings. A night the other phone hands you gets its
-  reminders without you opening the app.
+- **Reminders** on your nights: the evening before, that morning, and when to start cooking. Each
+  says what there is to do and has buttons that do it ("Reminders that do the next thing" below).
+  Times are in Settings. A night the other phone hands you gets its reminders without you opening
+  the app.
   They are set as exact alarms (`USE_EXACT_ALARM`, granted at install with no prompt): Android
   delivers any other kind up to an hour late when it was set hours ahead. Google Play allows that
   permission only for alarm and calendar apps, so a Play listing would have to argue the case or
@@ -29,7 +33,8 @@ all of that, and none of it is written to the repository.
   is in the house; tap the tag to record what you actually buy for that ingredient: the brand or
   the name on the shelf, the packet size (the list then says how many packets), its section, and a
   note on where it is in each store. All of it is shared, so one of you can tick things off in the
-  store while the other watches. The list copies as plain text.
+  store while the other watches. The list copies as plain text. Press and hold a line to say the
+  house always has it: no dinner asks for it again, until you tap it the day it runs out.
 - **Scan**: point the camera at a packet's barcode and the name, brand and size fill themselves in
   ("Scanning a packet" below). Say once which ingredient a packet is; after that scanning it
   ticks the line. The camera stays open for the next packet, so a full cart or a pantry shelf is
@@ -44,7 +49,74 @@ all of that, and none of it is written to the repository.
   ("garlic salt goes in here"); the step is read back before you type. A recipe can carry one note
   of its own and one per step. The other phone sees them, a linked kitchen screen shows each one on
   its step, and they wait there until someone deletes them or the recipe is fixed at a computer
-  ("Notes that wait for a fix" below).
+  ("Notes that wait for a fix" below). While cooking, "+ Note on this step" on the recipe's own
+  page opens the app on that step with the keyboard up, and Save goes back to the recipe.
+
+## Reminders that do the next thing
+
+`lib/core/nudges.dart` writes them; nothing is asked of the cook that the phone already knows.
+
+- **The evening before** names the meat or fish to move out of the freezer and what is still to
+  get: everything the recipe needs that is not ticked as in the house, staples left out. "All
+  here" ticks the lot; "Open the list" opens the Shop tab.
+- **That morning** says when to start, repeats what is still frozen or missing, and has "Not
+  tonight".
+- **Time to start** is counted back from when the household eats (Settings, "Dinner on the
+  table") by how long the recipe takes, plus ten minutes. Tapping it opens the recipe. The times
+  come from `data/source/recipe_times.json` (`scripts/recipe_times.py` reads them off each recipe's
+  HelloFresh page; a wrong one is corrected by hand there). A recipe with no time counts as forty
+  minutes.
+- **How was it?** comes an hour after dinner time, quietly, to both phones: "Loved it", "It was
+  fine", "Not again".
+- **Dinners for the coming week** comes on the evening the plan is two days from running out, and
+  then at most every three days: "Use these" or "Change".
+
+Every button brings the app to the front, where the tap is carried out and shown with Undo.
+Nothing is changed in the background, where it could collide with the open app.
+
+## A night off
+
+"Not tonight" (the Tonight card, or the morning and start reminders) asks one thing: leftovers,
+eating out, or just not cooking. The dinner that was planned moves to the next night with nothing
+on it, along with everything already ticked for it, and with its cook when that night has none.
+The night itself is kept as `off/<day>`: no reminders, nothing on the list, and a drafted week
+leaves it alone. Undo puts all of it back; picking a dinner for the night puts the night back on.
+
+## A drafted week
+
+`lib/data/autoplan.dart`. For each empty night from tomorrow through seven days on, the draft
+takes the recipe the picker's own scoring likes best for the week as it then stands, so the week
+shares what it buys. It passes over anything cooked in the last two weeks, a near twin of a
+dinner already in the week (the chicken and the beef version of one dish), and a third dinner of
+one kind. Cooking is shared evenly. After two weeks of history it follows the household: a
+weekday that has had no dinner in a month of them stays free, and each night goes to whoever
+usually cooks that weekday.
+
+## Always in the house
+
+Salt, pepper, oil, butter, sugar and flour are taken to be in every kitchen
+(`usualStaples` in `lib/core/shopping.dart`); the household adds its own by holding a line on the
+list, or with the switch in the "what you buy" sheet. A staple is kept as `have/<ingredient>` and
+is never on the list for a dinner, nor called missing by a reminder. Tapping it under "Always in
+the house" the day it runs out puts it on the list until it is bought.
+
+## How was it?
+
+An answer is this phone's owner's rating of the recipe, 1 to 5. It goes to the recipe site the
+way the site's own kitchen page sends one: a message on the topic named in the site's
+`data/source/kitchen.json`, which the hourly job folds into `data/source/recipes.json`. From there
+it is the same rating the picker's suggestions and the drafted week already read. That topic is
+public, so only the recipe, "pink" or "blue" and the stars are sent, never the household's names.
+A rating not yet seen in the site's data is sent again every four hours for about three days.
+
+## Backup
+
+Android's own backup keeps what the app holds (`android:allowBackup` and the two rule files under
+`android/app/src/main/res/xml/`), in the owner's Google account when the phone has backup turned
+on, and in a phone-to-phone transfer. A replaced or reset phone that restores it comes back with
+its plan, list, stores and sharing code. It is a copy of one phone: do not restore it onto a
+second phone while the first is still in use, because the two would answer to the same name.
+Checking it on a phone: `adb shell bmgr backupnow dev.dinnerplanner.dinner_planner`.
 
 ## Linked kitchen screens and computers
 
@@ -79,11 +151,13 @@ again each time it runs for two weeks.
 | What | Where |
 |---|---|
 | Recipes, photos, the kitchen page | the recipe site (public; set its address in Settings) |
-| Dinners by day, who cooks, the two names, notes on recipes | each phone, and the relay messages between them |
+| Dinners by day, who cooks, nights off, the two names, notes on recipes | each phone, and the relay messages between them |
+| What the house always has | each phone, and the relay messages between them |
+| How each of you rated a dinner | the recipe site (sent as "pink" or "blue", without names) |
 | What is in the house for which dinner; what you buy for each ingredient, its packet size and section; the stores, and where things are in each | each phone, and the relay messages between them |
 | Which barcode is which ingredient | each phone, and the relay messages between them |
 | The extras the household buys, and which are on the list | each phone, and the relay messages between them |
-| Which person this phone belongs to, reminder times, which store it is in right now, a USDA key | this phone only |
+| Which person this phone belongs to, reminder times and dinner time, which store it is in right now, a USDA key | this phone only |
 
 ## How two phones stay the same
 
@@ -232,6 +306,9 @@ phone before moving the first.
 
 ## Not built yet
 
+- Updating without a computer. A phone gets a new version over adb (`install-phones.bat`); a
+  button in the app that fetches the newest release would need the developer registration Android
+  asks for from 2027, so that a tapped APK still installs. To look into.
 - Timers that keep running with the screen off (the kitchen page's timers stop when the phone sleeps).
 - A scan-able code for joining, a home-screen widget, sharing a recipe link into the app.
 - Reading the words on a label or shelf tag when a barcode is on no list; turning cups and

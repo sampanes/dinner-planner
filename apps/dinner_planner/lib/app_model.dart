@@ -4,27 +4,71 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'core/nudges.dart';
 import 'core/plan.dart';
 import 'core/shopping.dart';
 import 'core/store_order.dart';
 import 'core/sync_core.dart';
+import 'data/autoplan.dart';
 import 'data/products.dart';
 import 'data/recipes.dart';
 import 'data/relay.dart';
 import 'data/session.dart';
 import 'data/suggest.dart';
+import 'notify/notifier.dart';
 
 /// What a new phone is walked through, in the order a first week brings
 /// them up.
 enum StartStep { plan, stores, scan, walk, share }
 
+/// Something a tapped reminder, or a link from the kitchen page, asks the
+/// screens to do. The model queues them; the home screen carries them out.
+sealed class Ask {
+  const Ask();
+}
+
+/// Switch to a tab, by its place in the bar.
+class AskTab extends Ask {
+  const AskTab(this.tab);
+  final int tab;
+}
+
+/// Say what was just done, with a way to take it back.
+class AskSay extends Ask {
+  const AskSay(this.text, [this.undo]);
+  final String text;
+  final Future<void> Function()? undo;
+}
+
+/// Ask what tonight is instead of the planned dinner.
+class AskSkip extends Ask {
+  const AskSkip(this.day);
+  final String day;
+}
+
+/// Show the drafted week for looking over.
+class AskDraft extends Ask {
+  const AskDraft();
+}
+
+/// What a change made in one go says about itself, and how to take it back.
+typedef Done = ({String text, Future<void> Function() undo});
+
+/// Where a note from the kitchen page goes: a recipe, and one of its steps
+/// (its place in the recipe and its words) unless it is about the whole thing.
+typedef NoteTarget = ({String slug, int? place, String? step});
+
 class AppModel extends ChangeNotifier {
-  AppModel(this.session, {DateTime Function()? clock}) : _clock = clock ?? DateTime.now;
+  AppModel(this.session, {DateTime Function()? clock, Future<bool> Function(Uri page)? open})
+      : _clock = clock ?? DateTime.now,
+        _open = open ?? ((page) => launchUrl(page, mode: LaunchMode.externalApplication));
 
   final Session session;
   final DateTime Function() _clock;
+  final Future<bool> Function(Uri page) _open;
+  final List<Ask> _asks = [];
 
   bool ready = false;
   String? syncError;
@@ -52,6 +96,83 @@ class AppModel extends ChangeNotifier {
     await session.load();
     ready = true;
     notifyListeners();
+    session.notifier.onTap = (tap) => unawaited(handleTap(tap));
+    final launched = await session.notifier.launchTap();
+    if (launched != null) await handleTap(launched);
+  }
+
+  void _ask(Ask ask) {
+    _asks.add(ask);
+    notifyListeners();
+  }
+
+  /// What the screens have been asked to do since the last call.
+  List<Ask> takeAsks() {
+    final out = List<Ask>.of(_asks);
+    _asks.clear();
+    return out;
+  }
+
+  /// The recipe's step-by-step page, in the browser.
+  Future<void> openRecipe(String slug) => _open(kitchenPage(site, slug));
+
+  /// A reminder, or one of its buttons, was tapped.
+  Future<void> handleTap(NudgeTap tap) async {
+    final ref = tap.ref;
+    final today = this.today();
+    final slug = ref.slug.isEmpty ? null : ref.slug;
+    switch (tap.button) {
+      case 'have':
+        _ask(const AskTab(0));
+        if (ref.day.compareTo(today) >= 0) {
+          final done = await haveAll(ref.day);
+          if (done != null) _ask(AskSay(done.text, done.undo));
+        }
+      case 'list':
+        _ask(const AskTab(2));
+      case 'skip':
+        _ask(const AskTab(0));
+        if (ref.day == today && plan.off(today) == null) _ask(AskSkip(today));
+      case 'use':
+        _ask(const AskTab(1));
+        final done = await useDraft(draft());
+        _ask(done == null ? const AskSay('The week is already planned.') : AskSay(done.text, done.undo));
+      case 'change':
+        _ask(const AskTab(1));
+        _ask(const AskDraft());
+      case final button? when rateStars.containsKey(button):
+        _ask(const AskTab(0));
+        if (slug != null) {
+          await rate(slug, rateStars[button]!);
+          _ask(AskSay('${session.recipeName(slug)}: ${rateStars[button]} stars. Thanks.'));
+        }
+      default:
+        switch (ref.kind) {
+          case 'start' when slug != null && ref.day == today && plan.meal(today) == slug:
+            await openRecipe(slug);
+          case 'eve' when slug != null && session.facts(ref.day, slug).missing.isNotEmpty:
+            _ask(const AskTab(2));
+          case 'week':
+            _ask(const AskTab(1));
+            _ask(const AskDraft());
+          default:
+            _ask(const AskTab(0));
+        }
+    }
+  }
+
+  /// What a link that opened the app is asking for. The kitchen page's
+  /// "Note" button is the only one: `dinnerplanner://open/note?slug=...&step=...`,
+  /// where the step is named by its id ([stepId]). Null for anything else. A
+  /// step this phone does not know (its recipes are older than the page's)
+  /// becomes a note on the whole recipe.
+  NoteTarget? noteLink(Uri? link) {
+    if (link == null || !(link.path.endsWith('/note') || link.path == 'note' || link.host == 'note')) return null;
+    final slug = link.queryParameters['slug'];
+    if (slug == null || slug.isEmpty || slug.length > 60) return null;
+    final steps = session.recipe(slug)?.steps ?? const <String>[];
+    final at = [for (final s in steps) stepId(s)].indexOf(link.queryParameters['step'] ?? '');
+    return (slug: slug, place: at < 0 ? null : at, step: at < 0 ? null : steps[at]);
   }
 
   /// The app came to the front: pick up anything the background task wrote,
@@ -71,6 +192,7 @@ class AppModel extends ChangeNotifier {
     }
     await sync();
     await session.replan(now);
+    unawaited(session.flushSite(now));
   }
 
   Future<void> sleep() async {
@@ -112,7 +234,138 @@ class AppModel extends ChangeNotifier {
     unawaited(sync());
   }
 
-  Future<void> setMeal(String day, String? slug) => _wrote(session.core.set(mealKey(day), slug, now));
+  /// Sets several shared facts in one go and says how to put them back.
+  Future<Future<void> Function()> _setAll(Map<String, Object?> values, {bool replan = true}) async {
+    final before = {for (final k in values.keys) k: session.core.value(k)};
+    var changed = false;
+    values.forEach((k, v) => changed = session.core.set(k, v, now) || changed);
+    await _wrote(changed, replan: replan);
+    return () async {
+      var back = false;
+      before.forEach((k, v) => back = session.core.set(k, v, now) || back);
+      await _wrote(back, replan: replan);
+    };
+  }
+
+  /// Picking a dinner for a night that was called off puts the night back on.
+  Future<void> setMeal(String day, String? slug) {
+    var changed = session.core.set(mealKey(day), slug, now);
+    if (slug != null) changed = session.core.set(offKey(day), null, now) || changed;
+    return _wrote(changed);
+  }
+
+  /// The first night after [day], within the fortnight, with no dinner on it.
+  String? _nextFree(String day) {
+    final from = parseDay(day);
+    if (from == null) return null;
+    final last = dayText(dayAfter(now, 13));
+    for (var i = 1; i < 14; i++) {
+      final d = dayText(dayAfter(from, i));
+      if (d.compareTo(last) > 0) break;
+      if (plan.meal(d) == null && plan.off(d) == null) return d;
+    }
+    return null;
+  }
+
+  /// Where the dinner on [day] would go if that night were called off, or
+  /// null when it has nowhere to go (or there is no dinner to move).
+  String? movesTo(String day) => plan.meal(day) == null ? null : _nextFree(day);
+
+  /// "Not tonight": nobody cooks on [day] ([why] is a key of [offKinds]). The
+  /// dinner that was planned moves to the next free night with everything
+  /// that was ticked for it, and with its cook when that night has none.
+  Future<Done> skipDinner(String day, String why) async {
+    final slug = plan.meal(day);
+    final to = movesTo(day);
+    final values = <String, Object?>{offKey(day): why, mealKey(day): null, cookKey(day): null};
+    if (slug != null && to != null) {
+      values[mealKey(to)] = slug;
+      final cook = plan.cook(day);
+      if (cook != null && plan.cook(to) == null) values[cookKey(to)] = cook;
+      for (final i in session.recipe(slug)?.ingredients ?? const <Ingredient>[]) {
+        if (_got(i.id, day)) {
+          values[gotKey(i.id, to)] = '1';
+          values[gotKey(i.id, day)] = null;
+        }
+      }
+    }
+    final undo = await _setAll(values);
+    final String text;
+    if (slug == null) {
+      text = '${offKinds[why]} it is.';
+    } else if (to == null) {
+      text = '${session.recipeName(slug)} is off the plan: the next two weeks are full.';
+    } else {
+      text = '${session.recipeName(slug)} moved to ${dayLabel(parseDay(to)!, now)}.';
+    }
+    return (text: text, undo: undo);
+  }
+
+  /// The night is back on: someone cooks after all.
+  Future<void> cookAfterAll(String day) => _wrote(session.core.set(offKey(day), null, now));
+
+  /// "All here": everything the dinner on [day] still asks for is in the
+  /// house. Null when there is no dinner or nothing was missing.
+  Future<Done?> haveAll(String day) async {
+    final slug = plan.meal(day), recipe = session.recipe(slug);
+    if (slug == null || recipe == null) return null;
+    final values = <String, Object?>{
+      for (final i in recipe.ingredients)
+        if (session.needs(i.id, day)) gotKey(i.id, day): '1',
+    };
+    if (values.isEmpty) return null;
+    final undo = await _setAll(values);
+    return (text: 'Everything for ${recipe.name} is ticked.', undo: undo);
+  }
+
+  /// Dinners for the empty nights of the coming week, for looking over.
+  List<DraftNight> draft() => session.draft(now);
+
+  /// How many of the next seven nights have neither a dinner nor a reason
+  /// not to cook.
+  int get emptyNights {
+    var n = 0;
+    for (var i = 1; i <= 7; i++) {
+      final d = dayText(dayAfter(now, i));
+      if (plan.meal(d) == null && plan.off(d) == null) n++;
+    }
+    return n;
+  }
+
+  /// Puts [nights] on the plan, leaving alone any night that has been filled
+  /// since they were drafted. Null when nothing was left to do.
+  Future<Done?> useDraft(List<DraftNight> nights) async {
+    final values = <String, Object?>{};
+    var count = 0;
+    for (final n in nights) {
+      if (plan.meal(n.day) != null || plan.off(n.day) != null) continue;
+      values[mealKey(n.day)] = n.slug;
+      if (n.cook != null && plan.cook(n.day) == null) values[cookKey(n.day)] = n.cook;
+      count++;
+    }
+    if (count == 0) return null;
+    final undo = await _setAll(values);
+    return (text: '$count dinner${count == 1 ? '' : 's'} planned. The list has what they need.', undo: undo);
+  }
+
+  /// How many stars this phone's owner gives a recipe, 0 for none yet.
+  int myStars(String slug) => session.myStars(slug);
+
+  /// True once this phone's owner has said today how [slug] was.
+  bool ratedToday(String slug) => session.rated[slug]?.day == today();
+
+  /// Whether dinner time has come, so "how was it?" makes sense.
+  bool get afterDinner => now.hour * 60 + now.minute >= times.eat;
+
+  /// This phone's owner says how a dinner was. It goes to the recipe site,
+  /// where both people's stars steer what gets suggested.
+  Future<void> rate(String slug, int stars) async {
+    if (me == null) return;
+    await session.rate(slug, stars, now);
+    notifyListeners();
+    await session.replan(now);
+    unawaited(session.flushSite(now));
+  }
 
   Future<void> setCook(String day, String? who) => _wrote(session.core.set(cookKey(day), who, now));
 
@@ -163,6 +416,7 @@ class AppModel extends ChangeNotifier {
     final text = site.trim();
     if (text.isEmpty || text == session.site) return;
     session.site = text;
+    session.siteTopic = null;
     await session.saveSettings();
     await refreshRecipes();
   }
@@ -293,7 +547,12 @@ class AppModel extends ChangeNotifier {
 
   List<ShopLine> _withExtras(List<ShopLine> lines, bool Function(String id) where) {
     final have = {for (final l in lines) l.id};
-    final names = extras;
+    // An extra, or a staple that has run out while no dinner asks for it.
+    final names = {
+      for (final e in ingredientNames.entries)
+        if (staple(e.key)) e.key: e.value,
+      ...extras,
+    };
     return [
       ...lines,
       for (final e in names.entries)
@@ -302,8 +561,9 @@ class AppModel extends ChangeNotifier {
   }
 
   /// What is still to buy: what the dinners planned from today on need,
-  /// added up, and the extras put on the list.
-  List<ShopLine> get shopping => _withExtras(shoppingList(_dinners, where: (id, day) => !_got(id, day)), _wanted);
+  /// added up, without what is always in the house; and the extras, and the
+  /// staples that have run out.
+  List<ShopLine> get shopping => _withExtras(shoppingList(_dinners, where: session.needs), _wanted);
 
   /// What has been ticked as in the house: for those dinners, and the
   /// extras got today.
@@ -333,6 +593,37 @@ class AppModel extends ChangeNotifier {
     await _wrote(changed, replan: false);
     return id;
   }
+
+  /// Always in the house, so no dinner puts it on the list.
+  bool staple(String id) => session.staple(id);
+
+  /// Says whether the household always has [id]. Saying so takes it off the
+  /// list; "want" then puts it back the day it runs out.
+  Future<Done> setStaple(String id, bool always, {String? name}) async {
+    final undo = await _setAll({
+      // Saying what the app already assumes is not worth a shared fact.
+      haveKey(id): always == usualStaples.contains(id) ? null : (always ? '1' : '0'),
+      if (always) wantKey(id): null,
+    });
+    final label = name ?? itemNames[id] ?? id;
+    return (text: always ? '$label: always in the house, so off the list.' : '$label goes on the list when a dinner needs it.', undo: undo);
+  }
+
+  /// A staple has run out: on the list until it is bought.
+  Future<void> ranOut(String id, bool out) => _wrote(session.core.set(wantKey(id), out ? '1' : null, now));
+
+  /// What the household always has, of the things its recipes use, by name.
+  /// [out] is true while one is on the list because it ran out.
+  List<({String id, String name, bool out})> get staples {
+    final out = [
+      for (final e in ingredientNames.entries)
+        if (staple(e.key)) (id: e.key, name: e.value, out: _wanted(e.key)),
+    ];
+    return out..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+  }
+
+  /// True once the household has said so for at least one thing itself.
+  bool get staplesTaught => session.core.entries.any((e) => e.key.startsWith('have/') && e.value != null);
 
   /// Puts a known extra on the list, or takes it off without calling it got.
   Future<void> wantExtra(String id, bool want) => _wrote(session.core.set(wantKey(id), want ? '1' : null, now), replan: false);
@@ -393,10 +684,7 @@ class AppModel extends ChangeNotifier {
   }
 
   /// The section an ingredient is in: what the household said, else a guess.
-  String section(String id) {
-    final v = session.core.value(sectionKey(id));
-    return v is String && sections.containsKey(v) ? v : guessSection(id);
-  }
+  String section(String id) => session.section(id);
 
   /// The stores the household shops at, by name.
   List<({String id, String name})> get stores {
@@ -465,8 +753,12 @@ class AppModel extends ChangeNotifier {
 
   /// Everything the household records about what it buys for an ingredient,
   /// saved in one go. A null leaves that part as it is; '' clears it.
-  Future<void> saveProduct(String id, {String? buy, String? size, String? section, Map<String, String> at = const {}, String? code}) {
+  Future<void> saveProduct(String id, {String? buy, String? size, String? section, Map<String, String> at = const {}, String? code, bool? always}) {
     var changed = false;
+    if (always != null && always != staple(id)) {
+      changed = session.core.set(haveKey(id), always == usualStaples.contains(id) ? null : (always ? '1' : '0'), now);
+      if (always) changed = session.core.set(wantKey(id), null, now) || changed;
+    }
     void put(String key, String? text, {int max = 120}) {
       if (text == null) return;
       final t = text.trim();
@@ -482,7 +774,8 @@ class AppModel extends ChangeNotifier {
     at.forEach((store, text) => put(atKey(store, id), text, max: 60));
     // The packet's barcode now means this ingredient, on both phones.
     if (code != null) changed = session.core.set(codeKey(code), id, now) || changed;
-    return _wrote(changed, replan: false);
+    // What is always in the house changes what a reminder calls missing.
+    return _wrote(changed, replan: always != null);
   }
 
   /// The ingredient a barcode was saved for, or null.
@@ -519,7 +812,12 @@ class AppModel extends ChangeNotifier {
 
   Future<bool> allowNotifications() => session.notifier.askPermission();
 
-  Future<void> testReminder() => session.notifier.show(const Notice("You're cooking tonight", 'This is what a reminder looks like.'));
+  Future<void> testReminder() => session.notifier.show(const Notice(
+        "You're cooking tonight: Beef Chili",
+        'This is what a reminder looks like. Start by 5:15 pm to eat at 6:00 pm. Still to get: sour cream and limes.',
+        ref: NudgeRef('test'),
+        buttons: [listButton],
+      ));
 
   @override
   void dispose() {

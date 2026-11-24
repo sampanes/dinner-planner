@@ -8,6 +8,7 @@ import '../core/store_order.dart';
 import '../core/sync_core.dart';
 import '../data/products.dart';
 import 'match.dart';
+import 'parts.dart' show say;
 import 'scan.dart';
 
 /// Offered when adding a store, so the usual ones are a tap rather than typing.
@@ -129,6 +130,11 @@ class ShopScreen extends StatelessWidget {
           else if (model.stores.isNotEmpty)
             Padding(padding: const EdgeInsets.only(top: 4), child: Text('In a store? Tap its name and the list follows the way you walk it.', style: soft)),
         ],
+        if (groups.isNotEmpty && !model.staplesTaught)
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Text('Always have something in the house? Press and hold its line, and no dinner will ask for it again.', key: const ValueKey('staple-hint'), style: soft),
+          ),
         for (final g in groups) ...[
           heading(sections[g.section] ?? g.section),
           for (final l in g.lines) _ShopTile(model: model, line: l, got: false),
@@ -138,8 +144,65 @@ class ShopScreen extends StatelessWidget {
         for (final l in check) _ShopTile(model: model, line: l, got: false),
         if (done.isNotEmpty) heading('Got'),
         for (final l in done) _ShopTile(model: model, line: l, got: true),
+        if (planned.isNotEmpty && model.staples.isNotEmpty) ...[
+          heading('Always in the house'),
+          Text('No dinner puts these on the list. Tap one the day it runs out.', style: soft),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            children: [
+              for (final s in model.staples)
+                ActionChip(
+                  key: ValueKey('staple-${s.id}'),
+                  avatar: Icon(s.out ? Icons.shopping_basket_outlined : Icons.check, size: 18),
+                  label: Text(_cap(s.name)),
+                  onPressed: () => _staple(context, s),
+                ),
+            ],
+          ),
+        ],
       ],
     );
+  }
+
+  /// One staple: it has run out, or it is not a staple after all.
+  Future<void> _staple(BuildContext context, ({String id, String name, bool out}) s) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final name = _cap(s.name);
+    final choice = await showModalBottomSheet<String>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              key: const ValueKey('staple-out'),
+              leading: Icon(s.out ? Icons.check : Icons.add_shopping_cart),
+              title: Text(s.out ? '$name is back in the house' : 'We are out of ${s.name}'),
+              subtitle: Text(s.out ? 'Take it off the list.' : 'On the list until it is bought.'),
+              onTap: () => Navigator.of(context).pop('out'),
+            ),
+            ListTile(
+              key: const ValueKey('staple-not'),
+              leading: const Icon(Icons.remove_circle_outline),
+              title: Text('$name is not always in the house'),
+              subtitle: const Text('Dinners that need it put it on the list again.'),
+              onTap: () => Navigator.of(context).pop('not'),
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+    if (choice == 'out') {
+      await model.ranOut(s.id, !s.out);
+      say(messenger, s.out ? '$name is off the list.' : '$name is on the list.', () => model.ranOut(s.id, s.out));
+    } else if (choice == 'not') {
+      final done = await model.setStaple(s.id, false, name: name);
+      say(messenger, done.text, done.undo);
+    }
   }
 }
 
@@ -287,6 +350,14 @@ class _ShopTile extends StatelessWidget {
       key: ValueKey('${got ? 'got' : 'shop'}-${line.id}'),
       borderRadius: BorderRadius.circular(12),
       onTap: () => model.setGot(line, !got),
+      // Held: "we always have this". Not for the things no dinner asks for.
+      onLongPress: got || line.extra
+          ? null
+          : () async {
+              final messenger = ScaffoldMessenger.of(context);
+              final done = await model.setStaple(line.id, true, name: _cap(line.name));
+              say(messenger, done.text, done.undo);
+            },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 6),
         child: Row(
@@ -465,14 +536,14 @@ Future<bool> editProduct(BuildContext context, AppModel model, {required String 
     builder: (_) => ProductSheet(model: model, id: id, name: name, found: found, code: code),
   );
   if (edit == null) return false;
-  await model.saveProduct(id, buy: edit.buy, size: edit.size, section: edit.section, at: edit.at, code: edit.code);
+  await model.saveProduct(id, buy: edit.buy, size: edit.size, section: edit.section, at: edit.at, code: edit.code, always: edit.always);
   return true;
 }
 
 String _cap(String s) => s.isEmpty ? s : '${s[0].toUpperCase()}${s.substring(1)}';
 
 /// What the sheet below hands back when it is saved.
-typedef ProductEdit = ({String buy, String size, String section, Map<String, String> at, String? code});
+typedef ProductEdit = ({String buy, String size, String section, Map<String, String> at, String? code, bool? always});
 
 /// Everything the household records about what it buys for one ingredient:
 /// the name on the shelf, the packet size, its section, and a note per store
@@ -501,6 +572,10 @@ class _ProductSheetState extends State<ProductSheet> {
     for (final s in widget.model.stores) s.id: TextEditingController(text: widget.model.at(s.id, widget.id) ?? ''),
   };
   late String _section = widget.model.section(widget.id);
+
+  /// Only something a recipe uses can be "always in the house".
+  late final bool _canBeStaple = widget.model.ingredientNames.containsKey(widget.id);
+  late bool _always = widget.model.staple(widget.id);
   late String? _code = widget.code;
   String? _note;
   bool _looking = false;
@@ -545,7 +620,7 @@ class _ProductSheetState extends State<ProductSheet> {
     super.dispose();
   }
 
-  void _save() => Navigator.of(context).pop((buy: _buy.text, size: _size.text, section: _section, at: {for (final e in _at.entries) e.key: e.value.text}, code: _code));
+  void _save() => Navigator.of(context).pop((buy: _buy.text, size: _size.text, section: _section, at: {for (final e in _at.entries) e.key: e.value.text}, code: _code, always: _canBeStaple ? _always : null));
 
   @override
   Widget build(BuildContext context) {
@@ -605,6 +680,15 @@ class _ProductSheetState extends State<ProductSheet> {
                 decoration: InputDecoration(labelText: 'Where in ${s.name}', hintText: 'Aisle 7, by the eggs', border: const OutlineInputBorder()),
               ),
             ],
+            if (_canBeStaple)
+              SwitchListTile(
+                key: const ValueKey('shop-staple'),
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Always in the house'),
+                subtitle: const Text('No dinner puts it on the list. Say when it runs out.'),
+                value: _always,
+                onChanged: (on) => setState(() => _always = on),
+              ),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,

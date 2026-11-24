@@ -40,10 +40,11 @@ class SettingsScreen extends StatelessWidget {
           onPicked: (m) => model.setTimes(model.times.copyWith(morning: m)),
         ),
         _TimeRow(
-          label: 'Start cooking',
-          hint: 'When you should be at the stove',
-          minutes: model.times.start,
-          onPicked: (m) => model.setTimes(model.times.copyWith(start: m)),
+          key: const ValueKey('time-eat'),
+          label: 'Dinner on the table',
+          hint: 'When to start is counted back from here',
+          minutes: model.times.eat,
+          onPicked: (m) => model.setTimes(model.times.copyWith(eat: m)),
         ),
         const SizedBox(height: 8),
         Wrap(
@@ -177,7 +178,7 @@ class _CommitFieldState extends State<_CommitField> {
 }
 
 class _TimeRow extends StatelessWidget {
-  const _TimeRow({required this.label, required this.hint, required this.minutes, required this.onPicked});
+  const _TimeRow({super.key, required this.label, required this.hint, required this.minutes, required this.onPicked});
 
   final String label;
   final String hint;

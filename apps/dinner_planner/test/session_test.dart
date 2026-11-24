@@ -231,7 +231,7 @@ void main() {
     first
       ..me = 'blue'
       ..household = house
-      ..times = const NudgeTimes(start: 16 * 60);
+      ..times = const NudgeTimes(eat: 18 * 60 + 30);
     first.core.set(cookKey('2026-11-21'), 'blue', ntfy.now);
     await first.saveProfile();
     await first.saveHousehold();
@@ -244,7 +244,7 @@ void main() {
     expect(again.core.dev, first.core.dev);
     expect(again.me, 'blue');
     expect(again.household!.topic, house.topic);
-    expect(again.times.start, 16 * 60);
+    expect(again.times.eat, 18 * 60 + 30);
     expect(again.plan.cook('2026-11-21'), 'blue');
     expect(again.recipeName('beef-chili'), 'Beef Chili');
   });
@@ -273,48 +273,115 @@ void main() {
     });
 
     test('the kitchen link opens the recipe overview', () {
-      expect(kitchenPage('https://site.example/dinner/', 'beef-chili').toString(), 'https://site.example/dinner/kitchen.html#/r/beef-chili');
+      expect(kitchenPage('https://site.example/dinner/', 'beef-chili').toString(), 'https://site.example/dinner/kitchen.html?app=1#/r/beef-chili');
     });
   });
 
   group('reminders', () {
     SyncCore core() => SyncCore('aaaa');
-    String name(String slug) => slug == 'beef-chili' ? 'Beef Chili' : slug;
+    // Chili takes 35 minutes; the beef is not ticked, the beans are.
+    DinnerFacts facts(String day, String slug) => slug == 'beef-chili'
+        ? const DinnerFacts(name: 'Beef Chili', minutes: 35, thaw: ['ground beef'], missing: ['ground beef', 'sour cream'])
+        : DinnerFacts(name: slug);
 
-    test('three per cooking night: evening before, morning, start', () {
+    test('three per cooking night, and each says what there is to do', () {
       final c = core();
       final now = DateTime(2026, 11, 19, 12);
       c.set(cookKey('2026-11-21'), 'blue', now);
       c.set(mealKey('2026-11-21'), 'beef-chili', now);
       c.set(cookKey('2026-11-22'), 'pink', now);
-      final got = planNudges(me: 'blue', now: now, times: const NudgeTimes(), plan: Plan(c), recipeName: name);
-      expect([for (final n in got) n.when], [DateTime(2026, 11, 20, 20), DateTime(2026, 11, 21, 7, 30), DateTime(2026, 11, 21, 17)]);
+      final got = [for (final n in planNudges(me: 'blue', now: now, times: const NudgeTimes(), plan: Plan(c), facts: facts)) if (!n.quiet) n];
+      expect([for (final n in got) n.when], [DateTime(2026, 11, 20, 20), DateTime(2026, 11, 21, 7, 30), DateTime(2026, 11, 21, 17, 15)],
+          reason: 'start is counted back from dinner at 6:00: 35 minutes of cooking and ten to spare');
       expect(got[0].title, 'You cook tomorrow: Beef Chili');
-      expect(got[2].body, 'Beef Chili. Tap to open it.');
+      expect(got[0].body, 'If the ground beef is frozen, move it to the fridge tonight. Still to get: ground beef and sour cream.');
+      expect([for (final b in got[0].buttons) b.label], ['All here', 'Open the list']);
+      expect(got[1].body, 'Start by 5:15 pm to eat at 6:00 pm. Take the ground beef out now if it is still frozen. Still to get: ground beef and sour cream.');
+      expect([for (final b in got[1].buttons) b.id], ['skip', 'list']);
+      expect(got[2].title, 'Time to start: Beef Chili');
+      expect(got[2].body, 'About 35 minutes, so dinner is at 6:00 pm. Tap to open the recipe.');
+      expect(got[2].ref!.text, 'start|2026-11-21|beef-chili', reason: 'a tap knows which recipe to open');
       expect({for (final n in got) n.id}.length, 3);
+    });
+
+    test('with everything in the house the evening reminder says so and has no buttons', () {
+      final c = core();
+      final now = DateTime(2026, 11, 19, 12);
+      c.set(cookKey('2026-11-21'), 'blue', now);
+      c.set(mealKey('2026-11-21'), 'ravioli', now);
+      final eve = planNudges(me: 'blue', now: now, times: const NudgeTimes(), plan: Plan(c), facts: (_, _) => const DinnerFacts(name: 'Ravioli')).first;
+      expect(eve.body, 'Everything it needs is in the house.');
+      expect(eve.buttons, isEmpty);
+    });
+
+    test('a recipe with no time of its own is given forty minutes', () {
+      expect(startMinutes(const NudgeTimes(), null), 17 * 60 + 10);
+      expect(startMinutes(const NudgeTimes(eat: 19 * 60), 60), 17 * 60 + 50);
+      expect(clockText(0), '12:00 am');
+      expect(clockText(12 * 60 + 5), '12:05 pm');
+    });
+
+    test('the time to start that an older version kept becomes a dinner time', () {
+      expect(NudgeTimes.fromJson({'evening': 1200, 'morning': 450, 'start': 17 * 60}).eat, 17 * 60 + 45);
+      expect(NudgeTimes.fromJson({'eat': 19 * 60, 'start': 17 * 60}).eat, 19 * 60);
+      expect(NudgeTimes.fromJson(null).eat, 18 * 60);
     });
 
     test('only the ones still ahead', () {
       final c = core();
       final now = DateTime(2026, 11, 19, 12);
       c.set(cookKey('2026-11-19'), 'blue', now);
-      final got = planNudges(me: 'blue', now: now, times: const NudgeTimes(), plan: Plan(c), recipeName: name);
-      expect(got.single.when, DateTime(2026, 11, 19, 17));
+      final got = planNudges(me: 'blue', now: now, times: const NudgeTimes(), plan: Plan(c), facts: facts);
+      expect(got.single.when, DateTime(2026, 11, 19, 17, 10));
       expect(got.single.body, 'Nothing is picked. Choose something quick.');
     });
 
-    test('none for the other person', () {
+    test('none for the other person, except how it was', () {
       final c = core();
       final now = DateTime(2026, 11, 19, 12);
       c.set(cookKey('2026-11-21'), 'blue', now);
-      expect(planNudges(me: 'pink', now: now, times: const NudgeTimes(), plan: Plan(c), recipeName: name), isEmpty);
+      expect(planNudges(me: 'pink', now: now, times: const NudgeTimes(), plan: Plan(c), facts: facts), isEmpty);
+      c.set(mealKey('2026-11-21'), 'beef-chili', now);
+      final asked = planNudges(me: 'pink', now: now, times: const NudgeTimes(), plan: Plan(c), facts: facts).single;
+      expect(asked.title, 'How was the Beef Chili?');
+      expect(asked.when, DateTime(2026, 11, 21, 19), reason: 'an hour after dinner');
+      expect(asked.quiet, isTrue);
+      expect([for (final b in asked.buttons) b.label], ['Loved it', 'It was fine', 'Not again']);
+      expect(planNudges(me: 'pink', now: now, times: const NudgeTimes(), plan: Plan(c), facts: facts, rated: (day, slug) => true), isEmpty, reason: 'not asked twice');
+    });
+
+    test('a night that was called off has none', () {
+      final c = core();
+      final now = DateTime(2026, 11, 19, 12);
+      c.set(cookKey('2026-11-21'), 'blue', now);
+      c.set(mealKey('2026-11-21'), 'beef-chili', now);
+      c.set(offKey('2026-11-21'), 'out', now);
+      expect(planNudges(me: 'blue', now: now, times: const NudgeTimes(), plan: Plan(c), facts: facts), isEmpty);
     });
 
     test('ids stay the same from one planning to the next', () {
       final c = core();
       c.set(cookKey('2026-11-21'), 'blue', DateTime(2026, 11, 19, 12));
-      List<int> ids(DateTime now) => [for (final n in planNudges(me: 'blue', now: now, times: const NudgeTimes(), plan: Plan(c), recipeName: name)) n.id];
+      List<int> ids(DateTime now) => [for (final n in planNudges(me: 'blue', now: now, times: const NudgeTimes(), plan: Plan(c), facts: facts)) n.id];
       expect(ids(DateTime(2026, 11, 19, 12)), ids(DateTime(2026, 11, 19, 13)));
+    });
+
+    test('the offer of a new week comes when the plan is about to run out, and not every evening', () {
+      final c = core();
+      final now = DateTime(2026, 11, 19, 12);
+      expect(planRunsOut(Plan(c), now), isTrue, reason: 'nothing is planned at all');
+      c.set(mealKey('2026-11-21'), 'beef-chili', now);
+      expect(planRunsOut(Plan(c), now), isTrue, reason: 'the last dinner is the day after tomorrow');
+      c.set(mealKey('2026-11-22'), 'beef-chili', now);
+      expect(planRunsOut(Plan(c), now), isFalse);
+
+      expect(weekAskTime(now: now, evening: 20 * 60), DateTime(2026, 11, 19, 20));
+      expect(weekAskTime(now: DateTime(2026, 11, 19, 21), evening: 20 * 60), DateTime(2026, 11, 20, 20));
+      expect(weekAskTime(now: now, evening: 20 * 60, lastAsk: DateTime(2026, 11, 19, 20)), DateTime(2026, 11, 19, 20), reason: 'already set for tonight');
+      expect(weekAskTime(now: DateTime(2026, 11, 20, 9), evening: 20 * 60, lastAsk: DateTime(2026, 11, 19, 20)), DateTime(2026, 11, 22, 20), reason: 'asked last night: three days of quiet');
+      final offer = weekNudge(DateTime(2026, 11, 19, 20), [(date: DateTime(2026, 11, 20), name: 'Beef Chili'), (date: DateTime(2026, 11, 21), name: 'Baked Penne')]);
+      expect(offer.body, 'Friday Beef Chili and Saturday Baked Penne. Use them, or change them.');
+      expect([for (final b in offer.buttons) b.id], ['use', 'change']);
     });
   });
 

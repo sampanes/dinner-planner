@@ -85,20 +85,20 @@ void main() {
     await hers.joinHousehold(his.household!.code);
     await his.setMeal('2026-11-19', 'beef-chili');
     await exchange(his, hers);
-    expect(show(hers.shopping), '1 lb ground beef; 2 onion; salt');
+    expect(show(hers.shopping), '1 lb ground beef; 2 onion', reason: 'salt is always in the house, so no dinner lists it');
 
     // She is in the store.
     await hers.setGot(hers.shopping.firstWhere((l) => l.id == 'onion'), true);
     await hers.setBuy('ground-beef', ' Store brand 88/12, the 1 lb tray ');
     await exchange(hers, his);
-    expect(show(his.shopping), '1 lb ground beef; salt');
+    expect(show(his.shopping), '1 lb ground beef');
     expect(show(his.shoppingGot), '2 onion');
     expect(his.buy('ground-beef'), 'Store brand 88/12, the 1 lb tray');
-    expect(his.shoppingText(), '- 1 lb Store brand 88/12, the 1 lb tray (ground beef)\nCheck you have: salt');
+    expect(his.shoppingText(), '- 1 lb Store brand 88/12, the 1 lb tray (ground beef)');
 
     // A dinner planned afterwards needs one more onion, not three.
     await his.setMeal('2026-11-21', 'baked-penne');
-    expect(show(his.shopping), '1 lb + 10 oz ground beef; 1 onion; 6 oz penne; salt');
+    expect(show(his.shopping), '1 lb + 10 oz ground beef; 1 onion; 6 oz penne');
     expect(show(his.shoppingGot), '2 onion');
 
     // Un-ticking puts it back.
@@ -143,7 +143,8 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.textContaining('For 2 dinners, through Friday, November 20.'), findsOneWidget);
     expect(find.text('3  Onion'), findsOneWidget);
-    expect(find.text('Check you have'), findsOneWidget);
+    expect(find.text('Check you have'), findsNothing);
+    expect(find.byKey(const ValueKey('staple-salt')), findsOneWidget, reason: 'salt is listed under what is always in the house');
 
     await tester.tap(find.byKey(const ValueKey('shop-onion')));
     await tester.pumpAndSettle();
@@ -161,7 +162,7 @@ void main() {
 
     await tester.tap(find.byKey(const ValueKey('shop-copy')));
     await tester.pumpAndSettle();
-    expect(copied, '- 1 lb + 10 oz Store brand 88/12 (ground beef)\n- 6 oz penne\nCheck you have: salt');
+    expect(copied, '- 1 lb + 10 oz Store brand 88/12 (ground beef)\n- 6 oz penne');
     expect(tester.takeException(), isNull);
   });
 }

@@ -9,6 +9,18 @@ export 'picker.dart';
 
 const Map<String, Color> personColors = {'pink': Color(0xFFD6497F), 'blue': Color(0xFF2F7FC1)};
 
+/// Says what was just done in a bar at the bottom, with Undo when it can be
+/// taken back. It leaves on its own.
+void say(ScaffoldMessengerState messenger, String text, [Future<void> Function()? undo]) {
+  messenger
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(
+      content: Text(text),
+      persist: false,
+      action: undo == null ? null : SnackBarAction(label: 'Undo', onPressed: () => undo()),
+    ));
+}
+
 /// A recipe photo that stays a tidy box while loading or when offline.
 class RecipePhoto extends StatelessWidget {
   const RecipePhoto({super.key, required this.url, this.width, this.height});

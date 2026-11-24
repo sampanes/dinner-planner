@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../app_model.dart';
+import '../core/nudges.dart';
 import '../core/plan.dart';
 import '../core/sync_core.dart';
 import '../data/recipes.dart';
@@ -21,6 +21,7 @@ class TonightScreen extends StatelessWidget {
     final now = model.now;
     final day = model.today();
     final me = model.me;
+    final off = model.plan.off(day);
     final start = me != null && !model.startHidden && model.startDone.length < StartStep.values.length;
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
@@ -29,7 +30,12 @@ class TonightScreen extends StatelessWidget {
         const SizedBox(height: 4),
         Text(_headline(day), style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700)),
         const SizedBox(height: 16),
-        if (me == null) _WhoAreYou(model: model) else _TonightCard(model: model, day: day),
+        if (me == null)
+          _WhoAreYou(model: model)
+        else if (off != null)
+          _OffCard(model: model, day: day, off: off)
+        else
+          _TonightCard(model: model, day: day),
         // Under tonight's dinner, which stays the first thing on the screen.
         if (start) ...[const SizedBox(height: 12), _StartHere(model: model, onOpen: onOpen)],
         const SizedBox(height: 24),
@@ -47,6 +53,8 @@ class TonightScreen extends StatelessWidget {
   }
 
   String _headline(String day) {
+    final off = model.plan.off(day);
+    if (off != null) return '${offKinds[off]} tonight';
     final cook = model.plan.cook(day);
     if (model.me == null) return 'Dinner tonight';
     if (cook == null) return 'Who cooks tonight?';
@@ -112,13 +120,7 @@ class _StartHere extends StatelessWidget {
   void _skip(BuildContext context) {
     final messenger = ScaffoldMessenger.of(context);
     model.hideStart(true);
-    messenger
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        content: const Text('Hidden. Settings can bring it back.'),
-        persist: false,
-        action: SnackBarAction(label: 'Undo', onPressed: () => model.hideStart(false)),
-      ));
+    say(messenger, 'Hidden. Settings can bring it back.', () => model.hideStart(false));
   }
 
   @override
@@ -170,6 +172,41 @@ class _StartHere extends StatelessWidget {
   }
 }
 
+/// Tonight was called off: what it is instead, and the way back.
+class _OffCard extends StatelessWidget {
+  const _OffCard({required this.model, required this.day, required this.off});
+
+  final AppModel model;
+  final String day;
+  final String off;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      key: const ValueKey('tonight-off'),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text('Nobody is cooking tonight.', style: theme.textTheme.titleLarge),
+            const SizedBox(height: 8),
+            Text('No reminders, and nothing on the list for tonight.', style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+            const SizedBox(height: 16),
+            OutlinedButton(
+              key: const ValueKey('cook-after-all'),
+              style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
+              onPressed: () => model.cookAfterAll(day),
+              child: const Text('Cooking after all'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _TonightCard extends StatelessWidget {
   const _TonightCard({required this.model, required this.day});
 
@@ -179,8 +216,10 @@ class _TonightCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final faded = theme.colorScheme.onSurfaceVariant;
     final slug = model.plan.meal(day);
     final Recipe? recipe = model.session.recipe(slug);
+    final minutes = recipe?.minutes;
     return Card(
       clipBehavior: Clip.antiAlias,
       child: Column(
@@ -196,11 +235,20 @@ class _TonightCard extends StatelessWidget {
                   slug == null ? 'Nothing is planned for tonight' : model.session.recipeName(slug),
                   style: theme.textTheme.headlineSmall,
                 ),
+                if (minutes != null && !model.afterDinner) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    'About $minutes minutes. Start by ${clockText(startMinutes(model.times, minutes))}.',
+                    key: const ValueKey('tonight-timing'),
+                    style: theme.textTheme.bodyMedium?.copyWith(color: faded),
+                  ),
+                ],
+                if (slug != null && model.afterDinner) ...[const SizedBox(height: 4), _RateRow(model: model, slug: slug)],
                 if (slug != null) ...[const SizedBox(height: 8), RecipeNotes(model: model, slug: slug)],
                 const SizedBox(height: 12),
                 Row(
                   children: [
-                    Text('Cooking:', style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+                    Text('Cooking:', style: theme.textTheme.titleMedium?.copyWith(color: faded)),
                     const SizedBox(width: 12),
                     Expanded(child: CookPicker(model: model, day: day)),
                   ],
@@ -212,7 +260,7 @@ class _TonightCard extends StatelessWidget {
                     style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(56)),
                     icon: const Icon(Icons.play_arrow),
                     label: const Text('Open the recipe', style: TextStyle(fontSize: 18)),
-                    onPressed: () => launchUrl(kitchenPage(model.site, slug), mode: LaunchMode.externalApplication),
+                    onPressed: () => model.openRecipe(slug),
                   ),
                 if (recipe != null && recipe.ingredients.isNotEmpty) ...[
                   const SizedBox(height: 8),
@@ -224,17 +272,62 @@ class _TonightCard extends StatelessWidget {
                   ),
                 ],
                 const SizedBox(height: 8),
-                OutlinedButton(
-                  key: const ValueKey('pick-tonight'),
-                  style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
-                  onPressed: () => pickDinner(context, model, day, 'Dinner tonight'),
-                  child: Text(slug == null ? 'Pick dinner' : 'Change dinner'),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        key: const ValueKey('pick-tonight'),
+                        style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
+                        onPressed: () => pickDinner(context, model, day, 'Dinner tonight'),
+                        child: Text(slug == null ? 'Pick dinner' : 'Change dinner'),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: OutlinedButton(
+                        key: const ValueKey('not-tonight'),
+                        style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
+                        onPressed: () => showSkip(context, model, day),
+                        child: const Text('Not tonight'),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+/// "How was it?", once dinner time has come: five stars, one tap. The answer
+/// goes to the recipe site, where it steers what gets suggested.
+class _RateRow extends StatelessWidget {
+  const _RateRow({required this.model, required this.slug});
+
+  final AppModel model;
+  final String slug;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final said = model.ratedToday(slug);
+    final stars = said ? model.myStars(slug) : 0;
+    return Row(
+      key: const ValueKey('rate-row'),
+      children: [
+        Expanded(child: Text(said ? 'Your stars tonight' : 'How was it?', style: theme.textTheme.titleMedium)),
+        for (var n = 1; n <= 5; n++)
+          IconButton(
+            key: ValueKey('rate-$n'),
+            tooltip: '$n star${n == 1 ? '' : 's'}',
+            visualDensity: VisualDensity.compact,
+            icon: Icon(n <= stars ? Icons.star : Icons.star_border, color: n <= stars ? theme.colorScheme.primary : theme.colorScheme.outline),
+            onPressed: () => model.rate(slug, n),
+          ),
+      ],
     );
   }
 }
@@ -251,6 +344,7 @@ class _UpcomingRow extends StatelessWidget {
     final day = dayText(date);
     final slug = model.plan.meal(day);
     final cook = model.plan.cook(day);
+    final off = model.plan.off(day);
     final mine = cook != null && cook == model.me;
     final recipe = model.session.recipe(slug);
     return ListTile(
@@ -259,9 +353,9 @@ class _UpcomingRow extends StatelessWidget {
       onTap: recipe == null ? null : () => showNeeds(context, model, recipe, weekdayName(date)),
       leading: CircleAvatar(
         backgroundColor: cook == null ? theme.colorScheme.surfaceContainerHighest : personColors[cook]!.withValues(alpha: 0.28),
-        child: Text(cook == null ? '?' : model.plan.name(cook).characters.first.toUpperCase()),
+        child: Text(cook == null ? (off == null ? '?' : '-') : model.plan.name(cook).characters.first.toUpperCase()),
       ),
-      title: Text(slug == null ? 'Nothing planned' : model.session.recipeName(slug), maxLines: 1, overflow: TextOverflow.ellipsis),
+      title: Text(slug != null ? model.session.recipeName(slug) : (off == null ? 'Nothing planned' : offKinds[off]!), maxLines: 1, overflow: TextOverflow.ellipsis),
       subtitle: Text(
         '${weekdayName(date)}${cook == null ? '' : mine ? ', you cook' : ', ${model.plan.name(cook)} cooks'}',
         style: mine ? TextStyle(fontWeight: FontWeight.w700, color: theme.colorScheme.primary) : null,
@@ -292,6 +386,60 @@ class _ShareLine extends StatelessWidget {
   }
 }
 
+/// "Not tonight": one tap says what tonight is instead. The planned dinner
+/// moves to the next free night, with what was ticked for it, and the change
+/// can be undone from the message that follows.
+Future<void> showSkip(BuildContext context, AppModel model, String day) async {
+  final theme = Theme.of(context);
+  final messenger = ScaffoldMessenger.of(context);
+  final slug = model.plan.meal(day);
+  final to = model.movesTo(day);
+  final String lead;
+  if (slug == null) {
+    lead = 'What is tonight instead?';
+  } else if (to == null) {
+    lead = '${model.session.recipeName(slug)} comes off the plan: the next two weeks are full. What is tonight instead?';
+  } else {
+    lead = '${model.session.recipeName(slug)} moves to ${dayLabel(parseDay(to)!, model.now)}, with what is ticked for it. What is tonight instead?';
+  }
+  const kinds = {'leftovers': (Icons.kitchen_outlined, 'Leftovers'), 'out': (Icons.storefront_outlined, 'Eating out'), 'skip': (Icons.bedtime_outlined, 'Just not cooking')};
+  final why = await showModalBottomSheet<String>(
+    context: context,
+    showDragHandle: true,
+    builder: (context) => SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Not tonight', style: theme.textTheme.titleLarge),
+                const SizedBox(height: 4),
+                Text(lead, key: const ValueKey('skip-lead'), style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+              ],
+            ),
+          ),
+          for (final k in kinds.entries)
+            ListTile(
+              key: ValueKey('skip-${k.key}'),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+              leading: Icon(k.value.$1),
+              title: Text(k.value.$2, style: theme.textTheme.titleMedium),
+              onTap: () => Navigator.of(context).pop(k.key),
+            ),
+          const SizedBox(height: 8),
+        ],
+      ),
+    ),
+  );
+  if (why == null) return;
+  final done = await model.skipDinner(day, why);
+  say(messenger, done.text, done.undo);
+}
+
 /// A sheet listing what a dinner needs, for checking the fridge the evening
 /// before.
 Future<void> showNeeds(BuildContext context, AppModel model, Recipe recipe, String when) {
@@ -314,6 +462,7 @@ Future<void> showNeeds(BuildContext context, AppModel model, Recipe recipe, Stri
           children: [
             Text(when, style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
             Text(recipe.name, style: theme.textTheme.headlineSmall),
+            if (recipe.minutes != null) Text('About ${recipe.minutes} minutes', style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
             const SizedBox(height: 8),
             RecipeNotes(model: model, slug: recipe.slug),
             const SizedBox(height: 12),
@@ -327,7 +476,7 @@ Future<void> showNeeds(BuildContext context, AppModel model, Recipe recipe, Stri
               style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52)),
               icon: const Icon(Icons.play_arrow),
               label: const Text('Open the recipe'),
-              onPressed: () => launchUrl(kitchenPage(model.site, recipe.slug), mode: LaunchMode.externalApplication),
+              onPressed: () => model.openRecipe(recipe.slug),
             ),
           ],
         ),

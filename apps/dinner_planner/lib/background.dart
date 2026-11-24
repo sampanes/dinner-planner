@@ -27,6 +27,8 @@ void backgroundMain() {
       final report = await session.sync(now);
       await session.announce(report.changes, now);
       await session.replan(now);
+      // A rating given from a reminder while the app was shut.
+      await session.flushSite(now);
     } finally {
       client.close();
     }
