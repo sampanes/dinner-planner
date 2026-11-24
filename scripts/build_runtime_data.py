@@ -33,6 +33,7 @@ from recipe_tags import haves, haves_catalog, moods, proteins  # noqa: E402
 ROOT = Path(__file__).resolve().parent.parent
 SOURCE_PATH = ROOT / "data" / "source" / "recipes.json"
 STEP_PHOTOS_PATH = ROOT / "data" / "source" / "step_photos.json"
+RECIPE_TIMES_PATH = ROOT / "data" / "source" / "recipe_times.json"
 RUNTIME_DIR = ROOT / "data" / "runtime"
 REPORTS_DIR = ROOT / "data" / "reports"
 PAGES_DIR = ROOT / "recipes"
@@ -450,11 +451,16 @@ def attach_step_photos(runtime_recipe: dict, photos: list[str]) -> None:
             step["photo"] = by_step[step["sourceStep"]]
 
 
-def build_outputs(source_recipes: list[dict], step_photos: dict | None = None) -> dict[Path, str]:
+def build_outputs(source_recipes: list[dict], step_photos: dict | None = None, recipe_times: dict | None = None) -> dict[Path, str]:
     """Return every output file as {path: text}."""
     runtime_recipes = [build_runtime_recipe(recipe) for recipe in source_recipes]
     for recipe in runtime_recipes:
         attach_step_photos(recipe, (step_photos or {}).get(recipe["slug"], {}).get("photos", []))
+        # Start to table, in minutes (scripts/recipe_times.py); the phone app
+        # counts back from dinner time to say when to start.
+        minutes = (recipe_times or {}).get(recipe["slug"])
+        if isinstance(minutes, int) and not isinstance(minutes, bool) and minutes > 0:
+            recipe["minutes"] = minutes
     alias_index, ingredient_index = build_indexes(runtime_recipes)
 
     def dump(data: object) -> str:
@@ -493,9 +499,13 @@ def load_step_photos() -> dict:
     return json.loads(STEP_PHOTOS_PATH.read_text(encoding="utf-8")) if STEP_PHOTOS_PATH.exists() else {}
 
 
+def load_recipe_times() -> dict:
+    return json.loads(RECIPE_TIMES_PATH.read_text(encoding="utf-8")) if RECIPE_TIMES_PATH.exists() else {}
+
+
 def main(argv: list[str]) -> int:
     check = "--check" in argv
-    outputs = build_outputs(load_source(), load_step_photos())
+    outputs = build_outputs(load_source(), load_step_photos(), load_recipe_times())
 
     if check:
         stale = stale_outputs(outputs)
