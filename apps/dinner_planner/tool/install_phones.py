@@ -77,16 +77,26 @@ def repo_slug() -> str | None:
     return f"{m.group(1)}/{m.group(2)}" if m else None
 
 
+def version_of(tag: str) -> tuple[int, ...]:
+    """app-v0.10.0 -> (0, 10, 0), so that 0.10 counts as newer than 0.9."""
+    return tuple(int(n) for n in re.findall(r"\d+", tag[len(TAG_PREFIX):]))
+
+
 def newest_app_release(releases: list[dict]) -> tuple[str, dict] | None:
-    """(tag, apk asset) of the newest published app release that has an APK."""
-    for rel in releases:  # the API lists newest first
+    """(tag, apk asset) of the published app release with the highest version
+    that has an APK. The order GitHub lists them in is not by version: it put
+    app-v0.9.0 ahead of app-v0.10.0."""
+    best = None
+    for rel in releases:
         tag = rel.get("tag_name") or ""
         if not tag.startswith(TAG_PREFIX) or rel.get("draft") or rel.get("prerelease"):
             continue
         for asset in rel.get("assets") or []:
             if str(asset.get("name", "")).endswith(".apk"):
-                return tag, asset
-    return None
+                if best is None or version_of(tag) > version_of(best[0]):
+                    best = (tag, asset)
+                break
+    return best
 
 
 def fetch_json(url: str):

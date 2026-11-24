@@ -45,6 +45,14 @@ class ReleaseTests(unittest.TestCase):
         tag, asset = ip.newest_app_release(releases)
         self.assertEqual((tag, asset["name"]), ("app-v0.8.0", "dinner-planner-0.8.0.apk"))
 
+    def test_ten_is_newer_than_nine_whatever_order_github_lists_them_in(self):
+        releases = [
+            {"tag_name": "app-v0.9.0", "assets": [{"name": "dinner-planner-0.9.0.apk"}]},
+            {"tag_name": "app-v0.10.0", "assets": [{"name": "dinner-planner-0.10.0.apk"}]},
+            {"tag_name": "app-v0.8.0", "assets": [{"name": "dinner-planner-0.8.0.apk"}]},
+        ]
+        self.assertEqual(ip.newest_app_release(releases)[0], "app-v0.10.0")
+
     def test_no_release_gives_none(self):
         self.assertIsNone(ip.newest_app_release([]))
 
