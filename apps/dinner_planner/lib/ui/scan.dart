@@ -6,9 +6,16 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../data/products.dart';
 
-/// Draws the live camera and calls [onCode] with each product barcode it
-/// reads, in the form [canonicalCode] makes.
-typedef CameraBuilder = Widget Function(BuildContext context, ValueChanged<String> onCode);
+/// A barcode the camera read, in the form [canonicalCode] makes, and the
+/// picture it was read in when there is one: the label around the bars,
+/// whose words say what a barcode alone may not.
+typedef Seen = ({String code, Uint8List? picture});
+
+/// What the camera calls with each product barcode it reads.
+typedef OnSeen = void Function(String code, {Uint8List? picture});
+
+/// Draws the live camera and calls [onCode] with each barcode.
+typedef CameraBuilder = Widget Function(BuildContext context, OnSeen onCode);
 
 /// How the app sees a barcode. Tests put a stand-in here; the camera itself
 /// can only be tried on a phone.
@@ -19,11 +26,11 @@ typedef ScanOutcome = ({String text, Future<void> Function()? undo});
 
 /// What a scanning session does with each barcode. It may open pages of its
 /// own on [context]; null means the person backed out of them.
-typedef OnScan = Future<ScanOutcome?> Function(BuildContext context, String code);
+typedef OnScan = Future<ScanOutcome?> Function(BuildContext context, String code, {Uint8List? picture});
 
 /// Opens the camera for one barcode and gives it back, or null when the
 /// person backs out.
-Future<String?> scanOne(BuildContext context) => Navigator.of(context).push<String>(MaterialPageRoute(fullscreenDialog: true, builder: (_) => const ScanPage()));
+Future<Seen?> scanOne(BuildContext context) => Navigator.of(context).push<Seen>(MaterialPageRoute(fullscreenDialog: true, builder: (_) => const ScanPage()));
 
 /// Opens the camera and leaves it open: every barcode goes to [onCode] and
 /// what came of it is shown, until the person is done.
@@ -49,12 +56,12 @@ class _ScanPageState extends State<ScanPage> {
   int _handled = 0;
 
   /// [typed] is a number put in by hand, which is never a repeat by accident.
-  Future<void> _take(String code, {bool typed = false}) async {
+  Future<void> _take(String code, {bool typed = false, Uint8List? picture}) async {
     final handle = widget.onCode;
     if (handle == null) {
       if (_closed) return;
       _closed = true;
-      Navigator.of(context).pop(code);
+      Navigator.of(context).pop<Seen>((code: code, picture: picture));
       return;
     }
     // The camera reports a packet for as long as it is in view: the same one
@@ -73,7 +80,7 @@ class _ScanPageState extends State<ScanPage> {
     setState(() => _busy = true);
     ScanOutcome? outcome;
     try {
-      outcome = await handle(context, code);
+      outcome = await handle(context, code, picture: picture);
     } finally {
       _lastCode = code;
       _lastAt = DateTime.now();
@@ -112,7 +119,7 @@ class _ScanPageState extends State<ScanPage> {
       appBar: AppBar(title: Text(many ? 'Scan packets' : 'Scan the barcode')),
       body: Column(
         children: [
-          Expanded(child: ColoredBox(color: Colors.black, child: buildCamera(context, _take))),
+          Expanded(child: ColoredBox(color: Colors.black, child: buildCamera(context, (code, {picture}) => _take(code, picture: picture)))),
           SafeArea(
             top: false,
             child: Padding(
@@ -210,7 +217,7 @@ class _TypeDialogState extends State<_TypeDialog> {
 class _LiveCamera extends StatefulWidget {
   const _LiveCamera({required this.onCode});
 
-  final ValueChanged<String> onCode;
+  final OnSeen onCode;
 
   @override
   State<_LiveCamera> createState() => _LiveCameraState();
@@ -221,6 +228,9 @@ class _LiveCameraState extends State<_LiveCamera> {
     formats: const [BarcodeFormat.upcA, BarcodeFormat.upcE, BarcodeFormat.ean13, BarcodeFormat.ean8],
     detectionSpeed: DetectionSpeed.normal,
     detectionTimeoutMs: 400,
+    // The frame each barcode was seen in comes with it, for reading the
+    // label around the bars.
+    returnImage: true,
   );
   String? _felt;
 
@@ -237,7 +247,7 @@ class _LiveCameraState extends State<_LiveCamera> {
       // One buzz per packet, not one per camera frame.
       if (code != _felt) HapticFeedback.mediumImpact();
       _felt = code;
-      widget.onCode(code);
+      widget.onCode(code, picture: capture.image);
       return;
     }
   }

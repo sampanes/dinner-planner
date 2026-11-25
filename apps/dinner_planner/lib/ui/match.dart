@@ -1,29 +1,40 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../app_model.dart';
+import '../data/labels.dart';
 import '../data/products.dart';
 
 /// After a packet the household has not scanned before: which ingredient is
 /// it? The likeliest are on top, so most of the time it is one tap. Pops with
 /// the ingredient's id, or with a null id for "not for a recipe".
 class MatchPage extends StatefulWidget {
-  const MatchPage({super.key, required this.model, required this.code});
+  const MatchPage({super.key, required this.model, required this.code, this.picture});
 
   final AppModel model;
   final String code;
+
+  /// The camera frame the barcode was seen in: when no list knows the
+  /// barcode, the words on the label around it are read instead.
+  final Uint8List? picture;
 
   @override
   State<MatchPage> createState() => _MatchPageState();
 }
 
 class _MatchPageState extends State<MatchPage> {
-  late final Future<Product?> _lookup = widget.model.lookUp(widget.code);
+  late final Future<Product?> _lookup = widget.model.identify(widget.code, picture: widget.picture);
   late final Map<String, String> _names = widget.model.itemNames;
   late final Set<String> _onList = {for (final l in widget.model.shopping) l.id};
   final TextEditingController _filter = TextEditingController();
   Product? _found;
   bool _looking = true;
   bool _leaving = false;
+  bool _reading = false;
+
+  /// Every name-like word of a label photographed here, to match on.
+  String? _labelText;
+  String? _readNote;
 
   @override
   void initState() {
@@ -49,7 +60,27 @@ class _MatchPageState extends State<MatchPage> {
     setState(() => _leaving = true);
     // A tap made before the answer came still gets the answer.
     final found = await _lookup;
-    if (mounted) Navigator.of(context).pop((id: id, found: found));
+    if (mounted) Navigator.of(context).pop((id: id, found: _found ?? found));
+  }
+
+  /// A picture of the front of the packet, or of its shelf tag.
+  Future<void> _read() async {
+    setState(() {
+      _reading = true;
+      _readNote = null;
+    });
+    final label = await widget.model.photographLabel();
+    if (!mounted) return;
+    setState(() {
+      _reading = false;
+      if (label == null) return;
+      if (label.isEmpty) {
+        _readNote = 'No words could be read from that picture. Closer, and square on, usually does it.';
+      } else {
+        _found = productFromLabel(widget.code, label, _names);
+        _labelText = label.text;
+      }
+    });
   }
 
   @override
@@ -60,7 +91,8 @@ class _MatchPageState extends State<MatchPage> {
     final wanted = _filter.text.trim().toLowerCase();
     bool shown(String id) => wanted.isEmpty || _names[id]!.toLowerCase().contains(wanted);
 
-    final likely = found == null ? const <String>[] : matchIngredients(found.shelfName, _names).take(6).toList();
+    final likely = found == null ? const <String>[] : matchIngredients(_labelText ?? found.shelfName, _names).take(6).toList();
+    final canRead = !_looking && !_leaving && (found == null || found.read);
     final rest = [for (final id in _names.keys) if (!likely.contains(id)) id]
       ..sort((a, b) {
         final la = _onList.contains(a), lb = _onList.contains(b);
@@ -83,7 +115,7 @@ class _MatchPageState extends State<MatchPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (_looking || _leaving) const LinearProgressIndicator(),
+          if (_looking || _leaving || _reading) const LinearProgressIndicator(),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
             child: _looking
@@ -93,11 +125,28 @@ class _MatchPageState extends State<MatchPage> {
                     : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(found.shelfName.isEmpty ? 'A packet with no name on file' : found.shelfName, key: const ValueKey('match-found'), style: theme.textTheme.titleLarge),
+                          if (found.read) Text('Read off the label', key: const ValueKey('match-read-said'), style: theme.textTheme.labelLarge?.copyWith(color: faded)),
+                          Text(found.shelfName.isEmpty ? (found.read ? 'No name could be read' : 'A packet with no name on file') : found.shelfName, key: const ValueKey('match-found'), style: theme.textTheme.titleLarge),
                           if (found.size.isNotEmpty) Text(found.size, style: theme.textTheme.bodyLarge?.copyWith(color: faded)),
                         ],
                       ),
           ),
+          if (canRead)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  OutlinedButton.icon(
+                    key: const ValueKey('match-read'),
+                    onPressed: _reading ? null : _read,
+                    icon: const Icon(Icons.document_scanner_outlined),
+                    label: Text(found == null ? 'Read the label instead' : 'Read the label again'),
+                  ),
+                  Text(_readNote ?? 'Photograph the front of the packet or its shelf tag: the app reads the name and the size.', key: const ValueKey('match-read-note'), style: theme.textTheme.bodySmall?.copyWith(color: faded)),
+                ],
+              ),
+            ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: TextField(

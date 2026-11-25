@@ -17,7 +17,7 @@ import 'package:http/http.dart' as http;
 String codeKey(String code) => 'code/$code';
 
 class Product {
-  const Product({required this.code, this.name = '', this.brand = '', this.size = ''});
+  const Product({required this.code, this.name = '', this.brand = '', this.size = '', this.read = false});
 
   final String code;
   final String name;
@@ -25,6 +25,10 @@ class Product {
 
   /// "16 oz", as printed.
   final String size;
+
+  /// True when the camera read this off the label, rather than a list
+  /// knowing the barcode.
+  final bool read;
 
   /// The brand and the name as one line, without saying the brand twice.
   String get shelfName {
@@ -130,6 +134,12 @@ String _stem(String word) {
 }
 
 Set<String> _words(String text) => {for (final w in text.toLowerCase().split(RegExp(r'[^a-z0-9]+'))) if (w.isNotEmpty) _stem(w)};
+
+/// How many of the words of [name] are in [text].
+int sharedWords(String text, String name) {
+  final on = _words(text);
+  return _words(name).where(on.contains).length;
+}
 
 /// The ingredients (id -> name) a packet called [productText] could be, the
 /// likeliest first: the more of an ingredient's words are on the packet the

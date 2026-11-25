@@ -90,7 +90,7 @@ class UpdateTests(unittest.TestCase):
         self.assertEqual(provider.get(f"{ANDROID}grantUriPermissions"), "true")
         self.assertEqual(provider.find("meta-data").get(f"{ANDROID}resource"), "@xml/file_paths")
         paths = ET.parse(MAIN / "res" / "xml" / "file_paths.xml").getroot()
-        self.assertEqual([(p.tag, p.attrib) for p in paths], [("cache-path", {"name": "updates", "path": "updates/"})])
+        self.assertEqual([(p.tag, p.attrib) for p in paths], [("cache-path", {"name": "updates", "path": "updates/"}), ("cache-path", {"name": "labels", "path": "labels/"})])
         kotlin = read("android/app/src/main/kotlin/dev/dinnerplanner/dinner_planner/MainActivity.kt")
         self.assertIn('File(cacheDir, "updates")', kotlin)
         self.assertIn('"$packageName.files"', kotlin)
@@ -113,6 +113,42 @@ class UpdateTests(unittest.TestCase):
     def test_the_code_knows_its_own_version(self):
         version = re.search(r"^version:\s*([0-9.]+)\+", read("pubspec.yaml"), re.M).group(1)
         self.assertIn(f"const String appVersion = '{version}';", read("lib/data/updates.dart"))
+
+
+class LabelTests(unittest.TestCase):
+    """Reading the words on a label: the phone reads, the app makes sense of them."""
+
+    KOTLIN = "android/app/src/main/kotlin/dev/dinnerplanner/dinner_planner/MainActivity.kt"
+
+    def test_both_sides_use_the_same_names(self):
+        kotlin, dart = read(self.KOTLIN), read("lib/data/labels.dart")
+        self.assertIn("MethodChannel('dinner_planner/app')", dart)
+        for method in ("readText", "photoText"):
+            self.assertIn(f'"{method}" ->', kotlin)
+            self.assertIn(f"'{method}'", dart)
+        for field in ("text", "height"):
+            self.assertIn(f'"{field}" to', kotlin)
+            self.assertIn(f"line['{field}']", dart)
+        self.assertIn('call.argument<ByteArray>("picture")', kotlin)
+        self.assertIn("{'picture': picture}", dart)
+
+    def test_the_text_reader_is_inside_the_app(self):
+        gradle = read("android/app/build.gradle.kts")
+        # Bundled, not the Play Services one: it has to work in a store with no signal.
+        self.assertIn('implementation("com.google.mlkit:text-recognition:', gradle)
+        self.assertNotIn("play-services-mlkit-text-recognition", gradle)
+
+    def test_the_photograph_is_kept_where_only_the_app_reads_it_and_then_deleted(self):
+        kotlin = read(self.KOTLIN)
+        self.assertIn('File(cacheDir, "labels")', kotlin)
+        self.assertIn("MediaStore.ACTION_IMAGE_CAPTURE", kotlin)
+        self.assertIn("file.delete()", kotlin)
+        # Android will not open its camera for an app that lists the permission without holding it.
+        self.assertIn("checkSelfPermission(Manifest.permission.CAMERA)", kotlin)
+
+    def test_the_scanner_hands_over_the_frame_a_barcode_was_seen_in(self):
+        self.assertIn("returnImage: true", read("lib/ui/scan.dart"))
+        self.assertIn("picture: capture.image", read("lib/ui/scan.dart"))
 
 
 class WidgetTests(unittest.TestCase):

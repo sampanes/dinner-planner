@@ -24,6 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'fake_labels.dart';
 import 'fake_ntfy.dart';
 
 final String? shotsDir = Platform.environment['SHOTS_DIR'];
@@ -147,7 +148,7 @@ void main() {
     client.close();
   });
 
-  Future<AppModel> start(WidgetTester tester, {Brightness brightness = Brightness.light, DateTime? at}) async {
+  Future<AppModel> start(WidgetTester tester, {Brightness brightness = Brightness.light, DateTime? at, FakeLabels? labels}) async {
     tester.view.physicalSize = const Size(1080, 2400);
     tester.view.devicePixelRatio = 2.625;
     tester.platformDispatcher.platformBrightnessTestValue = brightness;
@@ -156,7 +157,7 @@ void main() {
     // Tests draw shadows as hard black outlines unless told otherwise.
     debugDisableShadows = false;
     if (photos.isNotEmpty) debugNetworkImageHttpClientProvider = _PhotoClient.new;
-    final model = AppModel(Session(store: MemoryStore(), client: ntfy.client(), notifier: SilentNotifier()), clock: () => at ?? thursday, open: (_) async => true);
+    final model = AppModel(Session(store: MemoryStore(), client: ntfy.client(), notifier: SilentNotifier()), clock: () => at ?? thursday, open: (_) async => true, labels: labels);
     await model.start();
     await tester.pumpWidget(DinnerApp(model: model));
     await tester.pumpAndSettle();
@@ -240,8 +241,10 @@ void main() {
     // A trip: the first things into the cart, then put back so the order shows.
     await tester.tap(find.byKey(const ValueKey('store-kroger')));
     await tester.pumpAndSettle();
-    for (final id in ['ground-beef', 'shrimp', 'cheddar-cheese', 'butter', 'sour-cream', 'carrot', 'broccoli', 'celery']) {
-      await model.setGot(model.shopping.firstWhere((l) => l.id == id), true);
+    for (final id in ['ground-beef', 'shrimp', 'cheddar-cheese', 'sour-cream', 'carrot', 'broccoli', 'celery']) {
+      // Whatever of these the week's dinners ask for.
+      final line = model.shopping.where((l) => l.id == id).firstOrNull;
+      if (line != null) await model.setGot(line, true);
     }
     for (final l in model.shoppingGot) {
       if (l.id != 'celery' && l.id != 'broccoli') await model.setGot(l, false);
@@ -313,6 +316,71 @@ void main() {
     await shoot(tester, '27-shop-with-extras');
     await tester.scrollUntilVisible(find.byKey(const ValueKey('got-sour-cream')), 400, scrollable: list);
     await shoot(tester, '19-scan-ticked');
+    await finish(tester);
+  }, skip: shotsDir == null);
+
+  testWidgets('shots: reading a label', (tester) async {
+    final labels = FakeLabels();
+    final model = await start(tester, labels: labels);
+    await fillWeek(model, me: 'blue');
+    final real = buildCamera;
+    late OnSeen camera;
+    buildCamera = (context, onCode) {
+      camera = onCode;
+      return const ColoredBox(color: Color(0xFF2B2B2B), child: Center(child: Icon(Icons.photo_camera_outlined, size: 72, color: Colors.white24)));
+    };
+    addTearDown(() => buildCamera = real);
+    await tester.tap(find.text('Shop'));
+    await tester.pumpAndSettle();
+    // Cups and spoons of what is sold by weight, as ounces; then as packets.
+    final list = find.descendant(of: find.byType(ShopScreen), matching: find.byType(Scrollable)).first;
+    await tester.scrollUntilVisible(find.byKey(const ValueKey('shop-cheddar-cheese')), 300, scrollable: list);
+    await Scrollable.ensureVisible(tester.element(find.byKey(const ValueKey('shop-cheddar-cheese'))), alignment: 0.08);
+    await shoot(tester, '86-shop-ounces-for-cups');
+    await model.saveProduct('cheddar-cheese', buy: 'Sharp, shredded', size: '8 oz');
+    await model.saveProduct('sour-cream', size: '16 oz');
+    await model.saveProduct('jasmine-rice', size: '2 lb');
+    await shoot(tester, '87-shop-packets-for-cups');
+    for (final id in ['cheddar-cheese', 'sour-cream', 'jasmine-rice']) {
+      await model.saveProduct(id, buy: '', size: '');
+    }
+    await tester.drag(list, const Offset(0, 5000));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('shop-scan')));
+    await tester.pumpAndSettle();
+
+    // A tray of meat with the store's own barcode and price sticker.
+    labels.frames[1] = lines([
+      ('CORNER MARKET', 22), ('GROUND BEEF', 54), ('88% LEAN 12% FAT', 26), ('KEEP REFRIGERATED', 14), ('SELL BY 11/24/26', 16), ('NET WT', 14), ('1.33 lb', 30),
+      ('UNIT PRICE', 14), (r'$5.99/lb', 28), ('TOTAL PRICE', 14), (r'$7.97', 40),
+    ]);
+    camera('212345000000', picture: frame(1));
+    await shoot(tester, '80-label-read-off-the-sticker');
+    await tester.tap(find.byKey(const ValueKey('match-ground-beef')));
+    await shoot(tester, '81-label-filled-in');
+    await tester.tap(find.byKey(const ValueKey('shop-buy-save')));
+    await shoot(tester, '82-label-is-the-pack-enough');
+
+    // A store brand neither public list has: the frame is the back of the bag.
+    camera('099999000011', picture: frame(2));
+    await shoot(tester, '83-label-no-list-knows-it');
+    labels.photos.add(lines([('Meadow Farm', 30), ('SHARP CHEDDAR', 60), ('FINELY SHREDDED CHEESE', 24), ('NET WT 8 OZ (226g)', 16)]));
+    await tester.tap(find.byKey(const ValueKey('match-read')));
+    await shoot(tester, '84-label-read-the-front');
+    await tester.tap(find.byType(CloseButton));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('scan-done')));
+    await tester.pumpAndSettle();
+
+    // From a line of the list: the shelf tag gives the name and the size.
+    await tester.scrollUntilVisible(find.byKey(const ValueKey('shop-edit-sour-cream')), 300, scrollable: list);
+    await tester.tap(find.byKey(const ValueKey('shop-edit-sour-cream')));
+    await tester.pumpAndSettle();
+    labels.photos.add(lines([('MEADOW FARM SOUR CREAM 16 OZ', 22), (r'$2.29', 80), ('14.3¢ PER OZ', 14)]));
+    await tester.tap(find.byKey(const ValueKey('shop-read-label')));
+    await shoot(tester, '85-label-from-a-line');
+    await tester.tap(find.byKey(const ValueKey('shop-buy-save')));
+    await tester.pumpAndSettle();
     await finish(tester);
   }, skip: shotsDir == null);
 

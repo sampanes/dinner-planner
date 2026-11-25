@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The one folder Android's installer may read from: where a downloaded
-     update waits (MainActivity "updatesDir"). -->
+<!-- The two folders another app is ever let into: where a downloaded update
+     waits for Android's installer (MainActivity "updatesDir"), and where the
+     phone's camera puts one picture of a label (MainActivity "photoText"),
+     deleted once it has been read. -->
 <paths>
     <cache-path name="updates" path="updates/"/>
+    <cache-path name="labels" path="labels/"/>
 </paths>

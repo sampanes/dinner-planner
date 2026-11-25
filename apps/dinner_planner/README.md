@@ -34,13 +34,15 @@ all of that, and none of it is written to the repository.
 - **Shop**: what the planned dinners need, added up into one list, by section. Tap a line when it
   is in the house; tap the tag to record what you actually buy for that ingredient: the brand or
   the name on the shelf, the packet size (the list then says how many packets), its section, and a
-  note on where it is in each store. All of it is shared, so one of you can tick things off in the
+  note on where it is in each store. Amounts read the way a store sells things ("Amounts in what
+  the store sells" below): ounces where the recipes said cups, pounds at the meat counter. All of it is shared, so one of you can tick things off in the
   store while the other watches. The list copies as plain text. Press and hold a line to say the
   house always has it: no dinner asks for it again, until you tap it the day it runs out.
 - **Scan**: point the camera at a packet's barcode and the name, brand and size fill themselves in
   ("Scanning a packet" below). Say once which ingredient a packet is; after that scanning it
   ticks the line. The camera stays open for the next packet, so a full cart or a pantry shelf is
-  one go, and a number the camera will not read can be typed.
+  one go, and a number the camera will not read can be typed. Where a barcode says nothing, the
+  words on the label are read instead ("Reading a label" below).
 - **Stores**: add the stores you use, and tap one when you walk in. The list switches to the order
   you walk that store, which it learns from the order you tick things in ("The order of a store"
   below).
@@ -218,6 +220,7 @@ again each time it runs for two weeks.
 | Which barcode is which ingredient | each phone, and the relay messages between them |
 | The extras the household buys, and which are on the list | each phone, and the relay messages between them |
 | Which person this phone belongs to, reminder times and dinner time, which store it is in right now, a USDA key | this phone only |
+| A photograph of a label, until it has been read (then deleted); camera frames are read and not kept | this phone only |
 
 ## How two phones stay the same
 
@@ -288,6 +291,52 @@ it is put on the list, which is how an empty carton gets itself bought again.
 
 The lookups, the scanning session and the extras are checked against stand-ins in the tests; the
 camera itself can only be tried on a phone.
+
+## Reading a label
+
+For what a barcode cannot say. A store prints its own barcode on what it weighs, which no public
+list knows, and plenty of store brands are on neither list; the words are on the label all the
+same. The phone turns a picture into lines of text (Google's ML Kit text reader, its model inside
+the app; the picture is read on the phone and is not sent anywhere), and `lib/data/labels.dart`
+turns the lines into a name and a size.
+
+- **In the frame a barcode was seen in.** The scanner hands over the camera frame with each
+  barcode. When neither list knows the barcode, that frame is read: a price sticker on a tray of
+  meat gives "Ground Beef" and puts ground beef at the top of "Which ingredient is this?".
+- **Is the pack enough?** A store-weighed pack says its weight on the sticker, so each time one
+  is scanned for a line the app holds it against what the dinners need: "1.33 lb, and the dinners
+  need 1.63 lb: 4 1/2 oz short." Its weight is not kept as the packet size, since the next pack
+  will weigh something else.
+- **A photograph, when the frame has nothing.** The frame around a barcode is often the back of
+  the packet. "Read the label instead" (and "Read the label" on the sheet for one ingredient)
+  opens the phone's own camera for one picture of the front or of the shelf tag. The picture is
+  kept in the app's cache only until it has been read.
+
+What counts as the name: the lines that are not dates, prices, weights, handling notes or
+anything after "Ingredients:", and of those the one naming the ingredient in the most words, else
+the tallest. What counts as the size: a number with a unit that is not a price or a nutrition
+figure, the one beside "NET WT" first. The usual camera slips are allowed for ("0Z", "Ib").
+
+The reading of text into a name and a size, and what the screens do with it, are checked in
+`test/label_test.dart` with the text of made-up labels. What the phone's reader makes of a real
+label can only be seen on a phone.
+
+## Amounts in what the store sells
+
+A recipe says "1 1/2 cups" of cheese and the bag says "8 oz" (`lib/core/amounts.dart`).
+
+- **Cups and spoons become ounces** for what is sold by weight: cheese, flour, rice, sour cream,
+  panko. The app knows roughly what a cup of each weighs (4 oz of shredded cheese, 6 1/2 oz of
+  rice), from the ingredient's name. What the recipes said stays under the line. A spoonful of a
+  spice stays a spoonful (any jar will do), and so does what comes in a bottle.
+- **With the packet size it is a number of packets**: "2 × 8 oz", whether the recipes asked in
+  ounces, cups or both. Things counted whole meet a bag sold by weight the same way, through what
+  one of them weighs: three onions are one 3 lb bag.
+- **Weights read the way the label does**: "1.25 lb" in the sections priced by the pound (meat,
+  produce, deli), whole ounces elsewhere ("13.76 oz" of tomatoes is "14 oz").
+
+Nothing is guessed about how many are in a pack sold by weight (tortillas, buns): those lines
+stay as the recipes wrote them.
 
 ## Build and test
 
@@ -385,5 +434,5 @@ tapped APK from an unregistered developer is refused, and adb stays open. Google
 
 ## Not built yet
 
-- Reading the words on a label or shelf tag when a barcode is on no list; turning cups and
-  spoonfuls into packets sold by weight; choosing the store by where the phone is.
+- Choosing the store by where the phone is; reading a label live, without a photograph, for what
+  has no barcode at all.

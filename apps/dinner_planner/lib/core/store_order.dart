@@ -17,6 +17,8 @@ import 'dart:math';
 
 import 'shopping.dart';
 
+export 'amounts.dart' show packsNeeded, parsePack;
+
 String sizeKey(String id) => 'size/$id';
 String sectionKey(String id) => 'sec/$id';
 String storeKey(String store) => 'store/$store';
@@ -169,40 +171,4 @@ List<ShopGroup> arrange(Iterable<ShopLine> lines, {required String Function(Stri
           }),
       ),
   ];
-}
-
-// Each unit as a kind of measure and how many of that kind's base it is:
-// ounces for weight, teaspoons for volume, one for things counted.
-const Map<String, (String, double)> _measures = {
-  'oz': ('weight', 1), 'lb': ('weight', 16), 'g': ('weight', 0.03527396), 'kg': ('weight', 35.27396),
-  'tsp': ('volume', 1), 'tbsp': ('volume', 3), 'floz': ('volume', 6), 'cup': ('volume', 48), 'pt': ('volume', 96), 'qt': ('volume', 192), 'gal': ('volume', 768), 'ml': ('volume', 0.202884), 'l': ('volume', 202.884),
-  '': ('count', 1), 'ct': ('count', 1),
-};
-
-final RegExp _fluid = RegExp(r'^[\s\d./]*fl\.?\s*oz', caseSensitive: false);
-
-/// A packet size as written on the shelf ("16 oz", "12 fl oz", "6 ct").
-Quantity parsePack(String text) {
-  final q = parseAmount(text);
-  return _fluid.hasMatch(text) ? Quantity(q.number, 'floz') : q;
-}
-
-/// How many packets of [size] cover the [totals] a list line asks for, or
-/// null when the two cannot be compared (cups of cheese against a bag sold
-/// by weight).
-int? packsNeeded(Map<String, double> totals, String size) {
-  final pack = parsePack(size);
-  final packKind = _measures[pack.unit];
-  final n = pack.number;
-  if (packKind == null || n == null || n <= 0 || totals.isEmpty) return null;
-  var need = 0.0;
-  for (final e in totals.entries) {
-    var kind = _measures[e.key];
-    // A recipe's "8 oz" of something sold by the fluid ounce means those.
-    if (e.key == 'oz' && pack.unit == 'floz') kind = _measures['floz'];
-    if (kind == null || kind.$1 != packKind.$1) return null;
-    need += e.value * kind.$2;
-  }
-  final count = (need / (n * packKind.$2) - 1e-9).ceil();
-  return count < 1 ? 1 : count;
 }

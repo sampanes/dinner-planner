@@ -17,7 +17,7 @@ import 'package:http/http.dart' as http;
 
 /// This version, the same as `version:` in pubspec.yaml (a test holds the
 /// two together). A constant, so the background task knows it too.
-const String appVersion = '0.11.0';
+const String appVersion = '0.12.0';
 
 const String _tagPrefix = 'app-v';
 

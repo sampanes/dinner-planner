@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'core/amounts.dart';
 import 'core/glance.dart';
 import 'core/nudges.dart';
 import 'core/pantry.dart';
@@ -14,6 +15,7 @@ import 'core/shopping.dart';
 import 'core/store_order.dart';
 import 'core/sync_core.dart';
 import 'data/autoplan.dart';
+import 'data/labels.dart';
 import 'data/products.dart';
 import 'data/recipes.dart';
 import 'data/relay.dart';
@@ -71,10 +73,11 @@ typedef TimerAsk = ({int id, String label, DateTime? end, String slug});
 typedef HouseItem = ({String id, String name, bool here});
 
 class AppModel extends ChangeNotifier {
-  AppModel(this.session, {DateTime Function()? clock, Future<bool> Function(Uri page)? open, Installer? installer})
+  AppModel(this.session, {DateTime Function()? clock, Future<bool> Function(Uri page)? open, Installer? installer, LabelCamera? labels})
       : _clock = clock ?? DateTime.now,
         _open = open ?? ((page) => launchUrl(page, mode: LaunchMode.externalApplication)),
-        installer = installer ?? AndroidInstaller();
+        installer = installer ?? AndroidInstaller(),
+        labels = labels ?? AndroidLabelCamera();
 
   final Session session;
   final DateTime Function() _clock;
@@ -82,6 +85,9 @@ class AppModel extends ChangeNotifier {
 
   /// Android's part of an update, and of stepping back behind the browser.
   final Installer installer;
+
+  /// The phone's text reader, for labels a barcode says nothing about.
+  final LabelCamera labels;
   final List<Ask> _asks = [];
 
   bool ready = false;
@@ -934,8 +940,16 @@ class AppModel extends ChangeNotifier {
   /// can be compared.
   int? packs(ShopLine line) {
     final s = size(line.id);
-    return s == null ? null : packsNeeded(line.totals, s);
+    return s == null ? null : packsNeeded(line.totals, s, ingredient: line.id);
   }
+
+  /// The sections whose labels read in pounds.
+  static const Set<String> _byThePound = {'meat', 'produce', 'deli'};
+
+  /// How much of a line to take off the shelf, in what the store sells:
+  /// packets of the size the household buys, or ounces where the recipes
+  /// said cups.
+  ShopAmount amount(ShopLine line) => shopAmount(line, size: size(line.id), byPound: _byThePound.contains(section(line.id)));
 
   /// The section an ingredient is in: what the household said, else a guess.
   String section(String id) => session.section(id);
@@ -1044,6 +1058,33 @@ class AppModel extends ChangeNotifier {
   /// What the public lists say a barcode is, or null.
   Future<Product?> lookUp(String code) => lookUpProduct(session.client, code, usdaKey: session.usdaKey);
 
+  /// What a picture of a label says: the camera frame a barcode was seen in.
+  Future<Label> readLabel(Uint8List picture) async => parseLabel(await labels.read(picture));
+
+  /// Has the person photograph a label and reads it. Null when they backed
+  /// out or the camera would not open.
+  Future<Label?> photographLabel() async {
+    final lines = await labels.photograph();
+    return lines == null ? null : parseLabel(lines);
+  }
+
+  /// What a barcode is: from the public lists, and when neither knows it,
+  /// from the words on the label in the [picture] it was seen in.
+  Future<Product?> identify(String code, {Uint8List? picture}) async {
+    final listed = await lookUp(code);
+    if (listed != null || picture == null) return listed;
+    final label = await readLabel(picture);
+    return label.isEmpty ? null : productFromLabel(code, label, itemNames);
+  }
+
+  /// A pack the store weighed, just ticked for [line]: whether its weight,
+  /// read off the label in [picture], covers what the dinners need. Null
+  /// when the weight cannot be read or compared.
+  Future<String?> weighedAgainst(ShopLine line, Uint8List picture) async {
+    final label = await readLabel(picture);
+    return label.size.isEmpty ? null : packNote(line, label.size, byPound: _byThePound.contains(section(line.id)));
+  }
+
   String get usdaKey => session.usdaKey;
 
   Future<void> setUsdaKey(String key) async {
@@ -1059,7 +1100,7 @@ class AppModel extends ChangeNotifier {
     final loose = [for (final l in lines) if (l.loose) label(l)];
     return [
       for (final l in lines)
-        if (!l.loose) '- ${l.extra ? '' : '${l.amountText} '}${label(l)}',
+        if (!l.loose) '- ${l.extra ? '' : '${amount(l).lead} '}${label(l)}',
       if (loose.isNotEmpty) 'Check you have: ${loose.join(', ')}',
     ].join('\n');
   }

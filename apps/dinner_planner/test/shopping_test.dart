@@ -157,12 +157,12 @@ void main() {
     await tester.enterText(find.byKey(const ValueKey('shop-buy-text')), 'Store brand 88/12');
     await tester.tap(find.byKey(const ValueKey('shop-buy-save')));
     await tester.pumpAndSettle();
-    expect(find.text('1 lb + 10 oz  Store brand 88/12'), findsOneWidget);
+    expect(find.text('1.63 lb  Store brand 88/12'), findsOneWidget, reason: 'a pound and ten ounces, as a meat label says it');
     expect(find.text('ground beef · Beef Chili, Baked Penne'), findsOneWidget);
 
     await tester.tap(find.byKey(const ValueKey('shop-copy')));
     await tester.pumpAndSettle();
-    expect(copied, '- 1 lb + 10 oz Store brand 88/12 (ground beef)\n- 6 oz penne');
+    expect(copied, '- 1.63 lb Store brand 88/12 (ground beef)\n- 6 oz penne');
     expect(tester.takeException(), isNull);
   });
 }

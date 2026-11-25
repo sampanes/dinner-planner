@@ -256,8 +256,8 @@ void main() {
     await tester.tap(find.text('Deli').last);
     await tester.pumpAndSettle();
     await tap('shop-buy-save');
-    expect(find.text('1 lb + 10 oz  Store brand 88/12'), findsOneWidget);
-    expect(find.text('ground beef · 2 × 1 lb · Back wall · Beef Chili, Baked Penne'), findsOneWidget);
+    expect(find.text('2 × 1 lb  Store brand 88/12'), findsOneWidget);
+    expect(find.text('ground beef · 1 lb + 10 oz · Back wall · Beef Chili, Baked Penne'), findsOneWidget);
     expect(find.text('Deli'), findsOneWidget);
     expect(model.section('ground-beef'), 'deli');
     expect(tester.takeException(), isNull);

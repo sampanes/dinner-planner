@@ -68,6 +68,8 @@ dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
     // FileProvider: how Android's installer is let read a downloaded update.
     implementation("androidx.core:core-ktx:1.13.1")
+    // Reads the words on a label, on the phone: the model ships in the app.
+    implementation("com.google.mlkit:text-recognition:16.0.1")
 }
 
 flutter {

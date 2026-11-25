@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../app_model.dart';
+import '../data/labels.dart';
 import '../core/plan.dart';
 import '../core/shopping.dart';
 import '../core/store_order.dart';
@@ -30,12 +31,12 @@ class ShopScreen extends StatelessWidget {
   /// One barcode of a scanning session. In the store it ticks the line; at
   /// the pantry shelf it teaches the app what the household buys; and an
   /// extra that has run out goes back on the list.
-  Future<ScanOutcome?> _scanned(BuildContext context, String code) async {
+  Future<ScanOutcome?> _scanned(BuildContext context, String code, {Uint8List? picture}) async {
     var names = model.itemNames;
     var id = model.ingredientForCode(code);
     if (id == null || !names.containsKey(id)) {
       // A packet the household has not scanned before: say what it is for.
-      final picked = await Navigator.of(context).push<({String? id, Product? found})>(MaterialPageRoute(fullscreenDialog: true, builder: (_) => MatchPage(model: model, code: code)));
+      final picked = await Navigator.of(context).push<({String? id, Product? found})>(MaterialPageRoute(fullscreenDialog: true, builder: (_) => MatchPage(model: model, code: code, picture: picture)));
       if (picked == null || !context.mounted) return null;
       final found = picked.found;
       if (picked.id == null) {
@@ -69,7 +70,9 @@ class ShopScreen extends StatelessWidget {
       return (text: '$name: not on the list right now.', undo: null);
     }
     await model.setGot(line, true);
-    return (text: 'Got: $name', undo: () => model.setGot(line, false));
+    // A pack the store weighed says its weight on the label: is it enough?
+    final weighs = picture == null || !weighedInStore(code) ? null : await model.weighedAgainst(line, picture);
+    return (text: weighs == null ? 'Got: $name' : 'Got: $name. $weighs', undo: () => model.setGot(line, false));
   }
 
   Future<void> _add(BuildContext context) async {
@@ -347,7 +350,7 @@ class _ShopTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final buy = model.buy(line.id), size = model.size(line.id), packs = got ? null : model.packs(line);
+    final buy = model.buy(line.id), size = model.size(line.id), amount = model.amount(line);
     final store = model.shoppingAt;
     final faded = theme.colorScheme.onSurfaceVariant;
     final dinners = {for (final u in line.uses) model.session.recipeName(u.slug)}.join(', ');
@@ -356,7 +359,9 @@ class _ShopTile extends StatelessWidget {
     final known = buy != null || size != null;
     final small = [
       if (buy != null) line.name,
-      if (size != null) packs == null ? size : '$packs × $size',
+      // What the recipes said, when the line itself is in packets or ounces.
+      ?amount.asked,
+      if (size != null && !amount.lead.endsWith(size)) size,
       if (store != null) ?model.at(store, line.id),
       if (dinners.isNotEmpty) dinners,
       if (asWell) 'and for the house',
@@ -388,7 +393,7 @@ class _ShopTile extends StatelessWidget {
                 children: [
                   Text.rich(
                     TextSpan(children: [
-                      if (line.totals.isNotEmpty) TextSpan(text: '${line.amountText}  ', style: TextStyle(color: got ? faded : theme.colorScheme.primary, fontWeight: FontWeight.w700)),
+                      if (line.totals.isNotEmpty) TextSpan(text: '${amount.lead}  ', style: TextStyle(color: got ? faded : theme.colorScheme.primary, fontWeight: FontWeight.w700)),
                       TextSpan(text: buy ?? _cap(line.name)),
                     ]),
                     style: theme.textTheme.titleMedium?.copyWith(decoration: strike, color: got ? faded : null),
@@ -446,7 +451,7 @@ class _LikelyTile extends StatelessWidget {
                 children: [
                   Text.rich(
                     TextSpan(children: [
-                      if (line.totals.isNotEmpty) TextSpan(text: '${line.amountText}  ', style: TextStyle(color: faded, fontWeight: FontWeight.w700)),
+                      if (line.totals.isNotEmpty) TextSpan(text: '${model.amount(line).lead}  ', style: TextStyle(color: faded, fontWeight: FontWeight.w700)),
                       TextSpan(text: name),
                     ]),
                     style: theme.textTheme.titleMedium,
@@ -670,20 +675,42 @@ class _ProductSheetState extends State<ProductSheet> {
     if (name.isNotEmpty) _buy.text = name;
     if (size.isNotEmpty) _size.text = size;
     _note = name.isEmpty && size.isEmpty
-        ? 'Neither list knows that barcode. Type the name once; the app will know the packet from now on.'
-        : 'From the barcode. Change anything that is off.';
+        ? 'Neither list knows that barcode. Type the name once, or read the label; the app will know the packet from now on.'
+        : (p?.read ?? false)
+            ? 'Read off the label. Change anything that is off.'
+            : 'From the barcode. Change anything that is off.';
   }
 
   Future<void> _scan() async {
-    final code = await scanOne(context);
-    if (code == null || !mounted) return;
+    final seen = await scanOne(context);
+    if (seen == null || !mounted) return;
     setState(() => _looking = true);
-    final found = await widget.model.lookUp(code);
+    final found = await widget.model.identify(seen.code, picture: seen.picture);
     if (!mounted) return;
     setState(() {
       _looking = false;
-      _code = code;
+      _code = seen.code;
       _fill(found);
+    });
+  }
+
+  /// For what has no barcode, or one no list knows: a picture of the front
+  /// of the packet or of its shelf tag, read for the name and the size.
+  Future<void> _readLabel() async {
+    setState(() => _looking = true);
+    final label = await widget.model.photographLabel();
+    if (!mounted) return;
+    setState(() {
+      _looking = false;
+      if (label == null) return;
+      if (label.isEmpty) {
+        _note = 'No words could be read from that picture. Closer, and square on, usually does it.';
+        return;
+      }
+      final name = labelName(label, ingredient: widget.name);
+      if (name.isNotEmpty) _buy.text = name;
+      if (label.size.isNotEmpty) _size.text = label.size;
+      _note = 'Read off the label. Change anything that is off.';
     });
   }
 
@@ -714,14 +741,23 @@ class _ProductSheetState extends State<ProductSheet> {
             const SizedBox(height: 4),
             Text('Both phones see it. Every part is optional.', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
             const SizedBox(height: 12),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: FilledButton.tonalIcon(
-                key: const ValueKey('shop-scan-packet'),
-                onPressed: _looking ? null : _scan,
-                icon: _looking ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2)) : const Icon(Icons.qr_code_scanner),
-                label: Text(_looking ? 'Looking it up' : (_code == null ? 'Scan the packet' : 'Scan another')),
-              ),
+            Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              children: [
+                FilledButton.tonalIcon(
+                  key: const ValueKey('shop-scan-packet'),
+                  onPressed: _looking ? null : _scan,
+                  icon: _looking ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2)) : const Icon(Icons.qr_code_scanner),
+                  label: Text(_looking ? 'Looking it up' : (_code == null ? 'Scan the packet' : 'Scan another')),
+                ),
+                OutlinedButton.icon(
+                  key: const ValueKey('shop-read-label'),
+                  onPressed: _looking ? null : _readLabel,
+                  icon: const Icon(Icons.document_scanner_outlined),
+                  label: const Text('Read the label'),
+                ),
+              ],
             ),
             if (_note != null) Padding(padding: const EdgeInsets.only(top: 8), child: Text(_note!, key: const ValueKey('shop-scan-note'), style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.primary))),
             const SizedBox(height: 16),
